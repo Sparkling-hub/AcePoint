@@ -1,3 +1,5 @@
+import '../tamagui-web.css';
+
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   DarkTheme,
@@ -13,6 +15,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { TamaguiProvider } from 'tamagui';
 
 import tamaguiConfig from '../tamagui.config';
+import PlayerProfile from '@/screens/PlayerProfile';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -30,6 +33,9 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Montserrat: require('../assets/fonts/Montserrat-Regular.ttf'),
+    MontserratBold: require('../assets/fonts/Montserrat-Bold.ttf'),
+    MontserratExtraBold: require('../assets/fonts/Montserrat-ExtraBold.ttf'),
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
     ...FontAwesome.font,
@@ -59,10 +65,11 @@ function RootLayoutNav() {
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
+        {/* <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-        </Stack>
+        </Stack> */}
+        <PlayerProfile />
       </ThemeProvider>
     </TamaguiProvider>
   );
