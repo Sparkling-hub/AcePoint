@@ -1,6 +1,6 @@
 import React from 'react';
-import { Image, StyleSheet } from 'react-native';
-import { Text, View } from 'tamagui';
+import { StyleSheet } from 'react-native';
+import { Image, Text, View } from 'tamagui';
 
 interface PlayerCardProps {
   displayName: string;
@@ -42,6 +42,7 @@ export default function PlayerCard(props: PlayerCardProps) {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    marginTop: 150,
     marginBottom: 35,
   },
   box: {
@@ -72,8 +73,6 @@ const styles = StyleSheet.create({
   },
   displayNameText: {
     fontFamily: 'MontserratBold',
-    fontStyle: 'normal',
-    fontWeight: '700',
     fontSize: 20,
     lineHeight: 24,
     color: '#3A4D6C',
@@ -87,8 +86,6 @@ const styles = StyleSheet.create({
   },
   numberText: {
     fontFamily: 'MontserratExtraBold',
-    fontStyle: 'normal',
-    fontWeight: '800',
     fontSize: 14,
     lineHeight: 17,
     color: '#3A4D6C',
@@ -96,8 +93,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Montserrat',
-    fontStyle: 'normal',
-    fontWeight: '400',
     fontSize: 14,
     lineHeight: 17,
     color: '#3A4D6C',

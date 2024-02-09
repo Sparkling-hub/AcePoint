@@ -1,5 +1,5 @@
-import { Image, StyleSheet } from 'react-native';
-import { Text, View } from 'tamagui';
+import { StyleSheet } from 'react-native';
+import { Image, Text, View } from 'tamagui';
 
 interface HistoryBoxProps {
   displayName: string;
@@ -71,16 +71,12 @@ const styles = StyleSheet.create({
   },
   displayNameText: {
     fontFamily: 'MontserratBold',
-    fontStyle: 'normal',
-    fontWeight: '700',
     fontSize: 14,
     lineHeight: 17,
     color: '#3A4D6C',
   },
   text: {
     fontFamily: 'Montserrat',
-    fontStyle: 'normal',
-    fontWeight: '400',
     fontSize: 14,
     lineHeight: 17,
     color: '#3A4D6C',
@@ -91,7 +87,7 @@ const styles = StyleSheet.create({
   hoursContainer: {
     width: 44,
     height: 19,
-    borderRadius: 10,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#A9D05C',
@@ -99,8 +95,6 @@ const styles = StyleSheet.create({
   },
   numberText: {
     fontFamily: 'MontserratBold',
-    fontStyle: 'normal',
-    fontWeight: '700',
     fontSize: 14,
     lineHeight: 17,
     color: '#3A4D6C',

@@ -16,6 +16,7 @@ import { TamaguiProvider } from 'tamagui';
 
 import tamaguiConfig from '../tamagui.config';
 import PlayerProfile from '@/screens/PlayerProfile';
+import PlayerAccount from '@/screens/PlayerAccount';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -34,6 +35,7 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     Montserrat: require('../assets/fonts/Montserrat-Regular.ttf'),
+    MontserratMedium: require('../assets/fonts/Montserrat-Medium.ttf'),
     MontserratBold: require('../assets/fonts/Montserrat-Bold.ttf'),
     MontserratExtraBold: require('../assets/fonts/Montserrat-ExtraBold.ttf'),
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
@@ -69,7 +71,8 @@ function RootLayoutNav() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack> */}
-        <PlayerProfile />
+        {/* <PlayerProfile /> */}
+        <PlayerAccount />
       </ThemeProvider>
     </TamaguiProvider>
   );

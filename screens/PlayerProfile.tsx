@@ -1,4 +1,4 @@
-import { StyleSheet, SafeAreaView, Image, FlatList } from 'react-native';
+import { StyleSheet, SafeAreaView, FlatList, StatusBar } from 'react-native';
 import { View, Text } from 'tamagui';
 import HistoryBox from '@/components/HistoryBox';
 import PlayerCard from '@/components/PlayerCard';
@@ -22,15 +22,22 @@ export default function PlayerProfile() {
     {
       id: '3',
       displayName: 'Daniel Antone',
-      location: 'Location 3',
+      location: 'Location 4',
       hours: 4,
       date: '12-10-2024',
     },
     {
       id: '4',
       displayName: 'Daniel Antone',
-      location: 'Location 3',
-      hours: 5,
+      location: 'Location 5',
+      hours: 2,
+      date: '13-10-2024',
+    },
+    {
+      id: '5',
+      displayName: 'Daniel Antone',
+      location: 'Location 6',
+      hours: 2,
       date: '13-10-2024',
     },
     // Add more items as needed
@@ -67,9 +74,10 @@ export default function PlayerProfile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 171,
+    paddingTop: StatusBar.currentHeight,
   },
   historyContainer: {
+    flex: 1,
     paddingHorizontal: 25,
   },
   historyTextContainer: {
@@ -79,8 +87,6 @@ const styles = StyleSheet.create({
   },
   historyText: {
     fontFamily: 'MontserratBold',
-    fontStyle: 'normal',
-    fontWeight: '700',
     fontSize: 16,
     lineHeight: 20,
   },
