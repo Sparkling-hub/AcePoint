@@ -1,5 +1,3 @@
-import '../tamagui-web.css';
-
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   DarkTheme,
@@ -13,10 +11,11 @@ import { useEffect } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import { TamaguiProvider } from 'tamagui';
-
 import tamaguiConfig from '../tamagui.config';
-import PlayerProfile from '@/screens/PlayerProfile';
-import PlayerAccount from '@/screens/PlayerAccount';
+
+import PlayerProfile from '@/screens/player/PlayerProfile';
+import PlayerAccount from '@/screens/player/PlayerAccount';
+import EditPlayerProfile from '@/screens/player/EditPlayerProfile';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -65,14 +64,17 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <TamaguiProvider config={tamaguiConfig}>
+    <TamaguiProvider
+      config={tamaguiConfig}
+      defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         {/* <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack> */}
         {/* <PlayerProfile /> */}
-        <PlayerAccount />
+        {/* <PlayerAccount /> */}
+        <EditPlayerProfile />
       </ThemeProvider>
     </TamaguiProvider>
   );

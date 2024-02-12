@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { Image, Text, View } from 'tamagui';
+import { Text, View } from 'tamagui';
+import PlayerPfp from './PlayerPfp';
+import Colors from '@/constants/Colors';
 
 interface HistoryBoxProps {
   displayName: string;
@@ -14,12 +16,9 @@ export default function HistoryBox(props: HistoryBoxProps) {
     <View style={styles.container}>
       <View style={styles.box}>
         <View style={styles.playerInfo}>
-          <View style={styles.imageContainer}>
-            <Image
-              source={require('../assets/images/user-pfp.png')}
-              style={styles.image}
-            />
-          </View>
+          <PlayerPfp
+            imageContainerStyle={{ height: 52, width: 52, marginRight: 10 }}
+          />
           <View>
             <Text style={styles.displayNameText}>{displayName}</Text>
             <Text style={styles.text}>{location}</Text>
@@ -55,31 +54,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  imageContainer: {
-    height: 52,
-    width: 52,
-    borderWidth: 2,
-    borderColor: '#A9D05C',
-    borderRadius: 47,
-    marginRight: 10,
-  },
-  image: {
-    height: 48,
-    width: 48,
-    resizeMode: 'contain',
-    borderRadius: 45,
-  },
   displayNameText: {
     fontFamily: 'MontserratBold',
     fontSize: 14,
     lineHeight: 17,
-    color: '#3A4D6C',
+    color: Colors.secondary,
   },
   text: {
     fontFamily: 'Montserrat',
     fontSize: 14,
     lineHeight: 17,
-    color: '#3A4D6C',
+    color: Colors.secondary,
   },
   playerAchievementsContainer: {
     flexDirection: 'row',
@@ -90,14 +75,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#A9D05C',
+    backgroundColor: Colors.primary,
     marginRight: 10,
   },
   numberText: {
     fontFamily: 'MontserratBold',
     fontSize: 14,
     lineHeight: 17,
-    color: '#3A4D6C',
+    color: Colors.secondary,
   },
   line: {
     borderBottomWidth: 1,

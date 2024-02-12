@@ -2,6 +2,7 @@ import { StyleSheet, SafeAreaView, FlatList, StatusBar } from 'react-native';
 import { View, Text } from 'tamagui';
 import HistoryBox from '@/components/HistoryBox';
 import PlayerCard from '@/components/PlayerCard';
+import Colors from '@/constants/Colors';
 
 export default function PlayerProfile() {
   const historyData = [
@@ -47,10 +48,8 @@ export default function PlayerProfile() {
       <PlayerCard displayName="Daniel Antone" hours={25} rating={5.7} />
       <View style={styles.historyContainer}>
         <View style={styles.historyTextContainer}>
-          <Text style={styles.historyText} color={'#A9D05C'}>
-            History
-          </Text>
-          <Text style={styles.historyText} color={'#3A4D6C'}>
+          <Text style={[styles.text, { color: Colors.primary }]}>History</Text>
+          <Text style={[styles.text, { color: Colors.secondary }]}>
             Achievements
           </Text>
         </View>
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  historyText: {
+  text: {
     fontFamily: 'MontserratBold',
     fontSize: 16,
     lineHeight: 20,

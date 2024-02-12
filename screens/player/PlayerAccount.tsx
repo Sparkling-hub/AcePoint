@@ -1,18 +1,16 @@
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
-import { Button, Image, Text, View } from 'tamagui';
-import CustomButton from '@/components/CustomButton';
+import { Text, View } from 'tamagui';
+
 import { ChevronRight } from '@tamagui/lucide-icons';
+import PlayerPfp from '@/components/PlayerPfp';
+import Colors from '@/constants/Colors';
+import CustomButton from '@/components/CustomButton';
 
 export default function PlayerAccount() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.playerDisplayNameContainer}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={require('../assets/images/user-pfp.png')}
-            style={styles.image}
-          />
-        </View>
+        <PlayerPfp imageContainerStyle={{ marginBottom: 20 }} />
         <Text style={styles.displayNameText}>Daniel Antone</Text>
       </View>
       <View style={styles.accountInfoContainer}>
@@ -79,23 +77,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: StatusBar.currentHeight,
   },
-  imageContainer: {
-    width: 94,
-    height: 94,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#EFEFEF',
-    borderWidth: 2,
-    borderColor: '#A9D05C',
-    borderRadius: 47,
-    marginBottom: 20,
-  },
-  image: {
-    width: 90,
-    height: 90,
-    resizeMode: 'contain',
-    borderRadius: 45,
-  },
+
   playerDisplayNameContainer: {
     alignItems: 'center',
     marginTop: 100,
@@ -105,9 +87,10 @@ const styles = StyleSheet.create({
     fontFamily: 'MontserratBold',
     fontSize: 20,
     lineHeight: 24,
-    color: '#3A4D6C',
+    color: Colors.secondary,
     textAlign: 'center',
   },
+
   accountInfoContainer: {
     flexDirection: 'column',
     gap: 20,
@@ -118,7 +101,7 @@ const styles = StyleSheet.create({
     fontFamily: 'MontserratBold',
     fontSize: 16,
     lineHeight: 20,
-    color: '#3A4D6C',
+    color: Colors.secondary,
     paddingLeft: 20,
     marginBottom: 10,
   },
@@ -132,7 +115,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   button: {
-    backgroundColor: '#A9D05C',
+    backgroundColor: Colors.primary,
     height: 52,
     alignItems: 'center',
     flexDirection: 'row',
@@ -145,14 +128,14 @@ const styles = StyleSheet.create({
     fontFamily: 'MontserratMedium',
     fontSize: 16,
     lineHeight: 20,
-    color: '#3A4D6C',
+    color: Colors.secondary,
   },
   logoutButton: {
     alignItems: 'center',
     paddingVertical: 16,
     paddingHorizontal: 32,
     marginVertical: 12,
-    backgroundColor: '#3A4D6C',
+    backgroundColor: Colors.secondary,
     borderRadius: 8,
   },
   logoutButtonText: {

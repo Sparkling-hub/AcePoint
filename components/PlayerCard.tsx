@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Image, Text, View } from 'tamagui';
+import { Text, View } from 'tamagui';
+import PlayerPfp from './PlayerPfp';
+import Colors from '@/constants/Colors';
 
 interface PlayerCardProps {
   displayName: string;
@@ -12,13 +14,14 @@ export default function PlayerCard(props: PlayerCardProps) {
   const { displayName, rating, hours } = props;
   return (
     <View style={styles.container}>
-      <View style={styles.box}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={require('../assets/images/user-pfp.png')}
-            style={styles.image}
-          />
-        </View>
+      <View style={styles.card}>
+        <PlayerPfp
+          imageContainerStyle={{
+            position: 'absolute',
+            top: -47,
+            alignSelf: 'center',
+          }}
+        />
         <View>
           <Text style={styles.displayNameText}>{displayName}</Text>
           <View style={styles.infoContainer}>
@@ -45,37 +48,18 @@ const styles = StyleSheet.create({
     marginTop: 150,
     marginBottom: 35,
   },
-  box: {
+  card: {
     width: 362,
     height: 162,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: Colors.lightSilver,
     borderRadius: 8,
     justifyContent: 'center',
-  },
-  imageContainer: {
-    position: 'absolute',
-    top: -47,
-    alignSelf: 'center',
-    width: 94,
-    height: 94,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#EFEFEF',
-    borderWidth: 2,
-    borderColor: '#A9D05C',
-    borderRadius: 47,
-  },
-  image: {
-    width: 90,
-    height: 90,
-    resizeMode: 'contain',
-    borderRadius: 45,
   },
   displayNameText: {
     fontFamily: 'MontserratBold',
     fontSize: 20,
     lineHeight: 24,
-    color: '#3A4D6C',
+    color: Colors.secondary,
     textAlign: 'center',
     marginTop: 50,
   },
@@ -88,13 +72,13 @@ const styles = StyleSheet.create({
     fontFamily: 'MontserratExtraBold',
     fontSize: 14,
     lineHeight: 17,
-    color: '#3A4D6C',
+    color: Colors.secondary,
     marginBottom: 5,
   },
   text: {
     fontFamily: 'Montserrat',
     fontSize: 14,
     lineHeight: 17,
-    color: '#3A4D6C',
+    color: Colors.secondary,
   },
 });

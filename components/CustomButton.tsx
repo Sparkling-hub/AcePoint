@@ -10,7 +10,7 @@ interface CustomButtonProps {
   icon?: ReactNode;
 }
 
-export default function index(props: CustomButtonProps) {
+export default function CustomButton(props: CustomButtonProps) {
   const { title, onPress, buttonStyle, textStyle, icon } = props;
 
   return (
