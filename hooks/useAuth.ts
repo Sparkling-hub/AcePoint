@@ -13,10 +13,11 @@ export const useAuthIos = () => {
 }
 
 export const useAuthAndroid = async () => {
+
+    GoogleSignin.configure({
+        webClientId: '739771999940-ail5uc7s8j2p84sbddmvojrui3k1c8fl.apps.googleusercontent.com',
+    });
     try {
-        GoogleSignin.configure({
-            webClientId: '739771999940-ail5uc7s8j2p84sbddmvojrui3k1c8fl.apps.googleusercontent.com',
-        });
         await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
         const { idToken, user } = await GoogleSignin.signIn();
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
