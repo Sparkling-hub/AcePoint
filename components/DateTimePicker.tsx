@@ -4,7 +4,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker"; // https:/
 import { XStack, Input, } from 'tamagui'
 import { Calendar, Clock } from '@tamagui/lucide-icons'
 
-interface datePickerProps {
+interface DatePickerProps {
     date?: Date;
     type: "date" | "time";
     confirmText?: string
@@ -16,7 +16,7 @@ interface datePickerProps {
     onConfirm?: (date: Date) => void;
 }
 
-const DateTimePicker = function DatePicker(props: datePickerProps) {
+const DateTimePicker = function DatePicker(props: DatePickerProps) {
     const [show, setShow] = useState(false);
     const [date, setDate] = useState(props.date);
 
@@ -70,7 +70,6 @@ const DateTimePicker = function DatePicker(props: datePickerProps) {
                 date={date}
                 isVisible={show}
                 mode={type}
-                // display="inline"
                 accentColor={props.accentColor}
                 textColor={props.textColor}
                 buttonTextColorIOS={props.buttonTextColorIOS}

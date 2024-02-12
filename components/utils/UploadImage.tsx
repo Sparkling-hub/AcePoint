@@ -1,4 +1,4 @@
-import { Button, Image, StyleSheet, View } from 'react-native'
+import { Button, Image, StyleSheet } from 'react-native'
 import * as ImagePicker from "expo-image-picker";
 import { useUploadImage } from '@/hooks/useUploadImage';
 const UploadImage = ({getFromChild}: { getFromChild: any  }) => {
@@ -12,7 +12,6 @@ const UploadImage = ({getFromChild}: { getFromChild: any  }) => {
         });
         if (!result.canceled) {
             console.log("test==>",result.assets[0].uri)
-            // upload the image
             await uploadImage(result.assets[0].uri)
           }
         }

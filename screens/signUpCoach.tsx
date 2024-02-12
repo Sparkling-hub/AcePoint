@@ -15,12 +15,11 @@ const SignUpCoach = () => {
     const [age, setAge] = useState<Date>(new Date());
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
     const onChange = (event: DateTimePickerEvent,selectedDate?: Date) => {
-        const currentDate = selectedDate || age;
+        const currentDate = selectedDate ?? age;
         setAge(currentDate);
         setShowDatePicker(false);
     };
     const handleDataFromChild = (data:string) => {
-        //console.log("coach image======",data)
         setImage(data);
     };
     const showDatepicker = () => {

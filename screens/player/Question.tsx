@@ -1,7 +1,7 @@
 import { SafeAreaView, StyleSheet } from 'react-native'
 import React, {useState } from 'react'
 import { Heading,RadioGroup,Stack,Text, View, YStack } from 'tamagui'
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import { heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import DateTimePicker from '@/components/DateTimePicker'
 import { RadioGroupItemWithLabel } from '@/components/RadioGroupItemWithLabel'
 import Button from '@/components/Button'
@@ -13,7 +13,7 @@ const Question = () => {
     const [gender, setGender] = useState('Male');
 
     const onChange = (selectedDate?: Date) => {
-        const currentDate = selectedDate || age;
+        const currentDate = selectedDate ?? age;
         setAge(currentDate);
     };
     const updatePlayer=()=>{
