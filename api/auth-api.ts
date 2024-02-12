@@ -1,4 +1,4 @@
-import {auth,updateDoc ,createUserWithEmailAndPassword,setDoc,db,doc,signOut} from'@/lib/firebase'
+import {auth,updateDoc ,createUserWithEmailAndPassword,setDoc,db,doc,signOut, signInWithEmailAndPassword} from'@/lib/firebase'
 import { Timestamp, collection } from "firebase/firestore";
 import { Coach } from '@/model/coach';
 import { Player } from '@/model/player';
@@ -70,5 +70,15 @@ const updateUserPlayer = async (playerData: Player) => {
   }
 };
 
-
-export { signUpCoach ,signUpPlayer,updateUserPlayer}
+const loginUser = async ({ email, password }:{email:string,password:string}) => {
+  try {
+    const user = await signInWithEmailAndPassword(auth,email, password)
+    console.log(user)
+    return { user }
+  } catch (error) {
+    return {
+       error
+    }
+  }
+}
+export { signUpCoach ,signUpPlayer,updateUserPlayer,loginUser}
