@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -13,7 +14,7 @@ const firebaseConfig = {
 
 // Initialize Firebase Admin with service account credentials
 const app = initializeApp(firebaseConfig)
-
+const firebaseAuth = getAuth(app)
 const db = getFirestore(app);
 
-export { app, db, getFirestore, collection, addDoc, getDocs };
+export { app, db, getFirestore, collection, addDoc, getDocs, firebaseAuth };
