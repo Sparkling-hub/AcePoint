@@ -1,11 +1,7 @@
-import { Alert, Button, Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-import { useAuthIos } from '@/services/auth';
 import { Text, View } from '@/components/Themed';
 import 'react-native-gesture-handler';
-import { useEffect } from 'react';
-import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
-import { firebaseAuth } from '@/lib/firebase';
 import GoogleAuthAndroid from '@/components/GoogleAuthAndroid';
 import GoogleAuthIOS from '@/components/GoogleAuthIOS';
 
@@ -18,7 +14,7 @@ export default function TabOneScreen() {
       <GoogleAuthIOS></GoogleAuthIOS>
     </View>
   }
-  else {
+  else if (Platform.OS === 'android') {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Tab One</Text>
