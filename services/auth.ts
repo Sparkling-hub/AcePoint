@@ -1,9 +1,7 @@
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useAuthRequest } from "expo-auth-session/build/providers/Google";
 import auth from '@react-native-firebase/auth';
-import { Alert, Platform } from "react-native";
-import { firebaseAuth, } from "@/lib/firebase";
-import { signInWithCredential } from "firebase/auth";
+import { Alert } from "react-native";
 
 export const useAuthIos = () => {
     const [request, response, promptAsync] = useAuthRequest({
@@ -12,7 +10,7 @@ export const useAuthIos = () => {
     return { request, response, promptAsync };
 }
 
-export const useAuthAndroid = async () => {
+export const authAndroid = async () => {
 
     GoogleSignin.configure({
         webClientId: '739771999940-ail5uc7s8j2p84sbddmvojrui3k1c8fl.apps.googleusercontent.com',
