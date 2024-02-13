@@ -9,10 +9,12 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function TabOneScreen() {
   if (Platform.OS === 'ios') {
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <GoogleAuthIOS></GoogleAuthIOS>
-    </View>
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Tab One</Text>
+        <GoogleAuthIOS></GoogleAuthIOS>
+      </View>
+    )
   }
   else if (Platform.OS === 'android') {
     return (
