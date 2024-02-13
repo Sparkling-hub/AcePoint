@@ -1,5 +1,5 @@
 import { StyleSheet, SafeAreaView, FlatList, StatusBar } from 'react-native';
-import { View, Text } from 'tamagui';
+import { View, Text, YStack, XStack } from 'tamagui';
 import HistoryBox from '@/components/HistoryBox';
 import PlayerCard from '@/components/PlayerCard';
 import Colors from '@/constants/Colors';
@@ -44,15 +44,17 @@ export default function PlayerProfile() {
     // Add more items as needed
   ];
   return (
-    <SafeAreaView style={styles.container}>
+    <YStack flex={1} paddingTop={100}>
       <PlayerCard displayName="Daniel Antone" hours={25} rating={5.7} />
-      <View style={styles.historyContainer}>
-        <View style={styles.historyTextContainer}>
-          <Text style={[styles.text, { color: Colors.primary }]}>History</Text>
-          <Text style={[styles.text, { color: Colors.secondary }]}>
+      <YStack flex={1} paddingHorizontal={25}>
+        <XStack justifyContent="space-between" alignItems="center">
+          <Text style={styles.text} color={Colors.primary}>
+            History
+          </Text>
+          <Text style={styles.text} color={Colors.secondary}>
             Achievements
           </Text>
-        </View>
+        </XStack>
         <FlatList
           data={historyData}
           keyExtractor={(item) => item.id}
@@ -65,25 +67,12 @@ export default function PlayerProfile() {
             />
           )}
         />
-      </View>
-    </SafeAreaView>
+      </YStack>
+    </YStack>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-  },
-  historyContainer: {
-    flex: 1,
-    paddingHorizontal: 25,
-  },
-  historyTextContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
   text: {
     fontFamily: 'MontserratBold',
     fontSize: 16,

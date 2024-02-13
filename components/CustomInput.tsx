@@ -6,7 +6,7 @@ import {
   TextInputProps,
   TouchableOpacity,
 } from 'react-native';
-import { Text, View } from 'tamagui';
+import { Text, XStack, YStack } from 'tamagui';
 
 interface CustomInputProps extends TextInputProps {
   onPress?: () => void;
@@ -30,14 +30,22 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
 
   return (
     <TouchableOpacity onPress={handleContainerPress} activeOpacity={0.5}>
-      <View style={styles.inputContainer}>
-        <View
-          alignItems="center"
-          justifyContent="space-between"
-          flexDirection="row">
-          <View>
+      <YStack
+        height={70}
+        backgroundColor={'#DADADA'}
+        borderRadius={8}
+        paddingVertical={16}
+        paddingHorizontal={32}
+        justifyContent="center"
+        alignItems="center">
+        <XStack alignItems="center" justifyContent="space-between">
+          <YStack>
             {placeholder && (
-              <Text style={styles.placeholder} fontSize={14} lineHeight={17}>
+              <Text
+                style={{ fontFamily: 'MontserratMedium' }}
+                color={Colors.secondary}
+                fontSize={14}
+                lineHeight={17}>
                 {placeholder}
               </Text>
             )}
@@ -47,28 +55,15 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
               editable={!readOnly}
               {...rest}
             />
-          </View>
+          </YStack>
           {icon && icon}
-        </View>
-      </View>
+        </XStack>
+      </YStack>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    height: 70,
-    backgroundColor: '#DADADA',
-    borderRadius: 8,
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeholder: {
-    fontFamily: 'MontserratMedium',
-    color: Colors.secondary,
-  },
   textInput: {
     fontFamily: 'MontserratMedium',
     color: Colors.secondary,

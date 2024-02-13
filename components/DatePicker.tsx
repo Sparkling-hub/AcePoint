@@ -3,6 +3,8 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import { CalendarDays } from '@tamagui/lucide-icons';
 import CustomInput from './CustomInput';
+import { YStack } from 'tamagui';
+import Colors from '@/constants/Colors';
 
 interface DatePickerProps {
   date: Date;
@@ -27,13 +29,13 @@ const DatePicker = function DatePicker(props: DatePickerProps) {
   };
 
   return (
-    <>
+    <YStack>
       <CustomInput
         value={date?.toLocaleDateString()}
         placeholder="Date of birth"
         readOnly
         onPress={showDatePicker}
-        icon={<CalendarDays color={'#3A4D6C'} />}
+        icon={<CalendarDays color={Colors.secondary} />}
       />
 
       <DateTimePickerModal
@@ -42,7 +44,7 @@ const DatePicker = function DatePicker(props: DatePickerProps) {
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
-    </>
+    </YStack>
   );
 };
 

@@ -3,7 +3,7 @@ import { option } from '@/types/options';
 import { Check } from '@tamagui/lucide-icons';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
-import { Text, View } from 'tamagui';
+import { Text, XStack } from 'tamagui';
 
 interface DropDownItemProps {
   handleItemClick: (item: string) => void;
@@ -23,23 +23,22 @@ export default function DropDownItem(props: DropDownItemProps) {
         width: '100%',
         paddingHorizontal: 20,
       }}>
-      <View
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between">
+      <XStack alignItems="center" justifyContent="space-between">
         <Text
+          fontSize={14}
+          lineHeight={20}
+          marginRight={10}
+          textTransform="capitalize"
           style={{
             fontFamily: 'MontserratMedium',
             color: Colors.secondary,
-            fontSize: 14,
-            lineHeight: 20,
-            marginRight: 10,
-            textTransform: 'capitalize',
           }}>
           {item.label}
         </Text>
-        {selectedItem === item.value && <Check color={'#3A4D6C'} size={'$1'} />}
-      </View>
+        {selectedItem === item.value && (
+          <Check color={Colors.secondary} size={'$1'} />
+        )}
+      </XStack>
     </TouchableOpacity>
   );
 }

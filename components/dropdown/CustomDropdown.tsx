@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View } from 'tamagui';
+import { View, YStack } from 'tamagui';
 import CustomInput from '../CustomInput';
 import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 
 import DropDownItem from './DropDownItem';
 import { FlatList } from 'react-native';
 import { option } from '@/types/options';
+import Colors from '@/constants/Colors';
 
 interface CustomDropDownProps {
   options: option[];
@@ -22,7 +23,7 @@ export default function CustomDropdown(props: CustomDropDownProps) {
   };
 
   return (
-    <View>
+    <YStack>
       <CustomInput
         placeholder="Gender"
         value={selectedItem}
@@ -30,16 +31,16 @@ export default function CustomDropdown(props: CustomDropDownProps) {
         readOnly
         icon={
           clicked ? (
-            <ChevronUp color={'#3A4D6C'} />
+            <ChevronUp color={Colors.secondary} />
           ) : (
-            <ChevronDown color={'#3A4D6C'} />
+            <ChevronDown color={Colors.secondary} />
           )
         }
         onPress={() => setClicked(!clicked)}
       />
-      <View>
+      <YStack>
         {clicked && (
-          <View
+          <YStack
             position="absolute"
             marginTop={8}
             elevationAndroid={4}
@@ -61,9 +62,9 @@ export default function CustomDropdown(props: CustomDropDownProps) {
                 />
               )}
             />
-          </View>
+          </YStack>
         )}
-      </View>
-    </View>
+      </YStack>
+    </YStack>
   );
 }

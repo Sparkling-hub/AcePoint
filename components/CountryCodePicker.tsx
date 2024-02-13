@@ -4,6 +4,8 @@ import { CountryPicker } from 'react-native-country-codes-picker';
 
 import CustomInput from './CustomInput';
 import { ChevronDown } from '@tamagui/lucide-icons';
+import Colors from '@/constants/Colors';
+import { YStack } from 'tamagui';
 
 interface CountryCodePickerProps {
   countryCode: string;
@@ -19,12 +21,12 @@ export default function CountryCodePicker(props: CountryCodePickerProps) {
   };
 
   return (
-    <>
+    <YStack>
       <CustomInput
         onPress={showCountryPicker}
         readOnly
         value={countryCode}
-        icon={<ChevronDown color={'#3A4D6C'} />}
+        icon={<ChevronDown color={Colors.secondary} />}
       />
       <CountryPicker
         show={show}
@@ -36,6 +38,6 @@ export default function CountryCodePicker(props: CountryCodePickerProps) {
         style={{ modal: { height: 500 } }}
         disableBackdrop={true}
       />
-    </>
+    </YStack>
   );
 }

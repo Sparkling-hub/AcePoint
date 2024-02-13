@@ -1,5 +1,5 @@
-import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
-import { Text, View } from 'tamagui';
+import { StyleSheet } from 'react-native';
+import { Text, View, YStack } from 'tamagui';
 
 import { ChevronRight } from '@tamagui/lucide-icons';
 import PlayerPfp from '@/components/PlayerPfp';
@@ -8,57 +8,64 @@ import CustomButton from '@/components/CustomButton';
 
 export default function PlayerAccount() {
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.playerDisplayNameContainer}>
+    <YStack paddingTop={100} flex={1}>
+      <YStack alignItems="center" marginBottom={30}>
         <PlayerPfp imageContainerStyle={{ marginBottom: 20 }} />
-        <Text style={styles.displayNameText}>Daniel Antone</Text>
-      </View>
-      <View style={styles.accountInfoContainer}>
-        <View>
+        <Text
+          style={{ fontFamily: 'MontserratBold' }}
+          fontSize={20}
+          lineHeight={24}
+          color={Colors.secondary}
+          textAlign="center">
+          Daniel Antone
+        </Text>
+      </YStack>
+      <YStack gap={20} paddingHorizontal={15} marginBottom={40}>
+        <YStack>
           <Text style={styles.text}>Your Account</Text>
-          <View style={styles.box}>
+          <YStack gap={15}>
             <CustomButton
               title="Edit profile"
               onPress={() => {}}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
-              icon={<ChevronRight size="$2" color={'#3A4D6C'} />}
+              icon={<ChevronRight size="$2" color={Colors.secondary} />}
             />
             <CustomButton
               title="Settings"
               onPress={() => {}}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
-              icon={<ChevronRight size="$2" color={'#3A4D6C'} />}
+              icon={<ChevronRight size="$2" color={Colors.secondary} />}
             />
-          </View>
-        </View>
-        <View>
+          </YStack>
+        </YStack>
+        <YStack>
           <Text style={styles.text}>Support</Text>
-          <View style={styles.box}>
+          <YStack>
             <CustomButton
               title="Help"
               onPress={() => {}}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
-              icon={<ChevronRight size="$2" color={'#3A4D6C'} />}
+              icon={<ChevronRight size="$2" color={Colors.secondary} />}
             />
-          </View>
-        </View>
-        <View>
+          </YStack>
+        </YStack>
+        <YStack>
           <Text style={styles.text}>Legal</Text>
-          <View style={styles.box}>
+          <YStack>
             <CustomButton
               title="Privacy"
               onPress={() => {}}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
-              icon={<ChevronRight size="$2" color={'#3A4D6C'} />}
+              icon={<ChevronRight size="$2" color={Colors.secondary} />}
             />
-          </View>
-        </View>
-      </View>
-      <View style={styles.logoutContainer}>
+          </YStack>
+        </YStack>
+      </YStack>
+      <YStack alignItems="center" marginBottom={20} paddingHorizontal={15}>
         <CustomButton
           title="Logout"
           onPress={() => {
@@ -67,22 +74,12 @@ export default function PlayerAccount() {
           buttonStyle={styles.logoutButton}
           textStyle={styles.logoutButtonText}
         />
-      </View>
-    </SafeAreaView>
+      </YStack>
+    </YStack>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-  },
-
-  playerDisplayNameContainer: {
-    alignItems: 'center',
-    marginTop: 100,
-    marginBottom: 30,
-  },
   displayNameText: {
     fontFamily: 'MontserratBold',
     fontSize: 20,
@@ -91,12 +88,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  accountInfoContainer: {
-    flexDirection: 'column',
-    gap: 20,
-    paddingHorizontal: 15,
-    marginBottom: 40,
-  },
   text: {
     fontFamily: 'MontserratBold',
     fontSize: 16,
@@ -105,15 +96,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     marginBottom: 10,
   },
-  box: {
-    flexDirection: 'column',
-    gap: 15,
-  },
-  logoutContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-    paddingHorizontal: 15,
-  },
+
   button: {
     backgroundColor: Colors.primary,
     height: 52,

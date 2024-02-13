@@ -1,6 +1,6 @@
 import PlayerPfp from '@/components/PlayerPfp';
 import Colors from '@/constants/Colors';
-import { StyleSheet } from 'react-native';
+
 import { Text, XStack, YStack } from 'tamagui';
 
 import DatePicker from '@/components/DatePicker';
@@ -22,7 +22,11 @@ export default function EditPlayerProfile() {
       <YStack marginBottom={30}>
         <YStack alignItems="center">
           <PlayerPfp imageContainerStyle={{ marginBottom: 20 }} />
-          <Text style={styles.changeProfilePictureText}>
+          <Text
+            style={{ fontFamily: 'Montserrat' }}
+            fontSize={20}
+            lineHeight={24}
+            color={Colors.secondary}>
             Change profile picture
           </Text>
         </YStack>
@@ -51,12 +55,3 @@ export default function EditPlayerProfile() {
     </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  changeProfilePictureText: {
-    fontFamily: 'Montserrat',
-    fontSize: 20,
-    lineHeight: 24,
-    color: Colors.secondary,
-  },
-});
