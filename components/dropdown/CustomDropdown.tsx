@@ -10,12 +10,13 @@ import Colors from '@/constants/Colors';
 
 interface CustomDropDownProps {
   options: option[];
+  selectedItem: string;
+  setSelectedItem: (item: string) => void;
 }
 
 export default function CustomDropdown(props: CustomDropDownProps) {
-  const { options } = props;
+  const { options, selectedItem, setSelectedItem } = props;
   const [clicked, setClicked] = useState(false);
-  const [selectedItem, setSelectedItem] = useState('');
 
   const handleItemClick = (item: string) => {
     setSelectedItem(item);
@@ -47,7 +48,7 @@ export default function CustomDropdown(props: CustomDropDownProps) {
             zIndex={1}
             backgroundColor={'white'}
             borderRadius={8}
-            paddingVertical={14}
+            paddingVertical={10}
             paddingHorizontal={16}
             minWidth={'100%'}>
             <FlatList

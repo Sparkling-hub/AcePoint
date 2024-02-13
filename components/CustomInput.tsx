@@ -1,14 +1,9 @@
 import Colors from '@/constants/Colors';
 import React, { useRef } from 'react';
-import {
-  TextInput,
-  StyleSheet,
-  TextInputProps,
-  TouchableOpacity,
-} from 'react-native';
-import { Text, XStack, YStack } from 'tamagui';
+import { TouchableOpacity } from 'react-native';
+import { Input, InputProps, Text, XStack, YStack } from 'tamagui';
 
-interface CustomInputProps extends TextInputProps {
+interface CustomInputProps extends InputProps {
   onPress?: () => void;
   icon?: React.ReactNode;
   readOnly?: boolean;
@@ -17,7 +12,7 @@ interface CustomInputProps extends TextInputProps {
 
 const CustomInput: React.FC<CustomInputProps> = (props) => {
   const { placeholder, onPress, inputStyle, readOnly, icon, ...rest } = props;
-  const textInputRef = useRef<TextInput>(null);
+  const textInputRef = useRef<Input>(null);
 
   const handleContainerPress = () => {
     if (onPress) {
@@ -49,10 +44,15 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
                 {placeholder}
               </Text>
             )}
-            <TextInput
+            <Input
               ref={textInputRef}
-              style={[styles.textInput, inputStyle]}
+              color={Colors.secondary}
+              fontSize={16}
+              lineHeight={20}
+              minWidth={'100%'}
+              style={[{ fontFamily: 'MontserratMedium' }, inputStyle]}
               editable={!readOnly}
+              unstyled
               {...rest}
             />
           </YStack>
@@ -62,15 +62,5 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  textInput: {
-    fontFamily: 'MontserratMedium',
-    color: Colors.secondary,
-    fontSize: 16,
-    lineHeight: 20,
-    minWidth: '100%',
-  },
-});
 
 export default CustomInput;

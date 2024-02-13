@@ -71,8 +71,6 @@ export default function PlayerAccount() {
           onPress={() => {
             console.log('pressed');
           }}
-          buttonStyle={styles.logoutButton}
-          textStyle={styles.logoutButtonText}
         />
       </YStack>
     </YStack>
@@ -112,20 +110,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     color: Colors.secondary,
-  },
-  logoutButton: {
-    alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    marginVertical: 12,
-    backgroundColor: Colors.secondary,
-    borderRadius: 8,
-  },
-  logoutButtonText: {
-    fontFamily: 'MontserratBold',
-    fontSize: 16,
-    lineHeight: 20,
-    textAlign: 'center',
-    color: '#FFFFFF',
   },
 });
