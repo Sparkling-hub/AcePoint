@@ -1,3 +1,4 @@
+import '../tamagui-web.css';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   DarkTheme,
@@ -8,7 +9,6 @@ import { useFonts } from 'expo-font';
 import { Stack, useNavigation } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-
 import { useColorScheme } from '@/components/useColorScheme';
 import { TamaguiProvider } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
@@ -20,6 +20,7 @@ import EditPlayerProfile from '@/screens/player/EditPlayerProfile';
 import { TouchableOpacity } from 'react-native';
 import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
+import SignUpPlayer from '@/screens/SignUpPlayer';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -73,6 +74,7 @@ function RootLayoutNav() {
       config={tamaguiConfig}
       defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <SignUpPlayer />
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
