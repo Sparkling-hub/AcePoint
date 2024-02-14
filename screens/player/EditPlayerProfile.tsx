@@ -64,9 +64,9 @@ export default function EditPlayerProfile() {
       </YStack>
       <Formik
         initialValues={{
-          name: '',
-          email: '',
-          phone: '',
+          name: 'Lian Arthofer',
+          email: 'email@email.com',
+          phone: '75755575',
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}>
