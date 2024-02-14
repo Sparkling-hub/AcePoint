@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import findUserByEmail from '@/services/user';
 
 export default function GoogleAuthIOS() {
     const { response, promptAsync } = useAuthIos()
@@ -18,8 +19,8 @@ export default function GoogleAuthIOS() {
                     await ReactNativeAsyncStorage.setItem('username', result.user.displayName)
                     await ReactNativeAsyncStorage.setItem('email', result.user.email)
                     await ReactNativeAsyncStorage.setItem('image', result.user.photoURL)
+                    findUserByEmail(result.user.email, result.user.displayName, result.user.photoURL);
                 }
-                Alert.alert("Success", "You logged in successfully !")
             } catch (error) {
                 Alert.alert("Error : ", "Something went wrong !");
                 console.log("ERROR : " + error);
