@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { Text, View, YStack } from 'tamagui';
 
 import { ChevronRight } from '@tamagui/lucide-icons';
@@ -20,7 +20,7 @@ export default function PlayerAccount() {
     getUserName()
   }, [])
   return (
-    <YStack flex={1}>
+    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 30}>
       <YStack alignItems="center" marginBottom={30}>
         <PlayerPfp imageContainerStyle={{ marginBottom: 20 }} />
         <Text

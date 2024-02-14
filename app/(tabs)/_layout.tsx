@@ -19,12 +19,10 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          height: 60,
           borderTopWidth: 0,
           shadowColor: 'transparent',
           shadowOpacity: 0,
           elevation: 0,
-          paddingBottom: 5,
         },
       }}>
       <Tabs.Screen
@@ -75,7 +73,7 @@ export default function TabLayout() {
           headerTitle: '',
           headerRight: () => (
             <Link href="/player/info" asChild>
-              <Pressable style={{ paddingTop: 30 }}>
+              <Pressable>
                 {({ pressed }) => (
                   <AlignJustify
                     size={'$2'}

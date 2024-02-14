@@ -26,7 +26,7 @@ export default function CustomButton(props: CustomButtonProps) {
         isPressed && styles.buttonPressed,
       ]}>
       <Text style={textStyle ? textStyle : styles.buttonText}>{title}</Text>
-      {icon && icon}
+      {icon}
     </Button>
   );
 }

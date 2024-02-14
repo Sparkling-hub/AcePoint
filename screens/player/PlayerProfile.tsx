@@ -1,4 +1,10 @@
-import { StyleSheet, SafeAreaView, FlatList, StatusBar } from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  FlatList,
+  StatusBar,
+  Platform,
+} from 'react-native';
 import { View, Text, YStack, XStack } from 'tamagui';
 import HistoryBox from '@/components/HistoryBox';
 import PlayerCard from '@/components/PlayerCard';
@@ -38,14 +44,36 @@ export default function PlayerProfile() {
     // Add more items as needed
   ];
   return (
-    <YStack flex={1} paddingTop={30}>
-      <PlayerCard displayName="Daniel Antone" hours={25} rating={5.7} />
+    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 70}>
+      <PlayerCard>
+        <Text
+          style={{ fontFamily: 'MontserratBold' }}
+          color={Colors.secondary}
+          fontSize={20}
+          lineHeight={24}
+          textAlign="center"
+          marginTop={50}>
+          Daniel Antone
+        </Text>
+        <XStack justifyContent="space-around" paddingTop={20}>
+          <YStack>
+            <Text style={styles.numberText}>5.7</Text>
+            <Text style={styles.text}>Rating</Text>
+          </YStack>
+          <YStack>
+            <Text style={styles.numberText}>
+              25 <Text style={styles.text}>hours</Text>
+            </Text>
+            <Text style={styles.text}>Time on court</Text>
+          </YStack>
+        </XStack>
+      </PlayerCard>
       <YStack flex={1} paddingHorizontal={25}>
         <XStack justifyContent="space-between" alignItems="center">
-          <Text style={styles.text} color={Colors.primary}>
+          <Text style={styles.sectionText} color={Colors.primary}>
             History
           </Text>
-          <Text style={styles.text} color={Colors.secondary}>
+          <Text style={styles.sectionText} color={Colors.secondary}>
             Achievements
           </Text>
         </XStack>
@@ -68,8 +96,21 @@ export default function PlayerProfile() {
 
 const styles = StyleSheet.create({
   text: {
+    fontFamily: 'Montserrat',
+    fontSize: 14,
+    lineHeight: 17,
+    color: Colors.secondary,
+  },
+  sectionText: {
     fontFamily: 'MontserratBold',
     fontSize: 16,
     lineHeight: 20,
+  },
+  numberText: {
+    fontFamily: 'MontserratExtraBold',
+    fontSize: 14,
+    lineHeight: 17,
+    color: Colors.secondary,
+    marginBottom: 5,
   },
 });

@@ -56,7 +56,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
               {...rest}
             />
           </YStack>
-          {icon && icon}
+          {icon}
         </XStack>
       </YStack>
     </TouchableOpacity>

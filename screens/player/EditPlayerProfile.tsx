@@ -10,7 +10,7 @@ import CountryCodePicker from '@/components/CountryCodePicker';
 import CustomDropdown from '@/components/dropdown/CustomDropdown';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { Info } from '@tamagui/lucide-icons';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { auth } from '@/lib/firebase';
@@ -69,7 +69,7 @@ export default function EditPlayerProfile() {
   };
 
   return (
-    <YStack flex={1}>
+    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 30}>
       <YStack marginBottom={30}>
         <YStack alignItems="center">
           <PlayerPfp imageContainerStyle={{ marginBottom: 20 }} />
@@ -84,9 +84,9 @@ export default function EditPlayerProfile() {
       </YStack>
       <Formik
         initialValues={{
-          name: '',
-          email: '',
-          phone: '',
+          name: 'Lian Arthofer',
+          email: 'email@email.com',
+          phone: '75755575',
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}>

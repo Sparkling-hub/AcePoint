@@ -10,7 +10,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
-import { TamaguiProvider } from 'tamagui';
+import { TamaguiProvider, Text } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
 
 import PlayerProfile from '@/screens/player/PlayerProfile';
@@ -80,9 +80,7 @@ function RootLayoutNav() {
             options={{
               headerShadowVisible: false,
               headerLeft: () => (
-                <TouchableOpacity
-                  onPress={() => navigation.goBack()}
-                  style={{ paddingTop: 30 }}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
                   <X size={'$2.5'} color={Colors.secondary} />
                 </TouchableOpacity>
               ),
@@ -94,10 +92,24 @@ function RootLayoutNav() {
             options={{
               headerShadowVisible: false,
               headerLeft: () => (
-                <TouchableOpacity
-                  onPress={() => navigation.goBack()}
-                  style={{ paddingTop: 30 }}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
                   <ChevronLeft size={'$2.5'} color={Colors.secondary} />
+                </TouchableOpacity>
+              ),
+
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log('pressed');
+                  }}>
+                  <Text
+                    style={{ fontFamily: 'MontserratBold' }}
+                    fontSize={18}
+                    lineHeight={22}
+                    textTransform="uppercase"
+                    color={Colors.secondary}>
+                    Save
+                  </Text>
                 </TouchableOpacity>
               ),
               headerTitle: '',

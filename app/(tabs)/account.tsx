@@ -1,4 +1,4 @@
-import { StatusBar, SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import React from 'react';
 import PlayerProfile from '@/screens/player/PlayerProfile';
 
@@ -14,6 +14,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: StatusBar.currentHeight,
   },
 });
