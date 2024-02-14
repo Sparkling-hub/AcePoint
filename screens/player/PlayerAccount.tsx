@@ -6,8 +6,19 @@ import PlayerPfp from '@/components/PlayerPfp';
 import Colors from '@/constants/Colors';
 import CustomButton from '@/components/CustomButton';
 import { router } from 'expo-router';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 
 export default function PlayerAccount() {
+  const [username, setUsername] = useState('')
+  const getUserName = async () => {
+    const name = await ReactNativeAsyncStorage.getItem('username')
+    if (name)
+      return setUsername(name)
+  }
+  useEffect(() => {
+    getUserName()
+  }, [])
   return (
     <YStack flex={1}>
       <YStack alignItems="center" marginBottom={30}>
@@ -18,7 +29,7 @@ export default function PlayerAccount() {
           lineHeight={24}
           color={Colors.secondary}
           textAlign="center">
-          Daniel Antone
+          {username}
         </Text>
       </YStack>
       <YStack gap={20} paddingHorizontal={15} marginBottom={40}>
@@ -38,7 +49,7 @@ export default function PlayerAccount() {
             />
             <CustomButton
               title="Settings"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -50,7 +61,7 @@ export default function PlayerAccount() {
           <YStack>
             <CustomButton
               title="Help"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -62,7 +73,7 @@ export default function PlayerAccount() {
           <YStack>
             <CustomButton
               title="Privacy"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}

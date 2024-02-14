@@ -20,10 +20,11 @@ export const authAndroid = async () => {
         await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
         const { idToken, user } = await GoogleSignin.signIn();
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-        const { displayName, email } = (await auth().signInWithCredential(googleCredential)).user
-        if (displayName && email) {
+        const { displayName, email, photoURL } = (await auth().signInWithCredential(googleCredential)).user
+        if (displayName && email && photoURL) {
             await ReactNativeAsyncStorage.setItem('username', displayName)
             await ReactNativeAsyncStorage.setItem('email', email)
+            await ReactNativeAsyncStorage.setItem('image', photoURL)
         }
         return Alert.alert("Logged in successfully :", `Welcome back ${user.name}`);
     } catch (error) {
