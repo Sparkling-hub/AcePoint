@@ -16,6 +16,7 @@ import { Info } from '@tamagui/lucide-icons';
 const options = [
   { label: 'Male', value: 'male' },
   { label: 'Female', value: 'female' },
+  { label: 'Other', value: 'other' },
 ];
 
 export default function EditPlayerProfile() {
@@ -48,7 +49,7 @@ export default function EditPlayerProfile() {
   };
 
   return (
-    <YStack flex={1} paddingTop={100}>
+    <YStack flex={1}>
       <YStack marginBottom={30}>
         <YStack alignItems="center">
           <PlayerPfp imageContainerStyle={{ marginBottom: 20 }} />

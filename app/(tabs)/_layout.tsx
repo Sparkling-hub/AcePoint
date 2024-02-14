@@ -1,59 +1,102 @@
 import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
 import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import Home from '@/components/svg/Home';
+import Stats from '@/components/svg/Stats';
+import Check from '@/components/svg/Check';
+import Account from '@/components/svg/Account';
+import { Text } from 'tamagui';
+import { StyleSheet } from 'react-native';
+import { AlignJustify } from '@tamagui/lucide-icons';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
+        tabBarStyle: {
+          height: 60,
+          borderTopWidth: 0,
+          shadowColor: 'transparent',
+          shadowOpacity: 0,
+          elevation: 0,
+          paddingBottom: 5,
+        },
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Home',
+          tabBarIcon: ({ focused }) => (
+            <Home fill={focused ? Colors.secondary : Colors.primary} />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={styles.tabBarLabelStyle}
+              color={focused ? Colors.secondary : Colors.primary}>
+              Home
+            </Text>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="book"
+        options={{
+          title: 'Find and Book',
+          tabBarIcon: ({ focused }) => (
+            <Check fill={focused ? Colors.secondary : Colors.primary} />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={styles.tabBarLabelStyle}
+              color={focused ? Colors.secondary : Colors.primary}>
+              Find and Book
+            </Text>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="account"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Account fill={focused ? Colors.secondary : Colors.primary} />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={styles.tabBarLabelStyle}
+              color={focused ? Colors.secondary : Colors.primary}>
+              Account
+            </Text>
+          ),
+          headerTitle: '',
           headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
+            <Link href="/player/info" asChild>
+              <Pressable style={{ paddingTop: 30 }}>
                 {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
+                  <AlignJustify
+                    size={'$2'}
+                    color={Colors.secondary}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
               </Pressable>
             </Link>
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          headerShadowVisible: false,
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBarLabelStyle: {
+    fontFamily: 'MontserratBold',
+    fontSize: 10,
+    lineHeight: 10,
+  },
+});

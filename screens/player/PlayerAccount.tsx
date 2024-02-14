@@ -5,10 +5,11 @@ import { ChevronRight } from '@tamagui/lucide-icons';
 import PlayerPfp from '@/components/PlayerPfp';
 import Colors from '@/constants/Colors';
 import CustomButton from '@/components/CustomButton';
+import { router } from 'expo-router';
 
 export default function PlayerAccount() {
   return (
-    <YStack paddingTop={100} flex={1}>
+    <YStack flex={1}>
       <YStack alignItems="center" marginBottom={30}>
         <PlayerPfp imageContainerStyle={{ marginBottom: 20 }} />
         <Text
@@ -26,7 +27,11 @@ export default function PlayerAccount() {
           <YStack gap={15}>
             <CustomButton
               title="Edit profile"
-              onPress={() => {}}
+              onPress={() =>
+                router.push({
+                  pathname: '/player/edit-profile',
+                })
+              }
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}

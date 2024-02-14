@@ -34,17 +34,11 @@ export default function PlayerProfile() {
       hours: 2,
       date: '13-10-2024',
     },
-    {
-      id: '5',
-      displayName: 'Daniel Antone',
-      location: 'Location 6',
-      hours: 2,
-      date: '13-10-2024',
-    },
+
     // Add more items as needed
   ];
   return (
-    <YStack flex={1} paddingTop={100}>
+    <YStack flex={1} paddingTop={30}>
       <PlayerCard displayName="Daniel Antone" hours={25} rating={5.7} />
       <YStack flex={1} paddingHorizontal={25}>
         <XStack justifyContent="space-between" alignItems="center">

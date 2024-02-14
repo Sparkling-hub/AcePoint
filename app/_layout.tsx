@@ -5,7 +5,7 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useNavigation } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
@@ -16,6 +16,10 @@ import tamaguiConfig from '../tamagui.config';
 import PlayerProfile from '@/screens/player/PlayerProfile';
 import PlayerAccount from '@/screens/player/PlayerAccount';
 import EditPlayerProfile from '@/screens/player/EditPlayerProfile';
+
+import { TouchableOpacity } from 'react-native';
+import { ChevronLeft, X } from '@tamagui/lucide-icons';
+import Colors from '@/constants/Colors';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -62,18 +66,46 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const navigation = useNavigation();
 
   return (
     <TamaguiProvider
       config={tamaguiConfig}
       defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        {/* <Stack>
+        <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-        </Stack> */}
+          <Stack.Screen
+            name="player/info"
+            options={{
+              headerShadowVisible: false,
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  style={{ paddingTop: 30 }}>
+                  <X size={'$2.5'} color={Colors.secondary} />
+                </TouchableOpacity>
+              ),
+              headerTitle: '',
+            }}
+          />
+          <Stack.Screen
+            name="player/edit-profile"
+            options={{
+              headerShadowVisible: false,
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  style={{ paddingTop: 30 }}>
+                  <ChevronLeft size={'$2.5'} color={Colors.secondary} />
+                </TouchableOpacity>
+              ),
+              headerTitle: '',
+            }}
+          />
+        </Stack>
         {/* <PlayerProfile /> */}
-        <PlayerAccount />
+        {/* <PlayerAccount /> */}
         {/* <EditPlayerProfile /> */}
       </ThemeProvider>
     </TamaguiProvider>
