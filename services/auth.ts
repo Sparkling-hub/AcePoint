@@ -2,6 +2,7 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useAuthRequest } from "expo-auth-session/build/providers/Google";
 import auth from '@react-native-firebase/auth';
 import { Alert } from "react-native";
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 export const useAuthIos = () => {
     const [request, response, promptAsync] = useAuthRequest({
@@ -19,8 +20,12 @@ export const authAndroid = async () => {
         await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
         const { idToken, user } = await GoogleSignin.signIn();
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-        Alert.alert("Logged in successfully :", `Welcome back ${user.name}`);
-        return auth().signInWithCredential(googleCredential);
+        const { displayName, email } = (await auth().signInWithCredential(googleCredential)).user
+        if (displayName && email) {
+            await ReactNativeAsyncStorage.setItem('username', displayName)
+            await ReactNativeAsyncStorage.setItem('email', email)
+        }
+        return Alert.alert("Logged in successfully :", `Welcome back ${user.name}`);
     } catch (error) {
         Alert.alert("Error : ", "Something went wrong !");
         console.log("ERROR : " + error);

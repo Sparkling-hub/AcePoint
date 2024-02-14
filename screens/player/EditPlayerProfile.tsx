@@ -4,7 +4,7 @@ import Colors from '@/constants/Colors';
 import { Button, Text, XStack, YStack } from 'tamagui';
 
 import DatePicker from '@/components/DatePicker';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomInput from '@/components/CustomInput';
 import CountryCodePicker from '@/components/CountryCodePicker';
 import CustomDropdown from '@/components/dropdown/CustomDropdown';
@@ -12,6 +12,9 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StyleSheet } from 'react-native';
 import { Info } from '@tamagui/lucide-icons';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { auth } from '@/lib/firebase';
+
 
 const options = [
   { label: 'Male', value: 'male' },
@@ -24,6 +27,23 @@ export default function EditPlayerProfile() {
   const [countryCode, setCountryCode] = useState('+44');
 
   const [selectedItem, setSelectedItem] = useState(options[0].value);
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+
+  const getUserName = async () => {
+    const u = await ReactNativeAsyncStorage.getItem('username')
+    if (u)
+      setUsername(u)
+  }
+  const getEmail = async () => {
+    const e = await ReactNativeAsyncStorage.getItem('email')
+    if (e)
+      setEmail(e)
+  }
+  useEffect(() => {
+    getUserName()
+    getEmail()
+  }, [])
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -83,7 +103,7 @@ export default function EditPlayerProfile() {
               <YStack>
                 <CustomInput
                   placeholder="Name"
-                  value={values.name}
+                  value={username}
                   onChangeText={handleChange('name')}
                   onBlur={handleBlur('name')}
                 />
@@ -97,7 +117,7 @@ export default function EditPlayerProfile() {
               <YStack>
                 <CustomInput
                   placeholder="Email"
-                  value={values.email}
+                  value={email}
                   onChangeText={handleChange('email')}
                   onBlur={handleBlur('email')}
                 />

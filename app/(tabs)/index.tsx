@@ -21,24 +21,25 @@ export default function TabOneScreen() {
         <GoogleAuthAndroid></GoogleAuthAndroid>
       );
     }
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Tab One</Text>
-        <Text style={{ marginBottom: 10 }}>Hello Tamagui!</Text>
-        <Button size="$3" onPress={() => alert('Button pressed!')}>
-          Press Me
-        </Button>
-        {GoogleAuth()}
-        <View
-          style={styles.separator}
-          lightColor="#eee"
-          darkColor="rgba(255,255,255,0.1)"
-        />
-        <EditScreenInfo path="app/(tabs)/index.tsx" />
-      </View>
-    );
   }
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Tab One</Text>
+      <Text style={{ marginBottom: 10 }}>Hello Tamagui!</Text>
+      <Button size="$3" onPress={() => alert('Button pressed!')}>
+        Press Me
+      </Button>
+      {GoogleAuth()}
+      <View
+        style={styles.separator}
+        lightColor="#eee"
+        darkColor="rgba(255,255,255,0.1)"
+      />
+      <EditScreenInfo path="app/(tabs)/index.tsx" />
+    </View>
+  );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
