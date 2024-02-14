@@ -10,7 +10,7 @@ import CountryCodePicker from '@/components/CountryCodePicker';
 import CustomDropdown from '@/components/dropdown/CustomDropdown';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { Info } from '@tamagui/lucide-icons';
 
 const options = [
@@ -49,7 +49,7 @@ export default function EditPlayerProfile() {
   };
 
   return (
-    <YStack flex={1}>
+    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 30}>
       <YStack marginBottom={30}>
         <YStack alignItems="center">
           <PlayerPfp imageContainerStyle={{ marginBottom: 20 }} />

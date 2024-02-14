@@ -24,11 +24,11 @@ export default function CustomDropdown(props: CustomDropDownProps) {
   };
 
   return (
-    <YStack>
+    <YStack zIndex={1}>
       <CustomInput
         placeholder="Gender"
         value={selectedItem}
-        inputStyle={{ textTransform: 'capitalize' }}
+        textTransform="capitalize"
         readOnly
         icon={
           clicked ? (
@@ -45,7 +45,12 @@ export default function CustomDropdown(props: CustomDropDownProps) {
             position="absolute"
             marginTop={8}
             elevationAndroid={4}
-            zIndex={1}
+            $platform-ios={{
+              shadowColor: 'rgba(0, 0, 0, 0.1)',
+              shadowOffset: { width: 2, height: 2 },
+              shadowOpacity: 0.8,
+              shadowRadius: 4,
+            }}
             backgroundColor={'white'}
             borderRadius={8}
             paddingVertical={10}

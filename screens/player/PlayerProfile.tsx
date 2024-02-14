@@ -1,4 +1,10 @@
-import { StyleSheet, SafeAreaView, FlatList, StatusBar } from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  FlatList,
+  StatusBar,
+  Platform,
+} from 'react-native';
 import { View, Text, YStack, XStack } from 'tamagui';
 import HistoryBox from '@/components/HistoryBox';
 import PlayerCard from '@/components/PlayerCard';
@@ -38,7 +44,7 @@ export default function PlayerProfile() {
     // Add more items as needed
   ];
   return (
-    <YStack flex={1} paddingTop={30}>
+    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 70}>
       <PlayerCard>
         <Text
           style={{ fontFamily: 'MontserratBold' }}
