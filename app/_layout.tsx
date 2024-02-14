@@ -1,11 +1,25 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useNavigation } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { TamaguiProvider } from 'tamagui';
+import tamaguiConfig from '../tamagui.config';
+
+import PlayerProfile from '@/screens/player/PlayerProfile';
+import PlayerAccount from '@/screens/player/PlayerAccount';
+import EditPlayerProfile from '@/screens/player/EditPlayerProfile';
+
+import { TouchableOpacity } from 'react-native';
+import { ChevronLeft, X } from '@tamagui/lucide-icons';
+import Colors from '@/constants/Colors';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -23,6 +37,12 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Montserrat: require('../assets/fonts/Montserrat-Regular.ttf'),
+    MontserratMedium: require('../assets/fonts/Montserrat-Medium.ttf'),
+    MontserratBold: require('../assets/fonts/Montserrat-Bold.ttf'),
+    MontserratExtraBold: require('../assets/fonts/Montserrat-ExtraBold.ttf'),
+    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
+    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
     ...FontAwesome.font,
   });
 
@@ -46,13 +66,48 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const navigation = useNavigation();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <TamaguiProvider
+      config={tamaguiConfig}
+      defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="player/info"
+            options={{
+              headerShadowVisible: false,
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  style={{ paddingTop: 30 }}>
+                  <X size={'$2.5'} color={Colors.secondary} />
+                </TouchableOpacity>
+              ),
+              headerTitle: '',
+            }}
+          />
+          <Stack.Screen
+            name="player/edit-profile"
+            options={{
+              headerShadowVisible: false,
+              headerLeft: () => (
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  style={{ paddingTop: 30 }}>
+                  <ChevronLeft size={'$2.5'} color={Colors.secondary} />
+                </TouchableOpacity>
+              ),
+              headerTitle: '',
+            }}
+          />
+        </Stack>
+        {/* <PlayerProfile /> */}
+        {/* <PlayerAccount /> */}
+        {/* <EditPlayerProfile /> */}
+      </ThemeProvider>
+    </TamaguiProvider>
   );
 }

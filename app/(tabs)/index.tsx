@@ -4,28 +4,41 @@ import { Text, View } from '@/components/Themed';
 import 'react-native-gesture-handler';
 import GoogleAuthAndroid from '@/components/GoogleAuthAndroid';
 import GoogleAuthIOS from '@/components/GoogleAuthIOS';
+import { Button } from 'tamagui';
+import EditScreenInfo from '@/components/EditScreenInfo';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function TabOneScreen() {
-  if (Platform.OS === 'ios') {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Tab One</Text>
+  const GoogleAuth = () => {
+    if (Platform.OS === 'ios') {
+      return (
         <GoogleAuthIOS></GoogleAuthIOS>
-      </View>
-    )
-  }
-  else if (Platform.OS === 'android') {
+      )
+    }
+    else if (Platform.OS === 'android') {
+      return (
+        <GoogleAuthAndroid></GoogleAuthAndroid>
+      );
+    }
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Tab One</Text>
-        <GoogleAuthAndroid></GoogleAuthAndroid>
+        <Text style={{ marginBottom: 10 }}>Hello Tamagui!</Text>
+        <Button size="$3" onPress={() => alert('Button pressed!')}>
+          Press Me
+        </Button>
+        {GoogleAuth()}
+        <View
+          style={styles.separator}
+          lightColor="#eee"
+          darkColor="rgba(255,255,255,0.1)"
+        />
+        <EditScreenInfo path="app/(tabs)/index.tsx" />
       </View>
     );
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -36,4 +49,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-});
+  separator: {
+    marginVertical: 30,
+    height: 1,
+    width: '80%',
+  },
+})
