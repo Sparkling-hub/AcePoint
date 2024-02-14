@@ -1,6 +1,8 @@
 import Colors from '@/constants/Colors';
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { Image, View } from 'tamagui';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 
 interface PlayerPfpProps {
   imageContainerStyle?: StyleProp<ViewStyle>;
@@ -15,13 +17,27 @@ export default function PlayerPfp(props: PlayerPfpProps) {
     height: DEFAULT_SIZE,
     ...(imageContainerStyle as object),
   };
+  const [image, setImage] = useState('')
+  const getImage = async() => {
+    const i = await ReactNativeAsyncStorage.getItem('image')
+    if(i !== null){
+      setImage(i)
+    }
+  }
+  useEffect(() => {
+    getImage()
+  }, [])
 
   return (
     <View style={[styles.imageContainer, containerStyle]}>
-      <Image
+      {image === '' ? <Image
         source={require('../assets/images/user-pfp.png')}
         style={styles.image}
       />
+    :<Image
+    src={image}
+    style={styles.image}
+  />}
     </View>
   );
 }
