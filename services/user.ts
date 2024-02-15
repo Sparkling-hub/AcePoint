@@ -16,6 +16,7 @@ export default async function findUserByEmail(email: string, displayName: string
         } catch (error) {
             console.error("Error adding new player:", error);
         }
+        router.push('/player/edit-profile')
         return Alert.alert("Logged in successfully :", `Welcome ${displayName}! Please complete your profile.`);
     } else {
         querySnapshot.forEach((doc) => {
