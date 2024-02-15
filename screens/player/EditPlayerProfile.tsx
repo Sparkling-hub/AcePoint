@@ -8,43 +8,28 @@ import { useEffect, useState } from 'react';
 import CustomInput from '@/components/CustomInput';
 import CountryCodePicker from '@/components/CountryCodePicker';
 import CustomDropdown from '@/components/dropdown/CustomDropdown';
-import { Formik } from 'formik';
+import { Formik, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Platform, StyleSheet } from 'react-native';
 import { Info } from '@tamagui/lucide-icons';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import { auth } from '@/lib/firebase';
 
-
-const options = [
-  { label: 'Male', value: 'male' },
-  { label: 'Female', value: 'female' },
-  { label: 'Other', value: 'other' },
-];
 
 export default function EditPlayerProfile() {
-  const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
+  const date = new Date(1900, 1, 1)
+  const [dateOfBirth, setDateOfBirth] = useState<Date>(date);
   const [countryCode, setCountryCode] = useState('+44');
 
-  const [selectedItem, setSelectedItem] = useState(options[0].value);
+  const [selectedItem, setSelectedItem] = useState('');
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
 
-  const getUserName = async () => {
-    const u = await ReactNativeAsyncStorage.getItem('username')
-    if (u)
-      setUsername(u)
+  const initialValues = {
+    name: '',
+    email: '',
+    phone: '',
   }
-  const getEmail = async () => {
-    const e = await ReactNativeAsyncStorage.getItem('email')
-    if (e)
-      setEmail(e)
-  }
-  useEffect(() => {
-    getUserName()
-    getEmail()
-  }, [])
-
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .min(2, 'Name is too short!')
@@ -67,6 +52,56 @@ export default function EditPlayerProfile() {
     // Handle form submission
     console.log({ ...values, countryCode, gender: selectedItem, dateOfBirth });
   };
+  const {
+    handleChange,
+    handleBlur,
+    values,
+    errors,
+    touched,
+  } = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: handleSubmit,
+  });
+  const options = [
+    { label: 'Male', value: 'male' },
+    { label: 'Female', value: 'female' },
+    { label: 'Other', value: 'other' },
+  ];
+
+  const getUserData = async () => {
+    try {
+      const u = await ReactNativeAsyncStorage.getItem('username')
+      if (u) {
+        setUsername(u)
+        values.name = u
+      }
+      const e = await ReactNativeAsyncStorage.getItem('email')
+      if (e) {
+        setEmail(e)
+        values.email = e
+      }
+      const ph = await ReactNativeAsyncStorage.getItem('phoneNumber')
+      if (ph) {
+        setPhone(ph)
+        values.phone = ph
+      }
+      const g = await ReactNativeAsyncStorage.getItem('gender')
+      if (g) setSelectedItem(g)
+      const b = await ReactNativeAsyncStorage.getItem('birthday')
+      if (b) setDateOfBirth(new Date(b))
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const [conditionDate, setConditionDate] = useState(false)
+  useEffect(()=>{
+    setConditionDate(false)
+  }, [dateOfBirth])
+  useEffect(() => {
+    getUserData()
+    setConditionDate(date == dateOfBirth)
+  }, [])
 
   return (
     <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 30}>
@@ -84,27 +119,24 @@ export default function EditPlayerProfile() {
       </YStack>
       <Formik
         initialValues={{
-          name: 'Lian Arthofer',
-          email: 'email@email.com',
-          phone: '75755575',
+          name: '',
+          email: '',
+          phone: '',
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}>
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-        }) => (
+        {() => (
           <YStack paddingHorizontal={20} gap={'$3'} minWidth={362} flex={1}>
             <YStack gap={'$3'}>
               <YStack>
                 <CustomInput
                   placeholder="Name"
                   value={username}
-                  onChangeText={handleChange('name')}
+                  onChangeText={(e) => {
+                    handleChange('name')
+                    setUsername(e)
+                    values.name = e
+                  }}
                   onBlur={handleBlur('name')}
                 />
                 {touched.name && errors.name && (
@@ -118,7 +150,11 @@ export default function EditPlayerProfile() {
                 <CustomInput
                   placeholder="Email"
                   value={email}
-                  onChangeText={handleChange('email')}
+                  onChangeText={(e) => {
+                    handleChange('email')
+                    setEmail(e)
+                    values.email = e
+                  }}
                   onBlur={handleBlur('email')}
                 />
                 {touched.email && errors.email && (
@@ -141,14 +177,24 @@ export default function EditPlayerProfile() {
                   <CustomInput
                     placeholder="Phone"
                     keyboardType="numeric"
-                    value={values.phone}
-                    onChangeText={handleChange('phone')}
+                    value={phone}
+                    onChangeText={(e) => {
+                      handleChange('phone')
+                      setPhone(e)
+                      values.phone = e
+                    }}
                     onBlur={handleBlur('phone')}
                   />
                   {touched.phone && errors.phone && (
                     <XStack alignItems="center" marginTop={5} marginLeft={5}>
                       <Info size={18} color={'red'} marginRight={5} />
                       <Text style={styles.errorText}>{errors.phone}</Text>
+                    </XStack>
+                  )}
+                  {phone === "" && (
+                    <XStack alignItems="center" marginTop={5} marginLeft={5}>
+                      <Info size={18} color={'red'} marginRight={5} />
+                      <Text style={styles.errorText}>Please type your phone number !</Text>
                     </XStack>
                   )}
                 </YStack>
@@ -160,9 +206,21 @@ export default function EditPlayerProfile() {
                 selectedItem={selectedItem}
                 setSelectedItem={setSelectedItem}
               />
+              {selectedItem === '' && (
+                <XStack alignItems="center" marginTop={5} marginLeft={5}>
+                  <Info size={18} color={'red'} marginRight={5} />
+                  <Text style={styles.errorText}>Please select a gender !</Text>
+                </XStack>
+              )}
               <DatePicker date={dateOfBirth} setDate={setDateOfBirth} />
+              {conditionDate &&
+                <XStack alignItems="center" marginTop={5} marginLeft={5}>
+                  <Info size={18} color={'red'} marginRight={5} />
+                  <Text style={styles.errorText}>Please select your birthday !</Text>
+                </XStack>
+              }
             </YStack>
-            {/* <Button onPress={() => handleSubmit()}>Save</Button> */}
+            <Button onPress={() => handleSubmit(values)}>Save</Button>
           </YStack>
         )}
       </Formik>
