@@ -5,9 +5,8 @@ import { Pressable } from 'react-native';
 
 import Colors from '@/constants/Colors';
 
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import Home from '@/components/svg/Home';
-import Stats from '@/components/svg/Stats';
+
 import Check from '@/components/svg/Check';
 import Account from '@/components/svg/Account';
 import { Text } from 'tamagui';

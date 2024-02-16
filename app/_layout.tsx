@@ -13,10 +13,6 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { TamaguiProvider, Text } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
 
-import PlayerProfile from '@/screens/player/PlayerProfile';
-import PlayerAccount from '@/screens/player/PlayerAccount';
-import EditPlayerProfile from '@/screens/player/EditPlayerProfile';
-
 import { TouchableOpacity } from 'react-native';
 import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';

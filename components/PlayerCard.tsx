@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { YStack } from 'tamagui';
-import PlayerPfp from './PlayerPfp';
+import { Card } from 'tamagui';
+
 import Colors from '@/constants/Colors';
+import PorfilePicture from './PorfilePicture';
 
 interface PlayerCardProps {
   children: React.ReactNode;
@@ -11,22 +12,26 @@ interface PlayerCardProps {
 export default function PlayerCard(props: PlayerCardProps) {
   const { children } = props;
   return (
-    <YStack marginBottom={35} alignItems="center">
-      <YStack
-        width={362}
-        height={162}
-        borderRadius={8}
-        justifyContent="center"
-        backgroundColor={Colors.lightSilver}>
-        <PlayerPfp
-          imageContainerStyle={{
-            position: 'absolute',
-            top: -47,
-            alignSelf: 'center',
-          }}
+    <Card
+      marginBottom={35}
+      width={'100%'}
+      height={162}
+      borderRadius={8}
+      backgroundColor={Colors.lightSilver}>
+      <Card.Header>
+        <PorfilePicture
+          circular
+          borderWidth={2}
+          borderColor={Colors.primary}
+          size="$9"
+          position="absolute"
+          top={-47}
+          alignSelf="center"
         />
-        <YStack>{children}</YStack>
-      </YStack>
-    </YStack>
+      </Card.Header>
+      {children}
+      <Card.Footer />
+      <Card.Background />
+    </Card>
   );
 }

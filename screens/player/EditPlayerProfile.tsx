@@ -1,20 +1,20 @@
-import PlayerPfp from '@/components/PlayerPfp';
 import Colors from '@/constants/Colors';
 
 import { Button, Text, XStack, YStack } from 'tamagui';
 
-import DatePicker from '@/components/DatePicker';
-import { useEffect, useState } from 'react';
-import CustomInput from '@/components/CustomInput';
-import CountryCodePicker from '@/components/CountryCodePicker';
-import CustomDropdown from '@/components/dropdown/CustomDropdown';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import { Platform, StyleSheet } from 'react-native';
-import { Info } from '@tamagui/lucide-icons';
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import { auth } from '@/lib/firebase';
+import DatePicker from '@/components/Form/DatePicker';
+import { useEffect } from 'react';
 
+import CountryCodePicker from '@/components/Form/CountryCodePicker';
+import CustomDropdown from '@/components/Form/dropdown/CustomDropdown';
+import { FormikValues, useFormik } from 'formik';
+import * as Yup from 'yup';
+import { Platform } from 'react-native';
+
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+
+import PorfilePicture from '@/components/PorfilePicture';
+import CustomInput from '@/components/Form/CustomInput';
 
 const options = [
   { label: 'Male', value: 'male' },
@@ -23,27 +23,14 @@ const options = [
 ];
 
 export default function EditPlayerProfile() {
-  const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
-  const [countryCode, setCountryCode] = useState('+44');
-
-  const [selectedItem, setSelectedItem] = useState(options[0].value);
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-
-  const getUserName = async () => {
-    const u = await ReactNativeAsyncStorage.getItem('username')
-    if (u)
-      setUsername(u)
-  }
-  const getEmail = async () => {
-    const e = await ReactNativeAsyncStorage.getItem('email')
-    if (e)
-      setEmail(e)
-  }
-  useEffect(() => {
-    getUserName()
-    getEmail()
-  }, [])
+  const initialValues = {
+    name: '',
+    email: '',
+    phone: '',
+    gender: '',
+    countryCode: '+44',
+    dateOfBirth: '',
+  };
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -57,22 +44,64 @@ export default function EditPlayerProfile() {
       )
       .required('Email is required'),
     phone: Yup.string()
-      .matches(/^[0-9]+$/, 'Phone number must be only digits')
+      .matches(/^[0-9]+$/, 'Phone must be only digits')
       .min(6, 'Phone number is too short!')
       .max(15, 'Phone number is too long!')
-      .required('Phone number is required'),
+      .required('Please enter your phone number'),
+    gender: Yup.string().required('Please select your gender'),
+    dateOfBirth: Yup.string().required('Please enter your date of birth'),
+    countryCode: Yup.string().required('Country code is required'),
   });
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = (values: FormikValues) => {
     // Handle form submission
-    console.log({ ...values, countryCode, gender: selectedItem, dateOfBirth });
+    console.log({ ...values });
   };
 
+  const formik = useFormik({
+    validateOnMount: true,
+    initialValues,
+    validationSchema,
+    onSubmit: (values) => handleSubmit(values),
+  });
+
+  const getUserData = async () => {
+    try {
+      const u = await ReactNativeAsyncStorage.getItem('username');
+      const e = await ReactNativeAsyncStorage.getItem('email');
+      const ph = await ReactNativeAsyncStorage.getItem('phoneNumber');
+      const g = await ReactNativeAsyncStorage.getItem('gender');
+      const b = await ReactNativeAsyncStorage.getItem('birthday');
+      console.log(b);
+
+      formik.setValues({
+        ...formik.values,
+        name: u || formik.values.name,
+        email: e || formik.values.email,
+        phone: ph || formik.values.phone,
+        gender: g || formik.values.gender,
+        dateOfBirth: b || formik.values.dateOfBirth,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
   return (
-    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 30}>
+    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 20}>
       <YStack marginBottom={30}>
         <YStack alignItems="center">
-          <PlayerPfp imageContainerStyle={{ marginBottom: 20 }} />
+          <PorfilePicture
+            marginBottom={20}
+            circular
+            borderWidth={2}
+            borderColor={Colors.primary}
+            size="$9"
+          />
           <Text
             style={{ fontFamily: 'Montserrat' }}
             fontSize={20}
@@ -82,98 +111,70 @@ export default function EditPlayerProfile() {
           </Text>
         </YStack>
       </YStack>
-      <Formik
-        initialValues={{
-          name: 'Lian Arthofer',
-          email: 'email@email.com',
-          phone: '75755575',
-        }}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}>
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-        }) => (
-          <YStack paddingHorizontal={20} gap={'$3'} minWidth={362} flex={1}>
-            <YStack gap={'$3'}>
-              <YStack>
-                <CustomInput
-                  placeholder="Name"
-                  value={username}
-                  onChangeText={handleChange('name')}
-                  onBlur={handleBlur('name')}
-                />
-                {touched.name && errors.name && (
-                  <XStack alignItems="center" marginTop={5} marginLeft={5}>
-                    <Info size={18} color={'red'} marginRight={5} />
-                    <Text style={styles.errorText}>{errors.name}</Text>
-                  </XStack>
-                )}
-              </YStack>
-              <YStack>
-                <CustomInput
-                  placeholder="Email"
-                  value={email}
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                />
-                {touched.email && errors.email && (
-                  <XStack alignItems="center" marginTop={5} marginLeft={5}>
-                    <Info size={18} color={'red'} marginRight={5} />
-                    <Text style={styles.errorText}>{errors.email}</Text>
-                  </XStack>
-                )}
-              </YStack>
-            </YStack>
-            <XStack gap={'$3'}>
-              <YStack flex={1}>
-                <CountryCodePicker
-                  countryCode={countryCode}
-                  setCountryCode={setCountryCode}
-                />
-              </YStack>
-              <YStack flex={2}>
-                <YStack>
-                  <CustomInput
-                    placeholder="Phone"
-                    keyboardType="numeric"
-                    value={values.phone}
-                    onChangeText={handleChange('phone')}
-                    onBlur={handleBlur('phone')}
-                  />
-                  {touched.phone && errors.phone && (
-                    <XStack alignItems="center" marginTop={5} marginLeft={5}>
-                      <Info size={18} color={'red'} marginRight={5} />
-                      <Text style={styles.errorText}>{errors.phone}</Text>
-                    </XStack>
-                  )}
-                </YStack>
-              </YStack>
-            </XStack>
-            <YStack gap={'$3'}>
-              <CustomDropdown
-                options={options}
-                selectedItem={selectedItem}
-                setSelectedItem={setSelectedItem}
-              />
-              <DatePicker date={dateOfBirth} setDate={setDateOfBirth} />
-            </YStack>
-            {/* <Button onPress={() => handleSubmit()}>Save</Button> */}
+
+      <YStack paddingHorizontal={20} gap={'$3'} minWidth={362} flex={1}>
+        <YStack gap={'$3'}>
+          <YStack>
+            <CustomInput
+              placeholder="Name"
+              value={formik.values.name}
+              onChangeText={formik.handleChange('name')}
+              onBlur={formik.handleBlur('name')}
+              errors={formik.errors.name}
+              touched={formik.touched.name}
+            />
           </YStack>
-        )}
-      </Formik>
+          <YStack>
+            <CustomInput
+              placeholder="Email"
+              value={formik.values.email}
+              onChangeText={formik.handleChange('email')}
+              onBlur={formik.handleBlur('email')}
+              errors={formik.errors.email}
+              touched={formik.touched.email}
+            />
+          </YStack>
+        </YStack>
+        <XStack gap={'$3'}>
+          <YStack flex={1}>
+            <CountryCodePicker
+              countryCode={formik.values.countryCode}
+              handleChange={formik.handleChange('countryCode')}
+              errors={formik.errors.countryCode}
+              validateOnInit
+            />
+          </YStack>
+          <YStack flex={2}>
+            <YStack>
+              <CustomInput
+                placeholder="Phone"
+                keyboardType="numeric"
+                value={formik.values.phone}
+                onChangeText={formik.handleChange('phone')}
+                onBlur={formik.handleBlur('phone')}
+                errors={formik.errors.phone}
+                validateOnInit
+              />
+            </YStack>
+          </YStack>
+        </XStack>
+        <YStack gap={'$3'}>
+          <CustomDropdown
+            options={options}
+            selectedItem={formik.values.gender}
+            handleChange={formik.handleChange('gender')}
+            errors={formik.errors.gender}
+            validateOnInit
+          />
+          <DatePicker
+            date={formik.values.dateOfBirth}
+            handleChange={formik.handleChange('dateOfBirth')}
+            errors={formik.errors.dateOfBirth}
+            validateOnInit
+          />
+        </YStack>
+        <Button onPress={() => formik.handleSubmit()}>Save</Button>
+      </YStack>
     </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  errorText: {
-    color: 'red',
-    fontSize: 12,
-    fontFamily: 'MontserratMedium',
-  },
-});

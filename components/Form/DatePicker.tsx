@@ -5,14 +5,18 @@ import { CalendarDays } from '@tamagui/lucide-icons';
 import CustomInput from './CustomInput';
 import { YStack } from 'tamagui';
 import Colors from '@/constants/Colors';
+import { FormikHandlers } from 'formik';
 
 interface DatePickerProps {
-  date: Date;
-  setDate: (date: Date) => void;
+  date: string;
+  handleChange: FormikHandlers['handleChange'];
+  touched?: boolean;
+  errors?: string;
+  validateOnInit?: boolean;
 }
 
 const DatePicker = function DatePicker(props: DatePickerProps) {
-  const { date, setDate } = props;
+  const { handleChange, date, touched, errors, validateOnInit } = props;
   const [show, setShow] = useState(false);
 
   const showDatePicker = () => {
@@ -24,14 +28,17 @@ const DatePicker = function DatePicker(props: DatePickerProps) {
   };
 
   const handleConfirm = (date: Date) => {
-    setDate(date);
+    handleChange(date.toLocaleDateString());
     hideDatePicker();
   };
 
   return (
     <YStack>
       <CustomInput
-        value={date?.toLocaleDateString()}
+        value={date}
+        touched={touched}
+        errors={errors}
+        validateOnInit={validateOnInit}
         placeholder="Date of birth"
         readOnly
         onPress={showDatePicker}

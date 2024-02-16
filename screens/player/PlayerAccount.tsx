@@ -1,28 +1,34 @@
 import { Platform, StyleSheet } from 'react-native';
-import { Text, View, YStack } from 'tamagui';
+import { Text, YStack } from 'tamagui';
 
 import { ChevronRight } from '@tamagui/lucide-icons';
-import PlayerPfp from '@/components/PlayerPfp';
+
 import Colors from '@/constants/Colors';
 import CustomButton from '@/components/CustomButton';
 import { router } from 'expo-router';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
+import PorfilePicture from '@/components/PorfilePicture';
 
 export default function PlayerAccount() {
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState('');
   const getUserName = async () => {
-    const name = await ReactNativeAsyncStorage.getItem('username')
-    if (name)
-      return setUsername(name)
-  }
+    const name = await ReactNativeAsyncStorage.getItem('username');
+    if (name) return setUsername(name);
+  };
   useEffect(() => {
-    getUserName()
-  }, [])
+    getUserName();
+  }, []);
   return (
     <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 30}>
       <YStack alignItems="center" marginBottom={30}>
-        <PlayerPfp imageContainerStyle={{ marginBottom: 20 }} />
+        <PorfilePicture
+          marginBottom={20}
+          circular
+          borderWidth={2}
+          borderColor={Colors.primary}
+          size="$9"
+        />
         <Text
           style={{ fontFamily: 'MontserratBold' }}
           fontSize={20}
@@ -49,7 +55,7 @@ export default function PlayerAccount() {
             />
             <CustomButton
               title="Settings"
-              onPress={() => { }}
+              onPress={() => {}}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -61,7 +67,7 @@ export default function PlayerAccount() {
           <YStack>
             <CustomButton
               title="Help"
-              onPress={() => { }}
+              onPress={() => {}}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -73,7 +79,7 @@ export default function PlayerAccount() {
           <YStack>
             <CustomButton
               title="Privacy"
-              onPress={() => { }}
+              onPress={() => {}}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}

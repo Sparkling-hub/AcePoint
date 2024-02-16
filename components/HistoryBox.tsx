@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Text, View, XStack, YStack } from 'tamagui';
-import PlayerPfp from './PlayerPfp';
 import Colors from '@/constants/Colors';
+import PorfilePicture from './PorfilePicture';
 
 interface HistoryBoxProps {
   displayName: string;
@@ -13,7 +13,7 @@ interface HistoryBoxProps {
 export default function HistoryBox(props: HistoryBoxProps) {
   const { hours, date, location, displayName } = props;
   return (
-    <YStack marginTop={30}>
+    <YStack marginTop={15}>
       <XStack
         width={'100%'}
         height={52}
@@ -21,8 +21,12 @@ export default function HistoryBox(props: HistoryBoxProps) {
         alignItems="center"
         marginBottom={10}>
         <XStack alignItems="center">
-          <PlayerPfp
-            imageContainerStyle={{ height: 52, width: 52, marginRight: 10 }}
+          <PorfilePicture
+            marginRight={10}
+            circular
+            borderWidth={2}
+            borderColor={Colors.primary}
+            size="$5"
           />
           <YStack gap={'$1'}>
             <Text style={[styles.text, { fontFamily: 'MontserratBold' }]}>
