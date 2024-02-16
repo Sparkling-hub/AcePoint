@@ -1,7 +1,7 @@
 import { StyleSheet, FlatList, Platform } from 'react-native';
 import { Text, YStack, XStack } from 'tamagui';
 import HistoryBox from '@/components/HistoryBox';
-import PlayerCard from '@/components/PlayerCard';
+import ProfileCard from '@/components/ProfileCard';
 import Colors from '@/constants/Colors';
 
 const historyData = [
@@ -44,7 +44,7 @@ export default function PlayerProfile() {
         justifyContent="center"
         alignItems="center"
         paddingHorizontal={16}>
-        <PlayerCard>
+        <ProfileCard>
           <YStack gap={'$4'}>
             <Text
               style={{ fontFamily: 'MontserratBold' }}
@@ -68,7 +68,7 @@ export default function PlayerProfile() {
               </YStack>
             </XStack>
           </YStack>
-        </PlayerCard>
+        </ProfileCard>
       </YStack>
 
       <YStack flex={1} paddingHorizontal={25}>

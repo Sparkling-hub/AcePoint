@@ -47,7 +47,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
           backgroundColor={
             (touched && errors) || (validateOnInit && errors)
               ? '#FEECEB'
-              : '#DADADA'
+              : Colors.iron
           }
           borderRadius={8}
           paddingVertical={16}

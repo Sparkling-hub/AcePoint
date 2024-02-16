@@ -16,6 +16,9 @@ import tamaguiConfig from '../tamagui.config';
 import { TouchableOpacity } from 'react-native';
 import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
+import CoachAccount from '@/screens/coach/CoachAccount';
+import PlayerProfile from '@/screens/player/PlayerProfile';
+import CoachProfile from '@/screens/coach/CoachProfile';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -37,6 +40,7 @@ export default function RootLayout() {
     MontserratMedium: require('../assets/fonts/Montserrat-Medium.ttf'),
     MontserratBold: require('../assets/fonts/Montserrat-Bold.ttf'),
     MontserratExtraBold: require('../assets/fonts/Montserrat-ExtraBold.ttf'),
+    MontserratSemiBold: require('../assets/fonts/Montserrat-SemiBold.ttf'),
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
     ...FontAwesome.font,
@@ -69,7 +73,7 @@ function RootLayoutNav() {
       config={tamaguiConfig}
       defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
+        {/* <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="player/info"
@@ -111,8 +115,10 @@ function RootLayoutNav() {
               headerTitle: '',
             }}
           />
-        </Stack>
+        </Stack> */}
+        {/* <CoachAccount /> */}
         {/* <PlayerProfile /> */}
+        <CoachProfile />
         {/* <PlayerAccount /> */}
         {/* <EditPlayerProfile /> */}
       </ThemeProvider>

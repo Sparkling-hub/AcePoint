@@ -72,7 +72,6 @@ export default function EditPlayerProfile() {
       const ph = await ReactNativeAsyncStorage.getItem('phoneNumber');
       const g = await ReactNativeAsyncStorage.getItem('gender');
       const b = await ReactNativeAsyncStorage.getItem('birthday');
-      console.log(b);
 
       formik.setValues({
         ...formik.values,
@@ -173,7 +172,7 @@ export default function EditPlayerProfile() {
             validateOnInit
           />
         </YStack>
-        <Button onPress={() => formik.handleSubmit()}>Save</Button>
+        {/* <Button onPress={() => formik.handleSubmit()}>Save</Button> */}
       </YStack>
     </YStack>
   );
