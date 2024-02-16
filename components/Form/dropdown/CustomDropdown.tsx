@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, YStack } from 'tamagui';
+import { YStack } from 'tamagui';
 import CustomInput from '../CustomInput';
 import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 
 import DropDownItem from './DropDownItem';
-import { FlatList } from 'react-native';
+
 import { option } from '@/types/options';
 import Colors from '@/constants/Colors';
 import { FormikHandlers } from 'formik';
@@ -70,18 +70,14 @@ export default function CustomDropdown(props: CustomDropDownProps) {
             paddingVertical={10}
             paddingHorizontal={16}
             minWidth={'100%'}>
-            <FlatList
-              data={options}
-              keyExtractor={(item) => item.value}
-              ItemSeparatorComponent={() => <View height={8} />}
-              renderItem={({ item }) => (
-                <DropDownItem
-                  handleItemClick={handleItemClick}
-                  selectedItem={selectedItem}
-                  item={item}
-                />
-              )}
-            />
+            {options.map((option, index) => (
+              <DropDownItem
+                key={index}
+                handleItemClick={handleItemClick}
+                selectedItem={selectedItem}
+                item={option}
+              />
+            ))}
           </YStack>
         )}
       </YStack>

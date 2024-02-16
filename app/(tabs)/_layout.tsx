@@ -12,6 +12,7 @@ import Account from '@/components/svg/Account';
 import { Text } from 'tamagui';
 import { StyleSheet } from 'react-native';
 import { AlignJustify } from '@tamagui/lucide-icons';
+import { USER_ROLE } from '@/constants/User';
 
 export default function TabLayout() {
   return (
@@ -71,7 +72,11 @@ export default function TabLayout() {
           ),
           headerTitle: '',
           headerRight: () => (
-            <Link href="/player/info" asChild>
+            <Link
+              href={
+                USER_ROLE === 'coach' ? '/coach/account' : '/player/account'
+              }
+              asChild>
               <Pressable>
                 {({ pressed }) => (
                   <AlignJustify

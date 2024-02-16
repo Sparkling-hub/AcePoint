@@ -22,6 +22,7 @@ export default function DropDownItem(props: DropDownItemProps) {
         borderRadius: 8,
         width: '100%',
         paddingHorizontal: 20,
+        marginBottom: 10,
       }}>
       <XStack alignItems="center" justifyContent="space-between">
         <Text

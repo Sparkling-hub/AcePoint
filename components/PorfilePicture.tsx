@@ -10,9 +10,9 @@ const PorfilePicture: React.FC<AvatarProps> = (props) => {
       setImage(i);
     }
   };
-  // useEffect(() => {
-  //   getImage();
-  // }, []);
+  useEffect(() => {
+    getImage();
+  }, []);
 
   return (
     <Avatar {...props}>

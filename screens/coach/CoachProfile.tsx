@@ -37,7 +37,7 @@ export default function CoachProfile() {
   return (
     <YStack
       flex={1}
-      paddingTop={Platform.OS === 'ios' ? 90 : 150}
+      paddingTop={Platform.OS === 'ios' ? 90 : 70}
       paddingHorizontal={16}>
       <YStack justifyContent="center" alignItems="center">
         <PorfileCard rating={5.7}>

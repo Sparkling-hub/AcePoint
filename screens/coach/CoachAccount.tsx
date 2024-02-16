@@ -20,13 +20,13 @@ export default function CoachAccount() {
     getUserName();
   }, []);
   return (
-    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 100}>
+    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 30}>
       <XStack
         justifyContent="space-between"
         alignItems="center"
         marginBottom={26}
         paddingHorizontal={20}>
-        <YStack alignItems="flex-start">
+        <YStack alignItems="flex-start" gap={'$1.5'}>
           <Text
             style={{ fontFamily: 'MontserratBold' }}
             fontSize={20}
@@ -59,7 +59,7 @@ export default function CoachAccount() {
               title="Edit profile"
               onPress={() =>
                 router.push({
-                  pathname: '/player/edit-profile',
+                  pathname: '/coach/edit-profile',
                 })
               }
               buttonStyle={styles.button}

@@ -16,9 +16,7 @@ import tamaguiConfig from '../tamagui.config';
 import { TouchableOpacity } from 'react-native';
 import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
-import CoachAccount from '@/screens/coach/CoachAccount';
-import PlayerProfile from '@/screens/player/PlayerProfile';
-import CoachProfile from '@/screens/coach/CoachProfile';
+import { USER_ROLE } from '@/constants/User';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -73,10 +71,10 @@ function RootLayoutNav() {
       config={tamaguiConfig}
       defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        {/* <Stack>
+        <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name="player/info"
+            name={USER_ROLE === 'coach' ? 'coach/account' : 'player/account'}
             options={{
               headerShadowVisible: false,
               headerLeft: () => (
@@ -88,7 +86,11 @@ function RootLayoutNav() {
             }}
           />
           <Stack.Screen
-            name="player/edit-profile"
+            name={
+              USER_ROLE === 'coach'
+                ? 'coach/edit-profile'
+                : 'player/edit-profile'
+            }
             options={{
               headerShadowVisible: false,
               headerLeft: () => (
@@ -115,10 +117,11 @@ function RootLayoutNav() {
               headerTitle: '',
             }}
           />
-        </Stack> */}
+        </Stack>
         {/* <CoachAccount /> */}
         {/* <PlayerProfile /> */}
-        <CoachProfile />
+        {/* <CoachProfile /> */}
+        {/* <EditCoachProfile /> */}
         {/* <PlayerAccount /> */}
         {/* <EditPlayerProfile /> */}
       </ThemeProvider>

@@ -1,8 +1,8 @@
-import { StatusBar, SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import React from 'react';
 import PlayerAccount from '@/screens/player/PlayerAccount';
 
-export default function Info() {
+export default function Account() {
   return (
     <SafeAreaView style={styles.container}>
       <PlayerAccount />

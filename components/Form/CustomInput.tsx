@@ -40,7 +40,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
   };
 
   return (
-    <>
+    <YStack>
       <TouchableOpacity onPress={handleContainerPress} activeOpacity={0.5}>
         <YStack
           height={70}
@@ -93,7 +93,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
           </Text>
         </XStack>
       ) : null}
-    </>
+    </YStack>
   );
 };
 

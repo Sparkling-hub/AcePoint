@@ -1,15 +1,15 @@
 import Colors from '@/constants/Colors';
 
-import { Button, Text, XStack, YStack } from 'tamagui';
+import { Button, ScrollView, Text, XStack, YStack } from 'tamagui';
 
 import DatePicker from '@/components/Form/DatePicker';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import CountryCodePicker from '@/components/Form/CountryCodePicker';
 import CustomDropdown from '@/components/Form/dropdown/CustomDropdown';
 import { FormikValues, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Platform } from 'react-native';
+import { ActivityIndicator, Platform } from 'react-native';
 
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -23,6 +23,7 @@ const options = [
 ];
 
 export default function EditPlayerProfile() {
+  const [isLoading, setIsLoading] = useState(true);
   const initialValues = {
     name: '',
     email: '',
@@ -83,6 +84,8 @@ export default function EditPlayerProfile() {
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -90,90 +93,100 @@ export default function EditPlayerProfile() {
     getUserData();
   }, []);
 
+  if (isLoading) {
+    return (
+      <YStack flex={1} justifyContent="center" alignItems="center">
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </YStack>
+    );
+  }
+
   return (
     <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 20}>
-      <YStack marginBottom={30}>
-        <YStack alignItems="center">
-          <PorfilePicture
-            marginBottom={20}
-            circular
-            borderWidth={2}
-            borderColor={Colors.primary}
-            size="$9"
-          />
-          <Text
-            style={{ fontFamily: 'Montserrat' }}
-            fontSize={20}
-            lineHeight={24}
-            color={Colors.secondary}>
-            Change profile picture
-          </Text>
+      <ScrollView marginBottom={20}>
+        <YStack marginBottom={30}>
+          <YStack alignItems="center">
+            <PorfilePicture
+              marginBottom={20}
+              circular
+              borderWidth={2}
+              borderColor={Colors.primary}
+              size="$9"
+            />
+            <Text
+              style={{ fontFamily: 'Montserrat' }}
+              fontSize={20}
+              lineHeight={24}
+              color={Colors.secondary}>
+              Change profile picture
+            </Text>
+          </YStack>
         </YStack>
-      </YStack>
 
-      <YStack paddingHorizontal={20} gap={'$3'} minWidth={362} flex={1}>
-        <YStack gap={'$3'}>
-          <YStack>
-            <CustomInput
-              placeholder="Name"
-              value={formik.values.name}
-              onChangeText={formik.handleChange('name')}
-              onBlur={formik.handleBlur('name')}
-              errors={formik.errors.name}
-              touched={formik.touched.name}
-            />
-          </YStack>
-          <YStack>
-            <CustomInput
-              placeholder="Email"
-              value={formik.values.email}
-              onChangeText={formik.handleChange('email')}
-              onBlur={formik.handleBlur('email')}
-              errors={formik.errors.email}
-              touched={formik.touched.email}
-            />
-          </YStack>
-        </YStack>
-        <XStack gap={'$3'}>
-          <YStack flex={1}>
-            <CountryCodePicker
-              countryCode={formik.values.countryCode}
-              handleChange={formik.handleChange('countryCode')}
-              errors={formik.errors.countryCode}
-              validateOnInit
-            />
-          </YStack>
-          <YStack flex={2}>
+        <YStack paddingHorizontal={20} gap={'$3'} minWidth={362} flex={1}>
+          <YStack gap={'$3'}>
             <YStack>
               <CustomInput
-                placeholder="Phone"
-                keyboardType="numeric"
-                value={formik.values.phone}
-                onChangeText={formik.handleChange('phone')}
-                onBlur={formik.handleBlur('phone')}
-                errors={formik.errors.phone}
-                validateOnInit
+                placeholder="Name"
+                value={formik.values.name}
+                onChangeText={formik.handleChange('name')}
+                onBlur={formik.handleBlur('name')}
+                errors={formik.errors.name}
+                touched={formik.touched.name}
+              />
+            </YStack>
+            <YStack>
+              <CustomInput
+                placeholder="Email"
+                value={formik.values.email}
+                onChangeText={formik.handleChange('email')}
+                onBlur={formik.handleBlur('email')}
+                errors={formik.errors.email}
+                touched={formik.touched.email}
               />
             </YStack>
           </YStack>
-        </XStack>
-        <YStack gap={'$3'}>
-          <CustomDropdown
-            options={options}
-            selectedItem={formik.values.gender}
-            handleChange={formik.handleChange('gender')}
-            errors={formik.errors.gender}
-            validateOnInit
-          />
-          <DatePicker
-            date={formik.values.dateOfBirth}
-            handleChange={formik.handleChange('dateOfBirth')}
-            errors={formik.errors.dateOfBirth}
-            validateOnInit
-          />
+          <XStack gap={'$3'}>
+            <YStack flex={1}>
+              <CountryCodePicker
+                countryCode={formik.values.countryCode}
+                handleChange={formik.handleChange('countryCode')}
+                errors={formik.errors.countryCode}
+                validateOnInit
+              />
+            </YStack>
+            <YStack flex={2}>
+              <YStack>
+                <CustomInput
+                  placeholder="Phone"
+                  keyboardType="numeric"
+                  value={formik.values.phone}
+                  onChangeText={formik.handleChange('phone')}
+                  onBlur={formik.handleBlur('phone')}
+                  errors={formik.errors.phone}
+                  validateOnInit
+                />
+              </YStack>
+            </YStack>
+          </XStack>
+          <YStack gap={'$3'}>
+            <CustomDropdown
+              options={options}
+              selectedItem={formik.values.gender}
+              handleChange={formik.handleChange('gender')}
+              errors={formik.errors.gender}
+              validateOnInit
+            />
+            <DatePicker
+              date={formik.values.dateOfBirth}
+              handleChange={formik.handleChange('dateOfBirth')}
+              errors={formik.errors.dateOfBirth}
+              validateOnInit
+            />
+          </YStack>
+          {/* <Button onPress={() => formik.handleSubmit()}>Save</Button> */}
         </YStack>
-        {/* <Button onPress={() => formik.handleSubmit()}>Save</Button> */}
-      </YStack>
+      </ScrollView>
     </YStack>
   );
 }
