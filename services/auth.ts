@@ -22,15 +22,14 @@ export const authAndroid = async () => {
         await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
         const { idToken } = await GoogleSignin.signIn();
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-        const { displayName, email, photoURL } = (await auth().signInWithCredential(googleCredential)).user
-        if (displayName && email && photoURL) {
-            await ReactNativeAsyncStorage.setItem('username', displayName)
-            await ReactNativeAsyncStorage.setItem('email', email)
-            await ReactNativeAsyncStorage.setItem('image', photoURL)
-            findUserByEmail(email, displayName, photoURL);
+        const { user } = (await auth().signInWithCredential(googleCredential))
+        if (user.displayName && user.email && user.photoURL) {
+            await ReactNativeAsyncStorage.setItem('username', user.displayName)
+            await ReactNativeAsyncStorage.setItem('email', user.email)
+            await ReactNativeAsyncStorage.setItem('image', user.photoURL)
+            findUserByEmail(user.email, user.displayName, user.photoURL);
         }
     } catch (error) {
         Alert.alert("Error : ", "Something went wrong !");
-        console.log("ERROR : " + error);
     }
 }
