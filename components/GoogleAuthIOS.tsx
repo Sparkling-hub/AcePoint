@@ -23,7 +23,6 @@ export default function GoogleAuthIOS() {
                 }
             } catch (error) {
                 Alert.alert("Error : ", "Something went wrong !");
-                console.log("ERROR : " + error);
             }
         }
     }

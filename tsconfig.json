@@ -13,7 +13,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "app/__tests__/auth.test.js",
+    "app/__tests__/androidAuth.test.js",
     "app/__tests__/user.test.js"
   ]
 }
