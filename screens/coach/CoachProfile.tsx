@@ -1,5 +1,5 @@
 import { FlatList, Platform } from 'react-native';
-import { Text, YStack, Paragraph, View } from 'tamagui';
+import { Text, YStack, Paragraph } from 'tamagui';
 
 import PorfileCard from '@/components/ProfileCard';
 import Colors from '@/constants/Colors';

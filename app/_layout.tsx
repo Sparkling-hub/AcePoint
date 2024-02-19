@@ -95,11 +95,11 @@ function RootLayoutNav() {
                     <ChevronLeft size={'$2.5'} color={Colors.secondary} />
                   }
                   title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
-                  rightContent={() => (
+                  rightContent={
                     <TouchableOpacity onPress={() => console.log('pressed')}>
                       <HeaderText text="Save" />
                     </TouchableOpacity>
-                  )}
+                  }
                 />
               ),
             }}

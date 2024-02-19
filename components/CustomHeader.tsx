@@ -10,7 +10,7 @@ interface CustomHeaderProps {
   title?: string;
   leftIcon?: React.ReactNode;
   onLeftPress?: () => void;
-  rightContent?: () => React.ReactNode;
+  rightContent?: React.ReactNode;
 }
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({
@@ -35,7 +35,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       )}
       {title && <HeaderText text={title} />}
 
-      {rightContent && rightContent()}
+      {rightContent}
     </XStack>
   );
 };

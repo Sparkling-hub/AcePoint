@@ -113,8 +113,15 @@ export default function EditProfileScreen() {
     );
   }
 
-  const paddingTop =
-    USER_ROLE === 'coach' ? 18 : Platform.OS === 'ios' ? 90 : 30;
+  const calculatePaddingTop = () => {
+    if (USER_ROLE === 'coach') {
+      return 18;
+    } else {
+      return Platform.OS === 'ios' ? 90 : 30;
+    }
+  };
+
+  const paddingTop = calculatePaddingTop();
 
   return (
     <YStack flex={1} paddingTop={paddingTop}>

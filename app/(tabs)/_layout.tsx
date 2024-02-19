@@ -5,7 +5,6 @@ import { Pressable } from 'react-native';
 
 import Colors from '@/constants/Colors';
 
-import { AlignJustify } from '@tamagui/lucide-icons';
 import TabBarText from '@/components/TabBarText';
 import HomeIcon from '@/components/tabIcons/HomeIcon';
 import AccountIcon from '@/components/tabIcons/AccountIcon';
@@ -55,7 +54,7 @@ export default function TabLayout() {
           ),
           header: () => (
             <CustomHeader
-              rightContent={() => (
+              rightContent={
                 <Link href="/user/account" asChild>
                   <Pressable>
                     {({ pressed }) => (
@@ -66,7 +65,7 @@ export default function TabLayout() {
                     )}
                   </Pressable>
                 </Link>
-              )}
+              }
             />
           ),
           headerShadowVisible: false,
