@@ -1,13 +1,12 @@
 import { SafeAreaView, StyleSheet } from 'react-native';
 import React from 'react';
-import PlayerProfile from '@/screens/player/PlayerProfile';
-import CoachProfile from '@/screens/coach/CoachProfile';
-import { USER_ROLE } from '@/constants/User';
+
+import CoachAccount from '@/screens/coach/CoachAccount';
 
 export default function Account() {
   return (
     <SafeAreaView style={styles.container}>
-      {USER_ROLE === 'coach' ? <CoachProfile /> : <PlayerProfile />}
+      <CoachAccount />
     </SafeAreaView>
   );
 }

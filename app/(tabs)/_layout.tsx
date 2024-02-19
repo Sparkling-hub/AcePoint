@@ -5,14 +5,14 @@ import { Pressable } from 'react-native';
 
 import Colors from '@/constants/Colors';
 
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import Home from '@/components/svg/Home';
-import Stats from '@/components/svg/Stats';
+
 import Check from '@/components/svg/Check';
 import Account from '@/components/svg/Account';
 import { Text } from 'tamagui';
 import { StyleSheet } from 'react-native';
 import { AlignJustify } from '@tamagui/lucide-icons';
+import { USER_ROLE } from '@/constants/User';
 
 export default function TabLayout() {
   return (
@@ -72,7 +72,11 @@ export default function TabLayout() {
           ),
           headerTitle: '',
           headerRight: () => (
-            <Link href="/player/info" asChild>
+            <Link
+              href={
+                USER_ROLE === 'coach' ? '/coach/account' : '/player/account'
+              }
+              asChild>
               <Pressable>
                 {({ pressed }) => (
                   <AlignJustify

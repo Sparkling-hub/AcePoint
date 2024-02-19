@@ -6,14 +6,18 @@ import CustomInput from './CustomInput';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
 import { YStack } from 'tamagui';
+import { FormikHandlers } from 'formik';
 
 interface CountryCodePickerProps {
   countryCode: string;
-  setCountryCode: (code: string) => void;
+  handleChange: FormikHandlers['handleChange'];
+  touched?: boolean;
+  errors?: string;
+  validateOnInit?: boolean;
 }
 
 export default function CountryCodePicker(props: CountryCodePickerProps) {
-  const { countryCode, setCountryCode } = props;
+  const { countryCode, handleChange, touched, errors, validateOnInit } = props;
   const [show, setShow] = useState(false);
 
   const showCountryPicker = () => {
@@ -24,6 +28,9 @@ export default function CountryCodePicker(props: CountryCodePickerProps) {
     <YStack>
       <CustomInput
         onPress={showCountryPicker}
+        touched={touched}
+        errors={errors}
+        validateOnInit={validateOnInit}
         readOnly
         value={countryCode}
         icon={<ChevronDown color={Colors.secondary} />}
@@ -31,7 +38,7 @@ export default function CountryCodePicker(props: CountryCodePickerProps) {
       <CountryPicker
         show={show}
         pickerButtonOnPress={(item) => {
-          setCountryCode(item.dial_code);
+          handleChange(item.dial_code);
           setShow(false);
         }}
         lang="en"

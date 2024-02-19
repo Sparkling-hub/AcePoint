@@ -1,5 +1,5 @@
 import { Platform, StyleSheet } from 'react-native';
-import { Text, YStack } from 'tamagui';
+import { Text, XStack, YStack } from 'tamagui';
 
 import { ChevronRight } from '@tamagui/lucide-icons';
 
@@ -10,7 +10,7 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import PorfilePicture from '@/components/PorfilePicture';
 
-export default function PlayerAccount() {
+export default function CoachAccount() {
   const [username, setUsername] = useState('');
   const getUserName = async () => {
     const name = await ReactNativeAsyncStorage.getItem('username');
@@ -21,7 +21,27 @@ export default function PlayerAccount() {
   }, []);
   return (
     <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 30}>
-      <YStack alignItems="center" marginBottom={30}>
+      <XStack
+        justifyContent="space-between"
+        alignItems="center"
+        marginBottom={26}
+        paddingHorizontal={20}>
+        <YStack alignItems="flex-start" gap={'$1.5'}>
+          <Text
+            style={{ fontFamily: 'MontserratBold' }}
+            fontSize={20}
+            lineHeight={24}
+            color={Colors.secondary}>
+            {username ? username : 'Daniel Antone'}
+          </Text>
+          <Text
+            style={{ fontFamily: 'Montserrat' }}
+            fontSize={12}
+            lineHeight={14}
+            color={Colors.secondary}>
+            Subscribed since 10/10/2001
+          </Text>
+        </YStack>
         <PorfilePicture
           marginBottom={20}
           circular
@@ -29,16 +49,9 @@ export default function PlayerAccount() {
           borderColor={Colors.primary}
           size="$9"
         />
-        <Text
-          style={{ fontFamily: 'MontserratBold' }}
-          fontSize={20}
-          lineHeight={24}
-          color={Colors.secondary}
-          textAlign="center">
-          {username ? username : 'Daniel Antone'}
-        </Text>
-      </YStack>
-      <YStack gap={20} paddingHorizontal={15} marginBottom={40}>
+      </XStack>
+
+      <YStack gap={20} paddingHorizontal={15} marginBottom={20}>
         <YStack>
           <Text style={styles.text}>Your Account</Text>
           <YStack gap={15}>
@@ -46,7 +59,7 @@ export default function PlayerAccount() {
               title="Edit profile"
               onPress={() =>
                 router.push({
-                  pathname: '/player/edit-profile',
+                  pathname: '/coach/edit-profile',
                 })
               }
               buttonStyle={styles.button}
@@ -76,9 +89,16 @@ export default function PlayerAccount() {
         </YStack>
         <YStack>
           <Text style={styles.text}>Legal</Text>
-          <YStack>
+          <YStack gap={15}>
             <CustomButton
               title="Privacy"
+              onPress={() => {}}
+              buttonStyle={styles.button}
+              textStyle={styles.buttonText}
+              icon={<ChevronRight size="$2" color={Colors.secondary} />}
+            />
+            <CustomButton
+              title="Subscription"
               onPress={() => {}}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
@@ -100,14 +120,6 @@ export default function PlayerAccount() {
 }
 
 const styles = StyleSheet.create({
-  displayNameText: {
-    fontFamily: 'MontserratBold',
-    fontSize: 20,
-    lineHeight: 24,
-    color: Colors.secondary,
-    textAlign: 'center',
-  },
-
   text: {
     fontFamily: 'MontserratBold',
     fontSize: 16,

@@ -19,4 +19,5 @@ export default {
   primary: '#A9D05C',
   secondary: '#3A4D6C',
   lightSilver: '#D9D9D9',
+  iron: '#DADADA',
 };

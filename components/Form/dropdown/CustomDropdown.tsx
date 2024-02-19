@@ -1,25 +1,36 @@
 import React, { useState } from 'react';
-import { View, YStack } from 'tamagui';
+import { YStack } from 'tamagui';
 import CustomInput from '../CustomInput';
 import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 
 import DropDownItem from './DropDownItem';
-import { FlatList } from 'react-native';
+
 import { option } from '@/types/options';
 import Colors from '@/constants/Colors';
+import { FormikHandlers } from 'formik';
 
 interface CustomDropDownProps {
   options: option[];
   selectedItem: string;
-  setSelectedItem: (item: string) => void;
+  handleChange: FormikHandlers['handleChange'];
+  touched?: boolean;
+  errors?: string;
+  validateOnInit?: boolean;
 }
 
 export default function CustomDropdown(props: CustomDropDownProps) {
-  const { options, selectedItem, setSelectedItem } = props;
+  const {
+    options,
+    selectedItem,
+    handleChange,
+    touched,
+    errors,
+    validateOnInit,
+  } = props;
   const [clicked, setClicked] = useState(false);
 
   const handleItemClick = (item: string) => {
-    setSelectedItem(item);
+    handleChange(item);
     setClicked(false);
   };
 
@@ -27,6 +38,9 @@ export default function CustomDropdown(props: CustomDropDownProps) {
     <YStack zIndex={1}>
       <CustomInput
         placeholder="Gender"
+        touched={touched}
+        errors={errors}
+        validateOnInit={validateOnInit}
         value={selectedItem}
         textTransform="capitalize"
         readOnly
@@ -56,18 +70,14 @@ export default function CustomDropdown(props: CustomDropDownProps) {
             paddingVertical={10}
             paddingHorizontal={16}
             minWidth={'100%'}>
-            <FlatList
-              data={options}
-              keyExtractor={(item) => item.value}
-              ItemSeparatorComponent={() => <View height={8} />}
-              renderItem={({ item }) => (
-                <DropDownItem
-                  handleItemClick={handleItemClick}
-                  selectedItem={selectedItem}
-                  item={item}
-                />
-              )}
-            />
+            {options.map((option, index) => (
+              <DropDownItem
+                key={index}
+                handleItemClick={handleItemClick}
+                selectedItem={selectedItem}
+                item={option}
+              />
+            ))}
           </YStack>
         )}
       </YStack>

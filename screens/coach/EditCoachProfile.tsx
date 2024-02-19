@@ -15,6 +15,7 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 import PorfilePicture from '@/components/PorfilePicture';
 import CustomInput from '@/components/Form/CustomInput';
+import { Search } from '@tamagui/lucide-icons';
 
 const options = [
   { label: 'Male', value: 'male' },
@@ -22,7 +23,7 @@ const options = [
   { label: 'Other', value: 'other' },
 ];
 
-export default function EditPlayerProfile() {
+export default function EditCoachProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const initialValues = {
     name: '',
@@ -31,6 +32,7 @@ export default function EditPlayerProfile() {
     gender: '',
     countryCode: '+44',
     dateOfBirth: '',
+    club: '',
   };
 
   const validationSchema = Yup.object().shape({
@@ -52,6 +54,7 @@ export default function EditPlayerProfile() {
     gender: Yup.string().required('Please select your gender'),
     dateOfBirth: Yup.string().required('Please enter your date of birth'),
     countryCode: Yup.string().required('Country code is required'),
+    club: Yup.string().required('Please enter your club'),
   });
 
   const handleSubmit = (values: FormikValues) => {
@@ -132,7 +135,7 @@ export default function EditPlayerProfile() {
                 onChangeText={formik.handleChange('name')}
                 onBlur={formik.handleBlur('name')}
                 errors={formik.errors.name}
-                touched={formik.touched.name}
+                validateOnInit
               />
             </YStack>
             <YStack>
@@ -142,7 +145,7 @@ export default function EditPlayerProfile() {
                 onChangeText={formik.handleChange('email')}
                 onBlur={formik.handleBlur('email')}
                 errors={formik.errors.email}
-                touched={formik.touched.email}
+                validateOnInit
               />
             </YStack>
           </YStack>
@@ -181,6 +184,15 @@ export default function EditPlayerProfile() {
               date={formik.values.dateOfBirth}
               handleChange={formik.handleChange('dateOfBirth')}
               errors={formik.errors.dateOfBirth}
+              validateOnInit
+            />
+            <CustomInput
+              placeholder="Club"
+              value={formik.values.club}
+              icon={<Search color={Colors.secondary} />}
+              onChangeText={formik.handleChange('club')}
+              onBlur={formik.handleBlur('club')}
+              errors={formik.errors.club}
               validateOnInit
             />
           </YStack>

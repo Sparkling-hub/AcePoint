@@ -13,13 +13,10 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { TamaguiProvider, Text } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
 
-import PlayerProfile from '@/screens/player/PlayerProfile';
-import PlayerAccount from '@/screens/player/PlayerAccount';
-import EditPlayerProfile from '@/screens/player/EditPlayerProfile';
-
 import { TouchableOpacity } from 'react-native';
 import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
+import { USER_ROLE } from '@/constants/User';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -41,6 +38,7 @@ export default function RootLayout() {
     MontserratMedium: require('../assets/fonts/Montserrat-Medium.ttf'),
     MontserratBold: require('../assets/fonts/Montserrat-Bold.ttf'),
     MontserratExtraBold: require('../assets/fonts/Montserrat-ExtraBold.ttf'),
+    MontserratSemiBold: require('../assets/fonts/Montserrat-SemiBold.ttf'),
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
     ...FontAwesome.font,
@@ -76,7 +74,7 @@ function RootLayoutNav() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name="player/info"
+            name={USER_ROLE === 'coach' ? 'coach/account' : 'player/account'}
             options={{
               headerShadowVisible: false,
               headerLeft: () => (
@@ -88,7 +86,11 @@ function RootLayoutNav() {
             }}
           />
           <Stack.Screen
-            name="player/edit-profile"
+            name={
+              USER_ROLE === 'coach'
+                ? 'coach/edit-profile'
+                : 'player/edit-profile'
+            }
             options={{
               headerShadowVisible: false,
               headerLeft: () => (
@@ -116,7 +118,10 @@ function RootLayoutNav() {
             }}
           />
         </Stack>
+        {/* <CoachAccount /> */}
         {/* <PlayerProfile /> */}
+        {/* <CoachProfile /> */}
+        {/* <EditCoachProfile /> */}
         {/* <PlayerAccount /> */}
         {/* <EditPlayerProfile /> */}
       </ThemeProvider>
