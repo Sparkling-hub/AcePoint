@@ -67,6 +67,26 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
+  const AccountHeader = () => {
+    return (
+      <CustomHeader leftIcon={<X size={'$2.5'} color={Colors.secondary} />} />
+    );
+  };
+
+  const EditProfileHeader = () => {
+    return (
+      <CustomHeader
+        leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
+        title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
+        rightContent={
+          <TouchableOpacity onPress={() => console.log('pressed')}>
+            <HeaderText text="Save" />
+          </TouchableOpacity>
+        }
+      />
+    );
+  };
+
   return (
     <TamaguiProvider
       config={tamaguiConfig}
@@ -78,30 +98,14 @@ function RootLayoutNav() {
             name="user/account"
             options={{
               headerShadowVisible: false,
-              header: () => (
-                <CustomHeader
-                  leftIcon={<X size={'$2.5'} color={Colors.secondary} />}
-                />
-              ),
+              header: AccountHeader,
             }}
           />
           <Stack.Screen
             name="user/edit-profile"
             options={{
               headerShadowVisible: false,
-              header: () => (
-                <CustomHeader
-                  leftIcon={
-                    <ChevronLeft size={'$2.5'} color={Colors.secondary} />
-                  }
-                  title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
-                  rightContent={
-                    <TouchableOpacity onPress={() => console.log('pressed')}>
-                      <HeaderText text="Save" />
-                    </TouchableOpacity>
-                  }
-                />
-              ),
+              header: EditProfileHeader,
             }}
           />
         </Stack>

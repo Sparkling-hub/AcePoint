@@ -5,14 +5,37 @@ import { Pressable } from 'react-native';
 
 import Colors from '@/constants/Colors';
 
-import TabBarText from '@/components/TabBarText';
-import HomeIcon from '@/components/tabIcons/HomeIcon';
-import AccountIcon from '@/components/tabIcons/AccountIcon';
-import CheckIcon from '@/components/tabIcons/CheckIcon';
 import CustomHeader from '@/components/CustomHeader';
 import Bars from '@/components/svg/Bars';
+import {
+  renderTabBarIcon,
+  renderTabBarIconBook,
+  renderTabBarIconProfile,
+  renderTabBarLabel,
+  renderTabBarLabelBook,
+  renderTabBarLabelProfile,
+} from '@/helpers/TabBarHelper';
 
 export default function TabLayout() {
+  const renderHeader = () => {
+    return (
+      <CustomHeader
+        rightContent={
+          <Link href="/user/account" asChild>
+            <Pressable>
+              {({ pressed }) => (
+                <Bars
+                  fill={Colors.secondary}
+                  style={{ opacity: pressed ? 0.5 : 1 }}
+                />
+              )}
+            </Pressable>
+          </Link>
+        }
+      />
+    );
+  };
+
   return (
     <Tabs
       screenOptions={{
@@ -29,45 +52,24 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ focused }) => <HomeIcon focused={focused} />,
-          tabBarLabel: ({ focused }) => (
-            <TabBarText focused={focused} text="Home" />
-          ),
+          tabBarIcon: renderTabBarIcon,
+          tabBarLabel: renderTabBarLabel,
         }}
       />
       <Tabs.Screen
         name="book"
         options={{
           title: 'Find and Book',
-          tabBarIcon: ({ focused }) => <CheckIcon focused={focused} />,
-          tabBarLabel: ({ focused }) => (
-            <TabBarText focused={focused} text="Find and Book" />
-          ),
+          tabBarIcon: renderTabBarIconBook,
+          tabBarLabel: renderTabBarLabelBook,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarIcon: ({ focused }) => <AccountIcon focused={focused} />,
-          tabBarLabel: ({ focused }) => (
-            <TabBarText focused={focused} text="Account" />
-          ),
-          header: () => (
-            <CustomHeader
-              rightContent={
-                <Link href="/user/account" asChild>
-                  <Pressable>
-                    {({ pressed }) => (
-                      <Bars
-                        fill={Colors.secondary}
-                        style={{ opacity: pressed ? 0.5 : 1 }}
-                      />
-                    )}
-                  </Pressable>
-                </Link>
-              }
-            />
-          ),
+          tabBarIcon: renderTabBarIconProfile,
+          tabBarLabel: renderTabBarLabelProfile,
+          header: renderHeader,
           headerShadowVisible: false,
         }}
       />
