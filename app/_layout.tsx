@@ -1,4 +1,3 @@
-import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   DarkTheme,
@@ -14,12 +13,13 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { TamaguiProvider } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
 
-import { X } from '@tamagui/lucide-icons';
+import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
 import CustomHeader from '@/components/CustomHeader';
-import HeaderText from '@/components/HeaderText';
+
 import { USER_ROLE } from '@/constants/User';
-import EditProfileHeader from '@/components/EditProfileHeader';
+import { TouchableOpacity } from 'react-native';
+import HeaderText from '@/components/HeaderText';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -37,6 +37,20 @@ SplashScreen.preventAutoHideAsync();
 const AccountHeader = () => {
   return (
     <CustomHeader leftIcon={<X size={'$2.5'} color={Colors.secondary} />} />
+  );
+};
+
+const EditProfileHeader = () => {
+  return (
+    <CustomHeader
+      leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
+      title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
+      rightContent={
+        <TouchableOpacity onPress={() => console.log('pressed')}>
+          <HeaderText text="Save" />
+        </TouchableOpacity>
+      }
+    />
   );
 };
 
@@ -92,12 +106,7 @@ function RootLayoutNav() {
             name="user/edit-profile"
             options={{
               headerShadowVisible: false,
-              header: (props) => (
-                <EditProfileHeader
-                  {...props}
-                  title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
-                />
-              ),
+              header: EditProfileHeader,
             }}
           />
         </Stack>
