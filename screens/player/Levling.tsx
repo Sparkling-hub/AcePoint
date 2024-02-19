@@ -5,6 +5,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { RadioGroupItemWithLabel } from '@/components/RadioGroupItemWithLabel';
 import Button from '@/components/Button'
 import {updateUserPlayer } from'@/api/auth-api'
+import {  } from '@tamagui/lucide-icons';
 const Levling = ({onNext}:{onNext:() => void}) => {
   const [level, setLevel] = useState('');
   const text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo ex, dapibus sit amet nisi ut, posuere laoreet nulla. Suspendisse dignissim elit in justo efficitur."

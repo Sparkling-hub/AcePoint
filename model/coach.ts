@@ -4,9 +4,12 @@ export class Coach {
     clubId?:CollectionReference
     createdAt?:Timestamp
     displayName?: string
-    phoneNumber?: number
+    phoneNumber?: string
     rating?: number
     subscription?: boolean
     image?:string
     age?:Date
+    country?:string
+    marketing?:boolean
+    terms?:boolean
 }

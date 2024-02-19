@@ -10,4 +10,7 @@ export class Player {
     gender?:string
     tennisLevel?:string
     country?:string
+    marketing?:boolean
+    terms?:boolean
+    fitness?:string
 }

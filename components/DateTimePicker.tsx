@@ -39,9 +39,9 @@ const DateTimePicker = function DatePicker(props: DatePickerProps) {
 
     return (
 
-            <Pressable  onPress={() => setShow(true)}>
-                <XStack alignItems={'center'}  justifyContent='flex-end'>
-                    <Input pointerEvents="none" editable={false} flexGrow={1} >
+            <Pressable  onPress={() => setShow(true)} >
+                <XStack alignItems={'center'}  justifyContent='flex-end' >
+                    <Input pointerEvents="none" editable={false} flexGrow={1} style={{height:72,color:"#3A4D6C"}}  >
                         {
 
                             type === 'date' && date?.toLocaleDateString()
@@ -55,7 +55,7 @@ const DateTimePicker = function DatePicker(props: DatePickerProps) {
                     <XStack paddingRight={10} position='absolute'>
                         
                         {
-                            type === 'date' && <Calendar />
+                            type === 'date' && <Calendar style={{color:"#3A4D6C"}}/>
                         }
 
                         {
@@ -76,6 +76,7 @@ const DateTimePicker = function DatePicker(props: DatePickerProps) {
                 onChange={props.onChange}
                 onConfirm={handleConfirm}
                 onCancel={hideDatePicker}
+             
             />
 
             </Pressable>

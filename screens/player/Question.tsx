@@ -11,16 +11,17 @@ import {updateUserPlayer } from'@/api/auth-api'
 const Question = () => {
     const [age, setAge] = useState<Date>(new Date());
     const [gender, setGender] = useState('Male');
-
+    const [fitness, setFitness] = useState('Normal');
     const onChange = (selectedDate?: Date) => {
         const currentDate = selectedDate ?? age;
         setAge(currentDate);
     };
     const updatePlayer=()=>{
         updateUserPlayer({age:age,
-            gender:gender
+            gender:gender,
+            fitness:fitness
         })
-      }
+    }
   return (
     <SafeAreaView style={styles.container}>
         <Heading size={"$3"} style={styles.header}>Answer the questions</Heading>
@@ -37,6 +38,19 @@ const Question = () => {
             <YStack width={300} alignItems="center" space="$4">
                 <RadioGroupItemWithLabel size="$3" value={"Male"} label="Male" />
                 <RadioGroupItemWithLabel size="$3" value={"Female"} label="Female" />
+            </YStack>
+        </RadioGroup>
+        </Stack>    
+        <Stack space="$4" >
+        <Text style={styles.datetext}>What’s your fitness level?</Text>
+        <RadioGroup aria-labelledby="Select one item"
+            onValueChange={value => setFitness(value)} value={fitness}>
+            <YStack width={300} alignItems="center" space="$4">
+                <RadioGroupItemWithLabel size="$3" value={"Excellent"} label="Excellent" />
+                <RadioGroupItemWithLabel size="$3" value={"Good"} label="Good" />
+                <RadioGroupItemWithLabel size="$3" value={"Normal"} label="Normal" />
+                <RadioGroupItemWithLabel size="$3" value={"Low"} label="Low" />
+                <RadioGroupItemWithLabel size="$3" value={"Very low"} label="Very low" />
             </YStack>
         </RadioGroup>
         </Stack>    

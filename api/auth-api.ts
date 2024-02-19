@@ -8,9 +8,9 @@ const signUpCoach = async ({ email,password,coach }: { email: string ,password:s
       .then((userCredential) => {
         const userData = {   
           displayName: coach.displayName,
-          subscription:coach.subscription,
           phoneNumber:coach.phoneNumber,
           age:coach.age,
+          country:coach.country,
           image:coach.image,
           createdAt:Timestamp.now()    
         }; 
@@ -36,6 +36,8 @@ const signUpPlayer = async ({ email,password,player }: { email: string ,password
       displayName: player.displayName,
       phoneNumber:player.phoneNumber,
       country:player.country,
+      terms:player.terms,
+      marketing:player.marketing,
       createdAt:Timestamp.now()    
     }; 
     console.log("User added successfully!");
@@ -43,7 +45,7 @@ const signUpPlayer = async ({ email,password,player }: { email: string ,password
       setDoc(doc(db, 'player',userCredential.user.uid), userData)
       console.log("player added successfully!");
       console.log(JSON.stringify(userData))
-      storeData("userId",userCredential.user.uid).then((data)=>{
+      storeData("playerId",userCredential.user.uid).then((data)=>{
         console.log("storage data: "+data)
       })
       
@@ -59,10 +61,10 @@ const signUpPlayer = async ({ email,password,player }: { email: string ,password
 
 const updateUserPlayer = async (playerData: Player) => {
   try {
-    const userId = await retrieveData("userId");
-    console.log("storage data: " + userId);
+    const playerId = await retrieveData("playerId");
+    console.log("storage data: " + playerId);
     const coachCollectionRef = collection(db, 'player');
-    await updateDoc(doc(coachCollectionRef, userId), { ...playerData });
+    await updateDoc(doc(coachCollectionRef, playerId), { ...playerData });
       return 'Player updated successfully';
   }catch (error) {
     console.error('Error updating Player:', error);

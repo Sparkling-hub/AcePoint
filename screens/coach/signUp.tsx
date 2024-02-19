@@ -1,13 +1,11 @@
 import { Keyboard, SafeAreaView, StyleSheet, View,TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
-import { signUpPlayer } from '@/api/auth-api'
+import { signUpCoach } from '@/api/auth-api'
 import {  Button,Heading, Input , Stack,Text } from 'tamagui';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import CountryCodeDropdownPicker from 'react-native-dropdown-country-picker'
 import { CheckboxWithLabel } from '@/components/CheckboxWithLabel';
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
-import { Formik } from 'formik';
-import * as Yup from 'yup';
 
 const SignUp = ({onNext}:{onNext:() => void}) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -36,34 +34,16 @@ const SignUp = ({onNext}:{onNext:() => void}) => {
     setMarketing(!marketing)
   };
   const signUp=()=>{
-    signUpPlayer({email,password,player:{
-      displayName,
-       phoneNumber:country.dial_code+phoneNumber,
-       country:country.name,
-      marketing:marketing,
-      terms:terms
-    }})
+    // signUpCoach({email,password,coach:{
+    //   displayName,
+    //    phoneNumber:country.dial_code+phoneNumber,
+    //    country:country.name,
+    //   marketing:marketing,
+    //   terms:terms
+    // }})
     onNext()
   }
   return (
-    <Formik
-      initialValues={{
-        displayName: '',
-        email: '',
-        phoneNumber: '',
-        password: '',
-      }}
-      validationSchema={Yup.object().shape({
-        displayName: Yup.string().required('Name and last name are required'),
-        email: Yup.string().email('Invalid email').required('Email is required'),
-        phoneNumber: Yup.string().required('Phone number is required'),
-        password: Yup.string().required('Password is required'),
-      })}
-      onSubmit={(values, { setSubmitting }) => {
-        setSubmitting(false);
-      }}
-    >
-    {formikProps => (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
         activeOpacity={1}
@@ -71,38 +51,22 @@ const SignUp = ({onNext}:{onNext:() => void}) => {
         >
       <Heading size={"$3"} style={styles.header}>SING UP</Heading>
       <Stack space="$5">
-        
-      <Input
-        borderWidth={0}
-        placeholder="Name and last name"
-        onChangeText={(text) => {
-          formikProps.handleChange('displayName')(text); 
-          setDisplayName(text); 
-      }}
-        onBlur={formikProps.handleBlur('displayName')}
-        value={formikProps.values.displayName}
-        style={styles.input}
-        placeholderTextColor='#3A4D6C'
-              />
-          {formikProps.touched.displayName && formikProps.errors.displayName &&
-                <Text style={{ color: 'red' }}>{formikProps.errors.displayName}</Text>
-              }
-        <Input
-                borderWidth={0}
-                placeholder="Email"
-                onChangeText={(text) => {
-                  formikProps.handleChange('email')(text); 
-                  setEmail(text); 
-              }}
-                onBlur={formikProps.handleBlur('email')}
-                value={formikProps.values.email}
-                autoCapitalize="none"
-                style={styles.input}
-                placeholderTextColor='#3A4D6C'
-              />
-              {formikProps.touched.email && formikProps.errors.email &&
-                <Text style={{ color: 'red' }}>{formikProps.errors.email}</Text>
-              }
+        <Input borderWidth={0}
+          placeholder="Name and last name"
+          onChangeText={(text: string) => setDisplayName(text)}
+          value={displayName}
+          style={styles.input}
+          placeholderTextColor='#3A4D6C'
+        />
+         
+        <Input borderWidth={0}
+          placeholder="Email"
+          onChangeText={(text: string) => setEmail(text)}
+          value={email}
+          autoCapitalize="none"
+          style={styles.input}
+          placeholderTextColor='#3A4D6C'
+        />
         <View>
          <Stack style={styles.stackPhone}>
          <View>
@@ -117,39 +81,25 @@ const SignUp = ({onNext}:{onNext:() => void}) => {
           searchStyles={{backgroundColor:"#DADADA",height:49,width:"90%",marginLeft:15}}
         />         
           </View>        
-          <Input
-            borderWidth={0}
-            placeholder="Phone"
-            onChangeText={(text) => {
-              formikProps.handleChange('phoneNumber')(text); 
-              setPhoneNumber(text); 
-          }}
-            onBlur={formikProps.handleBlur('phoneNumber')}
-            value={formikProps.values.phoneNumber}
-            style={styles.phone}
-            keyboardType='numeric'
-            placeholderTextColor='#3A4D6C'
+          <Input borderWidth={0}
+          placeholder="Phone"
+          onChangeText={(text: string) => setPhoneNumber(text)}
+          value={phoneNumber}
+          style={styles.phone}
+          keyboardType='numeric'
+          placeholderTextColor='#3A4D6C'
           />
-                  
          </Stack>
-         {formikProps.touched.phoneNumber && formikProps.errors.phoneNumber &&
-                    <Text style={{ color: 'red' }}>{formikProps.errors.phoneNumber}</Text>
-                  }
         </View> 
         <Stack style={styles.pasStack}>
-        <Input
-            borderWidth={0}
+          <Input  borderWidth={0}
             placeholder="Password"
-            onChangeText={(text) => {
-            formikProps.handleChange('password')(text); 
-            setPassword(text); 
-          }}
-          onBlur={formikProps.handleBlur('password')}
-          value={formikProps.values.password}
-          secureTextEntry={!passwordVisible}
-          style={styles.input}
-          placeholderTextColor='#3A4D6C'
-        />
+            onChangeText={(text: string) => setPassword(text)}
+            value={password}
+            secureTextEntry={!passwordVisible}
+            style={styles.input}
+            placeholderTextColor='#3A4D6C'
+          />
                {passwordVisible ? (
         <EyeOff
           onPress={togglePasswordVisibility}
@@ -173,9 +123,6 @@ const SignUp = ({onNext}:{onNext:() => void}) => {
           }}
         />
       )}
-       {formikProps.touched.password && formikProps.errors.password &&
-                  <Text style={{ color: 'red' }}>{formikProps.errors.password}</Text>
-                }
           </Stack>
       </Stack>
       <Stack space="$3" style={styles.stack}>
@@ -194,8 +141,6 @@ const SignUp = ({onNext}:{onNext:() => void}) => {
       </Stack>
       </TouchableOpacity>
     </SafeAreaView>
-    )}
-    </Formik>
   );
 }
 const styles = StyleSheet.create({
@@ -258,7 +203,7 @@ const styles = StyleSheet.create({
     marginTop:20,
     height:hp("6%"),
     width:wp("55%"),
-    left:wp("7%"),
+    left:wp("10%"),
     backgroundColor:"#3A4D6C"
   },
 

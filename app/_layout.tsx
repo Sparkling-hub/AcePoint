@@ -12,6 +12,13 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { TamaguiProvider } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
 import SignUpPlayer from '@/screens/SignUpPlayer';
+import Login from '@/screens/Login';
+import SignUpCoach from '@/screens/signUpCoach';
+import Information from '@/screens/coach/Information';
+import Trail from '@/screens/coach/Trail';
+import LoginPlayer from '@/screens/login/LoginPlayer';
+import LoginCoach from '@/screens/login/LoginCoach';
+import View from '@/screens/View';
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -60,7 +67,15 @@ function RootLayoutNav() {
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-         <SignUpPlayer/> 
+         {/* <SignUpPlayer/>  */}
+          {/* <Login/>  */}
+          {/* <SignUpCoach/> */}
+          {/* <Information/> */}
+          {/* <SignUpCoach/> */}
+           {/* <LoginPlayer />  */}
+           <View />
+          {/* <LoginCoach/> */}
+
       </ThemeProvider>
     </TamaguiProvider>
   );

@@ -1,102 +1,42 @@
-import { View,StyleSheet, TextInput, Button, Switch } from 'react-native'
+import { StyleSheet, SafeAreaView } from 'react-native'
 import React, { useState } from 'react'
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { signUpCoach } from '@/api/auth-api'
-import UploadImage from '@/components/utils/UploadImage';
+import { Progress } from 'tamagui';
+import SignUp from './coach/signUp';
+import Info from './coach/info';
+import Information from './coach/Information';
+import Trail from './coach/Trail';
 
 
 const SignUpCoach = () => {
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [displayName, setDisplayName] = useState<string>('');
-    const [image, setImage] = useState<string>('');
-    const [phoneNumber, setPhoneNumber] = useState<string>('');
-    const [subscription, setSubscription] = useState<boolean>(false);
-    const [age, setAge] = useState<Date>(new Date());
-    const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
-    const onChange = (event: DateTimePickerEvent,selectedDate?: Date) => {
-        const currentDate = selectedDate ?? age;
-        setAge(currentDate);
-        setShowDatePicker(false);
-    };
-    const handleDataFromChild = (data:string) => {
-        setImage(data);
-    };
-    const showDatepicker = () => {
-        setShowDatePicker(true);
-    };
-    const onSignUpPressed = async () => {
+  const [progress, setProgress] = useState(34);
+  const handleNext = () => setProgress(progress + 34);
    
-        await signUpCoach({
-          email:email,
-          password:password,
-          coach:{
-            displayName:displayName,
-            phoneNumber:parseInt(phoneNumber),
-            subscription:subscription,
-            age:age,
-            image:image
-        }})
-    }
-  return (
-    <View>
-        <UploadImage getFromChild={handleDataFromChild}/>
-      <TextInput
-        placeholder="Email"
-        onChangeText={(text: string) => setEmail(text)}
-        value={email}
-        autoCapitalize="none"
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Password"
-        onChangeText={(text: string) => setPassword(text)}
-        value={password}
-        secureTextEntry={true}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Display Name"
-        onChangeText={(text: string) => setDisplayName(text)}
-        value={displayName}
-        style={styles.input}
-      />
-     <TextInput
-      style={styles.input}
-      value={phoneNumber}
-      onChangeText={text => setPhoneNumber(text)}
-      keyboardType="numeric" 
-      placeholder="Enter phone number"
-    />
+  
+  return  (
+    <SafeAreaView style={styles.container}>
+      <Progress value={progress} style={styles.progress}>
+        <Progress.Indicator style={styles.bounce} animation="bouncy" />
+      </Progress>
+      {progress === 34 && <SignUp onNext={handleNext} />}
+      {progress === 68 && <Information onNext={handleNext} />}
+      {progress === 102 && <Trail  />}
     
-   <Button onPress={showDatepicker} title={""+age} />
-      {showDatePicker && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={age}
-          mode="date"
-          display="default"
-          onChange={onChange}
-          
-        />
-      )}
-      <Switch
-        value={subscription}
-        onValueChange={setSubscription}
-      />
-      <Button title="Sign Up" onPress={onSignUpPressed} />
-    </View>
+    </SafeAreaView>
   );
 }
+
+export default SignUpCoach
 const styles = StyleSheet.create({
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
-    marginBottom: 10,
-    backgroundColor: '#fff',
+  container: {
+    flex: 1,
+    paddingTop: 50,
+    backgroundColor: '#FFFF',
+    alignItems: 'center',
+  },
+  progress: {
+    backgroundColor: '#FFFF',
+  },
+  bounce: {
+    backgroundColor: '#3A4D6C',
   },
 });
-export default SignUpCoach
