@@ -10,12 +10,12 @@ import Colors from '@/constants/Colors';
 import { FormikHandlers } from 'formik';
 
 interface CustomDropDownProps {
-  options: option[];
-  selectedItem: string;
-  handleChange: FormikHandlers['handleChange'];
-  touched?: boolean;
-  errors?: string;
-  validateOnInit?: boolean;
+  readonly options: option[];
+  readonly selectedItem: string;
+  readonly handleChange: FormikHandlers['handleChange'];
+  readonly touched?: boolean;
+  readonly errors?: string;
+  readonly validateOnInit?: boolean;
 }
 
 export default function CustomDropdown(props: CustomDropDownProps) {
@@ -70,9 +70,9 @@ export default function CustomDropdown(props: CustomDropDownProps) {
             paddingVertical={10}
             paddingHorizontal={16}
             minWidth={'100%'}>
-            {options.map((option, index) => (
+            {options.map((option) => (
               <DropDownItem
-                key={index}
+                key={option.value}
                 handleItemClick={handleItemClick}
                 selectedItem={selectedItem}
                 item={option}

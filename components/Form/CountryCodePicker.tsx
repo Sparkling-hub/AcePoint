@@ -9,11 +9,11 @@ import { YStack } from 'tamagui';
 import { FormikHandlers } from 'formik';
 
 interface CountryCodePickerProps {
-  countryCode: string;
-  handleChange: FormikHandlers['handleChange'];
-  touched?: boolean;
-  errors?: string;
-  validateOnInit?: boolean;
+  readonly countryCode: string;
+  readonly handleChange: FormikHandlers['handleChange'];
+  readonly touched?: boolean;
+  readonly errors?: string;
+  readonly validateOnInit?: boolean;
 }
 
 export default function CountryCodePicker(props: CountryCodePickerProps) {

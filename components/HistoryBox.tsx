@@ -4,10 +4,10 @@ import Colors from '@/constants/Colors';
 import PorfilePicture from './PorfilePicture';
 
 interface HistoryBoxProps {
-  displayName: string;
-  hours: number;
-  date: string;
-  location: string;
+  readonly displayName: string;
+  readonly hours: number;
+  readonly date: string;
+  readonly location: string;
 }
 
 export default function HistoryBox(props: HistoryBoxProps) {

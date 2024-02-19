@@ -40,7 +40,7 @@ export default function CoachProfile() {
       paddingTop={Platform.OS === 'ios' ? 90 : 70}
       paddingHorizontal={16}>
       <YStack justifyContent="center" alignItems="center">
-        <PorfileCard rating={5.7}>
+        <PorfileCard rating={5.7} verified>
           <YStack gap={'$2'} alignItems="center" justifyContent="center">
             <YStack>
               <Text
@@ -97,7 +97,6 @@ export default function CoachProfile() {
                 issued={item.issued}
               />
             )}
-            ItemSeparatorComponent={() => <View height={18} />}
           />
         </YStack>
       </YStack>

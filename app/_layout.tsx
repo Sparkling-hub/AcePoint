@@ -5,17 +5,20 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack, useNavigation } from 'expo-router';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
-import { TamaguiProvider, Text } from 'tamagui';
+import { TamaguiProvider } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
 
 import { TouchableOpacity } from 'react-native';
 import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
+import CustomHeader from '@/components/CustomHeader';
+import HeaderText from '@/components/HeaderText';
+import { USER_ROLE } from '@/constants/User';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -63,7 +66,6 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const navigation = useNavigation();
 
   return (
     <TamaguiProvider
@@ -76,49 +78,33 @@ function RootLayoutNav() {
             name="user/account"
             options={{
               headerShadowVisible: false,
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <X size={'$2.5'} color={Colors.secondary} />
-                </TouchableOpacity>
+              header: () => (
+                <CustomHeader
+                  leftIcon={<X size={'$2.5'} color={Colors.secondary} />}
+                />
               ),
-              headerTitle: '',
             }}
           />
           <Stack.Screen
             name="user/edit-profile"
             options={{
               headerShadowVisible: false,
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <ChevronLeft size={'$2.5'} color={Colors.secondary} />
-                </TouchableOpacity>
+              header: () => (
+                <CustomHeader
+                  leftIcon={
+                    <ChevronLeft size={'$2.5'} color={Colors.secondary} />
+                  }
+                  title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
+                  rightContent={() => (
+                    <TouchableOpacity onPress={() => console.log('pressed')}>
+                      <HeaderText text="Save" />
+                    </TouchableOpacity>
+                  )}
+                />
               ),
-
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() => {
-                    console.log('pressed');
-                  }}>
-                  <Text
-                    style={{ fontFamily: 'MontserratBold' }}
-                    fontSize={18}
-                    lineHeight={22}
-                    textTransform="uppercase"
-                    color={Colors.secondary}>
-                    Save
-                  </Text>
-                </TouchableOpacity>
-              ),
-              headerTitle: '',
             }}
           />
         </Stack>
-        {/* <CoachAccount /> */}
-        {/* <PlayerProfile /> */}
-        {/* <CoachProfile /> */}
-        {/* <EditCoachProfile /> */}
-        {/* <PlayerAccount /> */}
-        {/* <EditPlayerProfile /> */}
       </ThemeProvider>
     </TamaguiProvider>
   );

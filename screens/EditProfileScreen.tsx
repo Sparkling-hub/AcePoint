@@ -48,7 +48,7 @@ export default function EditProfileScreen() {
       )
       .required('Email is required'),
     phone: Yup.string()
-      .matches(/^[0-9]+$/, 'Phone must be only digits')
+      .matches(/^\d+$/, 'Phone must be only digits')
       .min(6, 'Phone number is too short!')
       .max(15, 'Phone number is too long!')
       .required('Please enter your phone number'),
@@ -113,10 +113,13 @@ export default function EditProfileScreen() {
     );
   }
 
+  const paddingTop =
+    USER_ROLE === 'coach' ? 18 : Platform.OS === 'ios' ? 90 : 30;
+
   return (
-    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 20}>
-      <ScrollView marginBottom={20}>
-        <YStack marginBottom={30}>
+    <YStack flex={1} paddingTop={paddingTop}>
+      <ScrollView marginBottom={20} paddingHorizontal={16}>
+        <YStack marginBottom={30} paddingRight={14}>
           <YStack alignItems="center">
             <PorfilePicture
               marginBottom={20}
@@ -135,7 +138,7 @@ export default function EditProfileScreen() {
           </YStack>
         </YStack>
 
-        <YStack paddingHorizontal={20} gap={'$3'} minWidth={362} flex={1}>
+        <YStack gap={'$3'} minWidth={362} flex={1}>
           <YStack gap={'$3'}>
             <YStack>
               <CustomInput

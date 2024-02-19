@@ -20,8 +20,12 @@ export default function AccountScreen() {
   useEffect(() => {
     getUserName();
   }, []);
+
+  const paddingTop =
+    USER_ROLE === 'coach' ? 0 : Platform.OS === 'ios' ? 90 : 30;
+
   return (
-    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 30}>
+    <YStack flex={1} paddingTop={paddingTop}>
       {USER_ROLE === 'player' ? (
         <YStack alignItems="center" marginBottom={30}>
           <PorfilePicture
@@ -37,7 +41,7 @@ export default function AccountScreen() {
             lineHeight={24}
             color={Colors.secondary}
             textAlign="center">
-            {username ? username : 'Daniel Antone'}
+            {username ?? 'Daniel Antone'}
           </Text>
         </YStack>
       ) : (
@@ -52,7 +56,7 @@ export default function AccountScreen() {
               fontSize={20}
               lineHeight={24}
               color={Colors.secondary}>
-              {username ? username : 'Daniel Antone'}
+              {username ?? 'Daniel Antone'}
             </Text>
             <Text
               style={{ fontFamily: 'Montserrat' }}
