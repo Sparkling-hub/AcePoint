@@ -16,7 +16,6 @@ import tamaguiConfig from '../tamagui.config';
 import { TouchableOpacity } from 'react-native';
 import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
-import { USER_ROLE } from '@/constants/User';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -74,7 +73,7 @@ function RootLayoutNav() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name={USER_ROLE === 'coach' ? 'coach/account' : 'player/account'}
+            name="user/account"
             options={{
               headerShadowVisible: false,
               headerLeft: () => (
@@ -86,11 +85,7 @@ function RootLayoutNav() {
             }}
           />
           <Stack.Screen
-            name={
-              USER_ROLE === 'coach'
-                ? 'coach/edit-profile'
-                : 'player/edit-profile'
-            }
+            name="user/edit-profile"
             options={{
               headerShadowVisible: false,
               headerLeft: () => (

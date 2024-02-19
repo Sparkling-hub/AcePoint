@@ -1,6 +1,6 @@
 import Colors from '@/constants/Colors';
 
-import { Button, ScrollView, Text, XStack, YStack } from 'tamagui';
+import { ScrollView, Text, XStack, YStack } from 'tamagui';
 
 import DatePicker from '@/components/Form/DatePicker';
 import { useEffect, useState } from 'react';
@@ -15,6 +15,8 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 import PorfilePicture from '@/components/PorfilePicture';
 import CustomInput from '@/components/Form/CustomInput';
+import { Search } from '@tamagui/lucide-icons';
+import { USER_ROLE } from '@/constants/User';
 
 const options = [
   { label: 'Male', value: 'male' },
@@ -22,7 +24,7 @@ const options = [
   { label: 'Other', value: 'other' },
 ];
 
-export default function EditPlayerProfile() {
+export default function EditProfileScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const initialValues = {
     name: '',
@@ -31,9 +33,10 @@ export default function EditPlayerProfile() {
     gender: '',
     countryCode: '+44',
     dateOfBirth: '',
+    club: '',
   };
 
-  const validationSchema = Yup.object().shape({
+  const playerValidationSchema = Yup.object().shape({
     name: Yup.string()
       .min(2, 'Name is too short!')
       .max(50, 'Name is too long!')
@@ -54,6 +57,13 @@ export default function EditPlayerProfile() {
     countryCode: Yup.string().required('Country code is required'),
   });
 
+  const coachValidationSchema = playerValidationSchema.shape({
+    club: Yup.string().required('Please enter your club'),
+  });
+
+  const validationSchema =
+    USER_ROLE === 'coach' ? coachValidationSchema : playerValidationSchema;
+
   const handleSubmit = (values: FormikValues) => {
     // Handle form submission
     console.log({ ...values });
@@ -73,6 +83,7 @@ export default function EditPlayerProfile() {
       const ph = await ReactNativeAsyncStorage.getItem('phoneNumber');
       const g = await ReactNativeAsyncStorage.getItem('gender');
       const b = await ReactNativeAsyncStorage.getItem('birthday');
+      const c = await ReactNativeAsyncStorage.getItem('club');
 
       formik.setValues({
         ...formik.values,
@@ -81,6 +92,7 @@ export default function EditPlayerProfile() {
         phone: ph || formik.values.phone,
         gender: g || formik.values.gender,
         dateOfBirth: b || formik.values.dateOfBirth,
+        club: c || formik.values.club,
       });
     } catch (error) {
       console.log(error);
@@ -132,7 +144,7 @@ export default function EditPlayerProfile() {
                 onChangeText={formik.handleChange('name')}
                 onBlur={formik.handleBlur('name')}
                 errors={formik.errors.name}
-                touched={formik.touched.name}
+                validateOnInit
               />
             </YStack>
             <YStack>
@@ -142,7 +154,7 @@ export default function EditPlayerProfile() {
                 onChangeText={formik.handleChange('email')}
                 onBlur={formik.handleBlur('email')}
                 errors={formik.errors.email}
-                touched={formik.touched.email}
+                validateOnInit
               />
             </YStack>
           </YStack>
@@ -183,6 +195,17 @@ export default function EditPlayerProfile() {
               errors={formik.errors.dateOfBirth}
               validateOnInit
             />
+            {USER_ROLE === 'coach' && (
+              <CustomInput
+                placeholder="Club"
+                value={formik.values.club}
+                icon={<Search color={Colors.secondary} />}
+                onChangeText={formik.handleChange('club')}
+                onBlur={formik.handleBlur('club')}
+                errors={formik.errors.club}
+                validateOnInit
+              />
+            )}
           </YStack>
           {/* <Button onPress={() => formik.handleSubmit()}>Save</Button> */}
         </YStack>
