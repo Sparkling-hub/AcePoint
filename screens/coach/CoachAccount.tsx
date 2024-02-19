@@ -32,7 +32,7 @@ export default function CoachAccount() {
             fontSize={20}
             lineHeight={24}
             color={Colors.secondary}>
-            {username}
+            {username ? username : 'Daniel Antone'}
           </Text>
           <Text
             style={{ fontFamily: 'Montserrat' }}

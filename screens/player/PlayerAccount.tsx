@@ -35,7 +35,7 @@ export default function PlayerAccount() {
           lineHeight={24}
           color={Colors.secondary}
           textAlign="center">
-          {username}
+          {username ? username : 'Daniel Antone'}
         </Text>
       </YStack>
       <YStack gap={20} paddingHorizontal={15} marginBottom={40}>
