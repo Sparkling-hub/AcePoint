@@ -8,20 +8,20 @@ import { Button } from 'tamagui';
 import EditScreenInfo from '@/components/EditScreenInfo';
 
 WebBrowser.maybeCompleteAuthSession();
+type PlatformType = 'ios' | 'android';
 
-export default function TabOneScreen() {
-  const GoogleAuth = () => {
-    if (Platform.OS === 'ios') {
-      return (
-        <GoogleAuthIOS></GoogleAuthIOS>
-      )
-    }
-    else if (Platform.OS === 'android') {
-      return (
-        <GoogleAuthAndroid></GoogleAuthAndroid>
-      );
-    }
+interface GoogleAuthProps {
+  platform: PlatformType;
+}
+
+const GoogleAuth: React.FC<GoogleAuthProps> = ({ platform }) => {
+  if (platform === 'ios') {
+    return <GoogleAuthIOS />;
+  } else if (platform === 'android') {
+    return <GoogleAuthAndroid />;
   }
+};
+export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab One</Text>
@@ -29,7 +29,7 @@ export default function TabOneScreen() {
       <Button size="$3" onPress={() => alert('Button pressed!')}>
         Press Me
       </Button>
-      {GoogleAuth()}
+      <GoogleAuth platform={Platform.OS as PlatformType} />
       <View
         style={styles.separator}
         lightColor="#eee"
@@ -38,7 +38,8 @@ export default function TabOneScreen() {
       <EditScreenInfo path="app/(tabs)/index.tsx" />
     </View>
   );
-}
+};
+
 
 const styles = StyleSheet.create({
   container: {

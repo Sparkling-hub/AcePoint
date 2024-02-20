@@ -4,7 +4,7 @@ import { signInWithCredential } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import findUserByEmail from '@/services/user';
 import { Alert } from 'react-native';
-import { render, fireEvent, waitFor } from 'react-native-testing-library';
+import { render, waitFor } from 'react-native-testing-library';
 
 import GoogleAuthIOS from '@/components/GoogleAuthIOS';
 jest.mock('react-native-gesture-handler', () => {

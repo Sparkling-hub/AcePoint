@@ -21,9 +21,6 @@ import { USER_ROLE } from '@/constants/User';
 import { TouchableOpacity } from 'react-native';
 import HeaderText from '@/components/HeaderText';
 
-import SignUpPlayer from '@/screens/SignUpPlayer';
-import Login from '@/screens/Login';
-import SignUpCoach from '@/screens/signUpCoach';
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -96,7 +93,8 @@ function RootLayoutNav() {
       config={tamaguiConfig}
       defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
+        <Stack initialRouteName='login'>
+
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="user/account"
@@ -110,6 +108,12 @@ function RootLayoutNav() {
             options={{
               headerShadowVisible: false,
               header: EditProfileHeader,
+            }}
+          />
+          <Stack.Screen
+            name="login"
+            options={{
+              headerShown: false
             }}
           />
         </Stack>

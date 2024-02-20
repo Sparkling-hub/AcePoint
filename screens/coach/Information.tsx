@@ -8,7 +8,6 @@ import Colors from '@/constants/Colors'
 const Information = ({onNext}:{onNext:() => void}) => {
     const [image,setImage]=useState('')
     const [bios, setBios] = useState<string>('');
-    // const [club, setClub] = useState<string>('');
     const [tags, setTags] = useState<string>('');
     const updateCoach=()=>{
         updateUserCoach({image:image,
@@ -60,9 +59,6 @@ const Information = ({onNext}:{onNext:() => void}) => {
             borderRadius={9} 
             style={styles.simpleBox} 
             placeholder='Lorem ipsum dolor sit amet'
-            // onChangeText={(text) => {
-            //     setClub(text); 
-            // }}
             />   
             </YStack>    
             <YStack>
