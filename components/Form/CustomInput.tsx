@@ -13,6 +13,7 @@ interface CustomInputProps extends InputProps {
   touched?: boolean;
   errors?: string;
   validateOnInit?: boolean;
+  hide?:boolean
 }
 
 const CustomInput: React.FC<CustomInputProps> = (props) => {
@@ -25,6 +26,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     value,
     touched,
     errors,
+    hide,
     validateOnInit,
     ...rest
   } = props;
@@ -74,6 +76,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
                 style={[{ fontFamily: 'MontserratMedium' }, inputStyle]}
                 editable={!readOnly}
                 value={value}
+                secureTextEntry={hide}
                 unstyled
                 {...rest}
               />

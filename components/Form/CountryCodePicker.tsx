@@ -16,12 +16,12 @@ interface CountryCodePickerProps {
   validateOnInit?: boolean;
 }
 
-export default function CountryCodePicker(props: CountryCodePickerProps) {
+export default function CountryCodePicker(props: Readonly<CountryCodePickerProps>) {
   const { countryCode, handleChange, touched, errors, validateOnInit } = props;
   const [show, setShow] = useState(false);
 
   const showCountryPicker = () => {
-    setShow(true);
+    setShow(!show);
   };
 
   return (
@@ -32,6 +32,7 @@ export default function CountryCodePicker(props: CountryCodePickerProps) {
         errors={errors}
         validateOnInit={validateOnInit}
         readOnly
+        style={{zIndex:10}}
         value={countryCode}
         icon={<ChevronDown color={Colors.secondary} />}
       />

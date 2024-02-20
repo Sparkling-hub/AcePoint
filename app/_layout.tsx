@@ -18,6 +18,9 @@ import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
 import { USER_ROLE } from '@/constants/User';
 
+import SignUpPlayer from '@/screens/SignUpPlayer';
+import Login from '@/screens/Login';
+import SignUpCoach from '@/screens/signUpCoach';
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
