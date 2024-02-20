@@ -1,6 +1,5 @@
 import { Keyboard, Platform, SafeAreaView} from 'react-native'
 import React, { useState } from 'react'
-import { signUpCoach } from '@/api/auth-api'
 import { Text, View, XStack, YStack } from 'tamagui';
 import { CheckboxWithLabel } from '@/components/CheckboxWithLabel';
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
@@ -13,7 +12,7 @@ import CountryCodePicker from '@/components/Form/CountryCodePicker';
 import Button from '@/components/Button'
 import ProgressBar from '@/components/ProgressBar';
 
-const SignUp = ({onNext}:{onNext:() => void}) => {
+const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) => void}) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -22,8 +21,17 @@ const SignUp = ({onNext}:{onNext:() => void}) => {
   const [country, setCountry] = useState('+44');
   const [marketing, setMarketing] = useState(false);
   const [terms, setTerms] = useState(false);
-  console.log(marketing,terms)
-
+  const sign=()=>{
+    let data = {
+      displayName: displayName, 
+      phoneNumber: country+phoneNumber,
+      marketing: marketing, 
+      terms: terms 
+    };
+    console.log(data)
+    onNext(email,password,data)
+   
+   }
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -33,15 +41,6 @@ const SignUp = ({onNext}:{onNext:() => void}) => {
   const onCheckedChangeMarketing = () => {
     setMarketing(!marketing)
   };
-   const signUp=()=>{
-    signUpCoach({email,password,coach:{
-        displayName,
-        phoneNumber:country+phoneNumber,
-        marketing:marketing,
-        terms:terms
-     }})
-     onNext()
-   }
   return (
     <Formik
       initialValues={{
@@ -75,7 +74,7 @@ const SignUp = ({onNext}:{onNext:() => void}) => {
               Sign Up 
             </Text>
           </YStack>
-           {/* <View marginLeft={20} marginTop={25} ><ProgressBar value={20}/></View> */}
+            <View marginLeft={20} marginTop={25} ><ProgressBar value={20}/></View>
          </YStack>
          <YStack paddingHorizontal={20} gap={'$3'} minWidth={362} flex={1}>
           <YStack gap={'$3'}>
@@ -179,7 +178,7 @@ const SignUp = ({onNext}:{onNext:() => void}) => {
           <CheckboxWithLabel size="$3" label='Terms and Conditions & Privacy Policy'   onPress={onCheckedChangeTerms} />
           </YStack>
           <YStack gap={'$3'} style={{alignItems:'center'}}>
-          <Button text={"Create Account"} onPress={signUp}></Button> 
+          <Button text={"Create Account"} onPress={sign}></Button> 
           </YStack>
         </YStack>
         </ScrollView>

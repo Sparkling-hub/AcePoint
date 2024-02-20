@@ -64,9 +64,9 @@ function RootLayoutNav() {
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          {/* <SignUpPlayer/>   */}
+           <SignUpPlayer/>   
            {/* <Login/>   */}
-           <SignUpCoach/> 
+           {/* <SignUpCoach/>  */}
           {/* <Information/> */}
           {/* <SignUpCoach/> */}
           {/* <LoginCoach/> */}

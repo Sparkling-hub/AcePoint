@@ -24,11 +24,11 @@ const LoginBody = () => {
             Alert.alert("Login Successful", "You have successfully logged in.");
           } else {
             console.log("Error occurred during login:", result.message);
-            Alert.alert("Login Failed invalid-credential"|| "An unknown error occurred.");
+            Alert.alert("Login Failed invalid-credential"?? "An unknown error occurred.");
           }
         } catch (error:any) {
           console.error("Error occurred during login:", error.message);
-          Alert.alert("Login Failed", error.message || "An unknown error occurred.");
+          Alert.alert("Login Failed", error.message ?? "An unknown error occurred.");
         }
       };
   return (
