@@ -21,7 +21,8 @@ import { USER_ROLE } from '@/constants/User';
 import { TouchableOpacity } from 'react-native';
 import HeaderText from '@/components/HeaderText';
 import { store } from '@/store/store';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
+import { updateUser } from '@/api/user-api';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -43,12 +44,17 @@ const AccountHeader = () => {
 };
 
 const EditProfileHeader = () => {
+  const userData = useSelector((state: any) => state.editProfile.UserData);
+
   return (
     <CustomHeader
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
       title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
       rightContent={
-        <TouchableOpacity onPress={() => console.log('pressed')}>
+        <TouchableOpacity onPress={() => {
+          console.log(userData);
+          updateUser(userData);
+        }}>
           <HeaderText text="Save" />
         </TouchableOpacity>
       }
@@ -96,13 +102,8 @@ function RootLayoutNav() {
         config={tamaguiConfig}
         defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack initialRouteName='login'>
-          <Stack.Screen
-              name="login"
-              options={{
-                headerShown: false
-              }}
-            />
+          <Stack>
+
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
               name="user/account"

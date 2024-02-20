@@ -17,6 +17,10 @@ import PorfilePicture from '@/components/PorfilePicture';
 import CustomInput from '@/components/Form/CustomInput';
 import { Search } from '@tamagui/lucide-icons';
 import { USER_ROLE } from '@/constants/User';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateProfile } from '@/store/slices/editProfile';
+import { collection, doc, getDocs, query, where } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const options = [
   { label: 'Male', value: 'male' },
@@ -25,6 +29,11 @@ const options = [
 ];
 
 export default function EditProfileScreen() {
+  const dispatch = useDispatch();
+  const handleChange = (name: string, value: string) => {
+    formik.setFieldValue(name, value);
+    dispatch(updateProfile({ ...formik.values, [name]: value }));
+  };
   const [isLoading, setIsLoading] = useState(true);
   const initialValues = {
     name: '',
@@ -78,21 +87,28 @@ export default function EditProfileScreen() {
 
   const getUserData = async () => {
     try {
-      const u = await ReactNativeAsyncStorage.getItem('username');
-      const e = await ReactNativeAsyncStorage.getItem('email');
-      const ph = await ReactNativeAsyncStorage.getItem('phoneNumber');
-      const g = await ReactNativeAsyncStorage.getItem('gender');
-      const b = await ReactNativeAsyncStorage.getItem('birthday');
-      const c = await ReactNativeAsyncStorage.getItem('club');
+      const email = await ReactNativeAsyncStorage.getItem('email')
+
+      let querySnapshot = null
+      if (USER_ROLE === 'coach')
+        querySnapshot = await getDocs(
+          query(collection(db, 'coach'), where('email', '==', email))
+        );
+      else
+        querySnapshot = await getDocs(
+          query(collection(db, 'player'), where('email', '==', email))
+        );
+      const docSnapshot = querySnapshot.docs[0];
+      const data = docSnapshot.data();
 
       formik.setValues({
         ...formik.values,
-        name: u || formik.values.name,
-        email: e || formik.values.email,
-        phone: ph || formik.values.phone,
-        gender: g || formik.values.gender,
-        dateOfBirth: b || formik.values.dateOfBirth,
-        club: c || formik.values.club,
+        name: data.displayName || formik.values.name,
+        email: data.email || formik.values.email,
+        phone: data.phoneNumber || formik.values.phone,
+        gender: data.gender || formik.values.gender,
+        dateOfBirth: data.birthday || formik.values.dateOfBirth,
+        club: data.club || formik.values.club,
       });
     } catch (error) {
       console.log(error);
@@ -151,7 +167,10 @@ export default function EditProfileScreen() {
               <CustomInput
                 placeholder="Name"
                 value={formik.values.name}
-                onChangeText={formik.handleChange('name')}
+                onChangeText={(value) => {
+                  formik.handleChange('name')
+                  handleChange('name', value)
+                }}
                 onBlur={formik.handleBlur('name')}
                 errors={formik.errors.name}
                 validateOnInit
@@ -161,7 +180,10 @@ export default function EditProfileScreen() {
               <CustomInput
                 placeholder="Email"
                 value={formik.values.email}
-                onChangeText={formik.handleChange('email')}
+                onChangeText={(value) => {
+                  formik.handleChange('email')
+                  handleChange('email', value)
+                }}
                 onBlur={formik.handleBlur('email')}
                 errors={formik.errors.email}
                 validateOnInit
@@ -172,7 +194,11 @@ export default function EditProfileScreen() {
             <YStack flex={1}>
               <CountryCodePicker
                 countryCode={formik.values.countryCode}
-                handleChange={formik.handleChange('countryCode')}
+                handleChange={
+                  (value: any) => {
+                    formik.handleChange('countryCode')
+                    handleChange('countryCode', value)
+                  }}
                 errors={formik.errors.countryCode}
                 validateOnInit
               />
@@ -183,7 +209,11 @@ export default function EditProfileScreen() {
                   placeholder="Phone"
                   keyboardType="numeric"
                   value={formik.values.phone}
-                  onChangeText={formik.handleChange('phone')}
+                  onChangeText={
+                    (value: any) => {
+                      formik.handleChange('phone')
+                      handleChange('phone', value)
+                    }}
                   onBlur={formik.handleBlur('phone')}
                   errors={formik.errors.phone}
                   validateOnInit
@@ -195,13 +225,21 @@ export default function EditProfileScreen() {
             <CustomDropdown
               options={options}
               selectedItem={formik.values.gender}
-              handleChange={formik.handleChange('gender')}
+              handleChange={
+                (value: any) => {
+                  formik.handleChange('gender')
+                  handleChange('gender', value)
+                }}
               errors={formik.errors.gender}
               validateOnInit
             />
             <DatePicker
               date={formik.values.dateOfBirth}
-              handleChange={formik.handleChange('dateOfBirth')}
+              handleChange={
+                (value: any) => {
+                  formik.handleChange('dateOfBirth')
+                  handleChange('dateOfBirth', value)
+                }}
               errors={formik.errors.dateOfBirth}
               validateOnInit
             />
@@ -210,7 +248,11 @@ export default function EditProfileScreen() {
                 placeholder="Club"
                 value={formik.values.club}
                 icon={<Search color={Colors.secondary} />}
-                onChangeText={formik.handleChange('club')}
+                onChangeText={
+                  (value: any) => {
+                    formik.handleChange('club')
+                    handleChange('club', value)
+                  }}
                 onBlur={formik.handleBlur('club')}
                 errors={formik.errors.club}
                 validateOnInit
