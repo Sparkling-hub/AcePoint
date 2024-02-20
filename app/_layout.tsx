@@ -86,7 +86,7 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return <RootLayoutNav></RootLayoutNav>;
 }
 
 function RootLayoutNav() {
