@@ -14,7 +14,7 @@ export default ProgressBar
 
 const styles = StyleSheet.create({
     progress: {
-        backgroundColor: '#FFFF',
+        backgroundColor: '#DADADA',
       },
       bounce: {
         backgroundColor: '#3A4D6C',

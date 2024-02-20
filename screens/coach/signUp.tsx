@@ -73,7 +73,7 @@ const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) =
               Sign Up 
             </Text>
           </YStack>
-            <View marginLeft={20} marginTop={25} ><ProgressBar value={20}/></View>
+            <View marginLeft={20} marginRight={20} marginTop={25} ><ProgressBar value={20}/></View>
          </YStack>
          <YStack paddingHorizontal={20} gap={'$3'} minWidth={362} flex={1}>
           <YStack gap={'$3'}>
@@ -137,7 +137,7 @@ const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) =
           <YStack gap={'$3'}>
           {passwordVisible ?(
           <CustomInput
-                placeholder="password"
+                placeholder="Password"
                 value={formikProps.values.password}
                 onChangeText={(text) => {
                   formikProps.handleChange('password')(text); 
@@ -153,7 +153,7 @@ const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) =
               />
           ):(
               <CustomInput
-              placeholder="password"
+              placeholder="Password"
               value={formikProps.values.password}
               onChangeText={(text) => {
                 formikProps.handleChange('password')(text); 

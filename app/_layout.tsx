@@ -12,8 +12,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { TamaguiProvider } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
 import SignUpPlayer from '@/screens/SignUpPlayer';
-import Login from '@/screens/Login';
-import SignUpCoach from '@/screens/signUpCoach';
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,

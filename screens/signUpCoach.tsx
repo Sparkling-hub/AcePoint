@@ -19,8 +19,6 @@ const SignUpCoach = () => {
      }})
      handleNext()
    }
-   
-  
   return  (
     <SafeAreaView style={styles.container}>
       {progress === 34 && <SignUp onNext={signUp} />}
