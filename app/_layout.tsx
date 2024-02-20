@@ -20,6 +20,8 @@ import CustomHeader from '@/components/CustomHeader';
 import { USER_ROLE } from '@/constants/User';
 import { TouchableOpacity } from 'react-native';
 import HeaderText from '@/components/HeaderText';
+import { store } from '@/store/store';
+import { Provider } from 'react-redux';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -82,42 +84,44 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return <RootLayoutNav></RootLayoutNav>
 }
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <TamaguiProvider
-      config={tamaguiConfig}
-      defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack initialRouteName='login'>
+    <Provider store={store}>
+      <TamaguiProvider
+        config={tamaguiConfig}
+        defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack initialRouteName='login'>
 
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="user/account"
-            options={{
-              headerShadowVisible: false,
-              header: AccountHeader,
-            }}
-          />
-          <Stack.Screen
-            name="user/edit-profile"
-            options={{
-              headerShadowVisible: false,
-              header: EditProfileHeader,
-            }}
-          />
-          <Stack.Screen
-            name="login"
-            options={{
-              headerShown: false
-            }}
-          />
-        </Stack>
-      </ThemeProvider>
-    </TamaguiProvider>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="user/account"
+              options={{
+                headerShadowVisible: false,
+                header: AccountHeader,
+              }}
+            />
+            <Stack.Screen
+              name="user/edit-profile"
+              options={{
+                headerShadowVisible: false,
+                header: EditProfileHeader,
+              }}
+            />
+            <Stack.Screen
+              name="login"
+              options={{
+                headerShown: false
+              }}
+            />
+          </Stack>
+        </ThemeProvider>
+      </TamaguiProvider>
+    </Provider>
   );
 }
