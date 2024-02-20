@@ -18,7 +18,6 @@ import { updateProfile } from '@/store/slices/editProfile';
 import { collection, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db, doc } from '@/lib/firebase';
 import fireToast from '@/services/toast';
-import Toast from 'react-native-toast-message';
 
 const options = [
   { label: 'Male', value: 'male' },
