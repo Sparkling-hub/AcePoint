@@ -14,7 +14,7 @@ interface CountryCodePickerProps {
   validateOnInit?: boolean;
 }
 
-export default function CountryCodePicker(props: CountryCodePickerProps) {
+export default function CountryCodePicker(props: Readonly<CountryCodePickerProps>) {
   const { countryCode, handleChange, touched, errors, validateOnInit } = props;
   const [show, setShow] = useState(false);
 

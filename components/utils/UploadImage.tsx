@@ -1,4 +1,4 @@
-import { Button, Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import * as ImagePicker from "expo-image-picker";
 import { useUploadImage } from '@/hooks/useUploadImage';
 import { Avatar } from 'tamagui';
