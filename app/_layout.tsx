@@ -23,6 +23,7 @@ import HeaderText from '@/components/HeaderText';
 import { store } from '@/store/store';
 import { Provider, useSelector } from 'react-redux';
 import { updateUser } from '@/api/user-api';
+import Toast from 'react-native-toast-message';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -120,6 +121,7 @@ function RootLayoutNav() {
               }}
             />
           </Stack>
+          <Toast />
         </ThemeProvider>
       </TamaguiProvider>
     </Provider>

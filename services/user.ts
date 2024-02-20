@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Alert } from 'react-native';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 export default async function findUserByEmail(
   email: string,
@@ -18,6 +19,7 @@ export default async function findUserByEmail(
         displayName: displayName,
         picture: photoURL,
       });
+      await ReactNativeAsyncStorage.setItem('userID', newPlayerRef.id)
       console.log('New player added with ID:', newPlayerRef.id);
     } catch (error) {
       console.error('Error adding new player:', error);

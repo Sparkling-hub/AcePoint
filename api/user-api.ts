@@ -1,10 +1,10 @@
 import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Alert } from "react-native";
+import fireToast from "@/services/toast";
 
 const updateUser = async (data: any) => {
     try {
-        const userData = { 
+        const userData = {
             displayName: data.name,
             phoneNumber: data.phone,
             birthday: data.dateOfBirth,
@@ -25,20 +25,20 @@ const updateUser = async (data: any) => {
             playerQuerySnapshot.forEach(async (document) => {
                 await updateDoc(doc(collection(db, 'player'), document.id), userData);
             });
-            Alert.alert('Success', 'Profile updated successfully!');
+            fireToast('Profile updated successfully!')
         } else if (!coachQuerySnapshot.empty) {
             coachQuerySnapshot.forEach(async (document) => {
                 await updateDoc(doc(collection(db, 'coach'), document.id), userData);
             });
-            Alert.alert('Success', 'Profile updated successfully!');
+            fireToast('Profile updated successfully!')
         } else {
-            Alert.alert('Error', 'Profile not found!');
+            fireToast('Profile not found!')
         }
     } catch (error) {
-        Alert.alert('Error', 'Error updating profile!');
+        fireToast('Error updating profile!')
         console.error('Error updating profile:', error);
         throw error;
     }
-};
+}
 
 export { updateUser };

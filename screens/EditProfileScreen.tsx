@@ -1,26 +1,24 @@
 import Colors from '@/constants/Colors';
-
-import { ScrollView, Text, XStack, YStack } from 'tamagui';
-
+import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
+import * as ImagePicker from 'expo-image-picker';
+import { Avatar, ScrollView, Text, XStack, YStack } from 'tamagui';
 import DatePicker from '@/components/Form/DatePicker';
 import { useEffect, useState } from 'react';
-
 import CountryCodePicker from '@/components/Form/CountryCodePicker';
 import CustomDropdown from '@/components/Form/dropdown/CustomDropdown';
 import { FormikValues, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ActivityIndicator, Platform } from 'react-native';
-
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-
-import PorfilePicture from '@/components/PorfilePicture';
 import CustomInput from '@/components/Form/CustomInput';
 import { Search } from '@tamagui/lucide-icons';
 import { USER_ROLE } from '@/constants/User';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateProfile } from '@/store/slices/editProfile';
-import { collection, doc, getDocs, query, where } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { collection, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { db, doc } from '@/lib/firebase';
+import fireToast from '@/services/toast';
+import Toast from 'react-native-toast-message';
 
 const options = [
   { label: 'Male', value: 'male' },
@@ -30,10 +28,7 @@ const options = [
 
 export default function EditProfileScreen() {
   const dispatch = useDispatch();
-  const handleChange = (name: string, value: string) => {
-    formik.setFieldValue(name, value);
-    dispatch(updateProfile({ ...formik.values, [name]: value }));
-  };
+
   const [isLoading, setIsLoading] = useState(true);
   const initialValues = {
     name: '',
@@ -84,40 +79,103 @@ export default function EditProfileScreen() {
     validationSchema,
     onSubmit: (values) => handleSubmit(values),
   });
+  const handleChange = (name: string, value: string) => {
+    formik.setFieldValue(name, value);
+    dispatch(updateProfile({ ...formik.values, [name]: value }));
+  };
 
-  const getUserData = async () => {
+  const handleSelectProfilePicture = async () => {
     try {
-      const email = await ReactNativeAsyncStorage.getItem('email')
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permissionResult.granted === false) {
+        alert('Permission to access camera roll is required!');
+        return;
+      }
 
-      let querySnapshot = null
-      if (USER_ROLE === 'coach')
-        querySnapshot = await getDocs(
-          query(collection(db, 'coach'), where('email', '==', email))
-        );
-      else
-        querySnapshot = await getDocs(
-          query(collection(db, 'player'), where('email', '==', email))
-        );
-      const docSnapshot = querySnapshot.docs[0];
-      const data = docSnapshot.data();
-
-      formik.setValues({
-        ...formik.values,
-        name: data.displayName || formik.values.name,
-        email: data.email || formik.values.email,
-        phone: data.phoneNumber || formik.values.phone,
-        gender: data.gender || formik.values.gender,
-        dateOfBirth: data.birthday || formik.values.dateOfBirth,
-        club: data.club || formik.values.club,
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        aspect: [1, 1],
+        quality: 1,
       });
+
+      if (!result.canceled) {
+        const imageUri = result.assets[0].uri;
+        await handleProfilePictureChange(imageUri);
+      }
     } catch (error) {
-      console.log(error);
+      console.error('Error selecting profile picture:', error);
+    }
+  };
+
+  const handleProfilePictureChange = async (imageUri: string) => {
+    try {
+      setIsLoading(true);
+      const userId = await ReactNativeAsyncStorage.getItem('userID')
+      const storage = getStorage();
+      const imageRef = ref(storage, `profileImage/${userId}`);
+
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+
+      await uploadBytes(imageRef, blob);
+
+      const downloadURL = await getDownloadURL(imageRef);
+      let userDocRef = doc(db, 'coach', userId);
+      if (USER_ROLE === 'player')
+        userDocRef = doc(db, 'player', userId);
+
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (!userDocSnap.exists()) {
+        await setDoc(userDocRef, { picture: downloadURL });
+      } else {
+        await updateDoc(userDocRef, {
+          picture: downloadURL,
+        });
+      }
+      setImg(downloadURL)
+      fireToast('Profile picture uploaded successfully')
+      console.log('Profile picture uploaded successfully:', downloadURL);
+    } catch (error) {
+      console.error('Error uploading profile picture:', error);
     } finally {
       setIsLoading(false);
     }
   };
-
+  const [img, setImg] = useState('')
   useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const email = await ReactNativeAsyncStorage.getItem('email')
+
+        let querySnapshot = null
+        if (USER_ROLE === 'coach')
+          querySnapshot = await getDocs(
+            query(collection(db, 'coach'), where('email', '==', email))
+          );
+        else
+          querySnapshot = await getDocs(
+            query(collection(db, 'player'), where('email', '==', email))
+          );
+        const docSnapshot = querySnapshot.docs[0];
+        const data = docSnapshot.data();
+        setImg(data.picture)
+        formik.setValues({
+          ...formik.values,
+          name: data.displayName || formik.values.name,
+          email: data.email || formik.values.email,
+          phone: data.phoneNumber || formik.values.phone,
+          gender: data.gender || formik.values.gender,
+          dateOfBirth: data.birthday || formik.values.dateOfBirth,
+          club: data.club || formik.values.club,
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     getUserData();
   }, []);
 
@@ -144,14 +202,17 @@ export default function EditProfileScreen() {
       <ScrollView marginBottom={20} paddingHorizontal={16}>
         <YStack marginBottom={30} paddingRight={14}>
           <YStack alignItems="center">
-            <PorfilePicture
-              marginBottom={20}
+            <Avatar marginBottom={20}
               circular
               borderWidth={2}
               borderColor={Colors.primary}
-              size="$9"
-            />
+              size="$9">
+              <Avatar.Image
+                src={img}
+              />
+            </Avatar>
             <Text
+              onPress={handleSelectProfilePicture}
               style={{ fontFamily: 'Montserrat' }}
               fontSize={20}
               lineHeight={24}
