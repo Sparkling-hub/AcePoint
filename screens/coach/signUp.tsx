@@ -1,11 +1,10 @@
-import { Keyboard, Platform, SafeAreaView} from 'react-native'
+import {  Platform} from 'react-native'
 import React, { useState } from 'react'
-import { Text, View, XStack, YStack } from 'tamagui';
+import { Text, View, XStack, YStack,ScrollView } from 'tamagui';
 import { CheckboxWithLabel } from '@/components/CheckboxWithLabel';
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { ScrollView } from 'tamagui';
 import Colors from '@/constants/Colors';
 import CustomInput from '@/components/Form/CustomInput';
 import CountryCodePicker from '@/components/Form/CountryCodePicker';

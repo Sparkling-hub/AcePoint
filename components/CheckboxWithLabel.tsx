@@ -1,8 +1,7 @@
 import { Check as CheckIcon } from '@tamagui/lucide-icons'
 import { StyleSheet } from 'react-native';
 import type { CheckboxProps, SizeTokens } from 'tamagui'
-import { Text } from 'tamagui';
-import { Checkbox, Label, XStack,YStack } from 'tamagui'
+import { Checkbox, Label, XStack,YStack,Text } from 'tamagui'
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 export function CheckboxWithLabel({

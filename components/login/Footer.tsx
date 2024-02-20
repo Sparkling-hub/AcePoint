@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
-import { Image, Stack, XStack, YStack } from 'tamagui'
-import { Button,Text } from 'tamagui'
+import { Image, Stack, XStack, YStack,Button,Text } from 'tamagui'
 
 const Footer = () => {
   return (

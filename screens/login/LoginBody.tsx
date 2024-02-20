@@ -1,13 +1,11 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet,Alert } from 'react-native'
 import React, { useState } from 'react'
-import { Button, Input, Text, View, YStack } from 'tamagui'
+import { Button, Input, Text, View, YStack,XStack } from 'tamagui'
 import { loginUser } from '@/api/auth-api'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Info } from '@tamagui/lucide-icons';
-import { XStack } from 'tamagui';
-import { Alert } from 'react-native';
 
 const LoginBody = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -24,7 +22,7 @@ const LoginBody = () => {
             Alert.alert("Login Successful", "You have successfully logged in.");
           } else {
             console.log("Error occurred during login:", result.message);
-            Alert.alert("Login Failed invalid-credential"?? "An unknown error occurred.");
+            Alert.alert("Login Failed invalid-credential");
           }
         } catch (error:any) {
           console.error("Error occurred during login:", error.message);

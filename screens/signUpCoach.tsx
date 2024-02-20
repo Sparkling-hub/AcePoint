@@ -1,6 +1,5 @@
 import { StyleSheet, SafeAreaView } from 'react-native'
 import React, { useState } from 'react'
-import { Progress } from 'tamagui';
 import SignUp from './coach/signUp';
 import Information from './coach/Information';
 import Trail from './coach/Trail';

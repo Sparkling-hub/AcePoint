@@ -1,7 +1,6 @@
 import React from 'react'
-import { AvatarProps, YStack } from 'tamagui'
-import { Avatar } from 'tamagui'
-import { Text } from 'tamagui'
+import { AvatarProps, YStack,Avatar ,Text} from 'tamagui'
+
 
 interface TenisProps extends AvatarProps {
     onPress?: () => void;

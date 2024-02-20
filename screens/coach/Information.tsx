@@ -1,15 +1,14 @@
 import { SafeAreaView, StyleSheet  } from 'react-native'
 import React, { useState } from 'react'
-import { Text,Button, ScrollView, Input } from 'tamagui'
+import { Text,Button, ScrollView, Input,YStack  } from 'tamagui'
 import { heightPercentageToDP as hp,widthPercentageToDP as wp} from 'react-native-responsive-screen'
 import {updateUserCoach } from'@/api/auth-api'
 import UploadImage from '@/components/utils/UploadImage'
-import { YStack } from 'tamagui'
 import Colors from '@/constants/Colors'
 const Information = ({onNext}:{onNext:() => void}) => {
     const [image,setImage]=useState('')
     const [bios, setBios] = useState<string>('');
-    const [club, setClub] = useState<string>('');
+    // const [club, setClub] = useState<string>('');
     const [tags, setTags] = useState<string>('');
     const updateCoach=()=>{
         updateUserCoach({image:image,
@@ -61,9 +60,9 @@ const Information = ({onNext}:{onNext:() => void}) => {
             borderRadius={9} 
             style={styles.simpleBox} 
             placeholder='Lorem ipsum dolor sit amet'
-            onChangeText={(text) => {
-                setClub(text); 
-            }}
+            // onChangeText={(text) => {
+            //     setClub(text); 
+            // }}
             />   
             </YStack>    
             <YStack>

@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { Circle, YStack } from 'tamagui'
-import { Image } from 'tamagui'
+import { Circle, YStack,Image } from 'tamagui'
 
 const TopScreen = () => {
   return (
