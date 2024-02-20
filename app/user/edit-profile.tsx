@@ -1,12 +1,11 @@
 import { SafeAreaView, StyleSheet } from 'react-native';
 import React from 'react';
-
-import EditCoachProfile from '@/screens/coach/EditCoachProfile';
+import EditProfileScreen from '@/screens/EditProfileScreen';
 
 export default function EditProfile() {
   return (
     <SafeAreaView style={styles.container}>
-      <EditCoachProfile />
+      <EditProfileScreen />
     </SafeAreaView>
   );
 }

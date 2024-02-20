@@ -2,9 +2,9 @@ import Colors from '@/constants/Colors';
 import { Text, View } from 'tamagui';
 
 interface CertificationBoxProps {
-  name: string;
-  date: string;
-  issued: string;
+  readonly name: string;
+  readonly date: string;
+  readonly issued: string;
 }
 
 export default function CertificationBox(props: CertificationBoxProps) {
@@ -14,6 +14,7 @@ export default function CertificationBox(props: CertificationBoxProps) {
       backgroundColor={Colors.iron}
       width={'100%'}
       height={52}
+      marginBottom={17}
       borderRadius={8}
       alignItems="flex-start"
       paddingHorizontal={32}

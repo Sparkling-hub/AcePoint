@@ -9,8 +9,9 @@ import { router } from 'expo-router';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import PorfilePicture from '@/components/PorfilePicture';
+import { USER_ROLE } from '@/constants/User';
 
-export default function CoachAccount() {
+export default function AccountScreen() {
   const [username, setUsername] = useState('');
   const getUserName = async () => {
     const name = await ReactNativeAsyncStorage.getItem('username');
@@ -19,39 +20,70 @@ export default function CoachAccount() {
   useEffect(() => {
     getUserName();
   }, []);
+
+  const calculatePaddingTop = () => {
+    if (USER_ROLE === 'coach') {
+      return 0;
+    } else {
+      return Platform.OS === 'ios' ? 90 : 30;
+    }
+  };
+
+  const paddingTop = calculatePaddingTop();
+
   return (
-    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 30}>
-      <XStack
-        justifyContent="space-between"
-        alignItems="center"
-        marginBottom={26}
-        paddingHorizontal={20}>
-        <YStack alignItems="flex-start" gap={'$1.5'}>
+    <YStack flex={1} paddingTop={paddingTop}>
+      {USER_ROLE === 'player' ? (
+        <YStack alignItems="center" marginBottom={30}>
+          <PorfilePicture
+            marginBottom={20}
+            circular
+            borderWidth={2}
+            borderColor={Colors.primary}
+            size="$9"
+          />
           <Text
             style={{ fontFamily: 'MontserratBold' }}
             fontSize={20}
             lineHeight={24}
-            color={Colors.secondary}>
-            {username ? username : 'Daniel Antone'}
-          </Text>
-          <Text
-            style={{ fontFamily: 'Montserrat' }}
-            fontSize={12}
-            lineHeight={14}
-            color={Colors.secondary}>
-            Subscribed since 10/10/2001
+            color={Colors.secondary}
+            textAlign="center">
+            {username ?? 'Daniel Antone'}
           </Text>
         </YStack>
-        <PorfilePicture
-          marginBottom={20}
-          circular
-          borderWidth={2}
-          borderColor={Colors.primary}
-          size="$9"
-        />
-      </XStack>
+      ) : (
+        <XStack
+          justifyContent="space-between"
+          alignItems="center"
+          marginBottom={26}
+          paddingHorizontal={20}>
+          <YStack alignItems="flex-start" gap={'$1.5'}>
+            <Text
+              style={{ fontFamily: 'MontserratBold' }}
+              fontSize={20}
+              lineHeight={24}
+              color={Colors.secondary}>
+              {username ?? 'Daniel Antone'}
+            </Text>
+            <Text
+              style={{ fontFamily: 'Montserrat' }}
+              fontSize={12}
+              lineHeight={14}
+              color={Colors.secondary}>
+              Subscribed since 10/10/2001
+            </Text>
+          </YStack>
+          <PorfilePicture
+            marginBottom={20}
+            circular
+            borderWidth={2}
+            borderColor={Colors.primary}
+            size="$9"
+          />
+        </XStack>
+      )}
 
-      <YStack gap={20} paddingHorizontal={15} marginBottom={20}>
+      <YStack gap={20} paddingHorizontal={15} marginBottom={40}>
         <YStack>
           <Text style={styles.text}>Your Account</Text>
           <YStack gap={15}>
@@ -59,7 +91,7 @@ export default function CoachAccount() {
               title="Edit profile"
               onPress={() =>
                 router.push({
-                  pathname: '/coach/edit-profile',
+                  pathname: '/user/edit-profile',
                 })
               }
               buttonStyle={styles.button}
@@ -97,13 +129,15 @@ export default function CoachAccount() {
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
             />
-            <CustomButton
-              title="Subscription"
-              onPress={() => {}}
-              buttonStyle={styles.button}
-              textStyle={styles.buttonText}
-              icon={<ChevronRight size="$2" color={Colors.secondary} />}
-            />
+            {USER_ROLE === 'coach' && (
+              <CustomButton
+                title="Subscription"
+                onPress={() => {}}
+                buttonStyle={styles.button}
+                textStyle={styles.buttonText}
+                icon={<ChevronRight size="$2" color={Colors.secondary} />}
+              />
+            )}
           </YStack>
         </YStack>
       </YStack>
@@ -120,6 +154,14 @@ export default function CoachAccount() {
 }
 
 const styles = StyleSheet.create({
+  displayNameText: {
+    fontFamily: 'MontserratBold',
+    fontSize: 20,
+    lineHeight: 24,
+    color: Colors.secondary,
+    textAlign: 'center',
+  },
+
   text: {
     fontFamily: 'MontserratBold',
     fontSize: 16,

@@ -4,7 +4,7 @@ import PlayerProfile from '@/screens/player/PlayerProfile';
 import CoachProfile from '@/screens/coach/CoachProfile';
 import { USER_ROLE } from '@/constants/User';
 
-export default function Account() {
+export default function Profile() {
   return (
     <SafeAreaView style={styles.container}>
       {USER_ROLE === 'coach' ? <CoachProfile /> : <PlayerProfile />}

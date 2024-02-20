@@ -4,16 +4,21 @@ import { ReactNode, useState } from 'react';
 import Colors from '@/constants/Colors';
 
 interface CustomButtonProps {
-  title: string;
-  onPress: () => void;
-  buttonStyle?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<TextStyle>;
-  icon?: ReactNode;
+  readonly title: string;
+  readonly onPress: () => void;
+  readonly buttonStyle?: StyleProp<ViewStyle>;
+  readonly textStyle?: StyleProp<TextStyle>;
+  readonly icon?: ReactNode;
 }
 
 export default function CustomButton(props: CustomButtonProps) {
   const { title, onPress, buttonStyle, textStyle, icon } = props;
   const [isPressed, setIsPressed] = useState(false);
+
+  const defaultButtonStyle = StyleSheet.flatten([
+    !buttonStyle && styles.button,
+    isPressed && styles.buttonPressed,
+  ]);
 
   return (
     <Button
@@ -21,11 +26,8 @@ export default function CustomButton(props: CustomButtonProps) {
       onPress={onPress}
       onPressIn={() => setIsPressed(true)}
       onPressOut={() => setIsPressed(false)}
-      style={[
-        buttonStyle ? buttonStyle : styles.button,
-        isPressed && styles.buttonPressed,
-      ]}>
-      <Text style={textStyle ? textStyle : styles.buttonText}>{title}</Text>
+      style={[defaultButtonStyle, buttonStyle]}>
+      <Text style={[styles.buttonText, textStyle]}>{title}</Text>
       {icon}
     </Button>
   );

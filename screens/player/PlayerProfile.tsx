@@ -39,11 +39,11 @@ const historyData = [
 
 export default function PlayerProfile() {
   return (
-    <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 70}>
-      <YStack
-        justifyContent="center"
-        alignItems="center"
-        paddingHorizontal={16}>
+    <YStack
+      flex={1}
+      paddingTop={Platform.OS === 'ios' ? 90 : 68}
+      paddingHorizontal={16}>
+      <YStack justifyContent="center" alignItems="center">
         <ProfileCard>
           <YStack gap={'$4'}>
             <Text
@@ -71,7 +71,7 @@ export default function PlayerProfile() {
         </ProfileCard>
       </YStack>
 
-      <YStack flex={1} paddingHorizontal={25}>
+      <YStack flex={1}>
         <XStack justifyContent="space-between" alignItems="center">
           <Text style={styles.sectionText} color={Colors.primary}>
             History
@@ -117,5 +117,6 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     color: Colors.secondary,
     marginBottom: 5,
+    textAlign: 'center',
   },
 });

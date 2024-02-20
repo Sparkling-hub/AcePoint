@@ -6,9 +6,9 @@ import { TouchableOpacity } from 'react-native';
 import { Text, XStack } from 'tamagui';
 
 interface DropDownItemProps {
-  handleItemClick: (item: string) => void;
-  selectedItem: string;
-  item: option;
+  readonly handleItemClick: (item: string) => void;
+  readonly selectedItem: string;
+  readonly item: option;
 }
 
 export default function DropDownItem(props: DropDownItemProps) {

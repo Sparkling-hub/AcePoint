@@ -5,18 +5,21 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack, useNavigation } from 'expo-router';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
-import { TamaguiProvider, Text } from 'tamagui';
+import { TamaguiProvider } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
 
-import { TouchableOpacity } from 'react-native';
 import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
+import CustomHeader from '@/components/CustomHeader';
+
 import { USER_ROLE } from '@/constants/User';
+import { TouchableOpacity } from 'react-native';
+import HeaderText from '@/components/HeaderText';
 
 import SignUpPlayer from '@/screens/SignUpPlayer';
 import Login from '@/screens/Login';
@@ -33,6 +36,26 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+const AccountHeader = () => {
+  return (
+    <CustomHeader leftIcon={<X size={'$2.5'} color={Colors.secondary} />} />
+  );
+};
+
+const EditProfileHeader = () => {
+  return (
+    <CustomHeader
+      leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
+      title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
+      rightContent={
+        <TouchableOpacity onPress={() => console.log('pressed')}>
+          <HeaderText text="Save" />
+        </TouchableOpacity>
+      }
+    />
+  );
+};
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -67,7 +90,6 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const navigation = useNavigation();
 
   return (
     <TamaguiProvider
@@ -77,56 +99,20 @@ function RootLayoutNav() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name={USER_ROLE === 'coach' ? 'coach/account' : 'player/account'}
+            name="user/account"
             options={{
               headerShadowVisible: false,
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <X size={'$2.5'} color={Colors.secondary} />
-                </TouchableOpacity>
-              ),
-              headerTitle: '',
+              header: AccountHeader,
             }}
           />
           <Stack.Screen
-            name={
-              USER_ROLE === 'coach'
-                ? 'coach/edit-profile'
-                : 'player/edit-profile'
-            }
+            name="user/edit-profile"
             options={{
               headerShadowVisible: false,
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <ChevronLeft size={'$2.5'} color={Colors.secondary} />
-                </TouchableOpacity>
-              ),
-
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() => {
-                    console.log('pressed');
-                  }}>
-                  <Text
-                    style={{ fontFamily: 'MontserratBold' }}
-                    fontSize={18}
-                    lineHeight={22}
-                    textTransform="uppercase"
-                    color={Colors.secondary}>
-                    Save
-                  </Text>
-                </TouchableOpacity>
-              ),
-              headerTitle: '',
+              header: EditProfileHeader,
             }}
           />
         </Stack>
-        {/* <CoachAccount /> */}
-        {/* <PlayerProfile /> */}
-        {/* <CoachProfile /> */}
-        {/* <EditCoachProfile /> */}
-        {/* <PlayerAccount /> */}
-        {/* <EditPlayerProfile /> */}
       </ThemeProvider>
     </TamaguiProvider>
   );
