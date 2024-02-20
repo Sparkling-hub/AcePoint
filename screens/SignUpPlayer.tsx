@@ -11,7 +11,6 @@ const SignUpPlayer = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Progress value={progress} style={styles.progress}>
-        <Progress.Indicator style={styles.bounce} animation="bouncy" />
       </Progress>
       {progress === 34 && <SignUp onNext={handleNext} />}
       {progress === 68 && <Levling onNext={handleNext} />}

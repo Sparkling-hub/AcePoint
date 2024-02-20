@@ -6,7 +6,7 @@ export class Player {
     phoneNumber?: string
     rating?: number
     image?:string
-    age?:Date
+    age?:string
     gender?:string
     tennisLevel?:string
     country?:string

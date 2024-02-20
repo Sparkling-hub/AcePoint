@@ -2,7 +2,6 @@ import { StyleSheet, SafeAreaView } from 'react-native'
 import React, { useState } from 'react'
 import { Progress } from 'tamagui';
 import SignUp from './coach/signUp';
-import Info from './coach/info';
 import Information from './coach/Information';
 import Trail from './coach/Trail';
 
@@ -14,9 +13,6 @@ const SignUpCoach = () => {
   
   return  (
     <SafeAreaView style={styles.container}>
-      <Progress value={progress} style={styles.progress}>
-        <Progress.Indicator style={styles.bounce} animation="bouncy" />
-      </Progress>
       {progress === 34 && <SignUp onNext={handleNext} />}
       {progress === 68 && <Information onNext={handleNext} />}
       {progress === 102 && <Trail  />}

@@ -1,6 +1,9 @@
 import { Button, Image, StyleSheet } from 'react-native'
 import * as ImagePicker from "expo-image-picker";
 import { useUploadImage } from '@/hooks/useUploadImage';
+import { Avatar } from 'tamagui';
+import { heightPercentageToDP as hp} from 'react-native-responsive-screen'
+
 const UploadImage = ({getFromChild}: { getFromChild: any  }) => {
     const {uploadImage,image}=useUploadImage()
     async function pickImage() {
@@ -17,9 +20,16 @@ const UploadImage = ({getFromChild}: { getFromChild: any  }) => {
         }
         getFromChild(image)
         return(
-          < >
-          {image && <Image source={{ uri: image }} style={styles.test} />}
-          <Button title="Select Image" onPress={pickImage} />
+          <>
+          {image && <Avatar circular size="$7" style={styles.avatar}>
+            <Avatar.Image onPress={pickImage}
+            src={image}
+            /></Avatar>}
+          {!image &&<Avatar circular size="$7" style={styles.avatar}>
+            <Avatar.Image onPress={pickImage}
+            src={require('@/assets/images/avatar.png')}
+            />
+        </Avatar>}
           </>
         );
           
@@ -32,7 +42,11 @@ const styles = StyleSheet.create({
   },
   test:{
      width: 200, height: 200 
-  }
+  },
+  avatar:{
+    marginTop:hp("4%"),
+    marginLeft:hp("2%")
+},
 });
 export default UploadImage
 

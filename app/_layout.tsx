@@ -14,11 +14,6 @@ import tamaguiConfig from '../tamagui.config';
 import SignUpPlayer from '@/screens/SignUpPlayer';
 import Login from '@/screens/Login';
 import SignUpCoach from '@/screens/signUpCoach';
-import Information from '@/screens/coach/Information';
-import Trail from '@/screens/coach/Trail';
-import LoginPlayer from '@/screens/login/LoginPlayer';
-import LoginCoach from '@/screens/login/LoginCoach';
-import View from '@/screens/View';
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -36,8 +31,10 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     Montserrat: require('../assets/fonts/Montserrat-Regular.ttf'),
+    MontserratMedium: require('../assets/fonts/Montserrat-Medium.ttf'),
     MontserratBold: require('../assets/fonts/Montserrat-Bold.ttf'),
     MontserratExtraBold: require('../assets/fonts/Montserrat-ExtraBold.ttf'),
+    MontserratSemiBold: require('../assets/fonts/Montserrat-SemiBold.ttf'),
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
     ...FontAwesome.font,
@@ -67,13 +64,11 @@ function RootLayoutNav() {
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-         {/* <SignUpPlayer/>  */}
-          {/* <Login/>  */}
-          {/* <SignUpCoach/> */}
+          {/* <SignUpPlayer/>   */}
+           {/* <Login/>   */}
+           <SignUpCoach/> 
           {/* <Information/> */}
           {/* <SignUpCoach/> */}
-           {/* <LoginPlayer />  */}
-           <View />
           {/* <LoginCoach/> */}
 
       </ThemeProvider>

@@ -1,60 +1,55 @@
-import { SafeAreaView, StyleSheet, View } from 'react-native'
+import { SafeAreaView, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
-import {  Heading, RadioGroup, Stack,Text, YStack } from 'tamagui'
+import { RadioGroup, ScrollView,Text, YStack } from 'tamagui'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { RadioGroupItemWithLabel } from '@/components/RadioGroupItemWithLabel';
 import Button from '@/components/Button'
 import {updateUserPlayer } from'@/api/auth-api'
-import {  } from '@tamagui/lucide-icons';
+import LevlingBox from '@/components/LevlingBox';
+import Colors from '@/constants/Colors';
+import ProgressBar from '@/components/ProgressBar';
 const Levling = ({onNext}:{onNext:() => void}) => {
-  const [level, setLevel] = useState('');
+  const [level, setLevel] = useState('Beginner');
   const text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo ex, dapibus sit amet nisi ut, posuere laoreet nulla. Suspendisse dignissim elit in justo efficitur."
-  console.log(level)
   const updatePlayer=()=>{
     updateUserPlayer({tennisLevel:level})
     onNext()
   }
   return (
     <SafeAreaView style={styles.container}>
-        <Heading size={"$3"} style={styles.header}>Levling</Heading>
-       
-        <Stack space="$5" style={styles.stack}>
-        <View style={styles.box}>
-            <Text style={styles.text}>Lorem ipsum dolor sit amet, 
-            consectetur adipiscing elit. Curabitur leo ex,
-            dapibus sit amet nisi ut, posuere laoreet nulla. 
-            Suspendisse dignissim elit in justo efficitur.</Text>
-        </View>
-
-        </Stack>
-        
+      <ScrollView marginBottom={20}>
+        <YStack alignItems="center" >
+        <YStack marginBottom={25} >
+          <YStack alignItems="center" gap={"$4"}>
+            <Text
+              style={{ fontFamily: 'MontserratBold' }}
+              fontSize={20}
+              lineHeight={24}
+              color={Colors.secondary}>
+              Levling
+            </Text>
+          </YStack>
+         </YStack>
+            <ProgressBar value={68} />
+         <YStack marginBottom={30} marginTop={30} alignItems="center" >
+        <LevlingBox/>
+        </YStack>
         <RadioGroup aria-labelledby="Select one item"
         onValueChange={value => setLevel(value)} value={level}
             >
         <YStack width={300} alignItems="center" space="$5">
-            <RadioGroupItemWithLabel size="$3" value="Beginner" label="Beginner" />
-            {
-                level==="Beginner"&& <Text color={"#3A4D6C"} style={styles.showtext}>{text}</Text>
-            }
-            <RadioGroupItemWithLabel size="$3" value="Intermediate"  label="Intermediate" />
-            {
-                level==="Intermediate"&& <Text color={"#3A4D6C"} style={styles.showtext}>{text}</Text>
-            }
-            <RadioGroupItemWithLabel size="$3" value={"Intermediate high"} label="Intermediate high" />
-            {
-                level==="Intermediate high"&& <Text color={"#3A4D6C"} style={styles.showtext}>{text}</Text>
-            }
-            <RadioGroupItemWithLabel size="$3" value={"Advanced"} label="Advanced" />
-            {
-                level==="Advanced"&& <Text  color={"#3A4D6C"} style={styles.showtext}>{text}</Text>
-            }
-            <RadioGroupItemWithLabel size="$3" value={"Competition"} label="Competition" />
-            {
-                level==="Competition"&& <Text color={"#3A4D6C"} style={styles.showtext}>{text}</Text>
-            }
+            <RadioGroupItemWithLabel size="$3" value="Beginner" label="Beginner" level={level} text={text} />
+            <RadioGroupItemWithLabel size="$3" value="Intermediate" label="Intermediate" level={level} text={text} />
+            <RadioGroupItemWithLabel size="$3" value="Intermediate high" label="Intermediate high" level={level} text={text} />
+            <RadioGroupItemWithLabel size="$3" value="Advanced" label="Advanced" level={level} text={text} />
+            <RadioGroupItemWithLabel size="$3" value="Competition" label="Competition" level={level} text={text} />
         </YStack>
         </RadioGroup>
-      <Button text={"Continue"} textColor='#fff' onPress={updatePlayer} ></Button>
+        <YStack marginTop={"20%"}>
+          <Button text={"Continue"} textColor='#fff' onPress={updatePlayer} ></Button>
+      </YStack>
+      </YStack>
+      </ScrollView>
     </SafeAreaView>
   )
 }
@@ -69,7 +64,7 @@ const styles = StyleSheet.create({
       },
       header:{
         paddingTop:hp("4%"),
-        fontFamily:"Montserrat",
+        fontFamily:"MontserratBold",
         fontSize:hp("3%"),
         fontWeight:"700",
         color:"#3A4D6C",

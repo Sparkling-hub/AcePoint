@@ -9,15 +9,17 @@ const signUpCoach = async ({ email,password,coach }: { email: string ,password:s
         const userData = {   
           displayName: coach.displayName,
           phoneNumber:coach.phoneNumber,
-          age:coach.age,
-          country:coach.country,
-          image:coach.image,
-          createdAt:Timestamp.now()    
+          terms:coach.terms,
+          marketing:coach.marketing,
+          createdAt:Timestamp.now()      
         }; 
         console.log("User added successfully!");
         try {
           setDoc(doc(db, 'coach',userCredential.user.uid), userData)
           console.log("Coach added successfully!");
+          storeData("coachId",userCredential.user.uid).then((data)=>{
+            console.log("storage data: "+data)
+          })
           
         } catch (error) {
             console.error("Error adding coach: ", error);
@@ -35,7 +37,6 @@ const signUpPlayer = async ({ email,password,player }: { email: string ,password
     let userData = {   
       displayName: player.displayName,
       phoneNumber:player.phoneNumber,
-      country:player.country,
       terms:player.terms,
       marketing:player.marketing,
       createdAt:Timestamp.now()    
@@ -71,16 +72,28 @@ const updateUserPlayer = async (playerData: Player) => {
     throw error; 
   }
 };
+const updateUserCoach = async (coachData: Coach) => {
+  try {
+    const coachId = await retrieveData("coachId");
+    console.log("storage data: " + coachId);
+    const coachCollectionRef = collection(db, 'coach');
+    await updateDoc(doc(coachCollectionRef, coachId), { ...coachData });
+      return 'coach updated successfully';
+  }catch (error) {
+    console.error('Error updating coach:', error);
+    throw error; 
+  }
+};
 
 const loginUser = async ({ email, password }:{email:string,password:string}) => {
   try {
     const user = await signInWithEmailAndPassword(auth,email, password)
     console.log(user)
+    storeData("userInfo",JSON.stringify(user))
     return { user }
   } catch (error) {
-    return {
-       error
-    }
+    return error
+    
   }
 }
-export { signUpCoach ,signUpPlayer,updateUserPlayer,loginUser}
+export { signUpCoach ,signUpPlayer,updateUserPlayer,loginUser,updateUserCoach}

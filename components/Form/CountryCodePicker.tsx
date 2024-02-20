@@ -19,7 +19,7 @@ export default function CountryCodePicker(props: CountryCodePickerProps) {
   const [show, setShow] = useState(false);
 
   const showCountryPicker = () => {
-    setShow(true);
+    setShow(!show);
   };
 
   return (
@@ -30,6 +30,7 @@ export default function CountryCodePicker(props: CountryCodePickerProps) {
         errors={errors}
         validateOnInit={validateOnInit}
         readOnly
+        style={{zIndex:10}}
         value={countryCode}
         icon={<ChevronDown color={Colors.secondary} />}
       />
