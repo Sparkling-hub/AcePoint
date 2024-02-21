@@ -1,19 +1,17 @@
 import { Avatar, AvatarProps } from 'tamagui';
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-
+import { findConnectedUserByEmail } from '@/services/user';
 const PorfilePicture: React.FC<AvatarProps> = (props) => {
+  
   const [image, setImage] = useState('');
-  const getImage = async () => {
-    const i = await ReactNativeAsyncStorage.getItem('image');
-    if (i !== null) {
-      setImage(i);
-    }
-  };
-  useEffect(() => {
-    getImage();
-  }, []);
 
+  useEffect(() => {
+    const getImage = async () => {
+      const user = await findConnectedUserByEmail()
+      setImage(user?.data().picture)
+    };
+    getImage();
+  }, [])
   return (
     <Avatar {...props}>
       {image ? (

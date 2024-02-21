@@ -4,7 +4,7 @@ import { db } from '@/lib/firebase';
 import { Alert } from 'react-native';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
-export default async function findUserByEmail(
+async function findUserByEmail(
   email: string,
   displayName: string,
   photoURL: string
@@ -30,8 +30,9 @@ export default async function findUserByEmail(
       `Welcome ${displayName}! Please complete your profile.`
     );
   } else {
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach(async (doc) => {
       const playerData = doc.data();
+      await ReactNativeAsyncStorage.setItem('userID', playerData.id)
       if (
         !playerData.hasOwnProperty('gender') ||
         !playerData.hasOwnProperty('phoneNumber') ||
@@ -51,3 +52,22 @@ export default async function findUserByEmail(
     });
   }
 }
+async function findConnectedUserByEmail() {
+  const email = await ReactNativeAsyncStorage.getItem('email');
+  const playerQuery = query(collection(db, 'player'), where('email', '==', email));
+  const coachQuery = query(collection(db, 'coach'), where('email', '==', email));
+  const [playerQuerySnapshot, coachQuerySnapshot] = await Promise.all([
+    getDocs(playerQuery),
+    getDocs(coachQuery)
+  ]);
+  const playerDocument = playerQuerySnapshot.docs.find(doc => doc.exists());
+  if (playerDocument) {
+    return playerDocument;
+  }
+  const coachDocument = coachQuerySnapshot.docs.find(doc => doc.exists());
+  if (coachDocument) {
+    return coachDocument;
+  }
+  return null;
+}
+export { findUserByEmail, findConnectedUserByEmail }
