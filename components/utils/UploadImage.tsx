@@ -1,11 +1,7 @@
 import { StyleSheet } from 'react-native'
 import * as ImagePicker from "expo-image-picker";
 import { useUploadImage } from '@/hooks/useUploadImage';
-<<<<<<< HEAD
 import { Avatar, View } from 'tamagui';
-=======
-import { Avatar } from 'tamagui';
->>>>>>> 0376c0959368356cd611ab2042ba19a23b3a32fd
 import { heightPercentageToDP as hp} from 'react-native-responsive-screen'
 
 const UploadImage = ({getFromChild}: { getFromChild: any  }) => {
