@@ -22,20 +22,29 @@ const updateUser = async (data: any) => {
         );
 
         if (!playerQuerySnapshot.empty) {
-            playerQuerySnapshot.forEach(async (document) => {
-                await updateDoc(doc(collection(db, 'player'), document.id), userData);
-            });
-            fireToast('success','Profile updated successfully!')
+            if (userData.birthday !== '' && userData.gender !== '' && userData.displayName !== '' && userData.phoneNumber !== '') {
+                playerQuerySnapshot.forEach(async (document) => {
+                    await updateDoc(doc(collection(db, 'player'), document.id), userData);
+                });
+                fireToast('success', 'Profile updated successfully!')
+            }
+            else {
+                fireToast('error', 'Please complete your profile!')
+            }
         } else if (!coachQuerySnapshot.empty) {
-            coachQuerySnapshot.forEach(async (document) => {
-                await updateDoc(doc(collection(db, 'coach'), document.id), userData);
-            });
-            fireToast('success','Profile updated successfully!')
+            if (userData.birthday !== '' && userData.club !== '' && userData.gender !== '' && userData.displayName !== '' && userData.phoneNumber !== '') {
+                coachQuerySnapshot.forEach(async (document) => {
+                    await updateDoc(doc(collection(db, 'coach'), document.id), userData);
+                });
+                fireToast('success', 'Profile updated successfully!')
+            } else {
+                fireToast('error', 'Please complete your profile!')
+            }
         } else {
-            fireToast('error','Profile not found!')
+            fireToast('error', 'Profile not found!')
         }
     } catch (error) {
-        fireToast('error','Error updating profile!')
+        fireToast('error', 'Error updating profile!')
         console.error('Error updating profile:', error);
         throw error;
     }

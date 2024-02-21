@@ -10,6 +10,10 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import PorfilePicture from '@/components/PorfilePicture';
 import { USER_ROLE } from '@/constants/User';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { getStorage } from 'firebase/storage';
+import { removeItem } from '@/api/localStorage';
 
 export default function AccountScreen() {
   const [username, setUsername] = useState('');
@@ -30,6 +34,16 @@ export default function AccountScreen() {
   };
 
   const paddingTop = calculatePaddingTop();
+
+  const handleLogout = () => {
+    ReactNativeAsyncStorage.removeItem('email');
+    ReactNativeAsyncStorage.removeItem('image');
+    ReactNativeAsyncStorage.removeItem('username');
+    ReactNativeAsyncStorage.removeItem('userID');
+    signOut(auth)
+    removeItem('userInfo')
+    router.push('/login');
+  }
 
   return (
     <YStack flex={1} paddingTop={paddingTop}>
@@ -100,7 +114,7 @@ export default function AccountScreen() {
             />
             <CustomButton
               title="Settings"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -112,7 +126,7 @@ export default function AccountScreen() {
           <YStack>
             <CustomButton
               title="Help"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -124,7 +138,7 @@ export default function AccountScreen() {
           <YStack gap={15}>
             <CustomButton
               title="Privacy"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -132,7 +146,7 @@ export default function AccountScreen() {
             {USER_ROLE === 'coach' && (
               <CustomButton
                 title="Subscription"
-                onPress={() => {}}
+                onPress={() => { }}
                 buttonStyle={styles.button}
                 textStyle={styles.buttonText}
                 icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -145,7 +159,7 @@ export default function AccountScreen() {
         <CustomButton
           title="Logout"
           onPress={() => {
-            console.log('pressed');
+            handleLogout();
           }}
         />
       </YStack>
