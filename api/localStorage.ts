@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router } from 'expo-router';
 const storeData = async (storageName: string, value: any) => {
     try {
         await AsyncStorage.setItem(storageName, value);

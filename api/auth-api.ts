@@ -1,4 +1,4 @@
-import {auth,updateDoc,updateProfile ,createUserWithEmailAndPassword,setDoc,db,doc,signOut, signInWithEmailAndPassword} from'@/lib/firebase'
+import {auth,updateDoc ,createUserWithEmailAndPassword,setDoc,db,doc,signOut, signInWithEmailAndPassword} from'@/lib/firebase'
 import { Timestamp, collection } from "firebase/firestore";
 import { Coach } from '@/model/coach';
 import { Player } from '@/model/player';
