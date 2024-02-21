@@ -137,7 +137,7 @@ export default function EditProfileScreen() {
       }
       setImg(downloadURL)
       fireToast('success', 'Profile picture uploaded successfully')
-      // console.log('Profile picture uploaded successfully:', downloadURL);
+      console.log('Profile picture uploaded successfully:', downloadURL);
     } catch (error) {
       fireToast('error', 'Error uploading profile picture')
       console.error('error', 'Error uploading profile picture:', error);

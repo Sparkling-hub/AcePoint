@@ -1,8 +1,6 @@
 import { Platform, StyleSheet } from 'react-native';
 import { Text, XStack, YStack } from 'tamagui';
-
 import { ChevronRight } from '@tamagui/lucide-icons';
-
 import Colors from '@/constants/Colors';
 import CustomButton from '@/components/CustomButton';
 import { router } from 'expo-router';
@@ -12,7 +10,6 @@ import PorfilePicture from '@/components/PorfilePicture';
 import { USER_ROLE } from '@/constants/User';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { getStorage } from 'firebase/storage';
 import { removeItem } from '@/api/localStorage';
 
 export default function AccountScreen() {
