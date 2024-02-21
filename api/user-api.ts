@@ -25,17 +25,17 @@ const updateUser = async (data: any) => {
             playerQuerySnapshot.forEach(async (document) => {
                 await updateDoc(doc(collection(db, 'player'), document.id), userData);
             });
-            fireToast('Profile updated successfully!')
+            fireToast('success','Profile updated successfully!')
         } else if (!coachQuerySnapshot.empty) {
             coachQuerySnapshot.forEach(async (document) => {
                 await updateDoc(doc(collection(db, 'coach'), document.id), userData);
             });
-            fireToast('Profile updated successfully!')
+            fireToast('success','Profile updated successfully!')
         } else {
-            fireToast('Profile not found!')
+            fireToast('error','Profile not found!')
         }
     } catch (error) {
-        fireToast('Error updating profile!')
+        fireToast('error','Error updating profile!')
         console.error('Error updating profile:', error);
         throw error;
     }

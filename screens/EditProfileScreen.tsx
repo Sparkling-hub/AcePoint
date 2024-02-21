@@ -134,10 +134,10 @@ export default function EditProfileScreen() {
         });
       }
       setImg(downloadURL)
-      fireToast('Profile picture uploaded successfully')
+      fireToast('success', 'Profile picture uploaded successfully')
       console.log('Profile picture uploaded successfully:', downloadURL);
     } catch (error) {
-      console.error('Error uploading profile picture:', error);
+      console.error('error', 'Error uploading profile picture:', error);
     } finally {
       setIsLoading(false);
     }
