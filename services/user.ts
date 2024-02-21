@@ -30,19 +30,21 @@ export default async function findUserByEmail(
       `Welcome ${displayName}! Please complete your profile.`
     );
   } else {
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach(async (doc) => {
       const playerData = doc.data();
       if (
-        !playerData.hasOwnProperty('gender') ||
-        !playerData.hasOwnProperty('phoneNumber') ||
-        !playerData.hasOwnProperty('birthday')
+        !(playerData.hasOwnProperty('gender') && playerData.gender === '') ||
+        !(playerData.hasOwnProperty('phoneNumber') && playerData.phoneNumber === '') ||
+        !(playerData.hasOwnProperty('birthday') && playerData.birthday === '')
       ) {
+        await ReactNativeAsyncStorage.setItem('userID', doc.id)
         router.push('/user/edit-profile');
         return Alert.alert(
           'Logged in successfully :',
           `Welcome ${displayName}! Please complete your profile.`
         );
       } else {
+        await ReactNativeAsyncStorage.setItem('userID', doc.id)
         return Alert.alert(
           'Logged in successfully :',
           `Welcome ${displayName}!`

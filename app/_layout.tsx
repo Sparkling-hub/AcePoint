@@ -46,16 +46,15 @@ const AccountHeader = () => {
 
 const EditProfileHeader = () => {
   const userData = useSelector((state: any) => state.editProfile.UserData);
-
+  const handleSaveProfile = () => {
+    updateUser(userData);
+  }
   return (
     <CustomHeader
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
       title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
       rightContent={
-        <TouchableOpacity onPress={() => {
-          console.log(userData);
-          updateUser(userData);
-        }}>
+        <TouchableOpacity onPress={handleSaveProfile}>
           <HeaderText text="Save" />
         </TouchableOpacity>
       }

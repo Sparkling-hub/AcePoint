@@ -113,8 +113,10 @@ export default function EditProfileScreen() {
       const userId = await ReactNativeAsyncStorage.getItem('userID')
       const storage = getStorage();
       const imageRef = ref(storage, `profileImage/${userId}`);
-
+      console.log(userId);
+      
       const response = await fetch(imageUri);
+
       const blob = await response.blob();
 
       await uploadBytes(imageRef, blob);
@@ -135,8 +137,9 @@ export default function EditProfileScreen() {
       }
       setImg(downloadURL)
       fireToast('success', 'Profile picture uploaded successfully')
-      console.log('Profile picture uploaded successfully:', downloadURL);
+      // console.log('Profile picture uploaded successfully:', downloadURL);
     } catch (error) {
+      fireToast('error', 'Error uploading profile picture')
       console.error('error', 'Error uploading profile picture:', error);
     } finally {
       setIsLoading(false);
