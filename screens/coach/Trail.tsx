@@ -1,7 +1,8 @@
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { heightPercentageToDP as hp,widthPercentageToDP as wp} from 'react-native-responsive-screen'
-import { Button, Heading, Image, Stack } from 'tamagui'
+import { Button, Heading, Image, Stack, YStack } from 'tamagui'
+import HeaderArrow from '@/components/HeaderArrow'
 
 const Trail = () => {
     const updatePlayer=()=>{
@@ -9,7 +10,11 @@ const Trail = () => {
     }
   return (
     <SafeAreaView style={styles.container}>
-    <Heading size={"$3"} style={styles.header}></Heading>
+        <YStack marginBottom={25} >
+          <YStack alignItems="flex-start" gap={"$4"} marginLeft={-80}>
+          <HeaderArrow gap={"$5"} data={"SUBSCRIPTION"} />
+          </YStack>
+         </YStack>
     <Stack space="$4" >  
         <Stack space="$4" >  
         <Image
@@ -53,8 +58,9 @@ const styles = StyleSheet.create({
      
     },
     button:{
+        color:"#ffff",
         marginTop:20,
-        height:hp("6%"),
+        height:52,
         width:wp("55%"),
         left:wp("2%"),
         backgroundColor:"#3A4D6C"
@@ -64,19 +70,11 @@ const styles = StyleSheet.create({
         color:"#3A4D6C",
         fontSize:11,
         lineHeight: 13.41,
-        fontFamily:"Montserrat",
+        fontFamily:"Montserratbold",
         fontWeight:"600",      
         
     },
-    header:{
-        paddingTop:hp("4%"),
-        fontFamily:"Montserrat",
-        fontSize:hp("3%"),
-        fontWeight:"700",
-        color:"#3A4D6C",
-        lineHeight: 21.94,
-        marginBottom:20,
-    },
+   
     box:{
         borderWidth: 1, 
         borderColor: '#A9D05C', 
@@ -90,21 +88,21 @@ const styles = StyleSheet.create({
         color:"#A9D05C",
         fontSize:24,
         lineHeight: 29.26,
-        fontFamily:"Montserrat",
+        fontFamily:"Montserratbold",
         fontWeight:"600",          
     },
     cancel:{
         color:"#3A4D6C",
         fontSize:24,
         lineHeight: 29.26,
-        fontFamily:"Montserrat",
+        fontFamily:"Montserratbold",
         fontWeight:"600",          
     },
     price:{
         color:"#3A4D6C",
         fontSize:20,
         lineHeight: 24.38,
-        fontFamily:"Montserrat",
+        fontFamily:"Montserratbold",
         fontWeight:"600", 
         marginTop:wp("8%"),         
     },
@@ -112,7 +110,7 @@ const styles = StyleSheet.create({
         color:"#3A4D6C",
         fontSize:14,
         lineHeight: 17.07,
-        fontFamily:"Montserrat",
+        fontFamily:"Montserratbold",
         fontWeight:"600", 
         marginLeft:10
     },

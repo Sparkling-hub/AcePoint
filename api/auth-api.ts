@@ -1,12 +1,13 @@
-import {auth,updateDoc ,createUserWithEmailAndPassword,setDoc,db,doc,signOut, signInWithEmailAndPassword} from'@/lib/firebase'
+import {auth,updateDoc,updateProfile ,createUserWithEmailAndPassword,setDoc,db,doc,signOut, signInWithEmailAndPassword} from'@/lib/firebase'
 import { Timestamp, collection } from "firebase/firestore";
 import { Coach } from '@/model/coach';
 import { Player } from '@/model/player';
 import {storeData ,retrieveData} from '@/api/localStorage'
 const signUpCoach = async ({ email,password,coach }: { email: string ,password:string,coach:Coach }) => {
+    
       createUserWithEmailAndPassword(auth,email, password)
-      .then((userCredential) => {
-        const userData = {   
+      .then((userCredential) => { 
+        const userData = {  
           displayName: coach.displayName,
           phoneNumber:coach.phoneNumber,
           terms:coach.terms,
@@ -28,6 +29,7 @@ const signUpCoach = async ({ email,password,coach }: { email: string ,password:s
       .catch((error) => {
         console.log('Sign Up Failed', error.message);
       });
+      signOut(auth)
   };
 
 
@@ -96,4 +98,5 @@ const loginUser = async ({ email, password }:{email:string,password:string}) => 
     
   }
 }
+
 export { signUpCoach ,signUpPlayer,updateUserPlayer,loginUser,updateUserCoach}

@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, getDocs,doc,setDoc,updateDoc  } from "firebase/firestore";
-import {getReactNativePersistence,signOut ,initializeAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword} from'firebase/auth'
+import {getReactNativePersistence,signOut ,initializeAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updateProfile} from'firebase/auth'
 import {ref,getDownloadURL,uploadBytesResumable,getStorage} from 'firebase/storage'
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -27,6 +27,6 @@ export { app, db,auth,storage,
     ref,getDownloadURL,uploadBytesResumable,getFirestore, 
     collection, addDoc,doc,setDoc, getDocs,createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut,updateDoc,
+    signOut,updateDoc,updateProfile
     
 };

@@ -96,13 +96,10 @@ function RootLayoutNav() {
         config={tamaguiConfig}
         defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack initialRouteName='login'>
-          <Stack.Screen
-              name="login"
-              options={{
-                headerShown: false
-              }}
-            />
+          <Stack   screenOptions={{
+              headerShown: false,
+            }}>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
               name="user/account"
@@ -118,6 +115,15 @@ function RootLayoutNav() {
                 header: EditProfileHeader,
               }}
             />
+            <Stack.Screen
+              name="signUp/playersignup"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="signUp/coachsignup"
+              options={{ headerShown: false,headerShadowVisible: false, }}
+            />
+            
           </Stack>
         </ThemeProvider>
       </TamaguiProvider>

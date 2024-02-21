@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 const storeData = async (storageName: string, value: any) => {
     try {
         await AsyncStorage.setItem(storageName, value);
@@ -27,4 +28,17 @@ const removeItem = async (storageName: string) => {
         console.error('Error removing item:', error);
     }
 };
-export { removeItem, retrieveData, storeData }
+
+const existed = async (localStorageKey: string) => {
+    try {
+      const data = await AsyncStorage.getItem(localStorageKey);
+      if (data !== null) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false; 
+    }
+  };
+export { removeItem, retrieveData, storeData,existed }

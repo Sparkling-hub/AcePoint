@@ -1,19 +1,30 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
 import { Image, Stack, XStack, YStack,Button,Text } from 'tamagui'
+import { router } from 'expo-router'
 
-const Footer = () => {
+const Footer = ({userType}:{userType:string}) => {
+  const redirectSignUp=()=>{
+      if (userType==="Player"){
+        router.push('/signUp/playersignup')
+      }
+      if (userType==="Coach"){
+        router.push('/signUp/coachsignup')
+      }
+  }
   return (
-    <Stack alignItems='center' gap={'$4'}>
-    <Button  style={styles.button}>Sign Up</Button>
+    <Stack alignItems='center' gap={'$2'}>
+    <Button  style={styles.button} onPress={redirectSignUp}>Sign Up</Button>
     <Text style={{ fontFamily: 'MontserratMedium',fontSize:14,
             fontWeight:400,
-            lineHeight:17.07 
+            lineHeight:17.07 ,
+            color:"#ffff"
+            
           }}
             >
       Or
     </Text>
-    <YStack gap={'$5'} alignItems='center' >
+    <YStack gap={'$4'} alignItems='center' >
     <XStack gap={'$5'}>
     <Button  style={styles.ouath}><Image
     source={require('@/assets/images/appleIcon.png')} 

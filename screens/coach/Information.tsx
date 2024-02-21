@@ -4,7 +4,7 @@ import { Text,Button, ScrollView, Input,YStack  } from 'tamagui'
 import { heightPercentageToDP as hp,widthPercentageToDP as wp} from 'react-native-responsive-screen'
 import {updateUserCoach } from'@/api/auth-api'
 import UploadImage from '@/components/utils/UploadImage'
-import Colors from '@/constants/Colors'
+import HeaderArrow from '@/components/HeaderArrow'
 const Information = ({onNext}:{onNext:() => void}) => {
     const [image,setImage]=useState('')
     const [bios, setBios] = useState<string>('');
@@ -24,14 +24,8 @@ const Information = ({onNext}:{onNext:() => void}) => {
       <ScrollView marginBottom={20}>
         <YStack alignItems="center" gap={"$2"} >
         <YStack marginBottom={25} >
-          <YStack alignItems="center" gap={"$4"}>
-            <Text
-              style={{ fontFamily: 'MontserratBold' }}
-              fontSize={20}
-              lineHeight={24}
-              color={Colors.secondary}>
-              Info
-            </Text>
+          <YStack alignItems="flex-start" gap={"$4"} marginLeft={-150}>
+          <HeaderArrow gap={"$11"} data={"INFO"} />
           </YStack>
          </YStack>
         <YStack alignItems="center" marginBottom={20} gap={"$4"} >
@@ -94,7 +88,7 @@ const styles = StyleSheet.create({
         marginTop:80,
         height:52,
         width:136,
-        
+        color:"#ffff",
         backgroundColor:"#3A4D6C"
     },
     header:{
