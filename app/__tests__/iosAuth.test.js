@@ -47,7 +47,12 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 }));
 
 jest.mock('@/services/user', () => jest.fn());
-
+jest.mock('firebase/storage', () => ({
+    ref: jest.fn(),
+    getDownloadURL: jest.fn(),
+    uploadBytesResumable: jest.fn(),
+    getStorage: jest.fn()
+  }));
 describe('GoogleAuthIOS', () => {
     const mockResponse = {
         type: 'success',

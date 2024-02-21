@@ -29,6 +29,12 @@ jest.mock('react-native', () => ({
     alert: jest.fn(),
   },
 }));
+jest.mock('firebase/storage', () => ({
+  ref: jest.fn(),
+  getDownloadURL: jest.fn(),
+  uploadBytesResumable: jest.fn(),
+  getStorage: jest.fn()
+}));
 
 import { expect, jest, describe, afterEach, it } from '@jest/globals';
 import findUserByEmail from '@/services/user';
@@ -66,7 +72,7 @@ describe('findUserByEmail', () => {
       displayName: displayName,
       picture: photoURL,
     });
-    expect(router.push).toHaveBeenCalledWith('/player/edit-profile');
+    expect(router.push).toHaveBeenCalledWith('/user/edit-profile');
     expect(Alert.alert).toHaveBeenCalledWith("Logged in successfully :", `Welcome ${displayName}! Please complete your profile.`);
   });
 
@@ -82,7 +88,7 @@ describe('findUserByEmail', () => {
     await findUserByEmail(email, displayName, photoURL);
 
     expect(querySnapshot.forEach).toHaveBeenCalled();
-    expect(router.push).toHaveBeenCalledWith('/player/edit-profile');
+    expect(router.push).toHaveBeenCalledWith('/user/edit-profile');
     expect(Alert.alert).toHaveBeenCalledWith("Logged in successfully :", `Welcome ${displayName}! Please complete your profile.`);
   });
 
@@ -99,7 +105,7 @@ describe('findUserByEmail', () => {
 
     expect(querySnapshot.forEach).toHaveBeenCalled();
     expect(Alert.alert).toHaveBeenCalledWith("Logged in successfully :", `Welcome ${displayName}!`);
-    expect(router.push).not.toHaveBeenCalledWith('/player/edit-profile');
+    expect(router.push).not.toHaveBeenCalledWith('/user/edit-profile');
   });
 
 });
