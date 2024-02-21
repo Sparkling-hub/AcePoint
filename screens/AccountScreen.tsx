@@ -32,13 +32,13 @@ export default function AccountScreen() {
 
   const paddingTop = calculatePaddingTop();
 
-  const handleLogout = () => {
-    ReactNativeAsyncStorage.removeItem('email');
-    ReactNativeAsyncStorage.removeItem('image');
-    ReactNativeAsyncStorage.removeItem('username');
-    ReactNativeAsyncStorage.removeItem('userID');
-    signOut(auth)
-    removeItem('userInfo')
+  const handleLogout = async () => {
+    await ReactNativeAsyncStorage.removeItem('email');
+    await ReactNativeAsyncStorage.removeItem('image');
+    await ReactNativeAsyncStorage.removeItem('username');
+    await ReactNativeAsyncStorage.removeItem('userID');
+    await signOut(auth)
+    await removeItem('userInfo')
     router.push('/login');
   }
 
