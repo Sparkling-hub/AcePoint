@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, getDocs,doc,setDoc,updateDoc  } from "firebase/firestore";
-import {getReactNativePersistence,signOut ,initializeAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword} from'firebase/auth'
-import {ref,getDownloadURL,uploadBytesResumable,getStorage} from 'firebase/storage'
+import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc } from "firebase/firestore";
+import { getReactNativePersistence, signOut, initializeAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { ref, getDownloadURL, uploadBytesResumable, getStorage } from 'firebase/storage'
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -19,14 +19,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app);
 const auth = initializeAuth(app, {
-    persistence: getReactNativePersistence (ReactNativeAsyncStorage)
+    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
 const storage = getStorage(app)
 
-export { app, db,auth,storage,
-    ref,getDownloadURL,uploadBytesResumable,getFirestore, 
-    collection, addDoc,doc,setDoc, getDocs,createUserWithEmailAndPassword,
+export {
+    app, db, auth, storage,
+    ref, getDownloadURL, uploadBytesResumable, getFirestore,
+    collection, addDoc, doc, setDoc, getDocs, createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut,updateDoc,
-    
+    signOut, updateDoc,
+
 };
