@@ -20,7 +20,6 @@ const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) =
   const [country, setCountry] = useState('+44');
   const [marketing, setMarketing] = useState(false);
   const [terms, setTerms] = useState(false);
-
   const sign=()=>{
     let data = {
       displayName: displayName, 

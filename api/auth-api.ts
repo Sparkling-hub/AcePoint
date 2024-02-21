@@ -98,5 +98,4 @@ const loginUser = async ({ email, password }:{email:string,password:string}) => 
     
   }
 }
-
 export { signUpCoach ,signUpPlayer,updateUserPlayer,loginUser,updateUserCoach}
