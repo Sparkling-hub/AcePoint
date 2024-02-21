@@ -1,12 +1,11 @@
 import { StyleSheet,ImageBackground, Platform } from 'react-native'
-import React from 'react'
+import React,{ useEffect, useState } from 'react'
 import { Image, ScrollView,XStack, YStack } from 'tamagui'
 import Tenis from '@/components/login/Tenis';
 import TopScreen from '@/components/login/TopScreen';
 import LoginBody from './login/LoginBody';
 import Footer from '@/components/login/Footer';
 import {existed} from '@/api/localStorage'
-import { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import Loading from '@/components/Loading';
 const Login = () => {

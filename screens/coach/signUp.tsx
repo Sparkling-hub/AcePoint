@@ -1,5 +1,5 @@
 import {  Platform} from 'react-native'
-import React, { useState,useEffect } from 'react'
+import React, { useState } from 'react'
 import {  View, XStack, YStack,ScrollView } from 'tamagui';
 import { CheckboxWithLabel } from '@/components/CheckboxWithLabel';
 import { Eye, EyeOff } from "@tamagui/lucide-icons";

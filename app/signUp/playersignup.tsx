@@ -1,5 +1,4 @@
 import SignUpPlayer from '@/screens/SignUpPlayer'
-import { SafeAreaView, StyleSheet } from 'react-native'
 
 export default function playersignup() {
    
@@ -9,7 +8,3 @@ export default function playersignup() {
      
     )
 }
-const styles = StyleSheet.create({
-    container: {
-    }
-  })

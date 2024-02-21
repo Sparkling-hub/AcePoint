@@ -1,9 +1,7 @@
 import Colors from '@/constants/Colors'
 import React from 'react'
-import { Text } from 'tamagui'
-import { XStack } from 'tamagui'
+import { Text,Button,XStack } from 'tamagui'
 import { ChevronLeft } from '@tamagui/lucide-icons'
-import { Button } from 'tamagui'
 import { router } from 'expo-router'
 
 const HeaderArrow = ({data,gap}:{data:string,gap:string}) => {

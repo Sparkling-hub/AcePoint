@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
-import { RadioGroup, ScrollView,Text, YStack } from 'tamagui'
+import { RadioGroup, ScrollView, YStack } from 'tamagui'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { RadioGroupItemWithLabel } from '@/components/RadioGroupItemWithLabel';
 import Button from '@/components/Button'
