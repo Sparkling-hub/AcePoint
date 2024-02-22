@@ -5,7 +5,7 @@ import HeaderArrow from '../HeaderArrow';
 import { View } from 'tamagui';
 import { Search } from '@tamagui/lucide-icons'
 import {addClub} from '@/api/club-api'
-import {KEY} from '@env'
+import {GOOGLE_MAPS_KEY_ANDROID} from '@env'
 const SearchApi = ({setOpen,setClose,handleData }:{setOpen?:any,setClose?:any,handleData?:any}) => {
     const [error, setError] = useState(null);
     
@@ -37,7 +37,7 @@ const renderRightButton = () => {
         <GooglePlacesAutocomplete
             placeholder=""
             query={{
-            key: KEY,
+            key: GOOGLE_MAPS_KEY_ANDROID,
             language: 'en', 
             }}
             fetchDetails={true}
