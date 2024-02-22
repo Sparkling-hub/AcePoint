@@ -1,6 +1,6 @@
 import { authAndroid } from '@/services/auth';
 import { Button, Image } from 'tamagui';
-import { styles } from './GoogleStyleButton';
+import { styles } from '../GoogleStyleButton';
 
  export default function GoogleAuthAndroid() {
   return (

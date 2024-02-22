@@ -1,11 +1,11 @@
 import { Platform } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import GoogleAuthAndroid from '@/components/GoogleAuthAndroid';
-import GoogleAuthIOS from '@/components/GoogleAuthIOS';
 import { Image, Stack, XStack, YStack, Button, Text } from 'tamagui';
 import { router } from 'expo-router';
 import { styles } from '../GoogleStyleButton';
+import GoogleAuthIOS from '../auth/GoogleAuthIOS';
+import GoogleAuthAndroid from '../auth/GoogleAuthAndroid';
 WebBrowser.maybeCompleteAuthSession();
 type PlatformType = 'ios' | 'android';
 
