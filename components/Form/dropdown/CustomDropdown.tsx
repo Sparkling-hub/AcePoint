@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { YStack } from 'tamagui';
+import { ScrollView, YStack } from 'tamagui';
 import CustomInput from '../CustomInput';
 import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 
@@ -16,6 +16,7 @@ interface CustomDropDownProps {
   readonly touched?: boolean;
   readonly errors?: string;
   readonly validateOnInit?: boolean;
+  readonly scrollViewRef: React.RefObject<ScrollView>;
 }
 
 export default function CustomDropdown(props: CustomDropDownProps) {
@@ -26,8 +27,14 @@ export default function CustomDropdown(props: CustomDropDownProps) {
     touched,
     errors,
     validateOnInit,
+    scrollViewRef,
   } = props;
   const [clicked, setClicked] = useState(false);
+
+  const handleClick = () => {
+    setClicked(!clicked);
+    scrollViewRef.current?.scrollTo({ y: 100, animated: true });
+  };
 
   const handleItemClick = (item: string) => {
     handleChange(item);
@@ -38,8 +45,8 @@ export default function CustomDropdown(props: CustomDropDownProps) {
     <YStack zIndex={1}>
       <CustomInput
         placeholder="Gender"
-        touched={touched}
-        errors={errors}
+        touched={!clicked && touched}
+        errors={!clicked ? errors : ''}
         validateOnInit={validateOnInit}
         value={selectedItem}
         textTransform="capitalize"
@@ -51,14 +58,14 @@ export default function CustomDropdown(props: CustomDropDownProps) {
             <ChevronDown color={Colors.secondary} />
           )
         }
-        onPress={() => setClicked(!clicked)}
+        onPress={handleClick}
       />
-      <YStack>
+      <YStack marginTop={8} paddingHorizontal={5}>
         {clicked && (
           <YStack
-            position="absolute"
-            marginTop={8}
-            elevationAndroid={4}
+            maxHeight={300}
+            width={'100%'}
+            elevation={4}
             $platform-ios={{
               shadowColor: 'rgba(0, 0, 0, 0.1)',
               shadowOffset: { width: 2, height: 2 },
@@ -68,8 +75,7 @@ export default function CustomDropdown(props: CustomDropDownProps) {
             backgroundColor={'white'}
             borderRadius={8}
             paddingVertical={10}
-            paddingHorizontal={16}
-            minWidth={'100%'}>
+            paddingHorizontal={16}>
             {options.map((option) => (
               <DropDownItem
                 key={option.value}

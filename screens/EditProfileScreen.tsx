@@ -3,7 +3,7 @@ import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
 import { Avatar, ScrollView, Text, XStack, YStack } from 'tamagui';
 import DatePicker from '@/components/Form/DatePicker';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CountryCodePicker from '@/components/Form/CountryCodePicker';
 import CustomDropdown from '@/components/Form/dropdown/CustomDropdown';
 import { FormikValues, useFormik } from 'formik';
@@ -15,7 +15,15 @@ import { Search } from '@tamagui/lucide-icons';
 import { USER_ROLE } from '@/constants/User';
 import { useDispatch } from 'react-redux';
 import { updateProfile } from '@/store/slices/editProfile';
-import { collection, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import {
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import { db, doc } from '@/lib/firebase';
 import fireToast from '@/services/toast';
 
@@ -26,6 +34,7 @@ const options = [
 ];
 
 export default function EditProfileScreen() {
+  const scrollViewRef = useRef(null);
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -85,7 +94,8 @@ export default function EditProfileScreen() {
 
   const handleSelectProfilePicture = async () => {
     try {
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (permissionResult.granted === false) {
         alert('Permission to access camera roll is required!');
         return;
@@ -110,11 +120,11 @@ export default function EditProfileScreen() {
   const handleProfilePictureChange = async (imageUri: string) => {
     try {
       setIsLoading(true);
-      const userId = await ReactNativeAsyncStorage.getItem('userID')
+      const userId = await ReactNativeAsyncStorage.getItem('userID');
       const storage = getStorage();
       const imageRef = ref(storage, `profileImage/${userId}`);
       console.log(userId);
-      
+
       const response = await fetch(imageUri);
 
       const blob = await response.blob();
@@ -123,8 +133,7 @@ export default function EditProfileScreen() {
 
       const downloadURL = await getDownloadURL(imageRef);
       let userDocRef = doc(db, 'coach', userId);
-      if (USER_ROLE === 'player')
-        userDocRef = doc(db, 'player', userId);
+      if (USER_ROLE === 'player') userDocRef = doc(db, 'player', userId);
 
       const userDocSnap = await getDoc(userDocRef);
 
@@ -135,23 +144,23 @@ export default function EditProfileScreen() {
           picture: downloadURL,
         });
       }
-      setImg(downloadURL)
-      fireToast('success', 'Profile picture uploaded successfully')
+      setImg(downloadURL);
+      fireToast('success', 'Profile picture uploaded successfully');
       console.log('Profile picture uploaded successfully:', downloadURL);
     } catch (error) {
-      fireToast('error', 'Error uploading profile picture')
+      fireToast('error', 'Error uploading profile picture');
       console.error('error', 'Error uploading profile picture:', error);
     } finally {
       setIsLoading(false);
     }
   };
-  const [img, setImg] = useState('')
+  const [img, setImg] = useState('');
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const email = await ReactNativeAsyncStorage.getItem('email')
+        const email = await ReactNativeAsyncStorage.getItem('email');
 
-        let querySnapshot = null
+        let querySnapshot = null;
         if (USER_ROLE === 'coach')
           querySnapshot = await getDocs(
             query(collection(db, 'coach'), where('email', '==', email))
@@ -162,7 +171,7 @@ export default function EditProfileScreen() {
           );
         const docSnapshot = querySnapshot.docs[0];
         const data = docSnapshot.data();
-        setImg(data.picture)
+        setImg(data.picture);
         formik.setValues({
           ...formik.values,
           name: data.displayName || formik.values.name,
@@ -201,17 +210,16 @@ export default function EditProfileScreen() {
 
   return (
     <YStack flex={1} paddingTop={paddingTop}>
-      <ScrollView marginBottom={20} paddingHorizontal={16}>
+      <ScrollView marginBottom={20} paddingHorizontal={16} ref={scrollViewRef}>
         <YStack marginBottom={30} paddingRight={14}>
           <YStack alignItems="center">
-            <Avatar marginBottom={20}
+            <Avatar
+              marginBottom={20}
               circular
               borderWidth={2}
               borderColor={Colors.primary}
               size="$9">
-              <Avatar.Image
-                src={img}
-              />
+              <Avatar.Image src={img} />
             </Avatar>
             <Text
               onPress={handleSelectProfilePicture}
@@ -231,8 +239,8 @@ export default function EditProfileScreen() {
                 placeholder="Name"
                 value={formik.values.name}
                 onChangeText={(value) => {
-                  formik.handleChange('name')
-                  handleChange('name', value)
+                  formik.handleChange('name');
+                  handleChange('name', value);
                 }}
                 onBlur={formik.handleBlur('name')}
                 errors={formik.errors.name}
@@ -244,8 +252,8 @@ export default function EditProfileScreen() {
                 placeholder="Email"
                 value={formik.values.email}
                 onChangeText={(value) => {
-                  formik.handleChange('email')
-                  handleChange('email', value)
+                  formik.handleChange('email');
+                  handleChange('email', value);
                 }}
                 onBlur={formik.handleBlur('email')}
                 errors={formik.errors.email}
@@ -257,11 +265,10 @@ export default function EditProfileScreen() {
             <YStack flex={1}>
               <CountryCodePicker
                 countryCode={formik.values.countryCode}
-                handleChange={
-                  (value: any) => {
-                    formik.handleChange('countryCode')
-                    handleChange('countryCode', value)
-                  }}
+                handleChange={(value: any) => {
+                  formik.handleChange('countryCode');
+                  handleChange('countryCode', value);
+                }}
                 errors={formik.errors.countryCode}
                 validateOnInit
               />
@@ -272,11 +279,10 @@ export default function EditProfileScreen() {
                   placeholder="Phone"
                   keyboardType="numeric"
                   value={formik.values.phone}
-                  onChangeText={
-                    (value: any) => {
-                      formik.handleChange('phone')
-                      handleChange('phone', value)
-                    }}
+                  onChangeText={(value: any) => {
+                    formik.handleChange('phone');
+                    handleChange('phone', value);
+                  }}
                   onBlur={formik.handleBlur('phone')}
                   errors={formik.errors.phone}
                   validateOnInit
@@ -287,22 +293,21 @@ export default function EditProfileScreen() {
           <YStack gap={'$3'}>
             <CustomDropdown
               options={options}
+              scrollViewRef={scrollViewRef}
               selectedItem={formik.values.gender}
-              handleChange={
-                (value: any) => {
-                  formik.handleChange('gender')
-                  handleChange('gender', value)
-                }}
+              handleChange={(value: any) => {
+                formik.handleChange('gender');
+                handleChange('gender', value);
+              }}
               errors={formik.errors.gender}
               validateOnInit
             />
             <DatePicker
               date={formik.values.dateOfBirth}
-              handleChange={
-                (value: any) => {
-                  formik.handleChange('dateOfBirth')
-                  handleChange('dateOfBirth', value)
-                }}
+              handleChange={(value: any) => {
+                formik.handleChange('dateOfBirth');
+                handleChange('dateOfBirth', value);
+              }}
               errors={formik.errors.dateOfBirth}
               validateOnInit
             />
@@ -311,11 +316,10 @@ export default function EditProfileScreen() {
                 placeholder="Club"
                 value={formik.values.club}
                 icon={<Search color={Colors.secondary} />}
-                onChangeText={
-                  (value: any) => {
-                    formik.handleChange('club')
-                    handleChange('club', value)
-                  }}
+                onChangeText={(value: any) => {
+                  formik.handleChange('club');
+                  handleChange('club', value);
+                }}
                 onBlur={formik.handleBlur('club')}
                 errors={formik.errors.club}
                 validateOnInit
