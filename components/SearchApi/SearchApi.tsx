@@ -7,7 +7,6 @@ import { Search } from '@tamagui/lucide-icons'
 import {addClub} from '@/api/club-api'
 import {KEY} from '@env'
 const SearchApi = ({setOpen,setClose,handleData }:{setOpen?:any,setClose?:any,handleData?:any}) => {
-    const [name, setName] = useState('');
     const [error, setError] = useState(null);
     
     useEffect(()=>{
@@ -20,8 +19,6 @@ const SearchApi = ({setOpen,setClose,handleData }:{setOpen?:any,setClose?:any,ha
     const { lat, lng } = location;
     console.log('Latitude:=====', lat);
     console.log('Longitude:======', lng);
-
-    setName(name)
     console.log(details)
     console.log('name :', name);
     addClub({club:{name:name,location:`Latitude:${lat} Longitude:${lng}`}})
