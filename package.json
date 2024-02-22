@@ -47,6 +47,7 @@
     "react-dom": "18.2.0",
     "react-native": "0.73.2",
     "react-native-country-codes-picker": "^2.3.5",
+    "react-native-dotenv": "^3.4.10",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-google-places-autocomplete": "^2.5.6",
     "react-native-modal-datetime-picker": "^17.1.0",

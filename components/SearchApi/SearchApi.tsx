@@ -5,8 +5,8 @@ import HeaderArrow from '../HeaderArrow';
 import { View } from 'tamagui';
 import { Search } from '@tamagui/lucide-icons'
 import {addClub} from '@/api/club-api'
+import {KEY} from '@env'
 const SearchApi = ({setOpen,setClose,handleData }:{setOpen?:any,setClose?:any,handleData?:any}) => {
-    const key ="AIzaSyAzuntxcLFCww2YS2je_xzonz3gsQuyVdE"
     const [name, setName] = useState('');
     const [error, setError] = useState(null);
     
@@ -40,7 +40,7 @@ const renderRightButton = () => {
         <GooglePlacesAutocomplete
             placeholder=""
             query={{
-            key: key,
+            key: KEY,
             language: 'en', 
             }}
             fetchDetails={true}
