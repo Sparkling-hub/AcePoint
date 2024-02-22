@@ -19,11 +19,10 @@ import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
 import CustomHeader from '@/components/CustomHeader';
 
-import { USER_ROLE } from '@/constants/User';
 import { TouchableOpacity } from 'react-native';
 import HeaderText from '@/components/HeaderText';
-import { store } from '@/store/store';
-import { Provider } from 'react-redux';
+import { RootState, store } from '@/store/store';
+import { Provider, useSelector } from 'react-redux';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,10 +44,12 @@ const AccountHeader = () => {
 };
 
 const EditProfileHeader = () => {
+  const userRole = useSelector((state: RootState) => state.userRole);
+  const userRoleValue = userRole.userRole;
   return (
     <CustomHeader
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
-      title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
+      title={userRoleValue === 'Coach' ? 'Edit Profile' : ''}
       rightContent={
         <TouchableOpacity onPress={() => console.log('pressed')}>
           <HeaderText text="Save" />
@@ -86,7 +87,7 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav></RootLayoutNav>;
+  return <RootLayoutNav />;
 }
 
 function RootLayoutNav() {
@@ -100,12 +101,7 @@ function RootLayoutNav() {
         <ThemeProvider
           value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack>
-            {/* <Stack.Screen
-              name="login"
-              options={{
-                headerShown: false,
-              }}
-            /> */}
+            <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
               name="user/account"
@@ -120,6 +116,14 @@ function RootLayoutNav() {
                 headerShadowVisible: false,
                 header: EditProfileHeader,
               }}
+            />
+            <Stack.Screen
+              name="signUp/playersignup"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="signUp/coachsignup"
+              options={{ headerShown: false, headerShadowVisible: false }}
             />
           </Stack>
         </ThemeProvider>

@@ -27,6 +27,6 @@ export { app, db,auth,storage,
     ref,getDownloadURL,uploadBytesResumable,getFirestore, 
     collection, addDoc,doc,setDoc, getDocs,createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut,updateDoc,
+    signOut,updateDoc
     
 };

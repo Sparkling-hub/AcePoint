@@ -19,8 +19,8 @@ interface TenisProps extends AvatarProps {
       icon,
       text,
       borderWidth=4,
-      borderColor='#A9D05C',
-      backgroundColor='#3A4D6C',
+      borderColor="#FFFFFF",
+      backgroundColor='#A9D05C',
       ...rest
     } = props;
   
@@ -36,7 +36,7 @@ interface TenisProps extends AvatarProps {
         >
             <YStack alignItems='center' gap={'$2'}> 
             {icon} 
-            <Text style={{fontFamily:"Montserrat",lineHeight:19.5,fontSize:16,fontWeight:800 }}>
+            <Text style={{fontFamily:"Montserrat",lineHeight:19.5,fontSize:16,fontWeight:800,color:"#FFFF" }}>
                 {text}
             </Text>
             </YStack>

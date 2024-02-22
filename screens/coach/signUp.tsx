@@ -1,15 +1,15 @@
 import {  Platform} from 'react-native'
 import React, { useState } from 'react'
-import { Text, View, XStack, YStack,ScrollView } from 'tamagui';
+import {  View, XStack, YStack,ScrollView } from 'tamagui';
 import { CheckboxWithLabel } from '@/components/CheckboxWithLabel';
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import Colors from '@/constants/Colors';
 import CustomInput from '@/components/Form/CustomInput';
 import CountryCodePicker from '@/components/Form/CountryCodePicker';
 import Button from '@/components/Button'
 import ProgressBar from '@/components/ProgressBar';
+import HeaderArrow from '@/components/HeaderArrow';
 
 const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) => void}) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -63,15 +63,9 @@ const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) =
     {formikProps => (
     <YStack flex={1} paddingTop={Platform.OS === 'ios' ? 90 : 20}>
         <ScrollView marginBottom={20}>
-         <YStack marginBottom={30}>
-          <YStack alignItems="center" gap={"$4"}>
-            <Text
-              style={{ fontFamily: 'MontserratBold' }}
-              fontSize={20}
-              lineHeight={24}
-              color={Colors.secondary}>
-              Sign Up 
-            </Text>
+         <YStack marginBottom={30} marginTop={-10}>
+          <YStack alignItems="flex-start" gap={"$4"} marginLeft={20}>
+            <HeaderArrow gap={"$11"} data={"SIGN UP"} />
           </YStack>
             <View marginLeft={20} marginTop={25} ><ProgressBar value={20}/></View>
          </YStack>

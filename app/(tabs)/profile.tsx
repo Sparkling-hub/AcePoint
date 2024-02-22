@@ -2,12 +2,15 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import React from 'react';
 import PlayerProfile from '@/screens/player/PlayerProfile';
 import CoachProfile from '@/screens/coach/CoachProfile';
-import { USER_ROLE } from '@/constants/User';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 export default function Profile() {
+  const userRole = useSelector((state: RootState) => state.userRole);
+  const userRoleValue = userRole.userRole;
   return (
     <SafeAreaView style={styles.container}>
-      {USER_ROLE === 'coach' ? <CoachProfile /> : <PlayerProfile />}
+      {userRoleValue === 'Coach' ? <CoachProfile /> : <PlayerProfile />}
     </SafeAreaView>
   );
 }

@@ -2,13 +2,14 @@ import { StyleSheet, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { Button, Input, Text, View, YStack, XStack } from 'tamagui'
 import { loginUser } from '@/api/auth-api'
+import { storeData } from '@/api/localStorage'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Info } from '@tamagui/lucide-icons';
 import { router } from 'expo-router';
 
-const LoginBody = () => {
+const LoginBody = ({userType}:{userType:string}) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -16,19 +17,25 @@ const LoginBody = () => {
     setPasswordVisible(!passwordVisible);
   };
   const login = async () => {
-    try {
-      const result: any = await loginUser({ email, password });
-      if (result.user) {
-        console.log("Login successful");
-        router.push('/(tabs)')
-        Alert.alert("Login Successful", "You have successfully logged in.");
-      } else {
-        console.log("Error occurred during login:", result.message);
-        Alert.alert("Login Failed invalid-credential");
+    if (userType==='') {
+      Alert.alert("please click on player or coach button");
+    }
+    if(userType!==''){
+      try {
+        storeData("userType",userType)
+        const result: any = await loginUser({ email, password });
+        if (result.user) {
+          console.log("Login successful");
+          router.push('/(tabs)')
+          Alert.alert("Login Successful", "You have successfully logged in.");
+        } else {
+          console.log("Error occurred during login:", result.message);
+          Alert.alert("Login Failed invalid-credential");
+        }
+      } catch (error: any) {
+        console.error("Error occurred during login:", error.message);
+        Alert.alert("Login Failed", error.message ?? "An unknown error occurred.");
       }
-    } catch (error: any) {
-      console.error("Error occurred during login:", error.message);
-      Alert.alert("Login Failed", error.message ?? "An unknown error occurred.");
     }
   };
   return (
@@ -41,7 +48,7 @@ const LoginBody = () => {
         //
       }}>
       {({ handleChange, handleBlur, values, errors, touched }) => (
-        <YStack gap={'$4'} >
+        <YStack gap={'$3'} >
           <Input
             borderWidth={0}
             placeholder="Email"
@@ -109,7 +116,7 @@ const LoginBody = () => {
                 }}>Show</Text>
             )}
           </View>
-          <YStack marginTop={-30} alignItems='center' gap={'$4'}>
+          <YStack marginTop={-40} alignItems='center' gap={'$4'}>
             <Button onPress={login} style={styles.button}>Log In</Button>
             <Text style={styles.text}>Forgot your password?</Text>
           </YStack>
@@ -125,25 +132,26 @@ export default LoginBody
 
 const styles = StyleSheet.create({
   input: {
-    backgroundColor: "#DADADA",
+    backgroundColor: "white",
     fontSize: 16,
-    height: hp("6.5%"),
-    width: wp("90%"),
+    height: 45,
+    width:343,
     color: "#3A4D6C",
     borderRadius: 50,
 
   },
   text: {
-    marginBottom: wp("7%"),
+    marginBottom: wp("2%"),
     fontFamily: "Montserrat",
     fontWeight: "400",
     fontSize: 14,
     lineHeight: 17.07,
+    color: "#FFFF"
 
   },
   button: {
-    height: hp("6.5%"),
-    width: wp("90%"),
+    height: 44,
+    width: 343,
     backgroundColor: "#A9D05C",
     color: "#3A4D6C",
     fontFamily: "Montserrat",

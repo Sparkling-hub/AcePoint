@@ -9,20 +9,25 @@ import { router } from 'expo-router';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import PorfilePicture from '@/components/PorfilePicture';
-import { USER_ROLE } from '@/constants/User';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 export default function AccountScreen() {
   const [username, setUsername] = useState('');
-  const getUserName = async () => {
+
+  const getUserData = async () => {
     const name = await ReactNativeAsyncStorage.getItem('username');
     if (name) return setUsername(name);
   };
   useEffect(() => {
-    getUserName();
+    getUserData();
   }, []);
 
+  const userRole = useSelector((state: RootState) => state.userRole);
+  const userRoleValue = userRole.userRole;
+
   const calculatePaddingTop = () => {
-    if (USER_ROLE === 'coach') {
+    if (userRoleValue === 'Player') {
       return 0;
     } else {
       return Platform.OS === 'ios' ? 90 : 30;
@@ -33,7 +38,7 @@ export default function AccountScreen() {
 
   return (
     <YStack flex={1} paddingTop={paddingTop}>
-      {USER_ROLE === 'player' ? (
+      {userRoleValue === 'Player' ? (
         <YStack alignItems="center" marginBottom={30}>
           <PorfilePicture
             marginBottom={20}
@@ -129,7 +134,7 @@ export default function AccountScreen() {
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
             />
-            {USER_ROLE === 'coach' && (
+            {userRoleValue === 'Coach' && (
               <CustomButton
                 title="Subscription"
                 onPress={() => {}}
