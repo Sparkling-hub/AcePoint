@@ -1,10 +1,11 @@
-import { Platform, StyleSheet } from 'react-native';
+import { Platform } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import GoogleAuthAndroid from '@/components/GoogleAuthAndroid';
 import GoogleAuthIOS from '@/components/GoogleAuthIOS';
 import { Image, Stack, XStack, YStack, Button, Text } from 'tamagui';
 import { router } from 'expo-router';
+import { styles } from '../GoogleStyleButton';
 WebBrowser.maybeCompleteAuthSession();
 type PlatformType = 'ios' | 'android';
 
@@ -64,26 +65,4 @@ const Footer = ({ userType }: { userType: string }) => {
     </Stack>
   );
 };
-
 export default Footer;
-
-const styles = StyleSheet.create({
-  button: {
-    height: 44,
-    width: 343,
-    backgroundColor: '#A9D05C',
-    color: '#3A4D6C',
-    fontFamily: 'Montserrat',
-    fontWeight: '700',
-    fontSize: 16,
-    lineHeight: 19.5,
-  },
-  ouath: {
-    height: 52,
-    width: 95,
-    backgroundColor: '#FFFFFF',
-    fontWeight: '700',
-    fontSize: 16,
-    lineHeight: 19.5,
-  },
-});

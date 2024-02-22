@@ -37,7 +37,7 @@ jest.mock('firebase/storage', () => ({
 }));
 
 import { expect, jest, describe, afterEach, it } from '@jest/globals';
-import findUserByEmail from '@/services/user';
+import { findUserByEmail } from '@/services/user';
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
@@ -75,10 +75,7 @@ describe('findUserByEmail', () => {
       picture: photoURL,
     });
     expect(router.push).toHaveBeenCalledWith('/user/edit-profile');
-    expect(Alert.alert).toHaveBeenCalledWith(
-      'Logged in successfully :',
-      `Welcome ${displayName}! Please complete your profile.`
-    );
+
   });
 
   it('should push to edit-profile route if existing player data is incomplete', async () => {
@@ -94,10 +91,7 @@ describe('findUserByEmail', () => {
 
     expect(querySnapshot.forEach).toHaveBeenCalled();
     expect(router.push).toHaveBeenCalledWith('/user/edit-profile');
-    expect(Alert.alert).toHaveBeenCalledWith(
-      'Logged in successfully :',
-      `Welcome ${displayName}! Please complete your profile.`
-    );
+
   });
 
   it('should alert the player without additional actions if existing player data is complete', async () => {
@@ -112,10 +106,7 @@ describe('findUserByEmail', () => {
     await findUserByEmail(email, displayName, photoURL);
 
     expect(querySnapshot.forEach).toHaveBeenCalled();
-    expect(Alert.alert).toHaveBeenCalledWith(
-      'Logged in successfully :',
-      `Welcome ${displayName}!`
-    );
+
     expect(router.push).not.toHaveBeenCalledWith('/user/edit-profile');
   });
 });

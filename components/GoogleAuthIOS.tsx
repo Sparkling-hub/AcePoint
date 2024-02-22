@@ -1,4 +1,4 @@
-import { Alert, StyleSheet } from 'react-native';
+import { Alert } from 'react-native';
 import { useAuthIos } from '@/services/auth';
 import 'react-native-gesture-handler';
 import { useEffect } from 'react';
@@ -7,6 +7,7 @@ import { auth } from '@/lib/firebase';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { findUserByEmail } from '@/services/user';
 import { Button, Image } from 'tamagui';
+import { styles } from './GoogleStyleButton';
 
 export default function GoogleAuthIOS() {
   const { response, promptAsync } = useAuthIos();
@@ -55,13 +56,3 @@ export default function GoogleAuthIOS() {
   );
 }
 
-const styles = StyleSheet.create({
-  ouath: {
-    height: 52,
-    width: 95,
-    backgroundColor: '#FFFFFF',
-    fontWeight: '700',
-    fontSize: 16,
-    lineHeight: 19.5,
-  },
-});

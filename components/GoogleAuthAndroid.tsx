@@ -1,8 +1,8 @@
 import { authAndroid } from '@/services/auth';
-import { StyleSheet } from 'react-native';
 import { Button, Image } from 'tamagui';
+import { styles } from './GoogleStyleButton';
 
-export default function GoogleAuthAndroid() {
+ export default function GoogleAuthAndroid() {
   return (
     <Button
       style={styles.ouath}
@@ -17,13 +17,3 @@ export default function GoogleAuthAndroid() {
   );
 }
 
-const styles = StyleSheet.create({
-  ouath: {
-    height: 52,
-    width: 95,
-    backgroundColor: '#FFFFFF',
-    fontWeight: '700',
-    fontSize: 16,
-    lineHeight: 19.5,
-  },
-});

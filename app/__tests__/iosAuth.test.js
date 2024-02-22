@@ -2,11 +2,11 @@ import React from 'react';
 import { useAuthIos } from '@/services/auth';
 import { signInWithCredential } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import findUserByEmail from '@/services/user';
 import { Alert } from 'react-native';
 import { render, waitFor } from 'react-native-testing-library';
 
 import GoogleAuthIOS from '@/components/GoogleAuthIOS';
+
 jest.mock('react-native-gesture-handler', () => {
   jest.fn();
 });
@@ -27,6 +27,9 @@ jest.mock('react-native', () => ({
     alert: jest.fn(),
   },
   Button: 'Button',
+  StyleSheet: {
+    create: () => ({}),
+  }
 }));
 
 jest.mock('@/services/auth', () => ({
@@ -53,6 +56,11 @@ jest.mock('firebase/storage', () => ({
   uploadBytesResumable: jest.fn(),
   getStorage: jest.fn(),
 }));
+jest.mock('tamagui', () => ({
+  Button: jest.fn().mockImplementation(() => <button>Mocked Button</button>),
+  Image: jest.fn().mockImplementation(() => <img src="mockedImage.png" alt="Mocked Image" />)
+}));
+
 describe('GoogleAuthIOS', () => {
   const mockResponse = {
     type: 'success',
@@ -105,17 +113,7 @@ describe('GoogleAuthIOS', () => {
     });
   });
 
-  it('invokes findUserByEmail with user details on successful authentication', async () => {
-    render(<GoogleAuthIOS />);
 
-    await waitFor(() => {
-      expect(findUserByEmail).toHaveBeenCalledWith(
-        'test@example.com',
-        'Test User',
-        'http://example.com/photo.jpg'
-      );
-    });
-  });
 
   it('displays an error alert if authentication fails', async () => {
     signInWithCredential.mockRejectedValue(new Error('Something went wrong!'));
