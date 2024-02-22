@@ -37,7 +37,6 @@ const updateUser = async (data: any, userRoleValue: string) => {
     } catch (error) {
         fireToast('error', 'Error updating profile!');
         console.error('Error updating profile:', error);
-        throw error;
     }
 }
 function validateProfile(userData: any, profileType: string): boolean {
