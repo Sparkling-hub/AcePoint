@@ -9,7 +9,7 @@ import CountryCodePicker from '@/components/Form/CountryCodePicker';
 import CustomDropdown from '@/components/Form/dropdown/CustomDropdown';
 import { FormikValues, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { ActivityIndicator, Platform } from 'react-native';
+import { Platform } from 'react-native';
 
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -17,6 +17,7 @@ import PorfilePicture from '@/components/PorfilePicture';
 import CustomInput from '@/components/Form/CustomInput';
 import { Search } from '@tamagui/lucide-icons';
 import { USER_ROLE } from '@/constants/User';
+import EditProfileSkeleton from '@/components/skeletons/EditProfileSkeleton';
 
 const options = [
   { label: 'Male', value: 'male' },
@@ -105,14 +106,6 @@ export default function EditProfileScreen() {
     getUserData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <YStack flex={1} justifyContent="center" alignItems="center">
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </YStack>
-    );
-  }
-
   const calculatePaddingTop = () => {
     if (USER_ROLE === 'coach') {
       return 18;
@@ -122,6 +115,14 @@ export default function EditProfileScreen() {
   };
 
   const paddingTop = calculatePaddingTop();
+
+  if (isLoading) {
+    return (
+      <YStack flex={1} paddingTop={paddingTop} paddingHorizontal={16}>
+        <EditProfileSkeleton />
+      </YStack>
+    );
+  }
 
   return (
     <YStack flex={1} paddingTop={paddingTop}>
