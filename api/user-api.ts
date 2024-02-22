@@ -4,44 +4,46 @@ import fireToast from "@/services/toast";
 
 const updateUser = async (data: any) => {
     try {
-        const userData = {
-            displayName: data.name,
-            phoneNumber: data.phone,
-            birthday: data.dateOfBirth,
-            gender: data.gender,
-            countryCode: data.countryCode,
-            club: data.club
-        };
+        if (data.hasOwnProperty("name")) {
+            const userData = {
+                displayName: data.name,
+                phoneNumber: data.phone,
+                birthday: data.dateOfBirth,
+                gender: data.gender,
+                countryCode: data.countryCode,
+                club: data.club
+            };
 
-        const playerQuerySnapshot = await getDocs(
-            query(collection(db, 'player'), where('email', '==', data.email))
-        );
+            const playerQuerySnapshot = await getDocs(
+                query(collection(db, 'player'), where('email', '==', data.email))
+            );
 
-        const coachQuerySnapshot = await getDocs(
-            query(collection(db, 'coach'), where('email', '==', data.email))
-        );
+            const coachQuerySnapshot = await getDocs(
+                query(collection(db, 'coach'), where('email', '==', data.email))
+            );
 
-        if (!playerQuerySnapshot.empty) {
-            if (userData.birthday !== '' && userData.gender !== '' && userData.displayName !== '' && userData.phoneNumber !== '') {
-                playerQuerySnapshot.forEach(async (document) => {
-                    await updateDoc(doc(collection(db, 'player'), document.id), userData);
-                });
-                fireToast('success', 'Profile updated successfully!')
-            }
-            else {
-                fireToast('error', 'Please complete your profile!')
-            }
-        } else if (!coachQuerySnapshot.empty) {
-            if (userData.birthday !== '' && userData.club !== '' && userData.gender !== '' && userData.displayName !== '' && userData.phoneNumber !== '') {
-                coachQuerySnapshot.forEach(async (document) => {
-                    await updateDoc(doc(collection(db, 'coach'), document.id), userData);
-                });
-                fireToast('success', 'Profile updated successfully!')
+            if (!playerQuerySnapshot.empty) {
+                if (userData.birthday !== '' && userData.gender !== '' && userData.displayName !== '' && userData.phoneNumber !== '') {
+                    playerQuerySnapshot.forEach(async (document) => {
+                        await updateDoc(doc(collection(db, 'player'), document.id), userData);
+                    });
+                    fireToast('success', 'Profile updated successfully!')
+                }
+                else {
+                    fireToast('error', 'Please complete your profile!')
+                }
+            } else if (!coachQuerySnapshot.empty) {
+                if (userData.birthday !== '' && userData.club !== '' && userData.gender !== '' && userData.displayName !== '' && userData.phoneNumber !== '') {
+                    coachQuerySnapshot.forEach(async (document) => {
+                        await updateDoc(doc(collection(db, 'coach'), document.id), userData);
+                    });
+                    fireToast('success', 'Profile updated successfully!')
+                } else {
+                    fireToast('error', 'Please complete your profile!')
+                }
             } else {
-                fireToast('error', 'Please complete your profile!')
+                fireToast('error', 'Profile not found!')
             }
-        } else {
-            fireToast('error', 'Profile not found!')
         }
     } catch (error) {
         fireToast('error', 'Error updating profile!')

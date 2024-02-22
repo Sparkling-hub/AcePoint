@@ -33,11 +33,8 @@ async function findUserByEmail(
     querySnapshot.forEach(async (doc) => {
       const playerData = doc.data();
       await ReactNativeAsyncStorage.setItem('userID', doc.id)
-      if (
-        !(playerData.hasOwnProperty('gender') && playerData.gender === '') ||
-        !(playerData.hasOwnProperty('phoneNumber') && playerData.phoneNumber === '') ||
-        !(playerData.hasOwnProperty('birthday') && playerData.birthday === '')
-      ) {
+      if (!playerData.hasOwnProperty('gender') || !playerData.hasOwnProperty('phoneNumber') || !playerData.hasOwnProperty('birthday') ||
+        playerData.gender === '' || playerData.phoneNumber === '' || playerData.birthday === '') {
         router.push('/user/edit-profile');
         return Alert.alert(
           'Logged in successfully :',
