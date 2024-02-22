@@ -46,12 +46,14 @@ const AccountHeader = () => {
 };
 
 const EditProfileHeader = () => {
-  const userData = useSelector((state: any) => state.editProfile.UserData);
-  const handleSaveProfile = () => {
-    updateUser(userData);
-  };
   const userRole = useSelector((state: RootState) => state.userRole);
   const userRoleValue = userRole.userRole;
+
+  const userData = useSelector((state: any) => state.editProfile.UserData);
+  const handleSaveProfile = () => {
+    updateUser(userData, userRoleValue);
+  };
+
   return (
     <CustomHeader
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}

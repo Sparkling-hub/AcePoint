@@ -9,12 +9,9 @@ import CustomDropdown from '@/components/Form/dropdown/CustomDropdown';
 import { FormikValues, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Platform } from 'react-native';
-
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInput from '@/components/Form/CustomInput';
 import { Search } from '@tamagui/lucide-icons';
-
-import { useDispatch } from 'react-redux';
 import { updateProfile } from '@/store/slices/editProfile';
 import {
   collection,
@@ -27,7 +24,7 @@ import {
 } from 'firebase/firestore';
 import { db, doc } from '@/lib/firebase';
 import fireToast from '@/services/toast';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store/store';
 
 import EditProfileSkeleton from '@/components/skeletons/EditProfileSkeleton';

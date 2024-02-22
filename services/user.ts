@@ -42,6 +42,7 @@ async function findUserByEmail(
         );
       } else {
         await ReactNativeAsyncStorage.setItem('userID', doc.id)
+        router.push('/user/edit-profile');
         return Alert.alert(
           'Logged in successfully :',
           `Welcome ${displayName}!`

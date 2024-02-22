@@ -5,22 +5,22 @@ import GoogleAuthAndroid from '@/components/GoogleAuthAndroid';
 import GoogleAuthIOS from '@/components/GoogleAuthIOS';
 import { Image, Stack, XStack, YStack, Button, Text } from 'tamagui';
 import { router } from 'expo-router';
+WebBrowser.maybeCompleteAuthSession();
+type PlatformType = 'ios' | 'android';
 
-const Footer = ({ userType }: { userType: string }) => {
-  WebBrowser.maybeCompleteAuthSession();
-  type PlatformType = 'ios' | 'android';
+interface GoogleAuthProps {
+  platform: PlatformType;
+}
 
-  interface GoogleAuthProps {
-    platform: PlatformType;
+const GoogleAuth: React.FC<GoogleAuthProps> = ({ platform }) => {
+  if (platform === 'ios') {
+    return <GoogleAuthIOS />;
+  } else if (platform === 'android') {
+    return <GoogleAuthAndroid />;
   }
+};
+const Footer = ({ userType }: { userType: string }) => {
 
-  const GoogleAuth: React.FC<GoogleAuthProps> = ({ platform }) => {
-    if (platform === 'ios') {
-      return <GoogleAuthIOS />;
-    } else if (platform === 'android') {
-      return <GoogleAuthAndroid />;
-    }
-  };
 
   const redirectSignUp = () => {
     if (userType === 'Player') {

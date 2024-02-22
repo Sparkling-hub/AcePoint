@@ -33,8 +33,7 @@ export default function CustomDropdown(props: CustomDropDownProps) {
 
   const handleClick = () => {
     setClicked(!clicked);
-    scrollViewRef &&
-      scrollViewRef.current?.scrollTo({ y: 100, animated: true });
+    scrollViewRef?.current?.scrollTo({ y: 100, animated: true });
   };
 
   const handleItemClick = (item: string) => {
