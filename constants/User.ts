@@ -1,1 +1,1 @@
-export const USER_ROLE: 'coach' | 'player' = 'player';
+export const USER_ROLE: 'coach' | 'player' = 'coach';
