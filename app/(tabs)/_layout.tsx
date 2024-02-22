@@ -48,10 +48,7 @@ export default function TabLayout() {
           paddingHorizontal: 30,
           paddingBottom: 20,
         },
-<<<<<<< HEAD
         
-=======
->>>>>>> 0376c0959368356cd611ab2042ba19a23b3a32fd
       }}>
       <Tabs.Screen
         name="index"
