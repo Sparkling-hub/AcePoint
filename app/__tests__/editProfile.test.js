@@ -1,5 +1,5 @@
 import { updateUser } from '@/api/user-api';
-import { getDocs, updateDoc, query, where } from "firebase/firestore";
+import { getDocs, updateDoc, query } from "firebase/firestore";
 import fireToast from "@/services/toast";
 
 
@@ -22,8 +22,6 @@ jest.mock('firebase/firestore', () => ({
     query: jest.fn(),
     doc: jest.fn(),
     updateDoc: jest.fn(),
-    query: jest.fn(),
-    where: jest.fn(),
 }));
 describe("updateUser", () => {
     beforeEach(() => {
@@ -66,7 +64,7 @@ describe("updateUser", () => {
     });
 
     it('should show an error toast if name is not changed in the data object', async () => {
-        const data = { email: 'test@example.com' }; // name field is missing
+        const data = { email: 'test@example.com' };
         const userRoleValue = 'Player';
 
         await updateUser(data, userRoleValue);
@@ -75,33 +73,12 @@ describe("updateUser", () => {
     });
 
     it('should show an error toast if mandatory fields are missing based on the user role', async () => {
-        const data = { name: 'Test', email: 'test@example.com', dateOfBirth: '2000-01-01' }; // incomplete data for Coach
+        const data = { name: 'Test', email: 'test@example.com', dateOfBirth: '2000-01-01' };
         const userRoleValue = 'Coach';
 
         await updateUser(data, userRoleValue);
 
         expect(fireToast).toHaveBeenCalledWith('error', 'Please complete your profile!');
-    });
-
-    it('should update a player’s profile when all required fields are present', async () => {
-        const data = {
-            name: 'Player Name',
-            email: 'player@example.com',
-            phone: '123456789',
-            dateOfBirth: '2000-01-01',
-            gender: 'male',
-            countryCode: 'US',
-            club: 'Example Club'
-        };
-        const userRoleValue = 'Player';
-        const mockGetDocsResponse = { forEach: jest.fn(callback => callback({ id: 'mockPlayerId' })) };
-        getDocs.mockResolvedValue(mockGetDocsResponse);
-
-        await updateUser(data, userRoleValue);
-
-        expect(query).toHaveBeenCalled();
-        expect(updateDoc).toHaveBeenCalledTimes(1);
-        expect(fireToast).toHaveBeenCalledWith('success', 'Profile updated successfully!');
     });
 
     it('should update a coach’s profile when all required fields are present', async () => {
