@@ -17,11 +17,10 @@ import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
 import CustomHeader from '@/components/CustomHeader';
 
-import { USER_ROLE } from '@/constants/User';
 import { TouchableOpacity } from 'react-native';
 import HeaderText from '@/components/HeaderText';
-import { store } from '@/store/store';
-import { Provider } from 'react-redux';
+import { RootState, store } from '@/store/store';
+import { Provider, useSelector } from 'react-redux';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -43,10 +42,12 @@ const AccountHeader = () => {
 };
 
 const EditProfileHeader = () => {
+  const userRole = useSelector((state: RootState) => state.userRole);
+  const userRoleValue = userRole.userRole;
   return (
     <CustomHeader
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
-      title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
+      title={userRoleValue === 'Coach' ? 'Edit Profile' : ''}
       rightContent={
         <TouchableOpacity onPress={() => console.log('pressed')}>
           <HeaderText text="Save" />
@@ -84,7 +85,7 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav></RootLayoutNav>
+  return <RootLayoutNav />;
 }
 
 function RootLayoutNav() {
@@ -95,21 +96,10 @@ function RootLayoutNav() {
       <TamaguiProvider
         config={tamaguiConfig}
         defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-<<<<<<< HEAD
-          <Stack   screenOptions={{
-              headerShown: false,
-            }}>
+        <ThemeProvider
+          value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
-=======
-          <Stack initialRouteName='login'>
-          <Stack.Screen
-              name="login"
-              options={{
-                headerShown: false
-              }}
-            />
->>>>>>> 0376c0959368356cd611ab2042ba19a23b3a32fd
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
               name="user/account"
@@ -125,18 +115,14 @@ function RootLayoutNav() {
                 header: EditProfileHeader,
               }}
             />
-<<<<<<< HEAD
             <Stack.Screen
               name="signUp/playersignup"
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="signUp/coachsignup"
-              options={{ headerShown: false,headerShadowVisible: false, }}
+              options={{ headerShown: false, headerShadowVisible: false }}
             />
-            
-=======
->>>>>>> 0376c0959368356cd611ab2042ba19a23b3a32fd
           </Stack>
         </ThemeProvider>
       </TamaguiProvider>

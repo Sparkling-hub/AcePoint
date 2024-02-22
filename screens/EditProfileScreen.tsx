@@ -16,7 +16,8 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import PorfilePicture from '@/components/PorfilePicture';
 import CustomInput from '@/components/Form/CustomInput';
 import { Search } from '@tamagui/lucide-icons';
-import { USER_ROLE } from '@/constants/User';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const options = [
   { label: 'Male', value: 'male' },
@@ -61,8 +62,11 @@ export default function EditProfileScreen() {
     club: Yup.string().required('Please enter your club'),
   });
 
+  const userRole = useSelector((state: RootState) => state.userRole);
+  const userRoleValue = userRole.userRole;
+
   const validationSchema =
-    USER_ROLE === 'coach' ? coachValidationSchema : playerValidationSchema;
+    userRoleValue === 'Coach' ? coachValidationSchema : playerValidationSchema;
 
   const handleSubmit = (values: FormikValues) => {
     // Handle form submission
@@ -114,7 +118,7 @@ export default function EditProfileScreen() {
   }
 
   const calculatePaddingTop = () => {
-    if (USER_ROLE === 'coach') {
+    if (userRoleValue === 'Coach') {
       return 18;
     } else {
       return Platform.OS === 'ios' ? 90 : 30;
@@ -205,7 +209,7 @@ export default function EditProfileScreen() {
               errors={formik.errors.dateOfBirth}
               validateOnInit
             />
-            {USER_ROLE === 'coach' && (
+            {userRoleValue === 'Coach' && (
               <CustomInput
                 placeholder="Club"
                 value={formik.values.club}
