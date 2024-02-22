@@ -33,6 +33,7 @@ const Footer = ({userType}:{userType:string}) => {
     <Button  style={styles.ouath}><Image
     source={require('@/assets/images/googleIcon.png')} 
     style={[{ width: 27.55, height: 28 }]}
+    
     /></Button>
     </XStack>
 

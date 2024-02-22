@@ -9,7 +9,7 @@ const HeaderArrow = ({data,gap}:{data:string,gap:string}) => {
         router.back()
     }
   return (
-    <XStack gap={gap} alignItems='center' >
+    <XStack gap={gap} alignItems='center' backgroundColor={"#FFFF"} >
         <Button bg="transparent" icon={<ChevronLeft bg="transparent" color={Colors.secondary} size={25}   />} onPress={back}></Button>
         <Text
          style={{ fontFamily: 'MontserratBold' }}
