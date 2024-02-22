@@ -8,11 +8,12 @@ import CountryCodePicker from '@/components/Form/CountryCodePicker';
 import CustomDropdown from '@/components/Form/dropdown/CustomDropdown';
 import { FormikValues, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { ActivityIndicator, Platform } from 'react-native';
+import { Platform } from 'react-native';
+
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInput from '@/components/Form/CustomInput';
 import { Search } from '@tamagui/lucide-icons';
-import { USER_ROLE } from '@/constants/User';
+
 import { useDispatch } from 'react-redux';
 import { updateProfile } from '@/store/slices/editProfile';
 import {
@@ -26,6 +27,10 @@ import {
 } from 'firebase/firestore';
 import { db, doc } from '@/lib/firebase';
 import fireToast from '@/services/toast';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+
+import EditProfileSkeleton from '@/components/skeletons/EditProfileSkeleton';
 
 const options = [
   { label: 'Male', value: 'male' },
@@ -73,8 +78,11 @@ export default function EditProfileScreen() {
     club: Yup.string().required('Please enter your club'),
   });
 
+  const userRole = useSelector((state: RootState) => state.userRole);
+  const userRoleValue = userRole.userRole;
+
   const validationSchema =
-    USER_ROLE === 'coach' ? coachValidationSchema : playerValidationSchema;
+    userRoleValue === 'Coach' ? coachValidationSchema : playerValidationSchema;
 
   const handleSubmit = (values: FormikValues) => {
     // Handle form submission
@@ -133,7 +141,7 @@ export default function EditProfileScreen() {
 
       const downloadURL = await getDownloadURL(imageRef);
       let userDocRef = doc(db, 'coach', userId);
-      if (USER_ROLE === 'player') userDocRef = doc(db, 'player', userId);
+      if (userRoleValue === 'Player') userDocRef = doc(db, 'player', userId);
 
       const userDocSnap = await getDoc(userDocRef);
 
@@ -159,9 +167,10 @@ export default function EditProfileScreen() {
     const getUserData = async () => {
       try {
         const email = await ReactNativeAsyncStorage.getItem('email');
+        console.log(email);
 
         let querySnapshot = null;
-        if (USER_ROLE === 'coach')
+        if (userRoleValue === 'Coach')
           querySnapshot = await getDocs(
             query(collection(db, 'coach'), where('email', '==', email))
           );
@@ -190,16 +199,8 @@ export default function EditProfileScreen() {
     getUserData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <YStack flex={1} justifyContent="center" alignItems="center">
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </YStack>
-    );
-  }
-
   const calculatePaddingTop = () => {
-    if (USER_ROLE === 'coach') {
+    if (userRoleValue === 'Coach') {
       return 18;
     } else {
       return Platform.OS === 'ios' ? 90 : 30;
@@ -207,6 +208,14 @@ export default function EditProfileScreen() {
   };
 
   const paddingTop = calculatePaddingTop();
+
+  if (isLoading) {
+    return (
+      <YStack flex={1} paddingTop={paddingTop} paddingHorizontal={16}>
+        <EditProfileSkeleton />
+      </YStack>
+    );
+  }
 
   return (
     <YStack flex={1} paddingTop={paddingTop}>
@@ -311,7 +320,7 @@ export default function EditProfileScreen() {
               errors={formik.errors.dateOfBirth}
               validateOnInit
             />
-            {USER_ROLE === 'coach' && (
+            {userRoleValue === 'Coach' && (
               <CustomInput
                 placeholder="Club"
                 value={formik.values.club}

@@ -7,6 +7,7 @@ module.exports = function (api) {
     plugins: [
       [
         '@tamagui/babel-plugin',
+      
 
         {
           components: ['tamagui'],
@@ -16,6 +17,14 @@ module.exports = function (api) {
           logTimings: true,
 
           disableExtraction: process.env.NODE_ENV === 'development',
+        },
+      ],
+      [
+        "module:react-native-dotenv",
+        {
+          envName: "APP_ENV",
+          moduleName: "@env",
+          path: ".env",
         },
       ],
 

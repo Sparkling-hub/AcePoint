@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import * as ImagePicker from "expo-image-picker";
 import { useUploadImage } from '@/hooks/useUploadImage';
-import { Avatar } from 'tamagui';
+import { Avatar, View } from 'tamagui';
 import { heightPercentageToDP as hp} from 'react-native-responsive-screen'
 
 const UploadImage = ({getFromChild}: { getFromChild: any  }) => {
@@ -20,7 +20,7 @@ const UploadImage = ({getFromChild}: { getFromChild: any  }) => {
         }
         getFromChild(image)
         return(
-          <>
+          <View marginLeft={-20}>
           {image && <Avatar circular size="$7" style={styles.avatar}>
             <Avatar.Image onPress={pickImage}
             src={image}
@@ -30,7 +30,7 @@ const UploadImage = ({getFromChild}: { getFromChild: any  }) => {
             src={require('@/assets/images/avatar.png')}
             />
         </Avatar>}
-          </>
+          </View>
         );
           
 }

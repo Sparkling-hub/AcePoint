@@ -1,13 +1,13 @@
 import { SafeAreaView, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
-import { RadioGroup, ScrollView,Text, YStack } from 'tamagui'
+import { RadioGroup, ScrollView, YStack } from 'tamagui'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { RadioGroupItemWithLabel } from '@/components/RadioGroupItemWithLabel';
 import Button from '@/components/Button'
 import {updateUserPlayer } from'@/api/auth-api'
 import LevlingBox from '@/components/LevlingBox';
-import Colors from '@/constants/Colors';
 import ProgressBar from '@/components/ProgressBar';
+import HeaderArrow from '@/components/HeaderArrow';
 const Levling = ({onNext}:{onNext:() => void}) => {
   const [level, setLevel] = useState('Beginner');
   const text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo ex, dapibus sit amet nisi ut, posuere laoreet nulla. Suspendisse dignissim elit in justo efficitur."
@@ -16,18 +16,13 @@ const Levling = ({onNext}:{onNext:() => void}) => {
     onNext()
   }
   return (
+    
     <SafeAreaView style={styles.container}>
-      <ScrollView marginBottom={20}>
+      <ScrollView marginBottom={20} >
         <YStack alignItems="center" >
         <YStack marginBottom={25} >
-          <YStack alignItems="center" gap={"$4"}>
-            <Text
-              style={{ fontFamily: 'MontserratBold' }}
-              fontSize={20}
-              lineHeight={24}
-              color={Colors.secondary}>
-              Levling
-            </Text>
+          <YStack alignItems="flex-start" gap={"$4"} marginLeft={-150}>
+          <HeaderArrow gap={"$11"} data={"LEVLING"} />
           </YStack>
          </YStack>
             <ProgressBar value={68} />
@@ -46,7 +41,7 @@ const Levling = ({onNext}:{onNext:() => void}) => {
         </YStack>
         </RadioGroup>
         <YStack marginTop={"20%"}>
-          <Button text={"Continue"} textColor='#fff' onPress={updatePlayer} ></Button>
+          <Button text={"Continue"} onPress={updatePlayer} ></Button>
       </YStack>
       </YStack>
       </ScrollView>

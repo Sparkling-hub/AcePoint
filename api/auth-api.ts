@@ -2,33 +2,35 @@ import { auth, updateDoc, createUserWithEmailAndPassword, setDoc, db, doc, signO
 import { Timestamp, collection } from "firebase/firestore";
 import { Coach } from '@/model/coach';
 import { Player } from '@/model/player';
-import { storeData, retrieveData } from '@/api/localStorage'
-const signUpCoach = async ({ email, password, coach }: { email: string, password: string, coach: Coach }) => {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const userData = {
-        displayName: coach.displayName,
-        phoneNumber: coach.phoneNumber,
-        terms: coach.terms,
-        marketing: coach.marketing,
-        createdAt: Timestamp.now()
-      };
-      console.log("User added successfully!");
-      try {
-        setDoc(doc(db, 'coach', userCredential.user.uid), userData)
-        console.log("Coach added successfully!");
-        storeData("coachId", userCredential.user.uid).then((data) => {
-          console.log("storage data: " + data)
-        })
-
-      } catch (error) {
-        console.error("Error adding coach: ", error);
-      }
-    })
-    .catch((error) => {
-      console.log('Sign Up Failed', error.message);
-    });
-};
+import {storeData ,retrieveData} from '@/api/localStorage'
+const signUpCoach = async ({ email,password,coach }: { email: string ,password:string,coach:Coach }) => {
+    
+      createUserWithEmailAndPassword(auth,email, password)
+      .then((userCredential) => { 
+        const userData = {  
+          displayName: coach.displayName,
+          phoneNumber:coach.phoneNumber,
+          terms:coach.terms,
+          marketing:coach.marketing,
+          createdAt:Timestamp.now()      
+        }; 
+        console.log("User added successfully!");
+        try {
+          setDoc(doc(db, 'coach',userCredential.user.uid), userData)
+          console.log("Coach added successfully!");
+          storeData("coachId",userCredential.user.uid).then((data)=>{
+            console.log("storage data: "+data)
+          })
+          
+        } catch (error) {
+            console.error("Error adding coach: ", error);
+        }
+      })
+      .catch((error) => {
+        console.log('Sign Up Failed', error.message);
+      });
+      signOut(auth)
+  };
 
 
 const signUpPlayer = async ({ email, password, player }: { email: string, password: string, player: Player }) => {

@@ -1,14 +1,21 @@
-import { SafeAreaView, StyleSheet  } from 'react-native'
+import { Modal, SafeAreaView, StyleSheet, TouchableOpacity  } from 'react-native'
 import React, { useState } from 'react'
-import { Text,Button, ScrollView, Input,YStack  } from 'tamagui'
+import { Text,Button, Input,YStack  } from 'tamagui'
 import { heightPercentageToDP as hp,widthPercentageToDP as wp} from 'react-native-responsive-screen'
 import {updateUserCoach } from'@/api/auth-api'
 import UploadImage from '@/components/utils/UploadImage'
-import Colors from '@/constants/Colors'
+import HeaderArrow from '@/components/HeaderArrow'
+import SearchApi from '@/components/SearchApi/SearchApi'
 const Information = ({onNext}:{onNext:() => void}) => {
     const [image,setImage]=useState('')
     const [bios, setBios] = useState<string>('');
     const [tags, setTags] = useState<string>('');
+    const [open, setOpen] = useState<boolean>(false);
+    const [close, setClose] = useState<boolean>(false);
+    const [receivedData, setReceivedData] = useState<string>('');
+    const handleData = (data:string) => {
+        setReceivedData(data);
+      };
     const updateCoach=()=>{
         updateUserCoach({image:image,
             bios:bios,
@@ -17,30 +24,21 @@ const Information = ({onNext}:{onNext:() => void}) => {
          onNext()
         console.log("updated")
     } 
-
-    
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView marginBottom={20}>
         <YStack alignItems="center" gap={"$2"} >
         <YStack marginBottom={25} >
-          <YStack alignItems="center" gap={"$4"}>
-            <Text
-              style={{ fontFamily: 'MontserratBold' }}
-              fontSize={20}
-              lineHeight={24}
-              color={Colors.secondary}>
-              Info
-            </Text>
+          <YStack alignItems="flex-start" gap={"$4"} marginLeft={-150}>
+          <HeaderArrow gap={"$11"} data={"INFO"} />
           </YStack>
          </YStack>
-        <YStack alignItems="center" marginBottom={20} gap={"$4"} >
+        <YStack alignItems="center" marginBottom={20} marginTop={-25} gap={"$4"} >
         <UploadImage getFromChild={setImage} />
          <Text style={styles.datetext}>Upload Picture</Text>
         </YStack>
             
-        <YStack alignItems="center" gap={"$2"} >
-            <YStack marginBottom={20}  >
+        <YStack alignItems="center" gap={"$0.5"} >
+            <YStack marginBottom={15}  >
             <Text style={styles.text}>Add Bios</Text>
             <Input borderWidth={0} 
             borderRadius={9} 
@@ -52,14 +50,23 @@ const Information = ({onNext}:{onNext:() => void}) => {
             />   
             </YStack>
 
-            <YStack marginBottom={20}  >
+            <YStack marginBottom={15}  >
             <Text style={styles.text}>Main Club</Text>
+            <TouchableOpacity onPress={()=>setOpen(true)}>
             <Input 
             borderWidth={0} 
             borderRadius={9} 
             style={styles.simpleBox} 
-            placeholder='Lorem ipsum dolor sit amet'
-            />   
+            readOnly
+            value={close ? receivedData:'Lorem ipsum dolor sit amet'}
+            />    
+            </TouchableOpacity>
+            <Modal 
+            animationType="slide"
+            visible={open}
+            >
+                <SearchApi setOpen={setOpen} setClose={setClose} handleData={handleData} />
+            </Modal>
             </YStack>    
             <YStack>
             <Text style={styles.text}>Add Tags</Text>
@@ -77,7 +84,6 @@ const Information = ({onNext}:{onNext:() => void}) => {
     </YStack>    
     <Button onPress={updateCoach} style={styles.button}>Continue</Button> 
     </YStack>
-    </ScrollView>
 </SafeAreaView>
   )
 }
@@ -94,7 +100,7 @@ const styles = StyleSheet.create({
         marginTop:80,
         height:52,
         width:136,
-        
+        color:"#ffff",
         backgroundColor:"#3A4D6C"
     },
     header:{
@@ -119,6 +125,11 @@ const styles = StyleSheet.create({
         height:43,
         backgroundColor:"#d8dbe2",
         width:wp("90%"),
+        color:"#3A4D6C",
+        fontSize:14,
+        lineHeight: 17.07,
+        fontFamily:"MontserratMedium",
+        fontWeight:"500",
     
       },
     avatar:{

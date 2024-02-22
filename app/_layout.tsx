@@ -1,3 +1,5 @@
+import 'react-native-reanimated';
+import 'react-native-gesture-handler';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   DarkTheme,
@@ -17,10 +19,9 @@ import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
 import CustomHeader from '@/components/CustomHeader';
 
-import { USER_ROLE } from '@/constants/User';
 import { TouchableOpacity } from 'react-native';
 import HeaderText from '@/components/HeaderText';
-import { store } from '@/store/store';
+import { RootState, store } from '@/store/store';
 import { Provider, useSelector } from 'react-redux';
 import { updateUser } from '@/api/user-api';
 import Toast from 'react-native-toast-message';
@@ -48,11 +49,13 @@ const EditProfileHeader = () => {
   const userData = useSelector((state: any) => state.editProfile.UserData);
   const handleSaveProfile = () => {
     updateUser(userData);
-  }
+  };
+  const userRole = useSelector((state: RootState) => state.userRole);
+  const userRoleValue = userRole.userRole;
   return (
     <CustomHeader
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
-      title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
+      title={userRoleValue === 'Coach' ? 'Edit Profile' : ''}
       rightContent={
         <TouchableOpacity onPress={handleSaveProfile}>
           <HeaderText text="Save" />
@@ -90,7 +93,7 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav></RootLayoutNav>
+  return <RootLayoutNav />;
 }
 
 function RootLayoutNav() {
@@ -101,9 +104,10 @@ function RootLayoutNav() {
       <TamaguiProvider
         config={tamaguiConfig}
         defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <ThemeProvider
+          value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack>
-
+            <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
               name="user/account"
@@ -118,6 +122,14 @@ function RootLayoutNav() {
                 headerShadowVisible: false,
                 header: EditProfileHeader,
               }}
+            />
+            <Stack.Screen
+              name="signUp/playersignup"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="signUp/coachsignup"
+              options={{ headerShown: false, headerShadowVisible: false }}
             />
           </Stack>
           <Toast />
