@@ -16,7 +16,7 @@ interface CustomDropDownProps {
   readonly touched?: boolean;
   readonly errors?: string;
   readonly validateOnInit?: boolean;
-  readonly scrollViewRef: React.RefObject<ScrollView>;
+  readonly scrollViewRef?: React.RefObject<ScrollView>;
 }
 
 export default function CustomDropdown(props: CustomDropDownProps) {
@@ -33,7 +33,8 @@ export default function CustomDropdown(props: CustomDropDownProps) {
 
   const handleClick = () => {
     setClicked(!clicked);
-    scrollViewRef.current?.scrollTo({ y: 100, animated: true });
+    scrollViewRef &&
+      scrollViewRef.current?.scrollTo({ y: 100, animated: true });
   };
 
   const handleItemClick = (item: string) => {
