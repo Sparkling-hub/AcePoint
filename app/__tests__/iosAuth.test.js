@@ -58,7 +58,7 @@ jest.mock('firebase/storage', () => ({
 }));
 jest.mock('tamagui', () => ({
   Button: jest.fn().mockImplementation(() => <button>Mocked Button</button>),
-  Image: jest.fn().mockImplementation(() => <img src="mockedImage.png" alt="Mocked Image" />)
+  Image: jest.fn().mockImplementation(() => <img src="mocked.png" alt="Mocked" />)
 }));
 
 describe('GoogleAuthIOS', () => {
