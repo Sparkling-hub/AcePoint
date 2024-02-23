@@ -6,13 +6,13 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCGuHH-y3rBoWAO62Fov0nBWARVaRpG8Nw",
-    authDomain: "acepoint-9cd79.firebaseapp.com",
-    projectId: "acepoint-9cd79",
-    storageBucket: "acepoint-9cd79.appspot.com",
-    messagingSenderId: "739771999940",
-    appId: "1:739771999940:web:aa001b5d5c4dcd96fd8b91",
-    measurementId: "G-2MCQY7XRP6"
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID,
+    measurementId: process.env.FIREBASE_MEASSUREMENT_ID
 }
 
 // Initialize Firebase Admin with service account credentials
