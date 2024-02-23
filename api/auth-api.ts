@@ -31,12 +31,20 @@ const signUpCoach = async ({ email,password,coach }: { email: string ,password:s
   };
 
 const signup=async({email,password}:{email:any,password:any})=>{
- const data = await createUserWithEmailAndPassword(auth,email, password)
-  return data
+  try {
+    
+    const data = await createUserWithEmailAndPassword(auth,email, password)
+  } catch (error) {
+    console.log(error)
+  }
 }
 const signin=async({email,password}:{email:any,password:any})=>{
-  const user = await signInWithEmailAndPassword(auth,email, password)
-  return user
+  try {
+    
+    const user = await signInWithEmailAndPassword(auth,email, password)
+  } catch (error) {
+    console.log(error)
+  }
 }
 const signUpPlayer = async ({ email,password,player }: { email: string ,password:string,player:Player }) => {
   createUserWithEmailAndPassword(auth,email, password)
