@@ -7,8 +7,9 @@ import { signUpCoach } from '@/api/auth-api';
 
 
 const SignUpCoach = () => {
-  const [progress, setProgress] = useState(68);
+  const [progress, setProgress] = useState(34);
   const handleNext = () => setProgress(progress + 34);
+  const handlePrevious  = () => setProgress(progress - 34);
 
   const signUp=(email:string,password:string,data:any)=>{
     signUpCoach({email,password,coach:{
@@ -23,9 +24,9 @@ const SignUpCoach = () => {
   
   return  (
     <SafeAreaView style={styles.container}>
-      {progress === 34 && <SignUp onNext={signUp} />}
-      {progress === 68 && <Information onNext={handleNext} />}
-      {progress === 102 && <Trail  />}
+      {progress === 34 && <SignUp onNext={signUp}  />}
+      {progress === 68 && <Information onNext={handleNext} handlePrevious={handlePrevious} />}
+      {progress === 102 && <Trail handlePrevious={handlePrevious}  />}
     
     </SafeAreaView>
   );

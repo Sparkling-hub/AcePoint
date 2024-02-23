@@ -8,7 +8,7 @@ import {updateUserPlayer } from'@/api/auth-api'
 import LevlingBox from '@/components/LevlingBox';
 import ProgressBar from '@/components/ProgressBar';
 import HeaderArrow from '@/components/HeaderArrow';
-const Levling = ({onNext}:{onNext:() => void}) => {
+const Levling = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:() => void}) => {
   const [level, setLevel] = useState('Beginner');
   const text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo ex, dapibus sit amet nisi ut, posuere laoreet nulla. Suspendisse dignissim elit in justo efficitur."
   const updatePlayer=()=>{
@@ -22,7 +22,7 @@ const Levling = ({onNext}:{onNext:() => void}) => {
         <YStack alignItems="center" >
         <YStack marginBottom={25} >
           <YStack alignItems="flex-start" gap={"$4"} marginLeft={-150}>
-          <HeaderArrow gap={"$11"} data={"LEVLING"} />
+          <HeaderArrow back={handlePrevious} gap={"$11"} data={"LEVELLING"} />
           </YStack>
          </YStack>
             <ProgressBar value={68} />

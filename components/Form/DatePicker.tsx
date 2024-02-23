@@ -50,6 +50,8 @@ const DatePicker = function DatePicker(props: DatePickerProps) {
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
+        maximumDate={new Date()}
+
       />
     </YStack>
   );

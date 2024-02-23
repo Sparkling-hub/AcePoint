@@ -6,9 +6,7 @@ export default function login() {
  
     return (
         <SafeAreaView style={styles.container}>
-             <Login /> 
-            {/* {!isInputFocused && <View style={{marginTop:30}}><HeaderArrow data={"CLUB"}  gap={"$12"} /></View>} */}
-            
+             <Login />             
         </SafeAreaView>
     )
 }

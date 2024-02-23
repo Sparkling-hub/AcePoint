@@ -4,8 +4,7 @@ import { Coach } from '@/model/coach';
 import { Player } from '@/model/player';
 import {storeData ,retrieveData} from '@/api/localStorage'
 const signUpCoach = async ({ email,password,coach }: { email: string ,password:string,coach:Coach }) => {
-    
-      createUserWithEmailAndPassword(auth,email, password)
+      await createUserWithEmailAndPassword(auth,email, password)
       .then((userCredential) => { 
         const userData = {  
           displayName: coach.displayName,
@@ -16,12 +15,11 @@ const signUpCoach = async ({ email,password,coach }: { email: string ,password:s
         }; 
         console.log("User added successfully!");
         try {
-          setDoc(doc(db, 'coach',userCredential.user.uid), userData)
+          setDoc(doc(db, 'coach',userCredential?.user?.uid), userData)
           console.log("Coach added successfully!");
-          storeData("coachId",userCredential.user.uid).then((data)=>{
+          storeData("coachId",userCredential?.user?.uid).then((data)=>{
             console.log("storage data: "+data)
           })
-          
         } catch (error) {
             console.error("Error adding coach: ", error);
         }
@@ -32,7 +30,17 @@ const signUpCoach = async ({ email,password,coach }: { email: string ,password:s
       signOut(auth)
   };
 
-
+const signup=async({email,password}:{email:any,password:any})=>{
+  console.log(email,password)
+ const data = await createUserWithEmailAndPassword(auth,email, password)
+  return data
+}
+const signin=async({email,password}:{email:any,password:any})=>{
+  console.log(email,password)
+  const user = await signInWithEmailAndPassword(auth,email, password)
+  console.log(user)
+  return user
+}
 const signUpPlayer = async ({ email,password,player }: { email: string ,password:string,player:Player }) => {
   createUserWithEmailAndPassword(auth,email, password)
   .then((userCredential) => {
@@ -98,4 +106,4 @@ const loginUser = async ({ email, password }:{email:string,password:string}) => 
     
   }
 }
-export { signUpCoach ,signUpPlayer,updateUserPlayer,loginUser,updateUserCoach}
+export { signUpCoach ,signUpPlayer,updateUserPlayer,loginUser,updateUserCoach,signup,signin}
