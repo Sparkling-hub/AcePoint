@@ -5,7 +5,7 @@ import fireToast from "@/services/toast";
 
 jest.mock("@/services/toast", () => {
     return {
-        __esModule: true, 
+        __esModule: true,
         default: jest.fn()
     };
 });
@@ -31,7 +31,7 @@ describe("updateUser", () => {
     it("should not proceed with update if name is not in the data object and should show an error toast", async () => {
         const data = { email: "test@example.com" };
         await updateUser(data, 'Player');
-        expect(fireToast).toHaveBeenCalledWith('error', 'Please change at least one field!');
+        expect(fireToast).toHaveBeenCalledWith('error', 'Please complete your profile.');
     });
 
     it("should not proceed with update if profile validation fails and should show an error toast", async () => {
@@ -69,7 +69,7 @@ describe("updateUser", () => {
 
         await updateUser(data, userRoleValue);
 
-        expect(fireToast).toHaveBeenCalledWith('error', 'Please change at least one field!');
+        expect(fireToast).toHaveBeenCalledWith('error', 'Please complete your profile.');
     });
 
     it('should show an error toast if mandatory fields are missing based on the user role', async () => {
