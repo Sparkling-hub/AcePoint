@@ -4,7 +4,6 @@ jest.mock('firebase/app', () => ({
   jest.mock('firebase/auth', () => ({
     initializeAuth: jest.fn(),
     getReactNativePersistence: jest.fn(),
-    signInWithEmailAndPassword: jest.fn(),
     signInWithEmailAndPassword:jest.fn().mockImplementation(() => Promise.resolve()),
   
   }));
@@ -43,9 +42,7 @@ jest.mock('firebase/app', () => ({
   
   import { expect, jest, describe, afterEach, it } from '@jest/globals';
   import { signin } from '@/api/auth-api';
-  import { router } from 'expo-router';
-  import { Alert } from 'react-native';
-  import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+  import { addDoc} from 'firebase/firestore';
   import { auth,signInWithEmailAndPassword } from '@/lib/firebase';
   
   describe('loginUser', () => {
@@ -58,12 +55,6 @@ jest.mock('firebase/app', () => ({
     });
   
     it('logs in successfully with the correct email and password', async () => {
-      const mockUser = {
-        user: {
-          email: mockEmail,
-          password:mockPassword
-        }
-      };
       addDoc.mockResolvedValue({ id: '123' });
   
       const response = await signin({ email: mockEmail, password: mockPassword });
@@ -77,12 +68,12 @@ jest.mock('firebase/app', () => ({
   
     it('returns an error when login fails', async () => {
       const mockError = new Error('The password is invalid or the user does not have a password.');
-      mockError.code = 'auth/wrong-password';
+      mockError.code = 'auth/PASSWORD-password';
   
       signInWithEmailAndPassword.mockRejectedValue(mockError);
   
-      await expect(signin({ email: mockEmail, password: 'wrongPassword' })).rejects.toThrow(mockError);
+      await expect(signin({ email: mockEmail, password: 'PASSWORDPassword' })).rejects.toThrow(mockError);
   
-      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(auth, mockEmail, 'wrongPassword');
+      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(auth, mockEmail, 'PASSWORD');
     });
   });

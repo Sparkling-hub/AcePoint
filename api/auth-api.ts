@@ -31,14 +31,11 @@ const signUpCoach = async ({ email,password,coach }: { email: string ,password:s
   };
 
 const signup=async({email,password}:{email:any,password:any})=>{
-  console.log(email,password)
  const data = await createUserWithEmailAndPassword(auth,email, password)
   return data
 }
 const signin=async({email,password}:{email:any,password:any})=>{
-  console.log(email,password)
   const user = await signInWithEmailAndPassword(auth,email, password)
-  console.log(user)
   return user
 }
 const signUpPlayer = async ({ email,password,player }: { email: string ,password:string,player:Player }) => {

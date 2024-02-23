@@ -43,21 +43,11 @@ jest.mock('firebase/app', () => ({
   
   import { expect, jest, describe, afterEach, it } from '@jest/globals';
   import { signup } from '@/api/auth-api';
-  import { router } from 'expo-router';
-  import { Alert } from 'react-native';
-  import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
   import { auth,createUserWithEmailAndPassword } from '@/lib/firebase';
   
   describe('signUpCoach', () => {
     const mockEmail = 'test@example.com';
     const mockPassword = 'securePassword123';
-    const coach ={  
-      displayName: "coachdisplayName",
-      phoneNumber:"coachphoneNumber",
-      terms:true,
-      marketing:true,
-      createdAt:new Date()
-    }; 
   
     beforeEach(() => {
       jest.clearAllMocks();
@@ -75,7 +65,7 @@ jest.mock('firebase/app', () => ({
       };
       // Mock the FirebaseAuth function to resolve with the user object
       // Call your signUp function
-      const user = await signup({email:mockEmail, password:mockPassword});
+       await signup({email:mockEmail, password:mockPassword});
       createUserWithEmailAndPassword.mockReturnValueOnce(      
       auth, // This will be the mocked Firebase Auth object
       mockEmail,
