@@ -1,10 +1,10 @@
-import {auth,updateDoc ,createUserWithEmailAndPassword,setDoc,db,doc,signOut, signInWithEmailAndPassword} from'@/lib/firebase'
+import { auth, updateDoc, createUserWithEmailAndPassword, setDoc, db, doc, signOut, signInWithEmailAndPassword } from '@/lib/firebase'
 import { Timestamp, collection } from "firebase/firestore";
 import { Coach } from '@/model/coach';
 import { Player } from '@/model/player';
 import {storeData ,retrieveData} from '@/api/localStorage'
 const signUpCoach = async ({ email,password,coach }: { email: string ,password:string,coach:Coach }) => {
-      await createUserWithEmailAndPassword(auth,email, password)
+      createUserWithEmailAndPassword(auth,email, password)
       .then((userCredential) => { 
         const userData = {  
           displayName: coach.displayName,
@@ -67,11 +67,11 @@ const signUpPlayer = async ({ email,password,player }: { email: string ,password
       
     } catch (error) {
         console.error("Error adding player: ", error);
-    }
-  })
-  .catch((error) => {
-    console.log('Sign Up Failed', error.message);
-  });
+      }
+    })
+    .catch((error) => {
+      console.log('Sign Up Failed', error.message);
+    });
   signOut(auth)
 };
 
@@ -81,10 +81,10 @@ const updateUserPlayer = async (playerData: Player) => {
     console.log("storage data: " + playerId);
     const coachCollectionRef = collection(db, 'player');
     await updateDoc(doc(coachCollectionRef, playerId), { ...playerData });
-      return 'Player updated successfully';
-  }catch (error) {
+    return 'Player updated successfully';
+  } catch (error) {
     console.error('Error updating Player:', error);
-    throw error; 
+    throw error;
   }
 };
 const updateUserCoach = async (coachData: Coach) => {
@@ -93,22 +93,22 @@ const updateUserCoach = async (coachData: Coach) => {
     console.log("storage data: " + coachId);
     const coachCollectionRef = collection(db, 'coach');
     await updateDoc(doc(coachCollectionRef, coachId), { ...coachData });
-      return 'coach updated successfully';
-  }catch (error) {
+    return 'coach updated successfully';
+  } catch (error) {
     console.error('Error updating coach:', error);
-    throw error; 
+    throw error;
   }
 };
 
-const loginUser = async ({ email, password }:{email:string,password:string}) => {
+const loginUser = async ({ email, password }: { email: string, password: string }) => {
   try {
-    const user = await signInWithEmailAndPassword(auth,email, password)
+    const user = await signInWithEmailAndPassword(auth, email, password)
     console.log(user)
-    storeData("userInfo",JSON.stringify(user))
+    storeData("userInfo", JSON.stringify(user))
     return { user }
   } catch (error) {
     return error
-    
+
   }
 }
 export { signUpCoach ,signUpPlayer,updateUserPlayer,loginUser,updateUserCoach,signup,signin}

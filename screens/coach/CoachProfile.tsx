@@ -1,9 +1,10 @@
 import { FlatList, Platform } from 'react-native';
-import { Text, YStack, Paragraph } from 'tamagui';
+import { Text, YStack, Paragraph, XStack } from 'tamagui';
 
 import PorfileCard from '@/components/ProfileCard';
 import Colors from '@/constants/Colors';
 import CertificationBox from '@/components/CertificationBox';
+import CheckMark from '@/components/svg/CheckMark';
 
 const CertificationData = [
   {
@@ -40,24 +41,29 @@ export default function CoachProfile() {
       paddingTop={Platform.OS === 'ios' ? 90 : 70}
       paddingHorizontal={16}>
       <YStack justifyContent="center" alignItems="center">
-        <PorfileCard rating={5.7} verified>
-          <YStack gap={'$2'} alignItems="center" justifyContent="center">
-            <YStack>
-              <Text
-                style={{ fontFamily: 'MontserratBold' }}
-                color={Colors.secondary}
-                fontSize={20}
-                lineHeight={24}
-                marginTop={10}
-                textAlign="center">
-                Daniel Antone
-              </Text>
+        <PorfileCard rating={5.7}>
+          <YStack gap={'$2'}>
+            <YStack justifyContent="center" alignItems="center">
+              <XStack alignItems="center">
+                <Text
+                  style={{ fontFamily: 'MontserratBold' }}
+                  color={Colors.secondary}
+                  fontSize={20}
+                  lineHeight={24}
+                  marginRight={8}
+                  textAlign="center"
+                  marginTop={10}>
+                  Daniel Antone
+                </Text>
+                <CheckMark style={{ marginTop: 8 }} />
+              </XStack>
               <Text
                 style={{ fontFamily: 'MontserratSemiBold' }}
                 fontSize={14}
                 lineHeight={17}
-                color={Colors.secondary}
-                textAlign="center">
+                marginRight={8}
+                textAlign="center"
+                color={Colors.secondary}>
                 Club Name
               </Text>
             </YStack>

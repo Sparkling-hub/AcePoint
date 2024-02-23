@@ -6,7 +6,11 @@ import {updateUserCoach } from'@/api/auth-api'
 import UploadImage from '@/components/utils/UploadImage'
 import HeaderArrow from '@/components/HeaderArrow'
 import SearchApi from '@/components/SearchApi/SearchApi'
+<<<<<<< HEAD
 const Information = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:() => void}) => {
+=======
+const Information = ({onNext}:{onNext:() => void}) => {
+>>>>>>> 6e39781440407f4b219abc7581b3cd2e0a897066
     const [image,setImage]=useState('')
     const [bios, setBios] = useState<string>('');
     const [tags, setTags] = useState<string>('');
@@ -29,7 +33,11 @@ const Information = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:(
         <YStack alignItems="center" gap={"$2"} >
         <YStack marginBottom={25} >
           <YStack alignItems="flex-start" gap={"$4"} marginLeft={-150}>
+<<<<<<< HEAD
           <HeaderArrow back={handlePrevious} gap={"$11"} data={"INFO"} />
+=======
+          <HeaderArrow gap={"$11"} data={"INFO"} />
+>>>>>>> 6e39781440407f4b219abc7581b3cd2e0a897066
           </YStack>
          </YStack>
         <YStack alignItems="center" marginBottom={20} marginTop={-25} gap={"$4"} >

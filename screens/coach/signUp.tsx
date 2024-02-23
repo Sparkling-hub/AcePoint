@@ -10,7 +10,10 @@ import CountryCodePicker from '@/components/Form/CountryCodePicker';
 import Button from '@/components/Button'
 import ProgressBar from '@/components/ProgressBar';
 import HeaderArrow from '@/components/HeaderArrow';
+<<<<<<< HEAD
 import { router } from 'expo-router';
+=======
+>>>>>>> 6e39781440407f4b219abc7581b3cd2e0a897066
 
 const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) => void}) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -74,7 +77,11 @@ const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) =
         <ScrollView marginBottom={20}>
          <YStack marginBottom={30} marginTop={-10}>
           <YStack alignItems="flex-start" gap={"$4"} marginLeft={20}>
+<<<<<<< HEAD
             <HeaderArrow back={back} gap={"$11"} data={"SIGN UP"} />
+=======
+            <HeaderArrow gap={"$11"} data={"SIGN UP"} />
+>>>>>>> 6e39781440407f4b219abc7581b3cd2e0a897066
           </YStack>
             <View marginLeft={20} marginTop={25} ><ProgressBar value={20}/></View>
          </YStack>

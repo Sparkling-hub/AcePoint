@@ -87,20 +87,13 @@ const Login = () => {
           </YStack>
           </ScrollView>
           </ImageBackground>
-
-        
- 
-  )
-}
-
-export default Login
+  )}
+export default Login;
 
 const styles = StyleSheet.create({
- 
   backgroundImage: {
     flex: 1,
     width: '100%',
     height: '100%',
   },
-  
-})
+});

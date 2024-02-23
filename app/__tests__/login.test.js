@@ -33,7 +33,7 @@ jest.mock('firebase/app', () => ({
   import { expect, jest, describe, it } from '@jest/globals';
   import { signin } from '@/api/auth-api';
   import { addDoc} from 'firebase/firestore';
-  import { auth,signInWithEmailAndPassword } from '@/lib/firebase';
+  import { auth } from '@/lib/firebase';
   
   describe('loginUser', () => {
     const mockEmail = 'test@example.com';

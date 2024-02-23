@@ -1,22 +1,33 @@
 import Colors from '@/constants/Colors';
-
-import { ScrollView, Text, XStack, YStack } from 'tamagui';
-
+import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
+import * as ImagePicker from 'expo-image-picker';
+import { Avatar, ScrollView, Text, XStack, YStack } from 'tamagui';
 import DatePicker from '@/components/Form/DatePicker';
-import { useEffect, useState } from 'react';
-
+import { useEffect, useRef, useState } from 'react';
 import CountryCodePicker from '@/components/Form/CountryCodePicker';
 import CustomDropdown from '@/components/Form/dropdown/CustomDropdown';
 import { FormikValues, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { ActivityIndicator, Platform } from 'react-native';
-
+import { Platform } from 'react-native';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-
-import PorfilePicture from '@/components/PorfilePicture';
 import CustomInput from '@/components/Form/CustomInput';
 import { Search } from '@tamagui/lucide-icons';
-import { USER_ROLE } from '@/constants/User';
+import { updateProfile } from '@/store/slices/editProfile';
+import {
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
+import { db, doc } from '@/lib/firebase';
+import fireToast from '@/services/toast';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/store/store';
+
+import EditProfileSkeleton from '@/components/skeletons/EditProfileSkeleton';
 
 const options = [
   { label: 'Male', value: 'male' },
@@ -25,6 +36,9 @@ const options = [
 ];
 
 export default function EditProfileScreen() {
+  const scrollViewRef = useRef(null);
+  const dispatch = useDispatch();
+
   const [isLoading, setIsLoading] = useState(true);
   const initialValues = {
     name: '',
@@ -61,8 +75,11 @@ export default function EditProfileScreen() {
     club: Yup.string().required('Please enter your club'),
   });
 
+  const userRole = useSelector((state: RootState) => state.userRole);
+  const userRoleValue = userRole.userRole;
+
   const validationSchema =
-    USER_ROLE === 'coach' ? coachValidationSchema : playerValidationSchema;
+    userRoleValue === 'Coach' ? coachValidationSchema : playerValidationSchema;
 
   const handleSubmit = (values: FormikValues) => {
     // Handle form submission
@@ -75,46 +92,111 @@ export default function EditProfileScreen() {
     validationSchema,
     onSubmit: (values) => handleSubmit(values),
   });
+  const handleChange = (name: string, value: string) => {
+    formik.setFieldValue(name, value);
+    dispatch(updateProfile({ ...formik.values, [name]: value }));
+  };
 
-  const getUserData = async () => {
+  const handleSelectProfilePicture = async () => {
     try {
-      const u = await ReactNativeAsyncStorage.getItem('username');
-      const e = await ReactNativeAsyncStorage.getItem('email');
-      const ph = await ReactNativeAsyncStorage.getItem('phoneNumber');
-      const g = await ReactNativeAsyncStorage.getItem('gender');
-      const b = await ReactNativeAsyncStorage.getItem('birthday');
-      const c = await ReactNativeAsyncStorage.getItem('club');
+      const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permissionResult.granted === false) {
+        alert('Permission to access camera roll is required!');
+        return;
+      }
 
-      formik.setValues({
-        ...formik.values,
-        name: u || formik.values.name,
-        email: e || formik.values.email,
-        phone: ph || formik.values.phone,
-        gender: g || formik.values.gender,
-        dateOfBirth: b || formik.values.dateOfBirth,
-        club: c || formik.values.club,
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        aspect: [1, 1],
+        quality: 1,
       });
+
+      if (!result.canceled) {
+        const imageUri = result.assets[0].uri;
+        await handleProfilePictureChange(imageUri);
+      }
     } catch (error) {
-      console.log(error);
+      console.error('Error selecting profile picture:', error);
+    }
+  };
+
+  const handleProfilePictureChange = async (imageUri: string) => {
+    try {
+      setIsLoading(true);
+      const userId = await ReactNativeAsyncStorage.getItem('userID');
+      const storage = getStorage();
+      const imageRef = ref(storage, `profileImage/${userId}`);
+      console.log(userId);
+
+      const response = await fetch(imageUri);
+
+      const blob = await response.blob();
+
+      await uploadBytes(imageRef, blob);
+
+      const downloadURL = await getDownloadURL(imageRef);
+      let userDocRef = doc(db, 'coach', userId);
+      if (userRoleValue === 'Player') userDocRef = doc(db, 'player', userId);
+
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (!userDocSnap.exists()) {
+        await setDoc(userDocRef, { picture: downloadURL });
+      } else {
+        await updateDoc(userDocRef, {
+          picture: downloadURL,
+        });
+      }
+      setImg(downloadURL);
+      fireToast('success', 'Profile picture uploaded successfully');
+      console.log('Profile picture uploaded successfully:', downloadURL);
+    } catch (error) {
+      fireToast('error', 'Error uploading profile picture');
+      console.error('error', 'Error uploading profile picture:', error);
     } finally {
       setIsLoading(false);
     }
   };
-
+  const [img, setImg] = useState('');
   useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const email = await ReactNativeAsyncStorage.getItem('email');
+        let querySnapshot = null
+        if (userRoleValue === 'Coach')
+          querySnapshot = await getDocs(
+            query(collection(db, 'coach'), where('email', '==', email))
+          );
+        else {
+          querySnapshot = await getDocs(
+            query(collection(db, 'player'), where('email', '==', email))
+          );
+        }
+        const docSnapshot = querySnapshot.docs[0];
+        const data = docSnapshot.data();
+        setImg(data.picture);
+        formik.setValues({
+          ...formik.values,
+          name: data.displayName || formik.values.name,
+          email: data.email || formik.values.email,
+          phone: data.phoneNumber || formik.values.phone,
+          gender: data.gender || formik.values.gender,
+          dateOfBirth: data.birthday || formik.values.dateOfBirth,
+          club: data.club || formik.values.club,
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     getUserData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <YStack flex={1} justifyContent="center" alignItems="center">
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </YStack>
-    );
-  }
-
   const calculatePaddingTop = () => {
-    if (USER_ROLE === 'coach') {
+    if (userRoleValue === 'Coach') {
       return 18;
     } else {
       return Platform.OS === 'ios' ? 90 : 30;
@@ -123,19 +205,29 @@ export default function EditProfileScreen() {
 
   const paddingTop = calculatePaddingTop();
 
+  if (isLoading) {
+    return (
+      <YStack flex={1} paddingTop={paddingTop} paddingHorizontal={16}>
+        <EditProfileSkeleton />
+      </YStack>
+    );
+  }
+
   return (
     <YStack flex={1} paddingTop={paddingTop}>
-      <ScrollView marginBottom={20} paddingHorizontal={16}>
+      <ScrollView marginBottom={20} paddingHorizontal={16} ref={scrollViewRef}>
         <YStack marginBottom={30} paddingRight={14}>
           <YStack alignItems="center">
-            <PorfilePicture
+            <Avatar
               marginBottom={20}
               circular
               borderWidth={2}
               borderColor={Colors.primary}
-              size="$9"
-            />
+              size="$9">
+              <Avatar.Image src={img} />
+            </Avatar>
             <Text
+              onPress={handleSelectProfilePicture}
               style={{ fontFamily: 'Montserrat' }}
               fontSize={20}
               lineHeight={24}
@@ -151,7 +243,10 @@ export default function EditProfileScreen() {
               <CustomInput
                 placeholder="Name"
                 value={formik.values.name}
-                onChangeText={formik.handleChange('name')}
+                onChangeText={(value) => {
+                  formik.handleChange('name');
+                  handleChange('name', value);
+                }}
                 onBlur={formik.handleBlur('name')}
                 errors={formik.errors.name}
                 validateOnInit
@@ -161,7 +256,10 @@ export default function EditProfileScreen() {
               <CustomInput
                 placeholder="Email"
                 value={formik.values.email}
-                onChangeText={formik.handleChange('email')}
+                onChangeText={(value) => {
+                  formik.handleChange('email');
+                  handleChange('email', value);
+                }}
                 onBlur={formik.handleBlur('email')}
                 errors={formik.errors.email}
                 validateOnInit
@@ -172,7 +270,10 @@ export default function EditProfileScreen() {
             <YStack flex={1}>
               <CountryCodePicker
                 countryCode={formik.values.countryCode}
-                handleChange={formik.handleChange('countryCode')}
+                handleChange={(value: any) => {
+                  formik.handleChange('countryCode');
+                  handleChange('countryCode', value);
+                }}
                 errors={formik.errors.countryCode}
                 validateOnInit
               />
@@ -183,7 +284,10 @@ export default function EditProfileScreen() {
                   placeholder="Phone"
                   keyboardType="numeric"
                   value={formik.values.phone}
-                  onChangeText={formik.handleChange('phone')}
+                  onChangeText={(value: any) => {
+                    formik.handleChange('phone');
+                    handleChange('phone', value);
+                  }}
                   onBlur={formik.handleBlur('phone')}
                   errors={formik.errors.phone}
                   validateOnInit
@@ -194,23 +298,33 @@ export default function EditProfileScreen() {
           <YStack gap={'$3'}>
             <CustomDropdown
               options={options}
+              scrollViewRef={scrollViewRef}
               selectedItem={formik.values.gender}
-              handleChange={formik.handleChange('gender')}
+              handleChange={(value: any) => {
+                formik.handleChange('gender');
+                handleChange('gender', value);
+              }}
               errors={formik.errors.gender}
               validateOnInit
             />
             <DatePicker
               date={formik.values.dateOfBirth}
-              handleChange={formik.handleChange('dateOfBirth')}
+              handleChange={(value: any) => {
+                formik.handleChange('dateOfBirth');
+                handleChange('dateOfBirth', value);
+              }}
               errors={formik.errors.dateOfBirth}
               validateOnInit
             />
-            {USER_ROLE === 'coach' && (
+            {userRoleValue === 'Coach' && (
               <CustomInput
                 placeholder="Club"
                 value={formik.values.club}
                 icon={<Search color={Colors.secondary} />}
-                onChangeText={formik.handleChange('club')}
+                onChangeText={(value: any) => {
+                  formik.handleChange('club');
+                  handleChange('club', value);
+                }}
                 onBlur={formik.handleBlur('club')}
                 errors={formik.errors.club}
                 validateOnInit

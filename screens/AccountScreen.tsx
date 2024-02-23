@@ -1,28 +1,34 @@
 import { Platform, StyleSheet } from 'react-native';
 import { Text, XStack, YStack } from 'tamagui';
-
 import { ChevronRight } from '@tamagui/lucide-icons';
-
 import Colors from '@/constants/Colors';
 import CustomButton from '@/components/CustomButton';
 import { router } from 'expo-router';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import PorfilePicture from '@/components/PorfilePicture';
-import { USER_ROLE } from '@/constants/User';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { removeItem } from '@/api/localStorage';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 export default function AccountScreen() {
   const [username, setUsername] = useState('');
-  const getUserName = async () => {
+
+  const getUserData = async () => {
     const name = await ReactNativeAsyncStorage.getItem('username');
     if (name) return setUsername(name);
   };
   useEffect(() => {
-    getUserName();
+    getUserData();
   }, []);
 
+  const userRole = useSelector((state: RootState) => state.userRole);
+  const userRoleValue = userRole.userRole;
+
   const calculatePaddingTop = () => {
-    if (USER_ROLE === 'coach') {
+    if (userRoleValue === 'Coach') {
       return 0;
     } else {
       return Platform.OS === 'ios' ? 90 : 30;
@@ -31,9 +37,19 @@ export default function AccountScreen() {
 
   const paddingTop = calculatePaddingTop();
 
+  const handleLogout = async () => {
+    await ReactNativeAsyncStorage.removeItem('email');
+    await ReactNativeAsyncStorage.removeItem('image');
+    await ReactNativeAsyncStorage.removeItem('username');
+    await ReactNativeAsyncStorage.removeItem('userID');
+    await signOut(auth)
+    await removeItem('userInfo')
+    router.push('/');
+  }
+
   return (
     <YStack flex={1} paddingTop={paddingTop}>
-      {USER_ROLE === 'player' ? (
+      {userRoleValue === 'Player' ? (
         <YStack alignItems="center" marginBottom={30}>
           <PorfilePicture
             marginBottom={20}
@@ -100,7 +116,7 @@ export default function AccountScreen() {
             />
             <CustomButton
               title="Settings"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -112,7 +128,7 @@ export default function AccountScreen() {
           <YStack>
             <CustomButton
               title="Help"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -124,15 +140,15 @@ export default function AccountScreen() {
           <YStack gap={15}>
             <CustomButton
               title="Privacy"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
             />
-            {USER_ROLE === 'coach' && (
+            {userRoleValue === 'Coach' && (
               <CustomButton
                 title="Subscription"
-                onPress={() => {}}
+                onPress={() => { }}
                 buttonStyle={styles.button}
                 textStyle={styles.buttonText}
                 icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -145,7 +161,7 @@ export default function AccountScreen() {
         <CustomButton
           title="Logout"
           onPress={() => {
-            console.log('pressed');
+            handleLogout();
           }}
         />
       </YStack>
