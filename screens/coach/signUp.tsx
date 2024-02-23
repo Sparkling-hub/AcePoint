@@ -2,7 +2,7 @@ import {  Alert, Platform} from 'react-native'
 import React, { useState } from 'react'
 import {  View, XStack, YStack,ScrollView } from 'tamagui';
 import { CheckboxWithLabel } from '@/components/CheckboxWithLabel';
-import { Eye, EyeOff,Star } from "@tamagui/lucide-icons";
+import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import CustomInput from '@/components/Form/CustomInput';

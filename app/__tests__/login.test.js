@@ -23,16 +23,6 @@ jest.mock('firebase/app', () => ({
     removeItem: jest.fn(),
     clear: jest.fn(),
   }));
-  jest.mock('expo-router', () => ({
-    router: {
-      push: jest.fn(),
-    },
-  }));
-  jest.mock('react-native', () => ({
-    Alert: {
-      alert: jest.fn(),
-    },
-  }));
   jest.mock('firebase/storage', () => ({
     ref: jest.fn(),
     getDownloadURL: jest.fn(),
@@ -50,7 +40,6 @@ jest.mock('firebase/app', () => ({
     const mockPassword = 'password123';
   
     beforeEach(() => {
-      // Clear all mock calls
       jest.clearAllMocks();
     });
   
@@ -58,12 +47,9 @@ jest.mock('firebase/app', () => ({
       addDoc.mockResolvedValue({ id: '123' });
   
       const response = await signin({ email: mockEmail, password: mockPassword });
-      // Since signInWithEmailAndPassword is a named export, we mock it like this.
-     // signInWithEmailAndPassword.mockResolvedValue(mockUser);
   
   
       expect(signInWithEmailAndPassword).toBeCalledWith(auth, mockEmail,mockPassword)
-      //expect(response).toEqual({ user: mockUser });
     });
   
     it('returns an error when login fails', async () => {
@@ -72,8 +58,6 @@ jest.mock('firebase/app', () => ({
   
       signInWithEmailAndPassword.mockRejectedValue(mockError);
   
-      //await expect(signin({ email: mockEmail, password: 'assword' })).rejects.toThrow(mockError);
   
-      //expect(signInWithEmailAndPassword).toHaveBeenCalledWith(auth, mockEmail, 'PASSWORD');
     });
   });

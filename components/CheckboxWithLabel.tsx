@@ -14,7 +14,7 @@ export function CheckboxWithLabel({
   size,
   label,
   onPress,
-  terms = true, // Provide a default value for 'terms' if not provided by the parent
+  terms = true, 
   ...checkboxProps
   }: CheckboxWithLabel ) {
 
