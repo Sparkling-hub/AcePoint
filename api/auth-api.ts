@@ -33,7 +33,7 @@ const signUpCoach = async ({ email,password,coach }: { email: string ,password:s
 const signup=async({email,password}:{email:any,password:any})=>{
   try {
     
-    const data = await createUserWithEmailAndPassword(auth,email, password)
+     await createUserWithEmailAndPassword(auth,email, password)
   } catch (error) {
     console.log(error)
   }
@@ -41,7 +41,7 @@ const signup=async({email,password}:{email:any,password:any})=>{
 const signin=async({email,password}:{email:any,password:any})=>{
   try {
     
-    const user = await signInWithEmailAndPassword(auth,email, password)
+     await signInWithEmailAndPassword(auth,email, password)
   } catch (error) {
     console.log(error)
   }

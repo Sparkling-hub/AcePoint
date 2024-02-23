@@ -4,7 +4,6 @@ jest.mock('firebase/app', () => ({
   jest.mock('firebase/auth', () => ({
     initializeAuth: jest.fn(),
     getReactNativePersistence: jest.fn(),
-    createUserWithEmailAndPassword: jest.fn(),
     createUserWithEmailAndPassword:jest.fn().mockImplementation(() => Promise.resolve()),
 
   }));
@@ -46,7 +45,7 @@ jest.mock('firebase/app', () => ({
           email: mockEmail,
         },
       };
-       await signup({email:mockEmail, password:mockPassword});
+      await signup({email:mockEmail, password:mockPassword});
       createUserWithEmailAndPassword.mockReturnValueOnce(      
       auth, 
       mockEmail,

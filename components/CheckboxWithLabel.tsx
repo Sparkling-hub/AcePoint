@@ -1,16 +1,16 @@
-import { Check as CheckIcon, Star } from '@tamagui/lucide-icons'
+import { Check as CheckIcon } from '@tamagui/lucide-icons'
 import { StyleSheet } from 'react-native';
 import type { CheckboxProps, SizeTokens } from 'tamagui'
 import { Checkbox, Label, XStack,YStack,Text } from 'tamagui'
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
-interface CheckboxWithLabel extends CheckboxProps {
+interface CheckboxWithLabel extends CheckboxProps Readonly<CheckboxProps>  {
   size: SizeTokens;
   label?: string;
   onPress: () => void;
   terms?: boolean;
 }
-export function CheckboxWithLabel({
+export function CheckboxWithLabel ({
   size,
   label,
   onPress,

@@ -21,7 +21,8 @@ const LoginBody = ({userType}:{userType:string}) => {
     }else{
       if(email.length===0 || password.length===0){
         Alert.alert("please fill data");
-      }else{
+      }
+      if(email.length!==0 || password.length!==0){
         try {
           storeData("userType",userType)
           const result: any = await loginUser({ email, password });
