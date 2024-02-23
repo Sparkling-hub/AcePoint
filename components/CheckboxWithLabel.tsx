@@ -4,7 +4,7 @@ import type { CheckboxProps, SizeTokens } from 'tamagui'
 import { Checkbox, Label, XStack,YStack,Text } from 'tamagui'
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
-interface CheckboxWithLabel extends CheckboxProps Readonly<CheckboxProps>  {
+interface CheckboxWithLabel extends CheckboxProps   {
   size: SizeTokens;
   label?: string;
   onPress: () => void;

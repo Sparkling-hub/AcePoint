@@ -47,7 +47,7 @@ const SearchApi = ({
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ marginTop: 30, marginBottom: 20, marginRight: 'auto' }}>
-        <HeaderArrow back={""} data={'CLUB'} gap={'$14'} />
+        <HeaderArrow back={setOpen} data={'CLUB'} gap={'$14'} />
       </View>
       <GooglePlacesAutocomplete
         placeholder=""
