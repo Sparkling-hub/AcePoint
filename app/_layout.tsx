@@ -1,5 +1,3 @@
-import 'react-native-reanimated';
-import 'react-native-gesture-handler';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   DarkTheme,
@@ -95,7 +93,9 @@ export default function RootLayout() {
     return null;
   }
 
+
   return <RootLayoutNav />;
+
 }
 
 function RootLayoutNav() {
@@ -106,9 +106,11 @@ function RootLayoutNav() {
       <TamaguiProvider
         config={tamaguiConfig}
         defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
+
         <ThemeProvider
           value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack>
+
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
