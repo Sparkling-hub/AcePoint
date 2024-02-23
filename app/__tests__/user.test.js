@@ -39,7 +39,6 @@ jest.mock('firebase/storage', () => ({
 
 import { expect, jest, describe, afterEach, it } from '@jest/globals';
 import { findUserByEmail } from '@/services/user';
-import { router } from 'expo-router';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
