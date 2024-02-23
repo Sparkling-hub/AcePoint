@@ -5,16 +5,14 @@ import { Card, Text } from 'tamagui';
 import Colors from '@/constants/Colors';
 import PorfilePicture from './PorfilePicture';
 import { StyleSheet } from 'react-native';
-import CheckMark from './svg/CheckMark';
 
 interface ProfileCardProps {
   readonly children: React.ReactNode;
   readonly rating?: number;
-  readonly verified?: boolean;
 }
 
 export default function ProfileCard(props: ProfileCardProps) {
-  const { children, rating, verified } = props;
+  const { children, rating } = props;
   return (
     <Card
       marginBottom={35}
@@ -44,16 +42,6 @@ export default function ProfileCard(props: ProfileCardProps) {
               Rating
             </Text>
           </Text>
-        )}
-        {verified && (
-          <CheckMark
-            style={{
-              position: 'absolute',
-              top: -35,
-              left: 84,
-              alignSelf: 'center',
-            }}
-          />
         )}
       </Card.Header>
       {children}

@@ -17,11 +17,12 @@ import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
 import CustomHeader from '@/components/CustomHeader';
 
-import { USER_ROLE } from '@/constants/User';
 import { TouchableOpacity } from 'react-native';
 import HeaderText from '@/components/HeaderText';
-import { store } from '@/store/store';
-import { Provider } from 'react-redux';
+import { RootState, store } from '@/store/store';
+import { Provider, useSelector } from 'react-redux';
+import { updateUser } from '@/api/user-api';
+import Toast from 'react-native-toast-message';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -43,12 +44,20 @@ const AccountHeader = () => {
 };
 
 const EditProfileHeader = () => {
+  const userRole = useSelector((state: RootState) => state.userRole);
+  const userRoleValue = userRole.userRole;
+
+  const userData = useSelector((state: any) => state.editProfile.UserData);
+  const handleSaveProfile = () => {
+    updateUser(userData, userRoleValue);
+  };
+
   return (
     <CustomHeader
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
-      title={USER_ROLE === 'coach' ? 'Edit Profile' : ''}
+      title={userRoleValue === 'Coach' ? 'Edit Profile' : ''}
       rightContent={
-        <TouchableOpacity onPress={() => console.log('pressed')}>
+        <TouchableOpacity onPress={handleSaveProfile}>
           <HeaderText text="Save" />
         </TouchableOpacity>
       }
@@ -84,7 +93,9 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav></RootLayoutNav>
+
+  return <RootLayoutNav />;
+
 }
 
 function RootLayoutNav() {
@@ -95,8 +106,11 @@ function RootLayoutNav() {
       <TamaguiProvider
         config={tamaguiConfig}
         defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack >
+
+        <ThemeProvider
+          value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
@@ -119,10 +133,10 @@ function RootLayoutNav() {
             />
             <Stack.Screen
               name="signUp/coachsignup"
-              options={{ headerShown: false,headerShadowVisible: false, }}
+              options={{ headerShown: false, headerShadowVisible: false }}
             />
-            
           </Stack>
+          <Toast />
         </ThemeProvider>
       </TamaguiProvider>
     </Provider>

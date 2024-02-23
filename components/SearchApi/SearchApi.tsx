@@ -15,6 +15,7 @@ const SearchApi = ({setOpen,setClose,handleData }:{setOpen?:any,setClose?:any,ha
 
     const handlePlacePress = (data:any, details:any  ) => {
     const { geometry,name } = details;
+
     const { location } = geometry;
     const { lat, lng } = location;
     console.log('Latitude:=====', lat);
@@ -29,6 +30,7 @@ const SearchApi = ({setOpen,setClose,handleData }:{setOpen?:any,setClose?:any,ha
 const renderRightButton = () => {
     return (
       <Search style={{marginLeft:-40,marginTop:13,color:"#3A4D6C"}} size={24} />
+
     );
   };
   return (
@@ -117,3 +119,4 @@ const styles = StyleSheet.create({
       },
     
 })
+
