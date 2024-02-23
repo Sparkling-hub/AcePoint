@@ -1,7 +1,7 @@
 import { authAndroid } from '@/services/auth';
 import { Button, Image } from 'tamagui';
-import { styles } from './GoogleStyleButton';
 import { storeData } from '@/api/localStorage';
+import { styles } from '../GoogleStyleButton';
 interface GoogleAuthAndroidProps{
   readonly userType:string
 }
@@ -21,4 +21,3 @@ interface GoogleAuthAndroidProps{
     </Button>
   );
 }
-

@@ -5,7 +5,7 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 import { render, waitFor } from 'react-native-testing-library';
 
-import GoogleAuthIOS from '@/components/GoogleAuthIOS';
+import GoogleAuthIOS from '@/components/auth/GoogleAuthIOS';
 
 jest.mock('react-native-gesture-handler', () => {
   jest.fn();

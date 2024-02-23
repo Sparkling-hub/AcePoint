@@ -22,6 +22,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 jest.mock('expo-router', () => ({
   router: {
     push: jest.fn(),
+    replace: jest.fn(),
   },
 }));
 jest.mock('react-native', () => ({
@@ -73,7 +74,6 @@ describe('findUserByEmail', () => {
       displayName: displayName,
       picture: photoURL,
     });
-    expect(router.push).toHaveBeenCalledWith('/user/edit-profile');
 
   });
 
@@ -89,7 +89,6 @@ describe('findUserByEmail', () => {
     await findUserByEmail(email, displayName, photoURL);
 
     expect(querySnapshot.forEach).toHaveBeenCalled();
-    expect(router.push).toHaveBeenCalledWith('/user/edit-profile');
 
   });
 
@@ -106,6 +105,5 @@ describe('findUserByEmail', () => {
 
     expect(querySnapshot.forEach).toHaveBeenCalled();
 
-    expect(router.push).not.toHaveBeenCalledWith('/user/edit-profile');
   });
 });

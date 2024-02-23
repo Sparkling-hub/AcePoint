@@ -12,6 +12,7 @@ import { auth } from '@/lib/firebase';
 import { removeItem } from '@/api/localStorage';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import { handleLogout } from '@/components/auth/Logout';
 
 export default function AccountScreen() {
   const [username, setUsername] = useState('');
