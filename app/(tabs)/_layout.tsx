@@ -48,6 +48,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
+    
       screenOptions={{
         tabBarStyle: {
           borderTopWidth: 0,
@@ -57,6 +58,7 @@ export default function TabLayout() {
           paddingHorizontal: 30,
           paddingBottom: 20,
         },
+        
       }}>
       <Tabs.Screen
         name="index"
