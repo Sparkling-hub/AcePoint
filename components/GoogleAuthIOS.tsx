@@ -20,7 +20,6 @@ export default function GoogleAuthIOS(props : GoogleAuthIOSProps) {
   const authenticate = async () => {
     if (response?.type == 'success') {
       try {
-        storeData
         const { id_token } = response.params;
         const credential = GoogleAuthProvider.credential(id_token);
         const result = await signInWithCredential(auth, credential);
