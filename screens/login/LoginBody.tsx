@@ -16,33 +16,32 @@ const LoginBody = ({userType}:{userType:string}) => {
     setPasswordVisible(!passwordVisible);
   };
   const login = async () => {
-    if (userType==='') {
-      Alert.alert("please click on player or coach button");
-    }else{
-      if(email.length===0 || password.length===0){
-        Alert.alert("please fill data");
-      }
-      if(email.length!==0 || password.length!==0){
-        try {
-          storeData("userType",userType)
-          const result: any = await loginUser({ email, password });
-          if (result.user) {
-            console.log("Login successful");
-            router.push('/(tabs)')
-            Alert.alert("Login Successful", "You have successfully logged in.");
-          } else {
-            console.log("Error occurred during login:", result.message);
-            Alert.alert("Login Failed invalid-credential");
-          }
-        } catch (error: any) {
-          console.error("Error occurred during login:", error.message);
-          Alert.alert("Login Failed", error.message ?? "An unknown error occurred.");
-        }
-      }
+    if (userType === '') {
+      Alert.alert("Please click on player or coach button");
+      return;
     }
-   
-      
-    
+  
+    if (email.length === 0 || password.length === 0) {
+      Alert.alert("Please fill in all the fields");
+      return;
+    }
+  
+    try {
+      storeData("userType", userType);
+      const result: any = await loginUser({ email, password });
+  
+      if (result.user) {
+        console.log("Login successful");
+        router.push('/(tabs)');
+        Alert.alert("Login Successful", "You have successfully logged in.");
+      } else {
+        console.log("Error occurred during login:", result.message);
+        Alert.alert("Login Failed", "Invalid credentials");
+      }
+    } catch (error: any) {
+      console.error("Error occurred during login:", error.message);
+      Alert.alert("Login Failed", error.message ?? "An unknown error occurred.");
+    }
   };
   return (
     <Formik

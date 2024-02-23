@@ -43,14 +43,12 @@ jest.mock('firebase/storage', () => ({
       await signin({ email: mockEmail, password: mockPassword });
   
   
-     // expect(signInWithEmailAndPassword).toBeCalledWith(auth, mockEmail,mockPassword)
     });
   
     it('returns an error when login fails', async () => {
       const mockError = new Error('The password is invalid or the user does not have a password.');
       mockError.code = 'auth/password';
   
-      //signInWithEmailAndPassword.mockRejectedValue(mockError);
   
   
     });
