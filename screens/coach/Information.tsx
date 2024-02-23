@@ -58,7 +58,7 @@ const Information = ({onNext}:{onNext:() => void}) => {
             borderRadius={9} 
             style={styles.simpleBox} 
             readOnly
-            value={close ? receivedData:'Lorem ipsum dolor sit amet'}
+            value={close ? receivedData:'Search'}
             />    
             </TouchableOpacity>
             <Modal 
