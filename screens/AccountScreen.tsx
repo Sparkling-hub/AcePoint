@@ -1,8 +1,6 @@
 import { Platform, StyleSheet } from 'react-native';
 import { Text, XStack, YStack } from 'tamagui';
-
 import { ChevronRight } from '@tamagui/lucide-icons';
-
 import Colors from '@/constants/Colors';
 import CustomButton from '@/components/CustomButton';
 import { router } from 'expo-router';
@@ -11,6 +9,7 @@ import { useEffect, useState } from 'react';
 import PorfilePicture from '@/components/PorfilePicture';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import { handleLogout } from '@/components/auth/Logout';
 
 export default function AccountScreen() {
   const [username, setUsername] = useState('');
@@ -105,7 +104,7 @@ export default function AccountScreen() {
             />
             <CustomButton
               title="Settings"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -117,7 +116,7 @@ export default function AccountScreen() {
           <YStack>
             <CustomButton
               title="Help"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -129,7 +128,7 @@ export default function AccountScreen() {
           <YStack gap={15}>
             <CustomButton
               title="Privacy"
-              onPress={() => {}}
+              onPress={() => { }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -137,7 +136,7 @@ export default function AccountScreen() {
             {userRoleValue === 'Coach' && (
               <CustomButton
                 title="Subscription"
-                onPress={() => {}}
+                onPress={() => { }}
                 buttonStyle={styles.button}
                 textStyle={styles.buttonText}
                 icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -150,7 +149,7 @@ export default function AccountScreen() {
         <CustomButton
           title="Logout"
           onPress={() => {
-            console.log('pressed');
+            handleLogout();
           }}
         />
       </YStack>

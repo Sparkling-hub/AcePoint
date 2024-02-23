@@ -3,7 +3,7 @@ import { useAuthRequest } from "expo-auth-session/build/providers/Google";
 import auth from '@react-native-firebase/auth';
 import { Alert } from "react-native";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import findUserByEmail from "./user";
+import { findUserByEmail } from "./user";
 
 
 export const useAuthIos = () => {

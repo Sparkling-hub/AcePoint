@@ -23,6 +23,8 @@ import { TouchableOpacity } from 'react-native';
 import HeaderText from '@/components/HeaderText';
 import { RootState, store } from '@/store/store';
 import { Provider, useSelector } from 'react-redux';
+import { updateUser } from '@/api/user-api';
+import Toast from 'react-native-toast-message';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -46,12 +48,18 @@ const AccountHeader = () => {
 const EditProfileHeader = () => {
   const userRole = useSelector((state: RootState) => state.userRole);
   const userRoleValue = userRole.userRole;
+
+  const userData = useSelector((state: any) => state.editProfile.UserData);
+  const handleSaveProfile = () => {
+    updateUser(userData, userRoleValue);
+  };
+
   return (
     <CustomHeader
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
       title={userRoleValue === 'Coach' ? 'Edit Profile' : ''}
       rightContent={
-        <TouchableOpacity onPress={() => console.log('pressed')}>
+        <TouchableOpacity onPress={handleSaveProfile}>
           <HeaderText text="Save" />
         </TouchableOpacity>
       }
@@ -126,6 +134,7 @@ function RootLayoutNav() {
               options={{ headerShown: false, headerShadowVisible: false }}
             />
           </Stack>
+          <Toast />
         </ThemeProvider>
       </TamaguiProvider>
     </Provider>
