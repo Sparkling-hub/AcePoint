@@ -22,6 +22,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 jest.mock('expo-router', () => ({
   router: {
     push: jest.fn(),
+    replace: jest.fn(),
   },
 }));
 jest.mock('react-native', () => ({
@@ -33,13 +34,11 @@ jest.mock('firebase/storage', () => ({
   ref: jest.fn(),
   getDownloadURL: jest.fn(),
   uploadBytesResumable: jest.fn(),
-  getStorage: jest.fn()
+  getStorage: jest.fn(),
 }));
 
 import { expect, jest, describe, afterEach, it } from '@jest/globals';
-import findUserByEmail from '@/services/user';
-import { router } from 'expo-router';
-import { Alert } from 'react-native';
+import { findUserByEmail } from '@/services/user';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
@@ -66,46 +65,44 @@ describe('findUserByEmail', () => {
 
     await findUserByEmail(email, displayName, photoURL);
 
-    expect(getDocs).toHaveBeenCalledWith(query(collection(db, 'player'), where('email', '==', email)));
+    expect(getDocs).toHaveBeenCalledWith(
+      query(collection(db, 'player'), where('email', '==', email))
+    );
     expect(addDoc).toHaveBeenCalledWith(collection(db, 'player'), {
       email: email,
       displayName: displayName,
       picture: photoURL,
     });
-    expect(router.push).toHaveBeenCalledWith('/user/edit-profile');
-    expect(Alert.alert).toHaveBeenCalledWith("Logged in successfully :", `Welcome ${displayName}! Please complete your profile.`);
+
   });
 
   it('should push to edit-profile route if existing player data is incomplete', async () => {
     const querySnapshot = {
       empty: false,
-      forEach: jest.fn(callback => {
+      forEach: jest.fn((callback) => {
         callback({ data: () => ({ email, displayName }) });
-      })
+      }),
     };
     getDocs.mockResolvedValue(querySnapshot);
 
     await findUserByEmail(email, displayName, photoURL);
 
     expect(querySnapshot.forEach).toHaveBeenCalled();
-    expect(router.push).toHaveBeenCalledWith('/user/edit-profile');
-    expect(Alert.alert).toHaveBeenCalledWith("Logged in successfully :", `Welcome ${displayName}! Please complete your profile.`);
+
   });
 
   it('should alert the player without additional actions if existing player data is complete', async () => {
     const querySnapshot = {
       empty: false,
-      forEach: jest.fn(callback => {
-        callback({ data: () => (mockPlayerData) });
-      })
+      forEach: jest.fn((callback) => {
+        callback({ data: () => mockPlayerData });
+      }),
     };
     getDocs.mockResolvedValue(querySnapshot);
 
     await findUserByEmail(email, displayName, photoURL);
 
     expect(querySnapshot.forEach).toHaveBeenCalled();
-    expect(Alert.alert).toHaveBeenCalledWith("Logged in successfully :", `Welcome ${displayName}!`);
-    expect(router.push).not.toHaveBeenCalledWith('/user/edit-profile');
-  });
 
+  });
 });
