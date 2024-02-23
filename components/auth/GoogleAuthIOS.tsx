@@ -8,9 +8,15 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { findUserByEmail } from '@/services/user';
 import { Button, Image } from 'tamagui';
 import { styles } from '../GoogleStyleButton';
+import { storeData } from '@/api/localStorage';
 
-export default function GoogleAuthIOS() {
+interface GoogleAuthIOSProps{
+  readonly userType:string
+}
+export default function GoogleAuthIOS(props : GoogleAuthIOSProps) {
   const { response, promptAsync } = useAuthIos();
+  const { userType } = props;
+
   const authenticate = async () => {
     if (response?.type == 'success') {
       try {
@@ -45,8 +51,9 @@ export default function GoogleAuthIOS() {
   return (
     <Button
       style={styles.ouath}
-      onPress={() => {
-        promptAsync();
+      onPress={async () => {
+        await storeData("userType",userType)
+        await promptAsync();
       }}>
       <Image
         source={require('@/assets/images/googleIcon.png')}

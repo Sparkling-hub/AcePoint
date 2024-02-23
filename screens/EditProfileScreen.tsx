@@ -164,17 +164,16 @@ export default function EditProfileScreen() {
     const getUserData = async () => {
       try {
         const email = await ReactNativeAsyncStorage.getItem('email');
-        console.log(email);
-
-        let querySnapshot = null;
+        let querySnapshot = null
         if (userRoleValue === 'Coach')
           querySnapshot = await getDocs(
             query(collection(db, 'coach'), where('email', '==', email))
           );
-        else
+        else {
           querySnapshot = await getDocs(
             query(collection(db, 'player'), where('email', '==', email))
           );
+        }
         const docSnapshot = querySnapshot.docs[0];
         const data = docSnapshot.data();
         setImg(data.picture);

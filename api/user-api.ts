@@ -5,7 +5,7 @@ import fireToast from "@/services/toast";
 const updateUser = async (data: any, userRoleValue: string) => {
     try {
         if (!data.hasOwnProperty("name")) {
-            fireToast('error', 'Please change at least one field!');
+            fireToast('error', 'Please complete your profile.');
             return;
         }
         const userData: any = {
@@ -37,6 +37,7 @@ const updateUser = async (data: any, userRoleValue: string) => {
     } catch (error) {
         fireToast('error', 'Error updating profile!');
         console.error('Error updating profile:', error);
+        throw error;
     }
 }
 function validateProfile(userData: any, profileType: string): boolean {

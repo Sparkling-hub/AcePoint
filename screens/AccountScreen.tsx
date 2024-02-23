@@ -7,9 +7,11 @@ import { router } from 'expo-router';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import PorfilePicture from '@/components/PorfilePicture';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { removeItem } from '@/api/localStorage';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { handleLogout } from '@/components/auth/Logout';
 
 export default function AccountScreen() {
   const [username, setUsername] = useState('');
@@ -26,7 +28,7 @@ export default function AccountScreen() {
   const userRoleValue = userRole.userRole;
 
   const calculatePaddingTop = () => {
-    if (userRoleValue === 'Player') {
+    if (userRoleValue === 'Coach') {
       return 0;
     } else {
       return Platform.OS === 'ios' ? 90 : 30;
@@ -34,6 +36,16 @@ export default function AccountScreen() {
   };
 
   const paddingTop = calculatePaddingTop();
+
+  const handleLogout = async () => {
+    await ReactNativeAsyncStorage.removeItem('email');
+    await ReactNativeAsyncStorage.removeItem('image');
+    await ReactNativeAsyncStorage.removeItem('username');
+    await ReactNativeAsyncStorage.removeItem('userID');
+    await signOut(auth)
+    await removeItem('userInfo')
+    router.push('/');
+  }
 
   return (
     <YStack flex={1} paddingTop={paddingTop}>

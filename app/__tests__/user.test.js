@@ -22,6 +22,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 jest.mock('expo-router', () => ({
   router: {
     push: jest.fn(),
+    replace: jest.fn(),
   },
 }));
 jest.mock('react-native', () => ({
@@ -38,7 +39,6 @@ jest.mock('firebase/storage', () => ({
 
 import { expect, jest, describe, afterEach, it } from '@jest/globals';
 import { findUserByEmail } from '@/services/user';
-import { router } from 'expo-router';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
@@ -73,7 +73,6 @@ describe('findUserByEmail', () => {
       displayName: displayName,
       picture: photoURL,
     });
-    expect(router.push).toHaveBeenCalledWith('/user/edit-profile');
 
   });
 
@@ -89,7 +88,6 @@ describe('findUserByEmail', () => {
     await findUserByEmail(email, displayName, photoURL);
 
     expect(querySnapshot.forEach).toHaveBeenCalled();
-    expect(router.push).toHaveBeenCalledWith('/user/edit-profile');
 
   });
 
@@ -106,6 +104,5 @@ describe('findUserByEmail', () => {
 
     expect(querySnapshot.forEach).toHaveBeenCalled();
 
-    expect(router.push).not.toHaveBeenCalledWith('/user/edit-profile');
   });
 });

@@ -1,9 +1,9 @@
 import { Platform } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
+import { styles } from '../GoogleStyleButton';
 import { Image, Stack, XStack, YStack, Button, Text } from 'tamagui';
 import { router } from 'expo-router';
-import { styles } from '../GoogleStyleButton';
 import GoogleAuthIOS from '../auth/GoogleAuthIOS';
 import GoogleAuthAndroid from '../auth/GoogleAuthAndroid';
 WebBrowser.maybeCompleteAuthSession();
@@ -11,13 +11,14 @@ type PlatformType = 'ios' | 'android';
 
 interface GoogleAuthProps {
   platform: PlatformType;
+  userType: string;
 }
 
-const GoogleAuth: React.FC<GoogleAuthProps> = ({ platform }) => {
+const GoogleAuth: React.FC<GoogleAuthProps> = ({ platform, userType }) => {
   if (platform === 'ios') {
-    return <GoogleAuthIOS />;
+    return <GoogleAuthIOS userType={userType} />;
   } else if (platform === 'android') {
-    return <GoogleAuthAndroid />;
+    return <GoogleAuthAndroid userType={userType} />;
   }
 };
 const Footer = ({ userType }: { userType: string }) => {
@@ -54,7 +55,7 @@ const Footer = ({ userType }: { userType: string }) => {
               style={[{ width: 23, height: 28 }]}
             />
           </Button>
-          <GoogleAuth platform={Platform.OS as PlatformType} />
+          <GoogleAuth userType={userType} platform={Platform.OS as PlatformType} />
         </XStack>
 
         <Image
