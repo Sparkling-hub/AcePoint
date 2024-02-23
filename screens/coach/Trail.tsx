@@ -12,11 +12,7 @@ const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
     <SafeAreaView style={styles.container}>
         <YStack marginBottom={25} >
           <YStack alignItems="flex-start" gap={"$4"} marginLeft={-80}>
-<<<<<<< HEAD
           <HeaderArrow back={handlePrevious}  gap={"$5"} data={"SUBSCRIPTION"} />
-=======
-          <HeaderArrow gap={"$5"} data={"SUBSCRIPTION"} />
->>>>>>> 6e39781440407f4b219abc7581b3cd2e0a897066
           </YStack>
          </YStack>
     <Stack space="$4" >  
