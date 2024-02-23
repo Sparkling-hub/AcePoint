@@ -28,7 +28,7 @@ export default function AccountScreen() {
   const userRoleValue = userRole.userRole;
 
   const calculatePaddingTop = () => {
-    if (userRoleValue === 'Player') {
+    if (userRoleValue === 'Coach') {
       return 0;
     } else {
       return Platform.OS === 'ios' ? 90 : 30;
@@ -44,7 +44,7 @@ export default function AccountScreen() {
     await ReactNativeAsyncStorage.removeItem('userID');
     await signOut(auth)
     await removeItem('userInfo')
-    router.push('/login');
+    router.push('/');
   }
 
   return (

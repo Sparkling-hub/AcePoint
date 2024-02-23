@@ -1,13 +1,18 @@
 import { authAndroid } from '@/services/auth';
 import { Button, Image } from 'tamagui';
 import { styles } from './GoogleStyleButton';
-
- export default function GoogleAuthAndroid() {
+import { storeData } from '@/api/localStorage';
+interface GoogleAuthAndroidProps{
+  readonly userType:string
+}
+ export default function GoogleAuthAndroid(props : GoogleAuthAndroidProps) {
+  const { userType } = props;
   return (
     <Button
       style={styles.ouath}
-      onPress={() => {
-        authAndroid();
+      onPress={async () => {
+        await storeData("userType",userType)
+        await authAndroid();
       }}>
       <Image
         source={require('@/assets/images/googleIcon.png')}

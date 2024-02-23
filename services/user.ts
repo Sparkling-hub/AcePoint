@@ -3,28 +3,48 @@ import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Alert } from 'react-native';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-
+import { retrieveData } from '@/api/localStorage';
 async function findUserByEmail(
   email: string,
   displayName: string,
   photoURL: string
 ) {
-  const querySnapshot = await getDocs(
-    query(collection(db, 'player'), where('email', '==', email))
-  );
+  const userType = await retrieveData('userType')
+  let querySnapshot = null
+  if (userType === 'Player') {
+    querySnapshot = await getDocs(
+      query(collection(db, 'player'), where('email', '==', email))
+    );
+  } else {
+    querySnapshot = await getDocs(
+      query(collection(db, 'coach'), where('email', '==', email))
+    );
+  }
   if (querySnapshot.empty) {
     try {
-      const newPlayerRef = await addDoc(collection(db, 'player'), {
-        email: email,
-        displayName: displayName,
-        picture: photoURL,
-      });
-      await ReactNativeAsyncStorage.setItem('userID', newPlayerRef.id)
-      console.log('New player added with ID:', newPlayerRef.id);
+      if (userType === 'Player') {
+        const newPlayerRef = await addDoc(collection(db, 'player'), {
+          email: email,
+          displayName: displayName,
+          picture: photoURL,
+        });
+        await ReactNativeAsyncStorage.setItem('userID', newPlayerRef.id)
+        console.log('New player added with ID:', newPlayerRef.id);
+      }
+      else {
+        const newCoachRef = await addDoc(collection(db, 'coach'), {
+          email: email,
+          displayName: displayName,
+          picture: photoURL,
+        });
+        await ReactNativeAsyncStorage.setItem('userID', newCoachRef.id)
+        console.log('New player added with ID:', newCoachRef.id);
+      }
+
     } catch (error) {
       console.error('Error adding new player:', error);
     }
-    router.push('/user/edit-profile');
+    router.replace('/user/edit-profile');
     return Alert.alert(
       'Logged in successfully :',
       `Welcome ${displayName}! Please complete your profile.`
@@ -35,14 +55,14 @@ async function findUserByEmail(
       await ReactNativeAsyncStorage.setItem('userID', doc.id)
       if (!playerData.hasOwnProperty('gender') || !playerData.hasOwnProperty('phoneNumber') || !playerData.hasOwnProperty('birthday') ||
         playerData.gender === '' || playerData.phoneNumber === '' || playerData.birthday === '') {
-        router.push('/user/edit-profile');
+        router.replace('/user/edit-profile');
         return Alert.alert(
           'Logged in successfully :',
           `Welcome ${displayName}! Please complete your profile.`
         );
       } else {
         await ReactNativeAsyncStorage.setItem('userID', doc.id)
-        router.push('/user/edit-profile');
+        router.replace('/(tabs)');
         return Alert.alert(
           'Logged in successfully :',
           `Welcome ${displayName}!`
