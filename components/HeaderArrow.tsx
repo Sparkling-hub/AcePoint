@@ -21,5 +21,5 @@ const HeaderArrow = ({data,gap}:{data:string,gap:string}) => {
     </XStack>
   )
 }
-
+//dawdihuniniwedf
 export default HeaderArrow

@@ -126,7 +126,7 @@ function RootLayoutNav() {
                 headerShadowVisible: false,
                 header: EditProfileHeader,
               }}
-            />
+            /> 
             <Stack.Screen
               name="signUp/playersignup"
               options={{ headerShown: false }}
@@ -138,7 +138,8 @@ function RootLayoutNav() {
           </Stack>
           <Toast />
         </ThemeProvider>
-      </TamaguiProvider>
+      </TamaguiProvider> 
     </Provider>
   );
 }
+//dwadawdawdawdawdawd
