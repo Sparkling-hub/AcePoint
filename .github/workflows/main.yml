@@ -30,7 +30,7 @@ jobs:
       run: yarn
 
     - name: 📋 Test project
-      run: yarn test
+      run: yarn test --coverage
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
