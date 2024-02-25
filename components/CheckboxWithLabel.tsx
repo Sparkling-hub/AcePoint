@@ -4,27 +4,35 @@ import type { CheckboxProps, SizeTokens } from 'tamagui'
 import { Checkbox, Label, XStack,YStack,Text } from 'tamagui'
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
-export function CheckboxWithLabel({
-    size,
-    label ,
-    onPress,
-    ...checkboxProps
-  }: CheckboxProps & { size: SizeTokens; label?: string }) {
+interface CheckboxWithLabel extends Readonly<CheckboxProps>   {
+  readonly size: SizeTokens;
+  readonly label?: string;
+  readonly onPress: () => void;
+  readonly terms?: boolean;
+}
+export function CheckboxWithLabel ({
+  size,
+  label,
+  onPress,
+  terms = true, 
+  ...checkboxProps
+  }: CheckboxWithLabel ) {
 
     const id = `checkbox-${size.toString().slice(1)}`
     return (
       <XStack width={300} style={{marginLeft:20}} >
+        
         <YStack gap={'$3'}>
         <XStack gap={'$3'}>
-          <Checkbox id={id} size={size} {...checkboxProps} onPress={onPress}  style={{backgroundColor:"#D9D9D9", borderColor:"#3A4D6C",borderWidth:1,borderRadius:0 }}>
-            <Checkbox.Indicator>
+          <Checkbox id={id} size={size} {...checkboxProps} onPress={onPress} style={{backgroundColor:"#D9D9D9", borderColor:"#3A4D6C",borderWidth:1,borderRadius:0 }}>
+            <Checkbox.Indicator>   
               <CheckIcon />
             </Checkbox.Indicator>
           </Checkbox>
-          
+          <XStack>
           <Label size={size} style={{color:"#000000",fontSize:12,fontFamily:"Montserrat",fontWeight:"500",lineHeight: 14.63,}} htmlFor={id}>
-            {label}
-          </Label>
+          {label}
+          </Label></XStack>
         </XStack>
           <Text color={"#000000"} style={[styles.text]} >
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo ex, 

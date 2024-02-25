@@ -22,12 +22,13 @@ const SignUpPlayer = () => {
     });
     handleNext();
   }
+  const handlePrevious  = () => setProgress(progress - 34);
 
   return (
     <SafeAreaView style={styles.container}>
       {progress === 34 && <SignUp onNext={signUp} />}
-      {progress === 68 && <Levling onNext={handleNext} />}
-      {progress === 102 && <Question />}
+      {progress === 68 && <Levling onNext={handleNext} handlePrevious={handlePrevious} />}
+      {progress === 102 && <Question handlePrevious={handlePrevious} />}
     </SafeAreaView>
   );
 };

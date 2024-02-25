@@ -1,4 +1,4 @@
-import {  Platform} from 'react-native'
+import {  Alert, Platform} from 'react-native'
 import React, { useState } from 'react'
 import {  View, XStack, YStack,ScrollView } from 'tamagui';
 import { CheckboxWithLabel } from '@/components/CheckboxWithLabel';
@@ -10,6 +10,7 @@ import CountryCodePicker from '@/components/Form/CountryCodePicker';
 import Button from '@/components/Button'
 import ProgressBar from '@/components/ProgressBar';
 import HeaderArrow from '@/components/HeaderArrow';
+import { router } from 'expo-router';
 
 const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) => void}) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -20,6 +21,9 @@ const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) =
   const [country, setCountry] = useState('+44');
   const [marketing, setMarketing] = useState(false);
   const [terms, setTerms] = useState(false);
+  const back=()=>{
+    router.back()
+}
   const sign=()=>{
     let data = {
       displayName: displayName, 
@@ -28,7 +32,12 @@ const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) =
       terms: terms 
     };
     console.log(data)
-    onNext(email,password,data)
+    if(terms){
+
+      onNext(email,password,data)
+    }else{
+      Alert.alert("you must check the terms");
+    }
    
    }
   const togglePasswordVisibility = () => {
@@ -65,7 +74,7 @@ const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) =
         <ScrollView marginBottom={20}>
          <YStack marginBottom={30} marginTop={-10}>
           <YStack alignItems="flex-start" gap={"$4"} marginLeft={20}>
-            <HeaderArrow gap={"$11"} data={"SIGN UP"} />
+            <HeaderArrow back={back} gap={"$11"} data={"SIGN UP"} />
           </YStack>
             <View marginLeft={20} marginTop={25} ><ProgressBar value={20}/></View>
          </YStack>
@@ -168,7 +177,7 @@ const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) =
           <CheckboxWithLabel size="$3" label='Marketing Comunication from Acepoint'   onPress={onCheckedChangeMarketing} />
           </YStack>
           <YStack gap={'$3'}>
-          <CheckboxWithLabel size="$3" label='Terms and Conditions & Privacy Policy'   onPress={onCheckedChangeTerms} />
+          <CheckboxWithLabel size="$3" label='Terms and Conditions & Privacy Policy' terms={terms}   onPress={onCheckedChangeTerms} /> 
           </YStack>
           <YStack gap={'$3'} style={{alignItems:'center'}}>
           <Button text={"Create Account"} onPress={sign}></Button> 

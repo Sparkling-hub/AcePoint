@@ -4,7 +4,6 @@ import { Coach } from '@/model/coach';
 import { Player } from '@/model/player';
 import {storeData ,retrieveData} from '@/api/localStorage'
 const signUpCoach = async ({ email,password,coach }: { email: string ,password:string,coach:Coach }) => {
-    
       createUserWithEmailAndPassword(auth,email, password)
       .then((userCredential) => { 
         const userData = {  
@@ -16,12 +15,11 @@ const signUpCoach = async ({ email,password,coach }: { email: string ,password:s
         }; 
         console.log("User added successfully!");
         try {
-          setDoc(doc(db, 'coach',userCredential.user.uid), userData)
+          setDoc(doc(db, 'coach',userCredential?.user?.uid), userData)
           console.log("Coach added successfully!");
-          storeData("coachId",userCredential.user.uid).then((data)=>{
+          storeData("coachId",userCredential?.user?.uid).then((data)=>{
             console.log("storage data: "+data)
           })
-          
         } catch (error) {
             console.error("Error adding coach: ", error);
         }
@@ -32,27 +30,42 @@ const signUpCoach = async ({ email,password,coach }: { email: string ,password:s
       signOut(auth)
   };
 
-
-const signUpPlayer = async ({ email, password, player }: { email: string, password: string, player: Player }) => {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      let userData = {
-        displayName: player.displayName,
-        phoneNumber: player.phoneNumber,
-        terms: player.terms,
-        marketing: player.marketing,
-        createdAt: Timestamp.now()
-      };
-      console.log("User added successfully!");
-      try {
-        setDoc(doc(db, 'player', userCredential.user.uid), userData)
-        console.log("player added successfully!");
-        console.log(JSON.stringify(userData))
-        storeData("playerId", userCredential.user.uid).then((data) => {
-          console.log("storage data: " + data)
-        })
-
-      } catch (error) {
+const signup=async({email,password}:{email:any,password:any})=>{
+  try {
+    
+     await createUserWithEmailAndPassword(auth,email, password)
+  } catch (error) {
+    console.log(error)
+  }
+}
+const signin=async({email,password}:{email:any,password:any})=>{
+  try {
+    
+     await signInWithEmailAndPassword(auth,email, password)
+  } catch (error) {
+    console.log(error)
+  }
+}
+const signUpPlayer = async ({ email,password,player }: { email: string ,password:string,player:Player }) => {
+  createUserWithEmailAndPassword(auth,email, password)
+  .then((userCredential) => {
+    let userData = {   
+      displayName: player.displayName,
+      phoneNumber:player.phoneNumber,
+      terms:player.terms,
+      marketing:player.marketing,
+      createdAt:Timestamp.now()    
+    }; 
+    console.log("User added successfully!");
+    try {
+      setDoc(doc(db, 'player',userCredential.user.uid), userData)
+      console.log("player added successfully!");
+      console.log(JSON.stringify(userData))
+      storeData("playerId",userCredential.user.uid).then((data)=>{
+        console.log("storage data: "+data)
+      })
+      
+    } catch (error) {
         console.error("Error adding player: ", error);
       }
     })
@@ -98,4 +111,4 @@ const loginUser = async ({ email, password }: { email: string, password: string 
 
   }
 }
-export { signUpCoach, signUpPlayer, updateUserPlayer, loginUser, updateUserCoach }
+export { signUpCoach ,signUpPlayer,updateUserPlayer,loginUser,updateUserCoach,signup,signin}

@@ -73,7 +73,6 @@ describe('findUserByEmail', () => {
       displayName: displayName,
       picture: photoURL,
     });
-
   });
 
   it('should push to edit-profile route if existing player data is incomplete', async () => {
@@ -88,7 +87,6 @@ describe('findUserByEmail', () => {
     await findUserByEmail(email, displayName, photoURL);
 
     expect(querySnapshot.forEach).toHaveBeenCalled();
-
   });
 
   it('should alert the player without additional actions if existing player data is complete', async () => {

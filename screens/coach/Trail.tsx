@@ -4,7 +4,7 @@ import { heightPercentageToDP as hp,widthPercentageToDP as wp} from 'react-nativ
 import { Button, Image, Stack, YStack } from 'tamagui'
 import HeaderArrow from '@/components/HeaderArrow'
 
-const Trail = () => {
+const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
     const updatePlayer=()=>{
         console.log("clicked")
     }
@@ -12,7 +12,7 @@ const Trail = () => {
     <SafeAreaView style={styles.container}>
         <YStack marginBottom={25} >
           <YStack alignItems="flex-start" gap={"$4"} marginLeft={-80}>
-          <HeaderArrow gap={"$5"} data={"SUBSCRIPTION"} />
+          <HeaderArrow back={handlePrevious}  gap={"$5"} data={"SUBSCRIPTION"} />
           </YStack>
          </YStack>
     <Stack space="$4" >  

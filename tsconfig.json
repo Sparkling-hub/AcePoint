@@ -18,5 +18,6 @@
     "expo-env.d.ts",
     "app/__tests__/androidAuth.test.js",
     "app/__tests__/user.test.js"
-  ]
+,   "app/__tests__/login.test.js"  
+]
 }

@@ -6,7 +6,7 @@ import {updateUserCoach } from'@/api/auth-api'
 import UploadImage from '@/components/utils/UploadImage'
 import HeaderArrow from '@/components/HeaderArrow'
 import SearchApi from '@/components/SearchApi/SearchApi'
-const Information = ({onNext}:{onNext:() => void}) => {
+const Information = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:() => void}) => {
     const [image,setImage]=useState('')
     const [bios, setBios] = useState<string>('');
     const [tags, setTags] = useState<string>('');
@@ -29,7 +29,7 @@ const Information = ({onNext}:{onNext:() => void}) => {
         <YStack alignItems="center" gap={"$2"} >
         <YStack marginBottom={25} >
           <YStack alignItems="flex-start" gap={"$4"} marginLeft={-150}>
-          <HeaderArrow gap={"$11"} data={"INFO"} />
+          <HeaderArrow back={handlePrevious} gap={"$11"} data={"INFO"} />
           </YStack>
          </YStack>
         <YStack alignItems="center" marginBottom={20} marginTop={-25} gap={"$4"} >
@@ -58,7 +58,7 @@ const Information = ({onNext}:{onNext:() => void}) => {
             borderRadius={9} 
             style={styles.simpleBox} 
             readOnly
-            value={close ? receivedData:'Search'}
+            value={close ? receivedData:''}
             />    
             </TouchableOpacity>
             <Modal 

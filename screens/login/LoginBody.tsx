@@ -1,12 +1,11 @@
 import { StyleSheet, Alert } from 'react-native'
 import React, { useState } from 'react'
-import { Button, Input, Text, View, YStack, XStack } from 'tamagui'
+import { Button, Input, Text, View, YStack } from 'tamagui'
 import { loginUser } from '@/api/auth-api'
 import { storeData } from '@/api/localStorage'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Info } from '@tamagui/lucide-icons';
 import { router } from 'expo-router';
 
 const LoginBody = ({userType}:{userType:string}) => {
@@ -17,25 +16,31 @@ const LoginBody = ({userType}:{userType:string}) => {
     setPasswordVisible(!passwordVisible);
   };
   const login = async () => {
-    if (userType==='') {
-      Alert.alert("please click on player or coach button");
+    if (userType === '') {
+      Alert.alert("Please click on player or coach button");
+      return;
     }
-    if(userType!==''){
-      try {
-        storeData("userType",userType)
-        const result: any = await loginUser({ email, password });
-        if (result.user) {
-          console.log("Login successful");
-          router.push('/(tabs)')
-          Alert.alert("Login Successful", "You have successfully logged in.");
-        } else {
-          console.log("Error occurred during login:", result.message);
-          Alert.alert("Login Failed invalid-credential");
-        }
-      } catch (error: any) {
-        console.error("Error occurred during login:", error.message);
-        Alert.alert("Login Failed", error.message ?? "An unknown error occurred.");
+  
+    if (email.length === 0 || password.length === 0) {
+      Alert.alert("Please fill in all the fields");
+      return;
+    }
+  
+    try {
+      storeData("userType", userType);
+      const result: any = await loginUser({ email, password });
+  
+      if (result.user) {
+        console.log("Login successful");
+        router.push('/(tabs)');
+        Alert.alert("Login Successful", "You have successfully logged in.");
+      } else {
+        console.log("Error occurred during login:", result.message);
+        Alert.alert("Login Failed", "Invalid credentials");
       }
+    } catch (error: any) {
+      console.error("Error occurred during login:", error.message);
+      Alert.alert("Login Failed", error.message ?? "An unknown error occurred.");
     }
   };
   return (
@@ -47,7 +52,7 @@ const LoginBody = ({userType}:{userType:string}) => {
       onSubmit={(values) => {
         //
       }}>
-      {({ handleChange, handleBlur, values, errors, touched }) => (
+      {({ handleChange, handleBlur, values }) => (
         <YStack gap={'$3'} >
           <Input
             borderWidth={0}
@@ -61,17 +66,7 @@ const LoginBody = ({userType}:{userType:string}) => {
             autoCapitalize="none"
             style={styles.input}
           />
-          {errors.email &&
-            <XStack alignItems="center" marginTop={5} marginLeft={5}>
-              <Info size={18} color={'red'} marginRight={5} />
-              <Text
-                style={{ fontFamily: 'MontserratMedium' }}
-                color={'red'}
-                fontSize={12}>
-                {errors.email}
-              </Text>
-            </XStack>
-          }
+          
           <View>
             <Input
               borderWidth={0}

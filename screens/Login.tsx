@@ -1,7 +1,6 @@
 import { StyleSheet,ImageBackground, Platform } from 'react-native'
 import React,{ useEffect, useState } from 'react'
 import { Image, ScrollView,XStack, YStack } from 'tamagui'
-
 import Tenis from '@/components/login/Tenis';
 import TopScreen from '@/components/login/TopScreen';
 import LoginBody from './login/LoginBody';
@@ -73,25 +72,22 @@ const Login = () => {
               <Tenis icon={<Image
                 source={require('@/assets/images/whisle.png')} />}
                 text={"Coach"} 
-
                 backgroundColor={buttonCoachState.backgroundColor}
                 borderColor={buttonCoachState.borderColor}
                 onPress={onCoach}
                 // '#A9D05C'
                 // '#3A4D6C'
               />
-            </XStack>
-          </YStack>
-          <YStack alignItems="center">
-            <LoginBody userType={userType} />
-          </YStack>
-          <Footer userType={userType} />
+          </XStack>
         </YStack>
-      </ScrollView>
-    </ImageBackground>
-  );
-};
-
+          <YStack alignItems="center">
+          <LoginBody userType={userType}/>
+          </YStack>
+            <Footer userType={userType} />
+          </YStack>
+          </ScrollView>
+          </ImageBackground>
+  )}
 export default Login;
 
 const styles = StyleSheet.create({

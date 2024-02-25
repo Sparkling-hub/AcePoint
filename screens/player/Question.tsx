@@ -9,7 +9,7 @@ import ProgressBar from '@/components/ProgressBar'
 import HeaderArrow from '@/components/HeaderArrow'
 
 
-const Question = () => {
+const Question = ({handlePrevious}:{handlePrevious:() => void}) => {
     const [age, setAge] = useState<string>(() => {
         const date = new Date();
         const dateString = date.toLocaleString();
@@ -30,7 +30,7 @@ const Question = () => {
         <YStack gap={'$5'} alignItems="center">
         <YStack marginBottom={30}>
         <YStack alignItems="flex-start" gap={"$4"} marginLeft={-40}>
-          <HeaderArrow gap={"$2"} data={"ADDITIONAL QUESTIONS"} />
+          <HeaderArrow back={handlePrevious} gap={"$2"} data={"ADDITIONAL QUESTIONS"} />
           <View width={"107%"} marginLeft={10} marginTop={25} ><ProgressBar value={80}/></View>
           </YStack>
           </YStack>
@@ -40,6 +40,7 @@ const Question = () => {
               handleChange={(text:any) => {
                 setAge(text); 
               }}
+              
               validateOnInit
             />
         </YStack>
