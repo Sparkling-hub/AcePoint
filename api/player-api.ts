@@ -24,4 +24,25 @@ const findByName = async ({name}: { name: string }) => {
         return error.message;
     }
 };
-export { findByName}
+const findCoachByName = async ({name}: { name: string }) => {
+    try {
+        if(name.length !==0){
+        const data = query(collection(db, 'coach'), where('displayName', '==', name));
+        const coaches = await getDocs(data);
+        if (coaches.empty) {
+            return("coach does not exist")
+        }
+        
+
+        return (coaches)
+       
+        }if(name.length ===0){
+        const data = collection(db, 'coach');
+        const coaches = await getDocs(data);
+        return coaches
+    }
+} catch (error: any) {
+        return error.message;
+    }
+};
+export { findByName,findCoachByName}
