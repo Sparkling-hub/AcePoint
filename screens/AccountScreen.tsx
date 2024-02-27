@@ -1,4 +1,4 @@
-import { Platform, StyleSheet } from 'react-native';
+import { Platform } from 'react-native';
 import { Text, XStack, YStack } from 'tamagui';
 import { ChevronRight } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
@@ -12,6 +12,7 @@ import { auth } from '@/lib/firebase';
 import { removeItem } from '@/api/localStorage';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import { styles } from '@/components/ButtonStyles';
 
 export default function AccountScreen() {
   const [username, setUsername] = useState('');
@@ -116,7 +117,7 @@ export default function AccountScreen() {
             />
             <CustomButton
               title="Settings"
-              onPress={() => { router.push('/user/setting')}}
+              onPress={() => { router.push('/user/setting') }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -168,39 +169,3 @@ export default function AccountScreen() {
     </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  displayNameText: {
-    fontFamily: 'MontserratBold',
-    fontSize: 20,
-    lineHeight: 24,
-    color: Colors.secondary,
-    textAlign: 'center',
-  },
-
-  text: {
-    fontFamily: 'MontserratBold',
-    fontSize: 16,
-    lineHeight: 20,
-    color: Colors.secondary,
-    paddingLeft: 20,
-    marginBottom: 10,
-  },
-
-  button: {
-    backgroundColor: Colors.primary,
-    height: 52,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderRadius: 8,
-    padding: 16,
-    paddingHorizontal: 20,
-  },
-  buttonText: {
-    fontFamily: 'MontserratMedium',
-    fontSize: 16,
-    lineHeight: 20,
-    color: Colors.secondary,
-  },
-});

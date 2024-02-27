@@ -47,7 +47,7 @@ async function findUserByEmail(
         // Store the user ID in AsyncStorage
         await ReactNativeAsyncStorage.setItem('userID', newPlayerRef.id);
         console.log('New player added with ID:', newPlayerRef.id);
-      } else {
+      } else if (userType === 'Coach') {
         const newCoachRef = await addDoc(collection(db, 'coach'), {
           email: email,
           displayName: displayName,
@@ -57,7 +57,6 @@ async function findUserByEmail(
         await ReactNativeAsyncStorage.setItem('userID', newCoachRef.id);
         console.log('New coach added with ID:', newCoachRef.id);
       }
-      await ReactNativeAsyncStorage.setItem('email', email);
     } catch (error) {
       console.error('Error adding new user:', error);
     }
@@ -82,8 +81,6 @@ async function findUserByEmail(
         userData.birthday === ''
       ) {
         // Redirect the user to the edit profile page if the profile is incomplete
-        await ReactNativeAsyncStorage.setItem('userID', doc.id);
-        await ReactNativeAsyncStorage.setItem('email', email);
         router.replace('/user/edit-profile');
         return Alert.alert(
           'Logged in successfully:',
@@ -91,8 +88,6 @@ async function findUserByEmail(
         );
       } else {
         // Store the user ID in AsyncStorage and redirect the user to the appropriate page
-        await ReactNativeAsyncStorage.setItem('userID', doc.id);
-        await ReactNativeAsyncStorage.setItem('email', email);
         router.replace('/(tabs)');
         return Alert.alert('Logged in successfully:', `Welcome ${displayName}!`);
       }

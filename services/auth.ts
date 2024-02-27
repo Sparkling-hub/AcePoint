@@ -49,7 +49,5 @@ export const authAndroid = async () => {
     } catch (error) {
         // Handle errors gracefully
         Alert.alert("Error : ", "Something went wrong !");
-        console.log("Auth : ", error);
-
     }
 }

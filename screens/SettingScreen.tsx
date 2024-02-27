@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native';
 import { Button, Text, YStack, AlertDialog, XStack, } from 'tamagui';
 import { ChevronRight } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
@@ -7,6 +6,7 @@ import { handleDeleteAccount } from '@/services/user';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { useState } from 'react';
+import { styles } from '@/components/ButtonStyles';
 
 export default function SettingsScreen() {
 
@@ -84,7 +84,7 @@ export default function SettingsScreen() {
                                     Are you sure you want to delete your account ?
                                     All your data will be lost forever.
                                 </AlertDialog.Description>
-                                <XStack space="$3" justifyContent="flex-end">
+                                <XStack justifyContent="flex-end">
                                     <Button onPress={handleShow}>Cancel</Button>
                                     <Button onPress={() => {
                                         handleDeleteAccount(userRoleValue)
@@ -99,50 +99,3 @@ export default function SettingsScreen() {
         </YStack>
     )
 }
-
-
-const styles = StyleSheet.create({
-    displayNameText: {
-        fontFamily: 'MontserratBold',
-        fontSize: 20,
-        lineHeight: 24,
-        color: Colors.secondary,
-        textAlign: 'center',
-    },
-
-    text: {
-        fontFamily: 'MontserratBold',
-        fontSize: 16,
-        lineHeight: 20,
-        color: Colors.secondary,
-        paddingLeft: 20,
-        marginBottom: 10,
-    },
-
-    button: {
-        backgroundColor: Colors.primary,
-        height: 52,
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderRadius: 8,
-        padding: 16,
-        paddingHorizontal: 20,
-    },
-    dangerbutton: {
-        backgroundColor: Colors.danger,
-        height: 52,
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        borderRadius: 8,
-        padding: 16,
-        paddingHorizontal: 20,
-    },
-    buttonText: {
-        fontFamily: 'MontserratMedium',
-        fontSize: 16,
-        lineHeight: 20,
-        color: Colors.secondary,
-    },
-});
