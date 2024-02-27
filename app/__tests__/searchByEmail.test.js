@@ -1,25 +1,10 @@
-import { getDocs,query,collection,where } from 'firebase/firestore';
-import { findByName} from '@/api/player-api'
-import {db } from '@/lib/firebase'
+import { jest } from '../globalimport/globaImport';
+import { findByName } from '@/api/player-api';
+import { db } from '@/lib/firebase';
+import { getDocs, query, collection, where } from 'firebase/firestore';
 
-jest.mock('firebase/auth', () => ({
-  getReactNativePersistence: jest.fn(),
-  initializeAuth: jest.fn(),
-}));
-jest.mock("@/lib/firebase", () => ({
-  db: {}
-}));
-jest.mock('firebase/app', () => ({initializeApp: jest.fn(),}));
-jest.mock('firebase/storage', () => ({getStorage: jest.fn(),}));
-jest.mock('@react-native-async-storage/async-storage', () => ({ReactNativeAsyncStorage: jest.fn()}));
+// Your tests for findByName go here
 
-jest.mock('firebase/firestore', () => ({
-    getFirestore: jest.fn(),
-    collection: jest.fn(),
-    query: jest.fn(),
-    where: jest.fn(),
-    getDocs: jest.fn(),
-}));
 
 
 describe('findByName', () => {
