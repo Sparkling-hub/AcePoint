@@ -23,7 +23,7 @@ const findByName = async ({name}: { name: string }) => {
        return clubs
         }
     } catch (error: any) {
-        console.error('get failed:', error.message);
+       return error.message
     }
 };
 export { findByName}
