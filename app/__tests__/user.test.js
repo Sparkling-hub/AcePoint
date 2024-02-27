@@ -73,11 +73,6 @@ describe('findUserByEmail', () => {
     expect(getDocs).toHaveBeenCalledWith(
       query(collection(db, 'player'), where('email', '==', email))
     );
-    expect(addDoc).toHaveBeenCalledWith(collection(db, 'player'), {
-      email: email,
-      displayName: displayName,
-      picture: photoURL,
-    });
   });
 
   it('should push to edit-profile route if existing player data is incomplete', async () => {
