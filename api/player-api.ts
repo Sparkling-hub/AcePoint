@@ -9,7 +9,7 @@ const findByName = async ({name}: { name: string }) => {
         const clubs = await getDocs(data);
         if (clubs.empty) {
             // return there is no name if name dos not exist in db
-            return "there is no name"
+            return("name dose not exist")
         }
         // return the filtered data
         return clubs
@@ -21,7 +21,7 @@ const findByName = async ({name}: { name: string }) => {
             return clubs
         }
     } catch (error: any) {
-        console.error('get failed:', error.message);
+        return error.message;
     }
 };
 export { findByName}
