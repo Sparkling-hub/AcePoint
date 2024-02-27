@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Alert } from 'react-native';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
@@ -134,9 +134,8 @@ async function handleDeleteAccount(userRoleValue: string) {
   if (user) {
     try {
       await user.delete()
-      await handleLogout()
       fireToast('success', 'Your account has been successfully deleted!')
-      router.replace('/')
+      await handleLogout()
     } catch (error) {
       fireToast('error', 'Something went wrong!')
       console.error("Error removing document:", error);
@@ -149,7 +148,7 @@ async function handleDeleteAccount(userRoleValue: string) {
     try {
       await deleteDoc(userDocRef);
       fireToast('success', 'Your account has been successfully deleted!')
-      router.replace('/')
+      await handleLogout()
     } catch (error) {
       fireToast('error', 'Something went wrong!')
       console.error("Error removing document:", error);

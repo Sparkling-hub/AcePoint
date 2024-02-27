@@ -36,7 +36,12 @@ jest.mock('firebase/storage', () => ({
   uploadBytesResumable: jest.fn(),
   getStorage: jest.fn(),
 }));
-
+jest.mock("react-native-toast-message", () => ({
+  __esModule: true,
+  default: {
+    show: jest.fn()
+  }
+}));
 import { expect, jest, describe, afterEach, it } from '@jest/globals';
 import { findUserByEmail } from '@/services/user';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';

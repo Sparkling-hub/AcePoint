@@ -86,7 +86,10 @@ export default function SettingsScreen() {
                                 </AlertDialog.Description>
                                 <XStack space="$3" justifyContent="flex-end">
                                     <Button onPress={handleShow}>Cancel</Button>
-                                    <Button onPress={() => { handleDeleteAccount(userRoleValue) }} theme="active">Accept</Button>
+                                    <Button onPress={() => {
+                                        handleDeleteAccount(userRoleValue)
+                                        handleShow()
+                                    }} theme="active">Accept</Button>
                                 </XStack>
                             </YStack>
                         </AlertDialog.Content>
