@@ -17,9 +17,11 @@ const findByName = async ({name}: { name: string }) => {
         
         }
         // return the all data if there is no name
+        if(name.length ===0){
         const data = collection(db, 'club');
         const clubs = await getDocs(data);
        return clubs
+        }
     } catch (error: any) {
         console.error('get failed:', error.message);
     }
