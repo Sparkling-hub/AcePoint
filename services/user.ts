@@ -1,9 +1,11 @@
 import { router } from 'expo-router';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
 import { Alert } from 'react-native';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { retrieveData } from '@/api/localStorage';
+import fireToast from './toast';
+import { handleLogout } from '@/components/auth/Logout';
 /**
  * Asynchronously finds a user by email in Firestore and performs necessary actions based on user type and profile completeness.
  * @param email - The email of the user to find.
@@ -126,4 +128,33 @@ async function findConnectedUserByEmail() {
   return null; // Return null if the user is not found in either collection
 }
 
-export { findUserByEmail, findConnectedUserByEmail }
+async function handleDeleteAccount(userRoleValue: string) {
+  let user = null
+  user = auth.currentUser;
+  if (user) {
+    try {
+      await user.delete()
+      await handleLogout()
+      fireToast('success', 'Your account has been successfully deleted!')
+      router.replace('/')
+    } catch (error) {
+      fireToast('error', 'Something went wrong!')
+      console.error("Error removing document:", error);
+    }
+  }
+  else {
+    const userId = await ReactNativeAsyncStorage.getItem('userID');
+    let userDocRef = doc(db, 'coach', userId);
+    if (userRoleValue === 'Player') userDocRef = doc(db, 'player', userId);
+    try {
+      await deleteDoc(userDocRef);
+      fireToast('success', 'Your account has been successfully deleted!')
+      router.replace('/')
+    } catch (error) {
+      fireToast('error', 'Something went wrong!')
+      console.error("Error removing document:", error);
+    }
+  }
+}
+
+export { findUserByEmail, findConnectedUserByEmail, handleDeleteAccount }
