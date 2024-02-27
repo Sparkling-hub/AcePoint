@@ -1,5 +1,10 @@
 import React from 'react';
-import { StatusBar, TouchableOpacity } from 'react-native';
+import {
+  StatusBar,
+  StyleProp,
+  TextStyle,
+  TouchableOpacity,
+} from 'react-native';
 import { useNavigation } from 'expo-router';
 
 import { XStack } from 'tamagui';
@@ -11,6 +16,7 @@ interface CustomHeaderProps {
   leftIcon?: React.ReactNode;
   onLeftPress?: () => void;
   rightContent?: React.ReactNode;
+  headerTextStyle?: StyleProp<TextStyle>;
 }
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({
@@ -18,13 +24,14 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   leftIcon,
   onLeftPress,
   rightContent,
+  headerTextStyle,
 }) => {
   const navigation = useNavigation();
 
   return (
     <XStack
       backgroundColor={'#fff'}
-      justifyContent={leftIcon ? 'space-between' : 'flex-end'}
+      justifyContent={leftIcon || title ? 'space-between' : 'flex-end'}
       alignItems="center"
       paddingHorizontal={16}
       paddingTop={(StatusBar.currentHeight ?? 0) + 29}>
@@ -33,7 +40,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
           {leftIcon}
         </TouchableOpacity>
       )}
-      {title && <HeaderText text={title} />}
+      {title && <HeaderText text={title} headerTextStyle={headerTextStyle} />}
 
       {rightContent}
     </XStack>

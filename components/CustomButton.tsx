@@ -1,6 +1,12 @@
-import { StyleProp, StyleSheet, TextStyle, ViewStyle } from 'react-native';
-import { Button, Text } from 'tamagui';
-import { ReactNode, useState } from 'react';
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
+import { Text } from 'tamagui';
+import { ReactNode } from 'react';
 import Colors from '@/constants/Colors';
 
 interface CustomButtonProps {
@@ -13,23 +19,19 @@ interface CustomButtonProps {
 
 export default function CustomButton(props: CustomButtonProps) {
   const { title, onPress, buttonStyle, textStyle, icon } = props;
-  const [isPressed, setIsPressed] = useState(false);
 
   const defaultButtonStyle = StyleSheet.flatten([
     !buttonStyle && styles.button,
-    isPressed && styles.buttonPressed,
   ]);
 
   return (
-    <Button
-      unstyled
+    <TouchableOpacity
       onPress={onPress}
-      onPressIn={() => setIsPressed(true)}
-      onPressOut={() => setIsPressed(false)}
+      activeOpacity={0.7}
       style={[defaultButtonStyle, buttonStyle]}>
       <Text style={[styles.buttonText, textStyle]}>{title}</Text>
       {icon}
-    </Button>
+    </TouchableOpacity>
   );
 }
 
@@ -44,9 +46,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.secondary,
     borderRadius: 8,
   },
-  buttonPressed: {
-    opacity: 0.7,
-  },
+
   buttonText: {
     fontFamily: 'MontserratBold',
     fontSize: 16,

@@ -15,6 +15,9 @@ import {
 import { useDispatch } from 'react-redux';
 import { setUserRole } from '@/store/slices/userRole';
 import { retrieveData } from '@/api/localStorage';
+import { XStack } from 'tamagui';
+import Bell from '@/components/svg/Bell';
+import Message from '@/components/svg/Message';
 
 export default function TabLayout() {
   const dispatch = useDispatch();
@@ -27,7 +30,7 @@ export default function TabLayout() {
     getUserRole();
   }, [dispatch]);
 
-  const renderHeader = () => {
+  const ProfileHeader = () => {
     return (
       <CustomHeader
         rightContent={
@@ -46,9 +49,37 @@ export default function TabLayout() {
     );
   };
 
+  const BookHeader = () => {
+    return (
+      <CustomHeader
+        rightContent={
+          <XStack alignItems="center" gap={11}>
+            <Pressable>
+              {({ pressed }) => (
+                <Message
+                  fill={Colors.secondary}
+                  style={{ opacity: pressed ? 0.5 : 1 }}
+                />
+              )}
+            </Pressable>
+            <Pressable>
+              {({ pressed }) => (
+                <Bell
+                  fill={Colors.secondary}
+                  style={{ opacity: pressed ? 0.5 : 1 }}
+                />
+              )}
+            </Pressable>
+          </XStack>
+        }
+        title="Book Training"
+        headerTextStyle={{ fontSize: 26, lineHeight: 32 }}
+      />
+    );
+  };
+
   return (
     <Tabs
-    
       screenOptions={{
         tabBarStyle: {
           borderTopWidth: 0,
@@ -58,7 +89,6 @@ export default function TabLayout() {
           paddingHorizontal: 30,
           paddingBottom: 20,
         },
-        
       }}>
       <Tabs.Screen
         name="index"
@@ -71,7 +101,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="book"
         options={{
-          title: 'Find and Book',
+          header: BookHeader,
           tabBarIcon: renderTabBarIconBook,
           tabBarLabel: renderTabBarLabelBook,
         }}
@@ -81,7 +111,7 @@ export default function TabLayout() {
         options={{
           tabBarIcon: renderTabBarIconProfile,
           tabBarLabel: renderTabBarLabelProfile,
-          header: renderHeader,
+          header: ProfileHeader,
           headerShadowVisible: false,
         }}
       />

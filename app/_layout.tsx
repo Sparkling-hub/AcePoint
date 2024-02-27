@@ -55,10 +55,10 @@ const EditProfileHeader = () => {
   return (
     <CustomHeader
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
-      title={userRoleValue === 'Coach' ? 'Edit Profile' : ''}
+      title={userRoleValue === 'Coach' ? 'EDIT PROFILE' : ''}
       rightContent={
         <TouchableOpacity onPress={handleSaveProfile}>
-          <HeaderText text="Save" />
+          <HeaderText text="SAVE" />
         </TouchableOpacity>
       }
     />
@@ -93,9 +93,7 @@ export default function RootLayout() {
     return null;
   }
 
-
   return <RootLayoutNav />;
-
 }
 
 function RootLayoutNav() {
@@ -106,11 +104,9 @@ function RootLayoutNav() {
       <TamaguiProvider
         config={tamaguiConfig}
         defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
-
         <ThemeProvider
           value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack>
-
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
