@@ -4,8 +4,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 
 const findByName = async ({name}: { name: string }) => {
     try {
-        if(name.length !==0){
-            
+        if(name.length !==0){  
         const data = query(collection(db, 'club'), where('name', '==', name));
         const clubs = await getDocs(data);
         if (clubs.empty) {
@@ -14,12 +13,13 @@ const findByName = async ({name}: { name: string }) => {
         }
         // return the filtered data
         return clubs
-        
         }
         // return the all data if there is no name
-        const data = collection(db, 'club');
-        const clubs = await getDocs(data);
-       return clubs
+        if(name.length ===0){
+            const data = collection(db, 'club');
+            const clubs = await getDocs(data);
+            return clubs
+        }
     } catch (error: any) {
         console.error('get failed:', error.message);
     }
