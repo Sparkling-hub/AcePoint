@@ -1,32 +1,15 @@
 import { expect, jest, describe, afterEach, it } from '@jest/globals';
 
-jest.mock('firebase/app', () => ({
-  initializeApp: jest.fn(),
-}));
-jest.mock('firebase/auth', () => ({
-  initializeAuth: jest.fn(),
-  getReactNativePersistence: jest.fn(),
-  signOut: jest.fn(),
-}));
+
 jest.mock('firebase/firestore', () => ({
-  getFirestore: jest.fn(),
-  collection: jest.fn(),
-  addDoc: jest.fn(),
-  getDocs: jest.fn(() => Promise.resolve({ empty: true })),
-  where: jest.fn(),
-  query: jest.fn(),
   deleteDoc: jest.fn(),
   doc: jest.fn()
 }));
 jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
 }));
 jest.mock('expo-router', () => ({
   router: {
-    push: jest.fn(),
     replace: jest.fn(),
   },
 }));
@@ -35,12 +18,7 @@ jest.mock('react-native', () => ({
     alert: jest.fn(),
   },
 }));
-jest.mock('firebase/storage', () => ({
-  ref: jest.fn(),
-  getDownloadURL: jest.fn(),
-  uploadBytesResumable: jest.fn(),
-  getStorage: jest.fn(),
-}));
+
 jest.mock('@/lib/firebase', () => ({
   auth: {
     currentUser: {
