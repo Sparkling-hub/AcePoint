@@ -78,7 +78,7 @@ export default function SettingsScreen() {
                             opacity={1}
                             y={0}
                         >
-                            <YStack space>
+                            <YStack>
                                 <AlertDialog.Title>Accept</AlertDialog.Title>
                                 <AlertDialog.Description>
                                     Are you sure you want to delete your account ?
