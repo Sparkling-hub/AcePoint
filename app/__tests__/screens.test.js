@@ -2,9 +2,6 @@ import { render, waitFor } from 'react-native-testing-library';
 import * as redux from 'react-redux';
 import * as AsyncStorage from '@react-native-async-storage/async-storage';
 import AccountScreen from '@/screens/AccountScreen';
-import SettingsScreen from '@/screens/SettingScreen';
-import configureStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
 
 jest.mock('tamagui', () => ({
   YStack: jest.fn(),
