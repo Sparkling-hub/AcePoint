@@ -22,8 +22,8 @@ const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
          <YStack width={400} marginBottom={20} marginLeft={30} >
           <ProgressBar value={80}/>
           </YStack>
-        <Stack space="$3" >  
-        <Stack space="$2" >  
+        <Stack gap="$3" >  
+        <Stack gap="$2" >  
         <Image
         source={require('@/assets/images/acepointicon.png')}
             style={[{ width: 240, height: 55 },styles.image]}
@@ -33,7 +33,7 @@ const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
         <Text style={styles.cancel}>Cancel anytime.</Text>
         <Text style={styles.price}>£ 9.99 monthly</Text>
         <View style={styles.box}>   
-            <Stack space='$3' >
+            <Stack gap='$3' >
                 <Text style={styles.input}><Image source={require('@/assets/images/check.png')}/> Manage bookings</Text>
                 <Text style={styles.input}><Image source={require('@/assets/images/check.png')}/> Advance statistics</Text>
                 <Text style={styles.input}><Image source={require('@/assets/images/check.png')}/> Scheduling</Text>

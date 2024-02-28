@@ -1,6 +1,6 @@
 import { Modal, SafeAreaView, StyleSheet, TouchableOpacity  } from 'react-native'
 import React, { useState } from 'react'
-import { Text,Button, Input,YStack, View  } from 'tamagui'
+import { Text,Button, Input,YStack  } from 'tamagui'
 import { heightPercentageToDP as hp,widthPercentageToDP as wp} from 'react-native-responsive-screen'
 import {updateUserCoach } from'@/api/auth-api'
 import UploadImage from '@/components/utils/UploadImage'

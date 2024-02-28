@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Platform, ScrollView } from 'react-native';
+import {Platform, ScrollView } from 'react-native';
 import * as Yup from 'yup';
 import CustomInput from '@/components/Form/CustomInput';
 import CountryCodePicker from '@/components/Form/CountryCodePicker';
