@@ -1,26 +1,22 @@
-import { StyleSheet } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { Text, View } from '@/components/Themed';
-import 'react-native-gesture-handler';
+export default function App() {
+  const [clicked, setClicked] = useState(false);
 
-import { Button } from 'tamagui';
-import EditScreenInfo from '@/components/EditScreenInfo';
-
-export default function TabOneScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <Text style={{ marginBottom: 10 }}>Hello Tamagui!</Text>
-      <Button size="$3" onPress={() => alert('Button pressed!')}>
-        Press Me
-      </Button>
-
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      {!clicked && (
+        <Pressable
+          testID="click-me-button"
+          style={styles.button}
+          onPress={() => setClicked(true)}>
+          <Text style={styles.text}>Click me</Text>
+        </Pressable>
+      )}
+      {clicked && <Text style={styles.hi}>Hi!</Text>}
+      <StatusBar style="auto" />
     </View>
   );
 }
@@ -28,16 +24,28 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  hi: {
+    fontSize: 30,
+    color: '#4630EB',
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: '#4630EB',
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'white',
   },
 });

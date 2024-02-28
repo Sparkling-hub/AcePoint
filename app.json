@@ -33,7 +33,8 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@config-plugins/detox"
     ],
     "experiments": {
       "typedRoutes": true
@@ -43,7 +44,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "5ea426a7-d4b9-4f71-bec5-0cac3af617b7"
+        "projectId": "0a22f513-7c44-450a-af0e-dc09700f9d99"
       }
     }
   }
