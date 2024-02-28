@@ -20,7 +20,12 @@ const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: an
   const [countryCode, setCountryCode] = useState<string>('+44');
   const [marketing, setMarketing] = useState(false);
   const [terms, setTerms] = useState(false);
-  const [errors, setErrors] = useState({}); // State to hold validation errors
+  const [errors, setErrors] = useState({
+    displayName:undefined,
+    phoneNumber:undefined,
+    email:undefined,
+    password:undefined,
+  }); // State to hold validation errors
 
   const back = () => {
     router.back();
@@ -45,10 +50,11 @@ const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: an
     setPasswordVisible(!passwordVisible);
   };
   const onCheckedChangeTerms = () => {
-    setTerms(!terms)
+    setTimeout(() => setTerms(!terms), 0);
+    
   };
   const onCheckedChangeMarketing = () => {
-    setMarketing(!marketing)
+    setTimeout(() => setMarketing(!marketing), 0);
   };
   console.log(terms,marketing)
   const validate = async () => {

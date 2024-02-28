@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import type { CheckboxProps, SizeTokens } from 'tamagui'
 import { Checkbox, Label, XStack,YStack,Text } from 'tamagui'
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { useEffect } from 'react';
 
 interface CheckboxWithLabel extends Readonly<CheckboxProps>   {
   readonly size: SizeTokens;
@@ -18,7 +19,12 @@ export function CheckboxWithLabel ({
   onPress,
   ...checkboxProps
   }: CheckboxWithLabel ) {
-
+    // useEffect(() => {
+    //   if (onPress) {
+    //     onPress();
+    //   }
+    // }, [onPress,checked])
+    
     
     const id = `checkbox-${size.toString().slice(1)}`
     return (
