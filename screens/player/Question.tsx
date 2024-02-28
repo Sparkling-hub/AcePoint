@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet } from 'react-native'
 import React, {useState } from 'react'
-import { RadioGroup,Text, View, YStack } from 'tamagui'
+import { RadioGroup,Text, YStack } from 'tamagui'
 import { RadioGroupItemWithLabel } from '@/components/RadioGroupItemWithLabel'
 import Button from '@/components/Button'
 import {updateUserPlayer } from'@/api/auth-api'
