@@ -46,6 +46,7 @@ import { expect, jest, describe, afterEach, it } from '@jest/globals';
 import { findUserByEmail } from '@/services/user';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 describe('findUserByEmail', () => {
   const email = 'test@example.com';
@@ -85,7 +86,7 @@ describe('findUserByEmail', () => {
     getDocs.mockResolvedValue(querySnapshot);
 
     await findUserByEmail(email, displayName, photoURL);
-
+    expect(ReactNativeAsyncStorage.setItem).toBeCalled()
     expect(querySnapshot.forEach).toHaveBeenCalled();
   });
 
@@ -99,7 +100,7 @@ describe('findUserByEmail', () => {
     getDocs.mockResolvedValue(querySnapshot);
 
     await findUserByEmail(email, displayName, photoURL);
-
+    expect(ReactNativeAsyncStorage.setItem).toBeCalled()
     expect(querySnapshot.forEach).toHaveBeenCalled();
 
   });
