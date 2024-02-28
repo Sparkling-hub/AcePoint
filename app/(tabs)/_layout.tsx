@@ -89,6 +89,7 @@ export default function TabLayout() {
           paddingHorizontal: 30,
           paddingBottom: 20,
         },
+        tabBarHideOnKeyboard: true,
       }}>
       <Tabs.Screen
         name="index"

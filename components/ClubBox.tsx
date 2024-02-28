@@ -1,5 +1,6 @@
 import Colors from '@/constants/Colors';
-import { Star } from '@tamagui/lucide-icons';
+import { renderStars } from '@/helpers/RatingsHelper';
+
 import React from 'react';
 import { Avatar, Text, XStack, YStack } from 'tamagui';
 
@@ -10,25 +11,6 @@ interface clubBoxProps {
 }
 
 const ClubBox: React.FC<clubBoxProps> = ({ name, membership, rating }) => {
-  // Function to generate stars based on rating
-  const renderStars = () => {
-    const stars = [];
-    const filledStars = Math.floor(rating); // Number of filled stars
-    const remaining = 5 - filledStars; // Remaining stars to be empty
-
-    // Filled stars
-    for (let i = 0; i < filledStars; i++) {
-      stars.push(<Star key={i} size={12} color={'#FFB84E'} fill={'#FFB84E'} />);
-    }
-
-    // Empty stars
-    for (let i = 0; i < remaining; i++) {
-      stars.push(<Star key={i + filledStars} size={12} color={'#FFB84E'} />);
-    }
-
-    return stars;
-  };
-
   return (
     <XStack alignItems="center" width={'100%'}>
       <Avatar circular borderWidth={3} borderColor={Colors.primary} size={67}>
@@ -58,7 +40,7 @@ const ClubBox: React.FC<clubBoxProps> = ({ name, membership, rating }) => {
           </Text>
         </YStack>
         <YStack gap={5}>
-          <XStack>{renderStars()}</XStack>
+          <XStack>{renderStars(rating)}</XStack>
           <Text
             style={{ fontFamily: 'Montserrat' }}
             fontSize={14}
