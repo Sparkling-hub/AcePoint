@@ -32,11 +32,9 @@ const findCoachByName = async ({name}: { name: string }) => {
         if (coaches.empty) {
             return("coach does not exist")
         }
-        
-
         return (coaches)
-       
-        }if(name.length ===0){
+        }
+        if(name.length ===0){
         const data = collection(db, 'coach');
         const coaches = await getDocs(data);
         return coaches
