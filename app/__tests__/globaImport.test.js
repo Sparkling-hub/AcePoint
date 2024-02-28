@@ -29,7 +29,12 @@ jest.mock('firebase/firestore', () => ({
   where: jest.fn(),
   getDocs: jest.fn(),
 }));
-
+describe('Example ', () => {
+  test('Example Test Case', () => {
+    // Test logic goes here
+    expect(true).toBe(true); // Example assertion
+  });
+});
 export {
   jest
 };

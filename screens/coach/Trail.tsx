@@ -3,20 +3,27 @@ import React from 'react'
 import { heightPercentageToDP as hp,widthPercentageToDP as wp} from 'react-native-responsive-screen'
 import { Button, Image, Stack, YStack } from 'tamagui'
 import HeaderArrow from '@/components/HeaderArrow'
+import { router } from 'expo-router'
+import ProgressBar from '@/components/ProgressBar'
 
 const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
     const updatePlayer=()=>{
         console.log("clicked")
+        router.push('/login')
     }
   return (
     <SafeAreaView style={styles.container}>
         <YStack marginBottom={25} >
           <YStack alignItems="flex-start" gap={"$4"} marginLeft={-80}>
           <HeaderArrow back={handlePrevious}  gap={"$5"} data={"SUBSCRIPTION"} />
+          
           </YStack>
          </YStack>
-    <Stack space="$4" >  
-        <Stack space="$4" >  
+         <YStack width={400} marginBottom={20} marginLeft={30} >
+          <ProgressBar value={80}/>
+          </YStack>
+        <Stack space="$3" >  
+        <Stack space="$2" >  
         <Image
         source={require('@/assets/images/acepointicon.png')}
             style={[{ width: 240, height: 55 },styles.image]}

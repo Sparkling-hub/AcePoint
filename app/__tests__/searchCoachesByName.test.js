@@ -1,4 +1,4 @@
-import { jest } from '../globalimport/globaImport';
+import { jest } from './globaImport.test'
 import { findCoachByName } from '@/api/player-api';
 import { db } from '@/lib/firebase';
 import { getDocs, query, collection, where } from 'firebase/firestore';

@@ -7,24 +7,27 @@ import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 interface CheckboxWithLabel extends Readonly<CheckboxProps>   {
   readonly size: SizeTokens;
   readonly label?: string;
-  readonly onPress: () => void;
   readonly terms?: boolean;
+  onPress: () => void;
 }
 export function CheckboxWithLabel ({
   size,
   label,
-  onPress,
+  checked=false,
   terms = true, 
+  onPress,
   ...checkboxProps
   }: CheckboxWithLabel ) {
 
+    
     const id = `checkbox-${size.toString().slice(1)}`
     return (
       <XStack width={300} style={{marginLeft:20}} >
         
         <YStack gap={'$3'}>
         <XStack gap={'$3'}>
-          <Checkbox id={id} size={size} {...checkboxProps} onPress={onPress} style={{backgroundColor:"#D9D9D9", borderColor:"#3A4D6C",borderWidth:1,borderRadius:0 }}>
+          <Checkbox id={id} size={size} {...checkboxProps}   onPress={onPress} checked={checked} 
+          style={{backgroundColor:"#D9D9D9", borderColor:"#3A4D6C",borderWidth:1,borderRadius:0 }}>
             <Checkbox.Indicator>   
               <CheckIcon />
             </Checkbox.Indicator>
