@@ -1,9 +1,7 @@
-import { fireEvent, render, waitFor } from 'react-native-testing-library';
+import { render, waitFor } from 'react-native-testing-library';
 import * as redux from 'react-redux';
 import * as AsyncStorage from '@react-native-async-storage/async-storage';
-import * as router from 'expo-router';
 import AccountScreen from '@/screens/AccountScreen';
-import { handleLogout } from '@/components/auth/Logout';
 
 jest.mock('tamagui', () => ({
   YStack: jest.fn(),
@@ -67,25 +65,5 @@ describe('AccountScreen', () => {
       expect(findByText('Test Name')).toBeTruthy();
     });
   });
-
-  // it('navigates to edit profile on button press', async () => {
-  //   const { findByText } = render(<AccountScreen />);
-  //   const editProfileButton =await findByText('Edit profile');
-  //   fireEvent.press(editProfileButton);
-
-  //   // Use waitFor to wait for the navigation to be called
-  //   await waitFor(() => {
-  //     expect(router.router.push).toHaveBeenCalledWith({
-  //       pathname: '/user/edit-profile',
-  //     });
-  //   });
-  // });
-
-  // it('calls handleLogout on logout button press', () => {
-  //   const { getByText } = render(<AccountScreen />);
-  //   const logoutButton = getByText('Logout');
-  //   fireEvent.press(logoutButton);
-  //   expect(handleLogout).toHaveBeenCalled();
-  // });
 
 });
