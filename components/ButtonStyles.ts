@@ -2,12 +2,30 @@ import Colors from "@/constants/Colors";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+    input: {
+        backgroundColor: "white",
+        fontSize: 16,
+        height: 45,
+        width: 343,
+        color: "#3A4D6C",
+        borderRadius: 50,
+
+    },
     displayNameText: {
         fontFamily: 'MontserratBold',
         fontSize: 20,
         lineHeight: 24,
         color: Colors.secondary,
         textAlign: 'center',
+    },
+    title: {
+        fontFamily: 'MontserratBold',
+        fontSize: 25,
+        lineHeight: 25,
+        color: Colors.secondary,
+        marginBottom: 10,
+        marginTop: 10,
+        textAlign: 'center'
     },
     text: {
         fontFamily: 'MontserratBold',
