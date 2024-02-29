@@ -11,5 +11,5 @@ export async function handleLogout() {
     await ReactNativeAsyncStorage.removeItem('userID');
     await signOut(auth)
     await removeItem('userInfo')
-    router.push('/login');
+    router.push('/');
 }

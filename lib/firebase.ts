@@ -4,7 +4,6 @@ import { getReactNativePersistence, signOut, initializeAuth, createUserWithEmail
 import { ref, getDownloadURL, uploadBytesResumable, getStorage } from 'firebase/storage'
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -28,6 +27,6 @@ export {
     ref, getDownloadURL, uploadBytesResumable, getFirestore,
     collection, addDoc, doc, setDoc, getDocs, createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut,updateDoc
-    
+    signOut, updateDoc
+
 };
