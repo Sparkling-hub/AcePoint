@@ -108,15 +108,4 @@ const unfavoriteCoach = async (coachRef: any) => {
         return error.message;
     }
 };
-
-// Assuming you have the coach's reference, you can call the function like this:
-const coachRef = "0nHOThTHflgAdfCrqHPVPTeoJYE2"; // Replace coachReference with the actual reference to the coach
-const coachRef1 = "ka"; // Replace coachReference with the actual reference to the coach
-//  favouriteCoach(coachRef1);
-//  unfavoriteCoach(coachRef)
-
-
-
-
-
 export { findByName,favouriteCoach,findCoachByName,unfavoriteCoach}
