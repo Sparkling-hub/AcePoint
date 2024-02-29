@@ -1,8 +1,8 @@
-import { expect, jest, describe, afterEach, it } from '@jest/globals';
+import { expect, jest, describe, it, afterEach } from '@jest/globals';
 import { getAuth, updatePassword } from "firebase/auth";
-import fireToast from "@/services/toast";
 import { handleLogout } from "@/components/auth/Logout";
 import changePassword from "@/services/changePassword";
+
 jest.mock('firebase/auth', () => ({
     getAuth: jest.fn(),
     updatePassword: jest.fn()
@@ -19,9 +19,17 @@ jest.mock('@/components/auth/Logout', () => ({
     handleLogout: jest.fn()
 }))
 
-describe('loginUser', () => {
+jest.mock('tamagui', () => ({
+    YStack: jest.fn(),
+    Text: jest.fn(),
+    XStack: jest.fn(),
+    Button: jest.fn(),
+    Input: jest.fn()
+}));
 
-    beforeEach(() => {
+describe('changePassword', () => {
+
+    afterEach(() => {
         jest.clearAllMocks();
     });
     it('updates the user password', async () => {
