@@ -4,14 +4,14 @@ import Colors from '@/constants/Colors';
 import { Heart } from '@tamagui/lucide-icons';
 import { renderStars } from '@/helpers/RatingsHelper';
 
-interface coachBoxProps {
+interface CoachBoxProps {
   readonly name: string;
   readonly rating: number;
   readonly level: number;
   readonly age: number;
 }
 
-const CoachBox: React.FC<coachBoxProps> = ({ name, rating, level, age }) => {
+const CoachBox: React.FC<CoachBoxProps> = ({ name, rating, level, age }) => {
   return (
     <YStack width={'100%'}>
       <XStack>
