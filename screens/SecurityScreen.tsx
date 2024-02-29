@@ -5,13 +5,19 @@ import * as Yup from 'yup';
 import CustomInput from '@/components/Form/CustomInput';
 import { useState } from 'react';
 import { Eye, EyeOff } from '@tamagui/lucide-icons';
+import changePassword from '@/services/changePassword';
 
 export default function SettingsScreen() {
     const [passwordVisible, setPasswordVisible] = useState(true);
+    const [newPassword, setNewPassword] = useState('');
 
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
+
+    const handleSubmit = () => {
+        changePassword(newPassword);
+    }
     return (
         <YStack flex={1} paddingTop={60}>
             <YStack gap={20} paddingHorizontal={15} marginBottom={40}>
@@ -38,6 +44,9 @@ export default function SettingsScreen() {
                                         placeholder="New Password"
                                         validateOnInit
                                         hide={passwordVisible}
+                                        onChangeText={(text) => {
+                                            setNewPassword(text);
+                                        }}
                                         icon={<EyeOff color={"#3A4D6C"}
                                             onPress={togglePasswordVisibility}
                                             style={{ borderColor: "#3A4D6C" }} />}
@@ -47,6 +56,9 @@ export default function SettingsScreen() {
                                         placeholder="New Password"
                                         validateOnInit
                                         hide={passwordVisible}
+                                        onChangeText={(text) => {
+                                            setNewPassword(text);
+                                        }}
                                         icon={<Eye color={"#3A4D6C"}
                                             onPress={togglePasswordVisibility}
                                             style={{ borderColor: "#3A4D6C" }} />
@@ -62,7 +74,7 @@ export default function SettingsScreen() {
                                         backgroundColor: "#3A4D6C",
                                         textAlign: 'center'
                                         
-                                    }} onPress={() => { }}>Change password</Button>
+                                    }} onPress={() => { handleSubmit() }}>Change password</Button>
                                 </YStack>
                             </YStack>
 
