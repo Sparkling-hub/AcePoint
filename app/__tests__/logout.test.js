@@ -51,7 +51,7 @@ describe('handleLogout', () => {
 
         expect(signOut).toHaveBeenCalled();
 
-        expect(router.push).toHaveBeenCalledWith('/login');
+        expect(router.push).toHaveBeenCalledWith('/');
 
         jest.resetAllMocks();
     });

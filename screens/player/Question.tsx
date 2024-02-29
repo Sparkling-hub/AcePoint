@@ -1,12 +1,13 @@
 import { SafeAreaView, StyleSheet } from 'react-native'
 import React, {useState } from 'react'
-import { RadioGroup,Text, View, YStack } from 'tamagui'
+import { RadioGroup,Text, YStack } from 'tamagui'
 import { RadioGroupItemWithLabel } from '@/components/RadioGroupItemWithLabel'
 import Button from '@/components/Button'
 import {updateUserPlayer } from'@/api/auth-api'
 import DatePicker from '@/components/Form/DatePicker'
 import ProgressBar from '@/components/ProgressBar'
 import HeaderArrow from '@/components/HeaderArrow'
+import { router } from 'expo-router'
 
 
 const Question = ({handlePrevious}:{handlePrevious:() => void}) => {
@@ -24,15 +25,21 @@ const Question = ({handlePrevious}:{handlePrevious:() => void}) => {
              gender:gender,
              fitness:fitness
          })
+         router.push('/login')
+
     }
   return (
     <SafeAreaView style={styles.container}>
         <YStack gap={'$5'} alignItems="center">
-        <YStack marginBottom={30}>
-        <YStack alignItems="flex-start" gap={"$4"} marginLeft={-40}>
-          <HeaderArrow back={handlePrevious} gap={"$2"} data={"ADDITIONAL QUESTIONS"} />
-          <View width={"107%"} marginLeft={10} marginTop={25} ><ProgressBar value={80}/></View>
+        <YStack marginBottom={10}>
+        <YStack alignItems="flex-start" gap={"$2"} marginLeft={-20}>
+        <YStack  marginLeft={-25}>
+          <HeaderArrow back={handlePrevious} gap={"$2"} data={"ADDITIONAL QUESTIONS"}  />
           </YStack>
+          </YStack>
+          </YStack>
+          <YStack width={400} marginBottom={20} marginLeft={30} >
+          <ProgressBar value={80}/>
           </YStack>
         <YStack style={{width:"85%"}} gap={'$3'}>
         <DatePicker 

@@ -3,20 +3,27 @@ import React from 'react'
 import { heightPercentageToDP as hp,widthPercentageToDP as wp} from 'react-native-responsive-screen'
 import { Button, Image, Stack, YStack } from 'tamagui'
 import HeaderArrow from '@/components/HeaderArrow'
+import { router } from 'expo-router'
+import ProgressBar from '@/components/ProgressBar'
 
 const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
     const updatePlayer=()=>{
         console.log("clicked")
+        router.push('/login')
     }
   return (
     <SafeAreaView style={styles.container}>
         <YStack marginBottom={25} >
           <YStack alignItems="flex-start" gap={"$4"} marginLeft={-80}>
           <HeaderArrow back={handlePrevious}  gap={"$5"} data={"SUBSCRIPTION"} />
+          
           </YStack>
          </YStack>
-    <Stack space="$4" >  
-        <Stack space="$4" >  
+         <YStack width={400} marginBottom={20} marginLeft={30} >
+          <ProgressBar value={80}/>
+          </YStack>
+        <Stack gap="$3" >  
+        <Stack gap="$2" >  
         <Image
         source={require('@/assets/images/acepointicon.png')}
             style={[{ width: 240, height: 55 },styles.image]}
@@ -26,7 +33,7 @@ const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
         <Text style={styles.cancel}>Cancel anytime.</Text>
         <Text style={styles.price}>£ 9.99 monthly</Text>
         <View style={styles.box}>   
-            <Stack space='$3' >
+            <Stack gap='$3' >
                 <Text style={styles.input}><Image source={require('@/assets/images/check.png')}/> Manage bookings</Text>
                 <Text style={styles.input}><Image source={require('@/assets/images/check.png')}/> Advance statistics</Text>
                 <Text style={styles.input}><Image source={require('@/assets/images/check.png')}/> Scheduling</Text>
