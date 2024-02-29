@@ -5,7 +5,7 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
@@ -39,7 +39,12 @@ SplashScreen.preventAutoHideAsync();
 
 const AccountHeader = () => {
   return (
-    <CustomHeader leftIcon={<X size={'$2.5'} color={Colors.secondary} />} />
+    <CustomHeader
+      leftIcon={<X size={'$2.5'} color={Colors.secondary} />}
+      onLeftPress={() => {
+        router.navigate('/(tabs)/profile');
+      }}
+    />
   );
 };
 
@@ -55,6 +60,9 @@ const EditProfileHeader = () => {
   return (
     <CustomHeader
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
+      onLeftPress={() => {
+        router.navigate('/user/account');
+      }}
       title={userRoleValue === 'Coach' ? 'EDIT PROFILE' : ''}
       rightContent={
         <TouchableOpacity onPress={handleSaveProfile}>
