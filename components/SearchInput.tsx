@@ -1,6 +1,6 @@
 import { Heart, Navigation } from '@tamagui/lucide-icons';
 import React from 'react';
-import { Input, InputProps, Text, XStack } from 'tamagui';
+import { Input, InputProps, XStack } from 'tamagui';
 
 interface SearchInputProps extends InputProps {}
 

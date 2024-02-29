@@ -1,5 +1,5 @@
 import Colors from '@/constants/Colors';
-import React, { useState } from 'react';
+import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Text, View } from 'tamagui';
 

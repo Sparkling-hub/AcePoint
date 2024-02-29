@@ -5,7 +5,7 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack, router } from 'expo-router';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
@@ -13,16 +13,12 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { TamaguiProvider } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
 
-import { ChevronLeft, X } from '@tamagui/lucide-icons';
-import Colors from '@/constants/Colors';
-import CustomHeader from '@/components/CustomHeader';
+import { store } from '@/store/store';
+import { Provider } from 'react-redux';
 
-import { TouchableOpacity } from 'react-native';
-import HeaderText from '@/components/HeaderText';
-import { RootState, store } from '@/store/store';
-import { Provider, useSelector } from 'react-redux';
-import { updateUser } from '@/api/user-api';
 import Toast from 'react-native-toast-message';
+import AccountHeader from '@/components/headers/AccountHeader';
+import EditProfileHeader from '@/components/headers/EditProfileHeader';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -36,42 +32,6 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-const AccountHeader = () => {
-  return (
-    <CustomHeader
-      leftIcon={<X size={'$2.5'} color={Colors.secondary} />}
-      onLeftPress={() => {
-        router.navigate('/(tabs)/profile');
-      }}
-    />
-  );
-};
-
-const EditProfileHeader = () => {
-  const userRole = useSelector((state: RootState) => state.userRole);
-  const userRoleValue = userRole.userRole;
-
-  const userData = useSelector((state: any) => state.editProfile.UserData);
-  const handleSaveProfile = () => {
-    updateUser(userData, userRoleValue);
-  };
-
-  return (
-    <CustomHeader
-      leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
-      onLeftPress={() => {
-        router.navigate('/user/account');
-      }}
-      title={userRoleValue === 'Coach' ? 'EDIT PROFILE' : ''}
-      rightContent={
-        <TouchableOpacity onPress={handleSaveProfile}>
-          <HeaderText text="SAVE" />
-        </TouchableOpacity>
-      }
-    />
-  );
-};
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({

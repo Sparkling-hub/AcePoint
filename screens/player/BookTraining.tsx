@@ -1,4 +1,3 @@
-import ClubBox from '@/components/ClubBox';
 import CoachBox from '@/components/CoachBox';
 import SearchInput from '@/components/SearchInput';
 import { Filter } from '@tamagui/lucide-icons';

@@ -1,7 +1,7 @@
-import CustomSlider from '@/components/CustomSlider';
-import FilterHeader from '@/components/FilterHeader';
-import FilterText from '@/components/FilterText';
-import TagItem from '@/components/TagItem';
+import CustomSlider from '@/components/filter/CustomSlider';
+import FilterHeader from '@/components/filter/FilterHeader';
+import FilterText from '@/components/filter/FilterText';
+import TagItem from '@/components/filter/TagItem';
 
 import Colors from '@/constants/Colors';
 import { StarFull } from '@tamagui/lucide-icons';

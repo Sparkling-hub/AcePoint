@@ -4,13 +4,13 @@ import { renderStars } from '@/helpers/RatingsHelper';
 import React from 'react';
 import { Avatar, Text, XStack, YStack } from 'tamagui';
 
-interface clubBoxProps {
+interface ClubBoxProps {
   readonly name: string;
   readonly membership: string;
   readonly rating: number;
 }
 
-const ClubBox: React.FC<clubBoxProps> = ({ name, membership, rating }) => {
+const ClubBox: React.FC<ClubBoxProps> = ({ name, membership, rating }) => {
   return (
     <XStack alignItems="center" width={'100%'}>
       <Avatar circular borderWidth={3} borderColor={Colors.primary} size={67}>
