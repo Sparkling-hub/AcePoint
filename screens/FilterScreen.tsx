@@ -5,9 +5,17 @@ import TagItem from '@/components/filter/TagItem';
 
 import Colors from '@/constants/Colors';
 import { StarFull } from '@tamagui/lucide-icons';
-import React, { useState } from 'react';
+import React from 'react';
 import { XStack, YStack } from 'tamagui';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import {
+  setTempDistance,
+  setTempLevel,
+  setTempRating,
+  setTempTags,
+} from '@/store/slices/tempFilterSlice';
 
 const tagsData = [
   {
@@ -25,16 +33,16 @@ const tagsData = [
 ];
 
 const FilterScreen = () => {
-  const [distance, setDistance] = useState<number[]>([0]);
-  const [rating, setRating] = useState<number[]>([0]);
-  const [level, setLevel] = useState<number[]>([0]);
-  const [tags, setTags] = useState<string[]>([]);
+  const dispatch = useDispatch();
+  const { tempDistance, tempRating, tempLevel, tempTags } = useSelector(
+    (state: RootState) => state.tempFilter
+  );
 
   const handlePressTag = (tag: string) => {
-    if (tags.includes(tag)) {
-      setTags(tags.filter((t) => t !== tag));
+    if (tempTags.includes(tag)) {
+      dispatch(setTempTags(tempTags.filter((t) => t !== tag)));
     } else {
-      setTags([...tags, tag]);
+      dispatch(setTempTags([...tempTags, tag]));
     }
   };
 
@@ -45,37 +53,37 @@ const FilterScreen = () => {
         <FilterText
           title="Distance: "
           unit="km"
-          sliderValue={distance}
+          sliderValue={tempDistance}
           marginBottom={24}
         />
         <CustomSlider
           min={0}
           max={50}
           step={5}
-          sliderValue={distance}
-          setSliderValue={setDistance}
+          sliderValue={tempDistance}
+          setSliderValue={(value) => dispatch(setTempDistance(value))}
         />
       </YStack>
       <YStack>
         <FilterHeader title="Coach" containerStyles={{ marginBottom: 13 }} />
         <XStack alignItems="center" marginTop={13} marginBottom={24} gap={'$1'}>
-          <FilterText title="Rating: > " sliderValue={rating} />
+          <FilterText title="Rating: > " sliderValue={tempRating} />
           <StarFull size={16} color={Colors.primary} />
         </XStack>
         <CustomSlider
           min={0}
           max={5}
-          sliderValue={rating}
-          setSliderValue={setRating}
+          sliderValue={tempRating}
+          setSliderValue={(value) => dispatch(setTempRating(value))}
         />
       </YStack>
       <YStack>
-        <FilterText title="Level: " sliderValue={level} marginBottom={24} />
+        <FilterText title="Level: " sliderValue={tempLevel} marginBottom={24} />
         <CustomSlider
           min={0}
           max={5}
-          sliderValue={level}
-          setSliderValue={setLevel}
+          sliderValue={tempLevel}
+          setSliderValue={(value) => dispatch(setTempLevel(value))}
         />
       </YStack>
       <YStack gap={'$2'}>
@@ -85,7 +93,7 @@ const FilterScreen = () => {
             <TagItem
               key={tag.id}
               title={tag.title}
-              isActive={tags.includes(tag.title)}
+              isActive={tempTags.includes(tag.title)}
               onPress={() => handlePressTag(tag.title)}
             />
           ))}

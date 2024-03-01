@@ -7,6 +7,8 @@ import { FlatList, TouchableOpacity } from 'react-native';
 import { YStack } from 'tamagui';
 
 import { router } from 'expo-router';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 
 const clubData = [
   {
@@ -67,6 +69,20 @@ const coachData = [
 ];
 
 export default function BookTraining() {
+  const { tempDistance, tempRating, tempLevel, tempTags } = useSelector(
+    (state: RootState) => state.tempFilter
+  );
+
+  const { distance, rating, level, tags } = useSelector(
+    (state: RootState) => state.savedFilter
+  );
+  console.log('Temp Filter State:', {
+    tempDistance,
+    tempRating,
+    tempLevel,
+    tempTags,
+  });
+  console.log('Filter State:', { distance, rating, level, tags });
   return (
     <YStack flex={1} paddingTop={28} paddingHorizontal={16}>
       <SearchInput placeholder="Search for Club or Coach" />
