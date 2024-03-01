@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { Eye, EyeOff } from '@tamagui/lucide-icons';
 import changePassword from '@/services/changePassword';
 
-export default function SettingsScreen() {
+export default function SecurityScreen({ testID }: { testID: string }) {
     const [passwordVisible, setPasswordVisible] = useState(true);
     const [newPassword, setNewPassword] = useState('');
 
@@ -19,7 +19,7 @@ export default function SettingsScreen() {
         changePassword(newPassword);
     }
     return (
-        <YStack flex={1} paddingTop={60}>
+        <YStack flex={1} paddingTop={60} testID={testID}>
             <YStack gap={20} paddingHorizontal={15} marginBottom={40}>
                 <YStack>
                     <YStack gap={15}>

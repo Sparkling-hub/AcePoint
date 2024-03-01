@@ -2,10 +2,10 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import React from 'react';
 import SecurityScreen from '@/screens/SecurityScreen';
 
-export default function Account() {
+export default function Security({ testID }: { testID: string }) {
     return (
-        <SafeAreaView style={styles.container}>
-            <SecurityScreen></SecurityScreen>
+        <SafeAreaView testID={ testID } style={styles.container}>
+            <SecurityScreen testID={ testID }></SecurityScreen>
         </SafeAreaView>
     );
 }
