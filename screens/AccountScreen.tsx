@@ -12,7 +12,9 @@ import { RootState } from '@/store/store';
 import { styles } from '@/components/ButtonStyles';
 import { handleLogout } from '@/components/auth/Logout';
 
-export default function AccountScreen({ testID }: { testID: string }) {
+export default function AccountScreen({ testID }: {
+  readonly testID: string;
+}) {
   const [username, setUsername] = useState('');
 
   const getUserData = async () => {

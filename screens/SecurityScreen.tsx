@@ -7,7 +7,9 @@ import { useState } from 'react';
 import { Eye, EyeOff } from '@tamagui/lucide-icons';
 import changePassword from '@/services/changePassword';
 
-export default function SecurityScreen({ testID }: { testID: string }) {
+export default function SecurityScreen({ testID }: {
+    readonly testID: string;
+}) {
     const [passwordVisible, setPasswordVisible] = useState(true);
     const [newPassword, setNewPassword] = useState('');
 
