@@ -2,7 +2,7 @@ import { render, waitFor } from 'react-native-testing-library';
 import * as redux from 'react-redux';
 import * as AsyncStorage from '@react-native-async-storage/async-storage';
 import AccountScreen from '@/screens/AccountScreen';
-
+import Account from '../user/account';
 jest.mock('tamagui', () => ({
   YStack: jest.fn(),
   Text: jest.fn(),
@@ -65,6 +65,11 @@ describe('AccountScreen', () => {
     await waitFor(() => {
       expect(findByText('Test Name')).toBeTruthy();
     });
+  });
+  it('Account renders correctly', () => {
+    const testID = 'account-screen';
+    const { getByTestId } = render(<Account testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
   });
 
 });

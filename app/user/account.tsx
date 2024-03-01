@@ -3,10 +3,10 @@ import React from 'react';
 
 import AccountScreen from '@/screens/AccountScreen';
 
-export default function Account() {
+export default function Account({ testID }: { testID: string }) {
   return (
-    <SafeAreaView style={styles.container}>
-      <AccountScreen />
+    <SafeAreaView style={styles.container} testID={ testID }>
+      <AccountScreen testID={ testID }></AccountScreen>
     </SafeAreaView>
   );
 }
