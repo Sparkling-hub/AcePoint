@@ -5,7 +5,7 @@ import React from 'react';
 import { Avatar, Text, XStack, YStack } from 'tamagui';
 
 interface ClubBoxProps {
-  readonly name: string;
+  readonly name?: string;
   readonly membership: string;
   readonly rating: number;
 }

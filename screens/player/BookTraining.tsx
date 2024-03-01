@@ -1,91 +1,50 @@
 import CoachBox from '@/components/CoachBox';
 import SearchInput from '@/components/SearchInput';
 import { Filter } from '@tamagui/lucide-icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 
-import { YStack } from 'tamagui';
+import { Text, View, YStack } from 'tamagui';
 
 import { router } from 'expo-router';
-import { RootState } from '@/store/store';
-import { useSelector } from 'react-redux';
-
-const clubData = [
-  {
-    id: '1',
-    name: 'Sutton Tennis Club',
-    membership: 'No',
-    rating: 3,
-  },
-  {
-    id: '2',
-    name: 'Sutton Tennis Club',
-    membership: 'No',
-    rating: 2,
-  },
-  {
-    id: '3',
-    name: 'Sutton Tennis Club',
-    membership: 'No',
-    rating: 5,
-  },
-  {
-    id: '4',
-    name: 'Sutton Tennis Club',
-    membership: 'No',
-    rating: 3,
-  },
-];
-
-const coachData = [
-  {
-    id: '1',
-    name: 'John Doe',
-    rating: 4,
-    level: 3,
-    age: 25,
-  },
-  {
-    id: '2',
-    name: 'John Doe',
-    rating: 4,
-    level: 3,
-    age: 25,
-  },
-  {
-    id: '3',
-    name: 'John Doe',
-    rating: 1,
-    level: 3,
-    age: 25,
-  },
-  {
-    id: '4',
-    name: 'John Doe',
-    rating: 2,
-    level: 3,
-    age: 25,
-  },
-];
+import { findByName, findCoachByName } from '@/api/player-api';
+import { Coach } from '@/model/coach';
+import ClubBox from '@/components/ClubBox';
+import { Club } from '@/model/club';
 
 export default function BookTraining() {
-  const { tempDistance, tempRating, tempLevel, tempTags } = useSelector(
-    (state: RootState) => state.tempFilter
-  );
+  const [searchQuery, setSearchQuery] = useState('');
+  const [clubSearchResults, setClubSearchResults] = useState<Club[]>([]);
+  const [coachSearchResults, setCoachSearchResults] = useState<Coach[]>([]);
+  const handleSearch = async () => {
+    if (searchQuery.trim() !== '') {
+      let clubResults;
+      let coachResults;
+      if (searchQuery.trim() !== '') {
+        clubResults = await findByName({ name: searchQuery });
+        coachResults = await findCoachByName({ name: searchQuery });
+      }
 
-  const { distance, rating, level, tags } = useSelector(
-    (state: RootState) => state.savedFilter
-  );
-  console.log('Temp Filter State:', {
-    tempDistance,
-    tempRating,
-    tempLevel,
-    tempTags,
-  });
-  console.log('Filter State:', { distance, rating, level, tags });
+      setClubSearchResults(clubResults?.docs?.map((doc: any) => doc.data()));
+      setCoachSearchResults(coachResults?.docs?.map((doc: any) => doc.data()));
+    } else {
+      setClubSearchResults([]);
+      setCoachSearchResults([]);
+    }
+  };
+
+  useEffect(() => {
+    console.log('clubs:', clubSearchResults);
+    console.log('coaches:', coachSearchResults);
+  }, [clubSearchResults, coachSearchResults]);
   return (
     <YStack flex={1} paddingTop={28} paddingHorizontal={16}>
-      <SearchInput placeholder="Search for Club or Coach" />
+      <SearchInput
+        placeholder="Search for Club or Coach"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        onSearch={handleSearch}
+      />
       <TouchableOpacity
         style={{ marginLeft: 14, marginVertical: 23 }}
         onPress={() => router.navigate('/book/filter')}>
@@ -93,30 +52,34 @@ export default function BookTraining() {
       </TouchableOpacity>
 
       <YStack>
-        {/* <FlatList
-          data={clubData}
-          keyExtractor={(item) => item.id}
-          ItemSeparatorComponent={() => <View height={22} />}
-          renderItem={({ item }) => (
-            <ClubBox
-              name={item.name}
-              membership={item.membership}
-              rating={item.rating}
-            />
-          )}
-        /> */}
-        <FlatList
-          data={coachData}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <CoachBox
-              name={item.name}
-              rating={item.rating}
-              level={item.level}
-              age={item.age}
-            />
-          )}
-        />
+        {clubSearchResults?.length > 0 && (
+          <FlatList
+            data={clubSearchResults}
+            ItemSeparatorComponent={() => <View height={22} />}
+            renderItem={({ item }) => (
+              <ClubBox name={item.name} membership={'NO'} rating={5} />
+            )}
+          />
+        )}
+
+        {coachSearchResults?.length > 0 && (
+          <FlatList
+            data={coachSearchResults}
+            renderItem={({ item }) => (
+              <CoachBox
+                name={item.displayName}
+                rating={5}
+                level={2}
+                age={42}
+                image={item.image}
+              />
+            )}
+          />
+        )}
+
+        {!clubSearchResults && !coachSearchResults && searchQuery !== '' && (
+          <Text>No Data</Text>
+        )}
       </YStack>
     </YStack>
   );

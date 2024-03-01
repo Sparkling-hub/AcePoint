@@ -5,18 +5,27 @@ import { Heart } from '@tamagui/lucide-icons';
 import { renderStars } from '@/helpers/RatingsHelper';
 
 interface CoachBoxProps {
-  readonly name: string;
+  readonly name?: string;
   readonly rating: number;
   readonly level: number;
   readonly age: number;
+  readonly image?: string;
 }
 
-const CoachBox: React.FC<CoachBoxProps> = ({ name, rating, level, age }) => {
+const CoachBox: React.FC<CoachBoxProps> = ({
+  name,
+  rating,
+  level,
+  age,
+  image,
+}) => {
   return (
     <YStack width={'100%'}>
       <XStack>
         <Avatar circular borderWidth={2} borderColor={Colors.primary} size={52}>
-          <Avatar.Image src={require('../assets/images/user-pfp.png')} />
+          <Avatar.Image
+            src={image ?? require('../assets/images/user-pfp.png')}
+          />
           <Avatar.Fallback bc={'#EFEFEF'} />
         </Avatar>
         <YStack marginLeft={8} flex={1} justifyContent="space-between">
@@ -90,12 +99,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({ name, rating, level, age }) => {
                 </Text>
               </Text>
             </XStack>
-            <Heart
-              size={20}
-              color={Colors.secondary}
-              fill={Colors.secondary}
-              marginTop={'$2'}
-            />
+            <Heart size={20} color={Colors.secondary} marginTop={'$2'} />
           </XStack>
           <XStack>{renderStars(rating)}</XStack>
         </YStack>
