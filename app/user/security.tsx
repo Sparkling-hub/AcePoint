@@ -8,7 +8,7 @@ export default function Security({ testID }: {
 }) {
     return (
         <SafeAreaView testID={testID} style={styles.container}>
-            <SecurityScreen testID={testID}></SecurityScreen>
+            <SecurityScreen></SecurityScreen>
         </SafeAreaView>
     );
 }

@@ -7,9 +7,7 @@ import { useState } from 'react';
 import { Eye, EyeOff } from '@tamagui/lucide-icons';
 import changePassword from '@/services/changePassword';
 
-export default function SecurityScreen({ testID }: {
-    readonly testID: string;
-}) {
+export default function SecurityScreen() {
     const [passwordVisible, setPasswordVisible] = useState(true);
     const [newPassword, setNewPassword] = useState('');
 
@@ -21,7 +19,7 @@ export default function SecurityScreen({ testID }: {
         changePassword(newPassword);
     }
     return (
-        <YStack flex={1} paddingTop={60} testID={testID}>
+        <YStack flex={1} paddingTop={60}>
             <YStack gap={20} paddingHorizontal={15} marginBottom={40}>
                 <YStack>
                     <YStack gap={15}>
@@ -70,12 +68,12 @@ export default function SecurityScreen({ testID }: {
                                 <YStack >
                                     <Button style={{
                                         height: 52,
-                                        paddingLeft:119,
-                                        paddingRight:119,
+                                        paddingLeft: 119,
+                                        paddingRight: 119,
                                         color: "#fff",
                                         backgroundColor: "#3A4D6C",
                                         textAlign: 'center'
-                                        
+
                                     }} onPress={() => { handleSubmit() }}>Change password</Button>
                                 </YStack>
                             </YStack>

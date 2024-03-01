@@ -12,9 +12,7 @@ import { RootState } from '@/store/store';
 import { styles } from '@/components/ButtonStyles';
 import { handleLogout } from '@/components/auth/Logout';
 
-export default function AccountScreen({ testID }: {
-  readonly testID: string;
-}) {
+export default function AccountScreen() {
   const [username, setUsername] = useState('');
 
   const getUserData = async () => {
@@ -39,7 +37,7 @@ export default function AccountScreen({ testID }: {
   const paddingTop = calculatePaddingTop();
 
   return (
-    <YStack flex={1} paddingTop={paddingTop} testID={testID}>
+    <YStack flex={1} paddingTop={paddingTop}>
       {userRoleValue === 'Player' ? (
         <YStack alignItems="center" marginBottom={30}>
           <PorfilePicture

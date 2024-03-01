@@ -7,8 +7,8 @@ export default function Account({ testID }: {
   readonly testID: string;
 }) {
   return (
-    <SafeAreaView style={styles.container} testID={ testID }>
-      <AccountScreen testID={ testID }></AccountScreen>
+    <SafeAreaView style={styles.container} testID={testID}>
+      <AccountScreen></AccountScreen>
     </SafeAreaView>
   );
 }
