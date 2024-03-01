@@ -1,10 +1,12 @@
 import NotificationScreen from '@/screens/NotificationScreen'
 import { SafeAreaView, StyleSheet } from 'react-native'
 
-export default function notification() {
-    
+export default function notification({ testID }: {
+    readonly testID: string;
+}) {
+
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView testID={testID} style={styles.container}>
             <NotificationScreen></NotificationScreen>
         </SafeAreaView>
     )

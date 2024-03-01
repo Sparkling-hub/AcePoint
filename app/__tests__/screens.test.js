@@ -2,11 +2,13 @@ import { render, waitFor } from 'react-native-testing-library';
 import * as redux from 'react-redux';
 import * as AsyncStorage from '@react-native-async-storage/async-storage';
 import AccountScreen from '@/screens/AccountScreen';
+import Notification from '../notification';
 
 jest.mock('tamagui', () => ({
   YStack: jest.fn(),
   Text: jest.fn(),
-  XStack: jest.fn()
+  XStack: jest.fn(),
+  Switch: jest.fn(),
 }));
 jest.mock('firebase/firestore', () => ({
   getFirestore: jest.fn(),
@@ -65,6 +67,11 @@ describe('AccountScreen', () => {
     await waitFor(() => {
       expect(findByText('Test Name')).toBeTruthy();
     });
+  });
+  it('Notifications renders correctly', () => {
+    const testID = 'notification-screen';
+    const { getByTestId } = render(<Notification testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
   });
 
 });
