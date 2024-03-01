@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { useState } from 'react';
 import { styles } from '@/components/ButtonStyles';
+import { router } from 'expo-router';
 
 export default function SettingsScreen() {
 
@@ -24,7 +25,7 @@ export default function SettingsScreen() {
                     <YStack gap={15}>
                         <CustomButton
                             title="Notifications"
-                            onPress={() => { }
+                            onPress={() => { router.push('/notification') }
                             }
                             buttonStyle={styles.button}
                             textStyle={styles.buttonText}
