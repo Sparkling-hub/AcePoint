@@ -23,7 +23,7 @@ export default function AccountScreen() {
     getUserData();
   }, []);
 
-  const userRole = useSelector((state: RootState) => state.userRole);
+  const userRole: any = useSelector((state: RootState) => state.userRole);
   const userRoleValue = userRole.userRole;
 
   const calculatePaddingTop = () => {
