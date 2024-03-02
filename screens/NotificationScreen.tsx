@@ -21,21 +21,29 @@ export default function NotificationScreen() {
         const userTYpe = await retrieveData('userType')
         const notifCollection = collection(db, 'notification')
         const id = await retrieveData("userID")
+        let resultFeedback
+        let resultMessage
+        let resultSession
         if (userTYpe === 'Player') {
-            const resultMessage = await getDocs(query(notifCollection, where('type', '==', 'Message'), where('playerId', '==', id)))
-            const resultfeedback = await getDocs(query(notifCollection, where('type', '==', 'Feedback'), where('playerId', '==', id)))
-            const resultSession = await getDocs(query(notifCollection, where('type', '==', 'Session'), where('playerId', '==', id)))
-            if (!resultfeedback.empty) setFeedback(true)
-            if (!resultMessage.empty) setMessage(true)
-            if (!resultSession.empty) setSession(true)
+            resultMessage = await getDocs(query(notifCollection, where('type', '==', 'Message'), where('playerId', '==', id)))
+            resultFeedback = await getDocs(query(notifCollection, where('type', '==', 'Feedback'), where('playerId', '==', id)))
+            resultSession = await getDocs(query(notifCollection, where('type', '==', 'Session'), where('playerId', '==', id)))
         }
         if (userTYpe === 'Coach') {
-            const resultMessage = await getDocs(query(notifCollection, where('type', '==', 'Message'), where('coachId', '==', id)))
-            const resultfeedback = await getDocs(query(notifCollection, where('type', '==', 'Feedback'), where('coachId', '==', id)))
-            const resultSession = await getDocs(query(notifCollection, where('type', '==', 'Session'), where('coachId', '==', id)))
-            if (!resultfeedback.empty) setFeedback(true)
-            if (!resultMessage.empty) setMessage(true)
-            if (!resultSession.empty) setSession(true)
+            resultMessage = await getDocs(query(notifCollection, where('type', '==', 'Message'), where('coachId', '==', id)))
+            resultFeedback = await getDocs(query(notifCollection, where('type', '==', 'Feedback'), where('coachId', '==', id)))
+            resultSession = await getDocs(query(notifCollection, where('type', '==', 'Session'), where('coachId', '==', id)))
+        }
+        if (resultMessage && resultFeedback && resultSession) {
+            resultMessage.docs.forEach(doc => {
+                setMessage(doc.data().checked)
+            })
+            resultFeedback.docs.forEach(doc => {
+                setFeedback(doc.data().checked)
+            })
+            resultSession.docs.forEach(doc => {
+                setSession(doc.data().checked)
+            })
         }
     }
 

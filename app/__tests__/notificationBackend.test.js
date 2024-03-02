@@ -1,6 +1,6 @@
 import { expect, jest, describe, afterEach, it } from '@jest/globals';
 import { db } from "@/lib/firebase";
-import { collection, doc, getDocs, query, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, updateDoc } from "firebase/firestore";
 import { retrieveData } from "../../api/localStorage";
 import { findOrCreateNotification } from "@/api/notification-api";
 jest.mock("@/lib/firebase", () => ({
@@ -30,7 +30,7 @@ describe('findOrCreateNotification', () => {
         (doc).mockReturnValue('docRef');
 
         // Call the function with test data
-        await findOrCreateNotification('userId', 'type', false);
+        await findOrCreateNotification('userId', 'type', true);
 
         // Check if the Firestore functions were called correctly
         expect(retrieveData).toHaveBeenCalledWith('userType');
@@ -40,6 +40,7 @@ describe('findOrCreateNotification', () => {
         expect(setDoc).toHaveBeenCalledWith('docRef', {
             playerId: 'userId',
             type: 'type',
+            checked: true
         });
     });
 

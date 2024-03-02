@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase";
-import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { retrieveData } from "./localStorage";
 
 const findOrCreateNotification = async (userId: string, type: string, checked: boolean) => {
@@ -14,14 +14,19 @@ const findOrCreateNotification = async (userId: string, type: string, checked: b
             // If notification doesn't exist, create a new one
             userType === 'Player' ? await setDoc(doc(notifCollection), {
                 playerId: userId,
-                type: type
+                type: type,
+                checked: checked
             }) : await setDoc(doc(notifCollection), {
                 coachId: userId,
-                type: type
+                type: type,
+                checked: checked
             })
         } else {
             result.docs.forEach(async (element) => {
-                await deleteDoc(element.ref);
+                await updateDoc(element.ref, {
+                    ...element.data(),
+                    checked: checked
+                })
             });
         }
     } catch (error) {
