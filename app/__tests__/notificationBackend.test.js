@@ -1,6 +1,6 @@
 import { expect, jest, describe, afterEach, it } from '@jest/globals';
 import { db } from "@/lib/firebase";
-import { collection, doc, getDocs, query, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc } from "firebase/firestore";
 import { retrieveData } from "../../api/localStorage";
 import { findOrCreateNotification } from "@/api/notification-api";
 jest.mock("@/lib/firebase", () => ({
