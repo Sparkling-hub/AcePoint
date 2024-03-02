@@ -11,22 +11,26 @@ import { findByName, findCoachByName } from '@/api/player-api';
 import { Coach } from '@/model/coach';
 import ClubBox from '@/components/ClubBox';
 import { Club } from '@/model/club';
+import Colors from '@/constants/Colors';
 
 export default function BookTraining() {
   const [searchQuery, setSearchQuery] = useState('');
   const [clubSearchResults, setClubSearchResults] = useState<Club[]>([]);
   const [coachSearchResults, setCoachSearchResults] = useState<Coach[]>([]);
+  const [submitted, setSubmitted] = useState(false);
   const handleSearch = async () => {
     if (searchQuery.trim() !== '') {
-      let clubResults;
-      let coachResults;
-      if (searchQuery.trim() !== '') {
-        clubResults = await findByName({ name: searchQuery });
-        coachResults = await findCoachByName({ name: searchQuery });
-      }
-
-      setClubSearchResults(clubResults?.docs?.map((doc: any) => doc.data()));
-      setCoachSearchResults(coachResults?.docs?.map((doc: any) => doc.data()));
+      const [clubResults, coachResults] = await Promise.all([
+        findByName({ name: searchQuery }),
+        findCoachByName({ name: searchQuery }),
+      ]);
+      setClubSearchResults(
+        clubResults?.docs?.map((doc: any) => doc.data()) ?? []
+      );
+      setCoachSearchResults(
+        coachResults?.docs?.map((doc: any) => doc.data()) ?? []
+      );
+      setSubmitted(true);
     } else {
       setClubSearchResults([]);
       setCoachSearchResults([]);
@@ -34,9 +38,10 @@ export default function BookTraining() {
   };
 
   useEffect(() => {
-    console.log('clubs:', clubSearchResults);
-    console.log('coaches:', coachSearchResults);
-  }, [clubSearchResults, coachSearchResults]);
+    // Reset the submitted state to false when searchQuery changes
+    setSubmitted(false);
+  }, [searchQuery]);
+
   return (
     <YStack flex={1} paddingTop={28} paddingHorizontal={16}>
       <SearchInput
@@ -55,7 +60,7 @@ export default function BookTraining() {
         {clubSearchResults?.length > 0 && (
           <FlatList
             data={clubSearchResults}
-            ItemSeparatorComponent={() => <View height={22} />}
+            ItemSeparatorComponent={Spacer}
             renderItem={({ item }) => (
               <ClubBox name={item.name} membership={'NO'} rating={5} />
             )}
@@ -77,10 +82,20 @@ export default function BookTraining() {
           />
         )}
 
-        {!clubSearchResults && !coachSearchResults && searchQuery !== '' && (
-          <Text>No Data</Text>
-        )}
+        {clubSearchResults?.length === 0 &&
+          coachSearchResults?.length === 0 &&
+          searchQuery.trim() !== '' &&
+          submitted && (
+            <Text
+              style={{ fontFamily: 'MontserratBold' }}
+              color={Colors.secondary}
+              fontSize={16}>
+              No Data
+            </Text>
+          )}
       </YStack>
     </YStack>
   );
 }
+
+const Spacer = ({ height = 22 }) => <View style={{ height }} />;
