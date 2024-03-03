@@ -84,10 +84,10 @@ export default function BookTraining() {
         </TouchableOpacity>
         {/* Filter items */}
         <XStack gap={7} flexWrap="wrap" flex={1}>
-          {tags?.map((tag, index) => (
+          {tags?.map((tag) => (
             <FilterItem
               title={tag}
-              key={index}
+              key={tag}
               onPress={() => {
                 dispatch(setTags(tags.filter((t) => t !== tag)));
                 dispatch(setTempTags(tags.filter((t) => t !== tag)));
