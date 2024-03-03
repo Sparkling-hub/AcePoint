@@ -18,6 +18,7 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
   max,
   step = 1,
 }) => {
+  // Memoized rendering of scale items
   const renderScale = useMemo(() => {
     const items = [];
     for (let i = min; i <= max; i += step) {
@@ -48,7 +49,11 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
           index={0}
         />
       </Slider>
-      <XStack justifyContent="space-between" width={'100%'}>
+      {/* Stack to display scale items */}
+      <XStack
+        justifyContent="space-between"
+        width={'100%'}
+        marginLeft={step === 5 && 5}>
         {renderScale}
       </XStack>
     </YStack>

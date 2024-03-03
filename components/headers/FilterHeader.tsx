@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '@/store/store';
 import { setSavedFilter } from '@/store/slices/savedFilterSlice';
-import { resetTempFilter } from '@/store/slices/tempFilterSlice';
 
 const FilterHeader = () => {
   const dispatch = useDispatch();
@@ -27,8 +26,7 @@ const FilterHeader = () => {
         tags: tempTags,
       })
     );
-    // Reset temp filter states
-    dispatch(resetTempFilter());
+
     // Navigate back to the previous screen
     router.navigate('/(tabs)/book');
   };
