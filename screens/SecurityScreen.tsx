@@ -23,9 +23,8 @@ export default function SecurityScreen() {
             <YStack gap={20} paddingHorizontal={15} marginBottom={40}>
                 <YStack>
                     <YStack gap={15}>
-                        <Text style={styles.title}>Security</Text>
                         <Text style={styles.text}>Change Password</Text>
-                        <Text>In this screen, you can change your password.</Text>
+                        <Text style={{ paddingLeft: 20, paddingRight: 20 }}>In this screen, you can change your password.</Text>
                         <Formik
                             initialValues={{
                                 password: ''
@@ -37,7 +36,7 @@ export default function SecurityScreen() {
                                 setSubmitting(false);
                             }}
                         >
-                            <YStack gap={'$3'} style={{ alignItems: 'center', margin: 10 }}>
+                            <YStack gap={'$3'} style={{ alignItems: 'center', margin: 10, marginLeft: 25, marginRight: 25 }}>
 
                                 {passwordVisible ? (
                                     <CustomInput
@@ -49,7 +48,7 @@ export default function SecurityScreen() {
                                         }}
                                         icon={<EyeOff color={"#3A4D6C"}
                                             onPress={togglePasswordVisibility}
-                                            style={{ borderColor: "#3A4D6C" }} />}
+                                            style={{ borderColor: "#3A4D6C", }} />}
                                     />
                                 ) : (
                                     <CustomInput
@@ -65,20 +64,21 @@ export default function SecurityScreen() {
                                         }
                                     />
                                 )}
-                                <YStack >
-                                    <Button style={{
-                                        height: 52,
-                                        paddingLeft: 119,
-                                        paddingRight: 119,
-                                        color: "#fff",
-                                        backgroundColor: "#3A4D6C",
-                                        textAlign: 'center'
-
-                                    }} onPress={() => { handleSubmit() }}>Change password</Button>
-                                </YStack>
                             </YStack>
 
                         </Formik>
+                        <YStack style={{
+                            paddingLeft: 13,
+                            paddingRight: 13,
+                        }}>
+                            <Button style={{
+                                height: 52,
+                                color: "#fff",
+                                backgroundColor: "#3A4D6C",
+                                textAlign: 'center'
+
+                            }} onPress={() => { handleSubmit() }}>Change password</Button>
+                        </YStack>
                     </YStack>
                 </YStack>
             </YStack>

@@ -23,6 +23,7 @@ import { RootState, store } from '@/store/store';
 import { Provider, useSelector } from 'react-redux';
 import { updateUser } from '@/api/user-api';
 import Toast from 'react-native-toast-message';
+import SecurityHeader from '@/components/SecurityHeader';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -118,6 +119,13 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: AccountHeader,
+              }}
+            />
+            <Stack.Screen
+              name="user/security"
+              options={{
+                headerShadowVisible: false,
+                header: SecurityHeader,
               }}
             />
             <Stack.Screen
