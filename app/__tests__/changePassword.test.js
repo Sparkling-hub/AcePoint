@@ -2,7 +2,6 @@ import { expect, jest, describe, it, afterEach } from '@jest/globals';
 import { getAuth, updatePassword } from "firebase/auth";
 import { handleLogout } from "@/components/auth/Logout";
 import changePassword from "@/services/changePassword";
-import fireToast from "@/services/toast";
 
 jest.mock('firebase/auth', () => ({
     getAuth: jest.fn(),
