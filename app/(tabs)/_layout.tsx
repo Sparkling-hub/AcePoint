@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 import Colors from '@/constants/Colors';
-import CustomHeader from '@/components/CustomHeader';
-import Bars from '@/components/svg/Bars';
+import CustomHeader from '@/components/frontend/CustomHeader';
+import Bars from '@/components/frontend/svg/Bars';
 import {
   renderTabBarIcon,
   renderTabBarIconBook,

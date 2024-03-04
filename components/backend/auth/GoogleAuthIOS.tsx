@@ -7,7 +7,7 @@ import { auth } from '@/lib/firebase';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { findUserByEmail } from '@/services/user';
 import { Button, Image } from 'tamagui';
-import { styles } from '../GoogleStyleButton';
+import { styles } from '../../frontend/GoogleStyleButton';
 import { storeData } from '@/api/localStorage';
 
 interface GoogleAuthIOSProps{

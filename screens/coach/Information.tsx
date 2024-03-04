@@ -3,9 +3,9 @@ import React, { useState } from 'react'
 import { Text,Button, Input,YStack  } from 'tamagui'
 import { heightPercentageToDP as hp,widthPercentageToDP as wp} from 'react-native-responsive-screen'
 import {updateUserCoach } from'@/api/auth-api'
-import UploadImage from '@/components/utils/UploadImage'
-import HeaderArrow from '@/components/HeaderArrow'
-import SearchApi from '@/components/SearchApi/SearchApi'
+import UploadImage from '@/components/backend/utils/UploadImage'
+import HeaderArrow from '@/components/frontend/HeaderArrow'
+import SearchApi from '@/components/backend/SearchApi/SearchApi'
 const Information = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:() => void}) => {
     const [image,setImage]=useState('')
     const [bios, setBios] = useState<string>('');

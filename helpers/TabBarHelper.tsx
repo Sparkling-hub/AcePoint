@@ -1,7 +1,7 @@
-import TabBarText from '@/components/TabBarText';
-import AccountIcon from '@/components/tabIcons/AccountIcon';
-import CheckIcon from '@/components/tabIcons/CheckIcon';
-import HomeIcon from '@/components/tabIcons/HomeIcon';
+import TabBarText from '@/components/frontend/TabBarText';
+import AccountIcon from '@/components/frontend/tabIcons/AccountIcon';
+import CheckIcon from '@/components/frontend/tabIcons/CheckIcon';
+import HomeIcon from '@/components/frontend/tabIcons/HomeIcon';
 
 export const renderTabBarIcon = ({ focused }: { focused: boolean }) => (
   <HomeIcon focused={focused} />

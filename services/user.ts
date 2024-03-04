@@ -5,7 +5,7 @@ import { Alert } from 'react-native';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { retrieveData } from '@/api/localStorage';
 import fireToast from './toast';
-import { handleLogout } from '@/components/auth/Logout';
+import { handleLogout } from '@/components/backend/auth/Logout';
 /**
  * Asynchronously finds a user by email in Firestore and performs necessary actions based on user type and profile completeness.
  * @param email - The email of the user to find.

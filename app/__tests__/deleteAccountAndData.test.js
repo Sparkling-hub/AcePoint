@@ -32,14 +32,14 @@ jest.mock("react-native-toast-message", () => ({
     show: jest.fn()
   }
 }));
-jest.mock('@/components/auth/Logout', () => ({
+jest.mock('@/components/backend/auth/Logout', () => ({
   handleLogout: jest.fn()
 }))
 import { db, auth } from '@/lib/firebase';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { handleDeleteAccount } from '@/services/user'
-import { handleLogout } from '@/components/auth/Logout';
+import { handleLogout } from '@/components/backend/auth/Logout';
 
 describe('handleDeleteAccount function', () => {
   afterEach(() => {

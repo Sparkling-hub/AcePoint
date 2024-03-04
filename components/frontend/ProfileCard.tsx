@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, Text } from 'tamagui';
 
 import Colors from '@/constants/Colors';
-import PorfilePicture from './PorfilePicture';
+import PorfilePicture from '../backend/PorfilePicture';
 import { StyleSheet } from 'react-native';
 
 interface ProfileCardProps {

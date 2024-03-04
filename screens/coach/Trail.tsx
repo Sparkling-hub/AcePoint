@@ -2,7 +2,7 @@ import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { heightPercentageToDP as hp,widthPercentageToDP as wp} from 'react-native-responsive-screen'
 import { Button, Image, Stack, YStack } from 'tamagui'
-import HeaderArrow from '@/components/HeaderArrow'
+import HeaderArrow from '@/components/frontend/HeaderArrow'
 
 const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
     const updatePlayer=()=>{

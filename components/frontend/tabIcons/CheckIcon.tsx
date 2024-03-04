@@ -1,5 +1,5 @@
 import React from 'react';
-import Check from '@/components/svg/Check';
+import Check from '@/components/frontend/svg/Check';
 import Colors from '@/constants/Colors';
 
 interface CheckIconProps {

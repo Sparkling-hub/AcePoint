@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import EditScreenInfo from '@/components/frontend/EditScreenInfo';
+import { Text, View } from '@/components/frontend/Themed';
 
 export default function Book() {
   return (

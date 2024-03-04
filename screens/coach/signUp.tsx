@@ -1,15 +1,15 @@
 import {  Alert, Platform} from 'react-native'
 import React, { useState } from 'react'
 import {  View, XStack, YStack,ScrollView } from 'tamagui';
-import { CheckboxWithLabel } from '@/components/CheckboxWithLabel';
+import { CheckboxWithLabel } from '@/components/frontend/CheckboxWithLabel';
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import CustomInput from '@/components/Form/CustomInput';
-import CountryCodePicker from '@/components/Form/CountryCodePicker';
-import Button from '@/components/Button'
-import ProgressBar from '@/components/ProgressBar';
-import HeaderArrow from '@/components/HeaderArrow';
+import CustomInput from '@/components/frontend/Form/CustomInput';
+import CountryCodePicker from '@/components/frontend/Form/CountryCodePicker';
+import Button from '@/components/frontend/Button'
+import ProgressBar from '@/components/frontend/ProgressBar';
+import HeaderArrow from '@/components/frontend/HeaderArrow';
 import { router } from 'expo-router';
 
 const SignUp = ({onNext}:{onNext: (email: string, password: string, data: any) => void}) => {

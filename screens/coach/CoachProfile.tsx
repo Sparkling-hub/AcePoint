@@ -1,10 +1,10 @@
 import { FlatList, Platform } from 'react-native';
 import { Text, YStack, Paragraph, XStack } from 'tamagui';
 
-import PorfileCard from '@/components/ProfileCard';
+import PorfileCard from '@/components/frontend/ProfileCard';
 import Colors from '@/constants/Colors';
-import CertificationBox from '@/components/CertificationBox';
-import CheckMark from '@/components/svg/CheckMark';
+import CertificationBox from '@/components/frontend/CertificationBox';
+import CheckMark from '@/components/frontend/svg/CheckMark';
 
 const CertificationData = [
   {

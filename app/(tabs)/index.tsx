@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native';
 
-import { Text, View } from '@/components/Themed';
+import { Text, View } from '@/components/frontend/Themed';
 import 'react-native-gesture-handler';
 
 import { Button } from 'tamagui';
-import EditScreenInfo from '@/components/EditScreenInfo';
+import EditScreenInfo from '@/components/frontend/EditScreenInfo';
 
 export default function TabOneScreen() {
   return (

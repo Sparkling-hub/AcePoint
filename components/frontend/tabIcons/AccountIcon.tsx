@@ -1,5 +1,5 @@
 import React from 'react';
-import Account from '@/components/svg/Account';
+import Account from '@/components/frontend/svg/Account';
 import Colors from '@/constants/Colors';
 
 interface AccountIconProps {

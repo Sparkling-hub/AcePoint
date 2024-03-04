@@ -1,12 +1,12 @@
 import { SafeAreaView, StyleSheet } from 'react-native'
 import React, {useState } from 'react'
 import { RadioGroup,Text, View, YStack } from 'tamagui'
-import { RadioGroupItemWithLabel } from '@/components/RadioGroupItemWithLabel'
-import Button from '@/components/Button'
+import { RadioGroupItemWithLabel } from '@/components/frontend/RadioGroupItemWithLabel'
+import Button from '@/components/frontend/Button'
 import {updateUserPlayer } from'@/api/auth-api'
-import DatePicker from '@/components/Form/DatePicker'
-import ProgressBar from '@/components/ProgressBar'
-import HeaderArrow from '@/components/HeaderArrow'
+import DatePicker from '@/components/frontend/Form/DatePicker'
+import ProgressBar from '@/components/frontend/ProgressBar'
+import HeaderArrow from '@/components/frontend/HeaderArrow'
 
 
 const Question = ({handlePrevious}:{handlePrevious:() => void}) => {

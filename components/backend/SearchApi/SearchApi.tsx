@@ -1,7 +1,7 @@
 import { StyleSheet, Alert, SafeAreaView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import HeaderArrow from '../HeaderArrow';
+import HeaderArrow from '../../frontend/HeaderArrow';
 import { View } from 'tamagui';
 import { Search } from '@tamagui/lucide-icons';
 import { addClub } from '@/api/club-api';

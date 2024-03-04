@@ -2,15 +2,15 @@ import Colors from '@/constants/Colors';
 import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
 import { Avatar, ScrollView, Text, XStack, YStack } from 'tamagui';
-import DatePicker from '@/components/Form/DatePicker';
+import DatePicker from '@/components/frontend/Form/DatePicker';
 import { useEffect, useRef, useState } from 'react';
-import CountryCodePicker from '@/components/Form/CountryCodePicker';
-import CustomDropdown from '@/components/Form/dropdown/CustomDropdown';
+import CountryCodePicker from '@/components/frontend/Form/CountryCodePicker';
+import CustomDropdown from '@/components/frontend/Form/dropdown/CustomDropdown';
 import { FormikValues, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Platform } from 'react-native';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import CustomInput from '@/components/Form/CustomInput';
+import CustomInput from '@/components/frontend/Form/CustomInput';
 import { Search } from '@tamagui/lucide-icons';
 import { updateProfile } from '@/store/slices/editProfile';
 import {
@@ -27,7 +27,7 @@ import fireToast from '@/services/toast';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store/store';
 
-import EditProfileSkeleton from '@/components/skeletons/EditProfileSkeleton';
+import EditProfileSkeleton from '@/components/frontend/skeletons/EditProfileSkeleton';
 
 const options = [
   { label: 'Male', value: 'male' },
