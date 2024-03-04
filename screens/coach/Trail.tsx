@@ -15,8 +15,8 @@ const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
           <HeaderArrow back={handlePrevious}  gap={"$5"} data={"SUBSCRIPTION"} />
           </YStack>
          </YStack>
-    <Stack space="$4" >  
-        <Stack space="$4" >  
+    <Stack gap="$4" >  
+        <Stack gap="$4" >  
         <Image
         source={require('@/assets/images/acepointicon.png')}
             style={[{ width: 240, height: 55 },styles.image]}
@@ -26,7 +26,7 @@ const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
         <Text style={styles.cancel}>Cancel anytime.</Text>
         <Text style={styles.price}>£ 9.99 monthly</Text>
         <View style={styles.box}>   
-            <Stack space='$3' >
+            <Stack gap='$3' >
                 <Text style={styles.input}><Image source={require('@/assets/images/check.png')}/> Manage bookings</Text>
                 <Text style={styles.input}><Image source={require('@/assets/images/check.png')}/> Advance statistics</Text>
                 <Text style={styles.input}><Image source={require('@/assets/images/check.png')}/> Scheduling</Text>

@@ -48,7 +48,7 @@ const Question = ({handlePrevious}:{handlePrevious:() => void}) => {
         <Text style={styles.datetext}>Are you male or female?</Text>
         <RadioGroup aria-labelledby="Select one item"
             onValueChange={value => setGender(value)} value={gender}>
-            <YStack width={300} alignItems="center" space="$4">
+            <YStack width={300} alignItems="center" gap="$4">
                 <RadioGroupItemWithLabel size="$3" value={"Male"} label="Male" />
                 <RadioGroupItemWithLabel size="$3" value={"Female"} label="Female" />
             </YStack>

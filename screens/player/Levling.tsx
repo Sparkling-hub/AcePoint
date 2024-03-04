@@ -32,7 +32,7 @@ const Levling = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:() =>
         <RadioGroup aria-labelledby="Select one item"
         onValueChange={value => setLevel(value)} value={level}
             >
-        <YStack width={300} alignItems="center" space="$5">
+        <YStack width={300} alignItems="center" gap="$5">
             <RadioGroupItemWithLabel size="$3" value="Beginner" label="Beginner" level={level} text={text} />
             <RadioGroupItemWithLabel size="$3" value="Intermediate" label="Intermediate" level={level} text={text} />
             <RadioGroupItemWithLabel size="$3" value="Intermediate high" label="Intermediate high" level={level} text={text} />
