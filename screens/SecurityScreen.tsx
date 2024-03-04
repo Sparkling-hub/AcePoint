@@ -10,12 +10,25 @@ import changePassword from '@/services/changePassword';
 export default function SecurityScreen() {
     const [passwordVisible, setPasswordVisible] = useState(true);
     const [newPassword, setNewPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState(false);
 
+    const validationSchema = Yup.object().shape({
+        password: Yup.string()
+            .required('Password is required')
+            .matches(
+                /^(?=.*[A-Z0-9]).{8,}$/,
+                'Password must contain at least one capital letter or a number and have a minimum length of 8 characters'
+            )
+    });
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
 
     const handleSubmit = () => {
+        if (!validationSchema.isValidSync({ password: newPassword })) {
+            setErrorMessage(true);
+            return;
+        }
         changePassword(newPassword);
     }
     return (
@@ -24,14 +37,13 @@ export default function SecurityScreen() {
                 <YStack>
                     <YStack gap={15}>
                         <Text style={styles.text}>Change Password</Text>
-                        <Text style={{ paddingLeft: 20, paddingRight: 20 }}>In this screen, you can change your password.</Text>
+                        <Text style={{ paddingLeft: 20, paddingRight: 20, marginBottom: 0 }}>In this screen, you can change your password. {"\n"}The password should contain at least a capital letter or a number and have the minimum length of 8 characters
+                        </Text>
                         <Formik
                             initialValues={{
                                 password: ''
                             }}
-                            validationSchema={Yup.object().shape({
-                                password: Yup.string().required('Password is required').min(6)
-                            })}
+                            validationSchema={validationSchema}
                             onSubmit={(values, { setSubmitting }) => {
                                 setSubmitting(false);
                             }}
@@ -64,6 +76,9 @@ export default function SecurityScreen() {
                                         }
                                     />
                                 )}
+                                {errorMessage && <Text style={{color: 'red'}}>
+                                    Password is invalid. Please make sure it contains at least one capital letter or a number and has a minimum length of 8 characters.
+                                </Text>}
                             </YStack>
 
                         </Formik>
