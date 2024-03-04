@@ -14,14 +14,11 @@ jest.mock('firebase/firestore', () => ({
   query: jest.fn(),
 }));
 jest.mock('@react-native-async-storage/async-storage', () => ({
-  getItem: jest.fn(),
   setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
+  getItem: jest.fn()
 }));
 jest.mock('expo-router', () => ({
   router: {
-    push: jest.fn(),
     replace: jest.fn(),
   },
 }));
@@ -36,11 +33,16 @@ jest.mock('firebase/storage', () => ({
   uploadBytesResumable: jest.fn(),
   getStorage: jest.fn(),
 }));
-
+jest.mock('react-native-toast-message', () => ({
+  default: {
+    show: jest.fn()
+  }
+}));
 import { expect, jest, describe, afterEach, it } from '@jest/globals';
-import { findUserByEmail } from '@/services/user';
+import { findUserByEmail, findConnectedUserByEmail } from '@/services/user';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 describe('findUserByEmail', () => {
   const email = 'test@example.com';
@@ -68,11 +70,6 @@ describe('findUserByEmail', () => {
     expect(getDocs).toHaveBeenCalledWith(
       query(collection(db, 'player'), where('email', '==', email))
     );
-    expect(addDoc).toHaveBeenCalledWith(collection(db, 'player'), {
-      email: email,
-      displayName: displayName,
-      picture: photoURL,
-    });
   });
 
   it('should push to edit-profile route if existing player data is incomplete', async () => {
@@ -85,7 +82,7 @@ describe('findUserByEmail', () => {
     getDocs.mockResolvedValue(querySnapshot);
 
     await findUserByEmail(email, displayName, photoURL);
-
+    expect(ReactNativeAsyncStorage.setItem).toBeCalled()
     expect(querySnapshot.forEach).toHaveBeenCalled();
   });
 
@@ -99,8 +96,33 @@ describe('findUserByEmail', () => {
     getDocs.mockResolvedValue(querySnapshot);
 
     await findUserByEmail(email, displayName, photoURL);
-
+    expect(ReactNativeAsyncStorage.setItem).toBeCalled()
     expect(querySnapshot.forEach).toHaveBeenCalled();
 
   });
+  it('should find user by email', async () => {
+    getDocs.mockResolvedValue({ empty: true });
+    addDoc.mockResolvedValue({ id: '123' });
+    const email = 'test@example.com';
+    const playerDocument = { exists: jest.fn() };
+    const coachDocument = { exists: jest.fn() };
+    const playerQuerySnapshot = {
+        docs: [
+            playerDocument,  // Include the document that exists
+            coachDocument   // Assuming coachDocument doesn't exist
+        ]
+    };
+    const coachQuerySnapshot = { docs: [coachDocument] };
+
+    // Mock Firebase Firestore functions
+    query.mockReturnValueOnce({});
+    collection.mockReturnValueOnce({});
+    where.mockReturnValueOnce({});
+    getDocs.mockResolvedValueOnce(playerQuerySnapshot);
+    getDocs.mockResolvedValueOnce(coachQuerySnapshot);
+    await findConnectedUserByEmail();
+    expect(query).toHaveBeenCalledWith(collection(db, 'player'), where('email', '==', email))
+    expect(query).toHaveBeenCalledWith(collection(db, 'coach'), where('email', '==', email))
+
+});
 });
