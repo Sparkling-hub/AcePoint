@@ -23,6 +23,8 @@ import { RootState, store } from '@/store/store';
 import { Provider, useSelector } from 'react-redux';
 import { updateUser } from '@/api/user-api';
 import Toast from 'react-native-toast-message';
+import NotificationHeader from '@/components/NotificationHeader';
+import SettingsHeader from '@/components/SettingsHeader';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -118,6 +120,20 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: AccountHeader,
+              }}
+            />
+            <Stack.Screen
+              name="user/setting"
+              options={{
+                headerShadowVisible: false,
+                header: SettingsHeader,
+              }}
+            />
+            <Stack.Screen
+              name="notification"
+              options={{
+                headerShadowVisible: false,
+                header: NotificationHeader,
               }}
             />
             <Stack.Screen

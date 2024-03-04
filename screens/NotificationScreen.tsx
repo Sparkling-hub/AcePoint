@@ -61,9 +61,6 @@ export default function NotificationScreen() {
         <YStack flex={1} style={{ paddingTop: 30, backgroundColor: 'white' }}>
             <YStack gap={50} paddingHorizontal={15} marginBottom={40}>
                 <YStack>
-                    <Text style={styles.title}>Notifications</Text>
-                </YStack>
-                <YStack>
                     <Text style={styles.header}>App notifications</Text>
                 </YStack>
                 <YStack>
@@ -114,7 +111,7 @@ export default function NotificationScreen() {
                             <Switch.Thumb animation="bouncy" />
                         </Switch>
                     </XStack>
-                    <Text>
+                    <Text style={{ paddingLeft: 20, paddingRight: 20 }}>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo ex, dapibus sit amet nisi ut, posuere laoreet nulla. Suspendisse dignissim elit in justo efficitur.
                     </Text>
                 </YStack>
