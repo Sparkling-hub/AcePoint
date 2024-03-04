@@ -25,6 +25,8 @@ import { updateUser } from '@/api/user-api';
 import Toast from 'react-native-toast-message';
 import NotificationHeader from '@/components/NotificationHeader';
 import SettingsHeader from '@/components/SettingsHeader';
+import SupportHeader from '@/components/SupportHeader';
+import LegalHeader from '@/components/LegalHeader';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -134,6 +136,20 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: NotificationHeader,
+              }}
+            />
+            <Stack.Screen
+              name="legal"
+              options={{
+                headerShadowVisible: false,
+                header: LegalHeader,
+              }}
+            />
+            <Stack.Screen
+              name="support"
+              options={{
+                headerShadowVisible: false,
+                header: SupportHeader,
               }}
             />
             <Stack.Screen

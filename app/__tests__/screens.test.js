@@ -3,6 +3,8 @@ import * as redux from 'react-redux';
 import * as AsyncStorage from '@react-native-async-storage/async-storage';
 import AccountScreen from '@/screens/AccountScreen';
 import Notification from '../notification';
+import Legal from '../legal'
+import Support from '../support'
 
 jest.mock('tamagui', () => ({
   YStack: jest.fn(),
@@ -71,6 +73,16 @@ describe('AccountScreen', () => {
   it('Notifications renders correctly', () => {
     const testID = 'notification-screen';
     const { getByTestId } = render(<Notification testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Support renders correctly', () => {
+    const testID = 'support-screen';
+    const { getByTestId } = render(<Support testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Legal renders correctly', () => {
+    const testID = 'legal-screen';
+    const { getByTestId } = render(<Legal testID={testID} />);
     expect(getByTestId(testID)).toBeTruthy();
   });
 
