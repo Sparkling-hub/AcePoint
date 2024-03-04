@@ -12,7 +12,7 @@ export function RadioGroupItemWithLabel(props: Readonly<{
 }>) {
   const id = `radiogroup-${props.value}`
   return (
-    <XStack width={300} alignItems="center" space="$3">
+    <XStack width={300} alignItems="center" gap="$3">
       <YStack gap={'$3'}>
         <XStack gap={'$3'}>
           <RadioGroup.Item value={props.value} id={id} size={props.size} style={{ backgroundColor: "#D9D9D9" }}>
