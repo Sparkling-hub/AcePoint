@@ -2,6 +2,7 @@ import { expect, jest, describe, it, afterEach } from '@jest/globals';
 import { getAuth, updatePassword } from "firebase/auth";
 import { handleLogout } from "@/components/auth/Logout";
 import changePassword from "@/services/changePassword";
+import fireToast from "@/services/toast";
 
 jest.mock('firebase/auth', () => ({
     getAuth: jest.fn(),
@@ -18,7 +19,12 @@ jest.mock("@/services/toast", () => {
 jest.mock('@/components/auth/Logout', () => ({
     handleLogout: jest.fn()
 }))
-
+jest.mock("@/services/toast", () => {
+    return {
+        __esModule: true,
+        default: jest.fn()
+    };
+});
 jest.mock('tamagui', () => ({
     YStack: jest.fn(),
     Text: jest.fn(),
@@ -42,6 +48,18 @@ describe('changePassword', () => {
 
         expect(updatePassword).toHaveBeenCalledWith(user, newPassword);
         expect(handleLogout).toHaveBeenCalled();
+    });
+
+    it('return null', async () => {
+        const newPassword = 'newPassword123';
+        const user = null;
+        getAuth.mockReturnValue({ currentUser: user });
+        updatePassword.mockResolvedValue();
+
+        await changePassword(newPassword);
+
+        expect(updatePassword).not.toHaveBeenCalledWith(user, newPassword);
+        expect(handleLogout).not.toHaveBeenCalled();
     });
 
 })
