@@ -24,6 +24,8 @@ import { Provider, useSelector } from 'react-redux';
 import { updateUser } from '@/api/user-api';
 import Toast from 'react-native-toast-message';
 import SecurityHeader from '@/components/SecurityHeader';
+import SupportHeader from '@/components/SupportHeader';
+import LegalHeader from '@/components/LegalHeader';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -126,6 +128,20 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: SecurityHeader,
+              }}
+            />
+            <Stack.Screen
+              name="legal"
+              options={{
+                headerShadowVisible: false,
+                header: LegalHeader,
+              }}
+            />
+            <Stack.Screen
+              name="support"
+              options={{
+                headerShadowVisible: false,
+                header: SupportHeader,
               }}
             />
             <Stack.Screen

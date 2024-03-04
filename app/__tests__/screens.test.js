@@ -4,6 +4,9 @@ import * as AsyncStorage from '@react-native-async-storage/async-storage';
 import AccountScreen from '@/screens/AccountScreen';
 import Account from '../user/account';
 import Security from '../user/security';
+import Legal from '../legal'
+import Support from '../support'
+
 jest.mock('tamagui', () => ({
   YStack: jest.fn(),
   Text: jest.fn(),
@@ -76,6 +79,16 @@ describe('AccountScreen', () => {
   it('Security renders correctly', () => {
     const testID = 'security-screen';
     const { getByTestId } = render(<Security testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Support renders correctly', () => {
+    const testID = 'support-screen';
+    const { getByTestId } = render(<Support testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Legal renders correctly', () => {
+    const testID = 'legal-screen';
+    const { getByTestId } = render(<Legal testID={testID} />);
     expect(getByTestId(testID)).toBeTruthy();
   });
 
