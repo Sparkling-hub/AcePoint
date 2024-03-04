@@ -1,6 +1,6 @@
 import { favouriteCoach } from '@/api/player-api'; 
 import { auth } from '@/lib/firebase';
-import { getDoc,updateDoc ,runTransaction} from 'firebase/firestore';
+import { getDoc ,runTransaction} from 'firebase/firestore';
 
 jest.mock('firebase/auth', () => ({
     getReactNativePersistence: jest.fn(),
@@ -16,7 +16,6 @@ jest.mock('@react-native-async-storage/async-storage', () => ({ReactNativeAsyncS
 jest.mock('firebase/firestore', () => ({
     getFirestore: jest.fn(),
     getDoc: jest.fn(),
-    updateDoc: jest.fn(),
     doc: jest.fn(),
     runTransaction: jest.fn(),
 })); 

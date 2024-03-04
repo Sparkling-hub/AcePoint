@@ -78,7 +78,7 @@ const favouriteCoach = async (coachRef: any) => {
             return "Player already exists in coach's followed list.";
         }
 
-        const transactionResult = await runTransaction(db, async (transaction) => {
+        await runTransaction(db, async (transaction) => {
             // Update player's favorite coach
             transaction.update(playerRef, {
                 favoriteCoach: [...updatedFavoriteCoaches, coachRef]
@@ -126,7 +126,7 @@ const unfavoriteCoach = async (coachRef: any) => {
             return "Player is not following the coach.";
         }
 
-        const transactionResult = await runTransaction(db, async (transaction) => {
+        await runTransaction(db, async (transaction) => {
             // Update player's favorite coach
             transaction.update(playerRef, {
                 favoriteCoach: updatedFavoriteCoaches.filter(coach => coach !== coachRef)
