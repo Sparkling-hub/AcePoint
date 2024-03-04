@@ -8,52 +8,33 @@ import { Switch, Text, XStack, YStack } from "tamagui"
 
 export default function NotificationScreen() {
 
-    const [userId, setUserId] = useState('')
     const [message, setMessage] = useState(false)
     const [feedback, setFeedback] = useState(false)
     const [session, setSession] = useState(false)
+    const [promotion, setPromotion] = useState(false)
+
 
 
     const handleChangeNotification = async (type: string, checked: boolean) => {
-        await findOrCreateNotification(userId, type, checked);
+        await findOrCreateNotification(type, checked);
     }
     const getNotifications = async () => {
-        const userTYpe = await retrieveData('userType')
-        const notifCollection = collection(db, 'notification')
-        const id = await retrieveData("userID")
-        let resultFeedback
-        let resultMessage
-        let resultSession
-        if (userTYpe === 'Player') {
-            resultMessage = await getDocs(query(notifCollection, where('type', '==', 'Message'), where('playerId', '==', id)))
-            resultFeedback = await getDocs(query(notifCollection, where('type', '==', 'Feedback'), where('playerId', '==', id)))
-            resultSession = await getDocs(query(notifCollection, where('type', '==', 'Session'), where('playerId', '==', id)))
-        }
-        if (userTYpe === 'Coach') {
-            resultMessage = await getDocs(query(notifCollection, where('type', '==', 'Message'), where('coachId', '==', id)))
-            resultFeedback = await getDocs(query(notifCollection, where('type', '==', 'Feedback'), where('coachId', '==', id)))
-            resultSession = await getDocs(query(notifCollection, where('type', '==', 'Session'), where('coachId', '==', id)))
-        }
-        if (resultMessage && resultFeedback && resultSession) {
-            resultMessage.docs.forEach(doc => {
-                setMessage(doc.data().checked)
-            })
-            resultFeedback.docs.forEach(doc => {
-                setFeedback(doc.data().checked)
-            })
-            resultSession.docs.forEach(doc => {
-                setSession(doc.data().checked)
-            })
-        }
+        const email = await retrieveData('email')
+        const userType = await retrieveData('userType')
+        const userCollection = userType === 'Player' ? collection(db, 'player') : collection(db, 'coach')
+        const notificationQuery = query(userCollection, where('email', '==', email))
+        const result = await getDocs(notificationQuery)
+        result.docs.forEach(doc => {
+            setMessage(doc.data().messageNotification)
+            setFeedback(doc.data().feedbackNotification)
+            setSession(doc.data().sessionNotification)
+            setPromotion(doc.data().promotionsViaEmail)
+        })
     }
 
     useEffect(() => {
         const getInformations = async () => {
-            const id = await retrieveData("userID")
-            if (id) {
-                setUserId(id)
-                await getNotifications()
-            }
+            await getNotifications()
         }
         getInformations();
     }, [])
@@ -68,7 +49,7 @@ export default function NotificationScreen() {
                         <Text style={styles.text}>Message Notifications</Text>
                         <Switch size='$2'
                             onCheckedChange={(value) => {
-                                handleChangeNotification("Message", value);
+                                handleChangeNotification("messageNotification", value);
                                 setMessage(value);
                             }}
                             checked={message}>
@@ -80,7 +61,7 @@ export default function NotificationScreen() {
                     <XStack gap={92}>
                         <Text style={styles.text}>Feedback Notifications</Text>
                         <Switch checked={feedback} onCheckedChange={async (value) => {
-                            await handleChangeNotification("Feedback", value);
+                            await handleChangeNotification("feedbackNotification", value);
                             setFeedback(value);
                         }}
                             size='$2'>
@@ -93,7 +74,7 @@ export default function NotificationScreen() {
                         <Text style={styles.text}>Session Notifications</Text>
                         <Switch
                             onCheckedChange={(value) => {
-                                handleChangeNotification("Session", value);
+                                handleChangeNotification("sessionNotification", value);
                                 setSession(value);
                             }}
                             size='$2' checked={session}>
@@ -107,7 +88,11 @@ export default function NotificationScreen() {
                 <YStack>
                     <XStack gap={110}>
                         <Text style={styles.text}>Promotions via email</Text>
-                        <Switch size='$2' defaultChecked={false}>
+                        <Switch size='$2' checked={promotion}
+                            onCheckedChange={(value) => {
+                                handleChangeNotification("promotionsViaEmail", value);
+                                setPromotion(value);
+                            }}>
                             <Switch.Thumb animation="bouncy" />
                         </Switch>
                     </XStack>
