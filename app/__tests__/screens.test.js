@@ -14,7 +14,7 @@ jest.mock('firebase/firestore', () => ({
   getFirestore: jest.fn(),
   collection: jest.fn(),
   addDoc: jest.fn(),
-  getDocs: jest.fn(() => Promise.resolve({ empty: true })),
+  getDocs: jest.fn(() => Promise.resolve({ docs: [] })),
   where: jest.fn(),
   query: jest.fn(),
 }));
