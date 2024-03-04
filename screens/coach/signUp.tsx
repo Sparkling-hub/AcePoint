@@ -142,6 +142,7 @@ const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: an
                   </YStack>
                 </YStack>
               </XStack>
+              <Text>The password should contain at least a capital letter or a number and have the minimum length of 8 characters.</Text>
               <YStack gap={'$3'}>
                 {passwordVisible ? (
                   <CustomInput
@@ -178,7 +179,6 @@ const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: an
                   />
                 )}
               </YStack>
-              <Text>The password should contain at least a capital letter or a number and have the minimum length of 8 characters</Text>
               <YStack gap={'$3'}>
                 <CheckboxWithLabel size="$3" label='Marketing Comunication from Acepoint' onPress={onCheckedChangeMarketing} />
               </YStack>
