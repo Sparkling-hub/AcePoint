@@ -20,10 +20,6 @@ jest.mock('firebase/firestore', () => ({
     runTransaction: jest.fn(),
 })); 
 describe('favouriteCoach function', () => {
-    afterEach(() => {
-        jest.clearAllMocks(); // Reset mock calls after each test
-    });
-
     test('Player updated favourite Coach successfully', async () => {
         const mockCurrentUser = { uid: 'user123' };
         const mockPlayerData = { favoriteCoach: [] };

@@ -55,7 +55,7 @@ describe('findCoachByName', () => {
       getDocs.mockResolvedValueOnce({ empty: true });
   
       const result = await findCoachByName({ name });
-      expect(result).toBe('coach does not exist');
+      expect(result).toBe('Coach does not exist');
       expect(query).toHaveBeenCalledWith(collection(db, 'coach'), where('displayName', '==', name));
     });
   
