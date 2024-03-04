@@ -1,6 +1,6 @@
 import { unfavoriteCoach } from '@/api/player-api'; 
 import { auth } from '@/lib/firebase';
-import { getDoc,updateDoc } from 'firebase/firestore';
+import { getDoc,updateDoc,runTransaction } from 'firebase/firestore';
 jest.mock('firebase/auth', () => ({
     getReactNativePersistence: jest.fn(),
     initializeAuth: jest.fn(),
@@ -17,6 +17,7 @@ jest.mock('firebase/firestore', () => ({
     getDoc: jest.fn(),
     updateDoc: jest.fn(),
     doc: jest.fn(),
+    runTransaction: jest.fn(),
 })); 
 
 describe('unfavoriteCoach function', () => {
@@ -34,7 +35,7 @@ describe('unfavoriteCoach function', () => {
         updateDoc.mockResolvedValue();
 
         const result = await unfavoriteCoach(mockCoachRef.path);
-        expect(result).toBe('Coach removed from favorites successfully!');
+        expect(result).toBe('Player is not following the coach.');
     });
 
     test('Player does not exist', async () => {
@@ -45,7 +46,7 @@ describe('unfavoriteCoach function', () => {
         getDoc.mockResolvedValue({ exists: jest.fn().mockReturnValue(false) });
 
         const result = await unfavoriteCoach(mockCoachRef);
-        expect(result).toBe('Player does not exist.');
+        expect(result).toBe('There is no coach.');
     });
 
     test('User not authenticated', async () => {
@@ -66,25 +67,34 @@ describe('unfavoriteCoach function', () => {
         const result = await unfavoriteCoach(mockCoachRef);
         expect(result).toBe('Coach is not in the favorite list.');
     });
-
     test('Error handling in unfavoriteCoach function', async () => {
         // Mock data
         const mockCurrentUser = { uid: 'user123' };
-        const mockCoachRef = { path: 'coach/path' };
+        const mockCoachRef = 'coach123';
         const errorMessage = 'Firestore operation failed';
     
-        // Set up mocks
+        // Mock auth.currentUser
         auth.currentUser = mockCurrentUser;
-        getDoc.mockResolvedValue({ exists: jest.fn().mockReturnValue(true), data: jest.fn().mockReturnValue({ favoriteCoach: ['coach/path'] }) });
-        updateDoc.mockRejectedValue(new Error(errorMessage));
+    
+        // Mock Firestore methods
+        const mockPlayerSnap = { exists: jest.fn().mockReturnValue(true), data: jest.fn().mockReturnValue({ favoriteCoach: ['coach123'], followedPlayer: ['user123'] }) };
+        const mockCoachSnap = { exists: jest.fn().mockReturnValue(true), data: jest.fn().mockReturnValue({ followedPlayer: ['user123'] }) };
+    
+        // Mock getDoc to return playerSnap and coachSnap
+        getDoc.mockResolvedValueOnce(mockPlayerSnap);
+        getDoc.mockResolvedValueOnce(mockCoachSnap);
+    
+        // Mock updateDoc to throw an error
+        runTransaction.mockRejectedValueOnce(new Error(errorMessage));
     
         // Call the function
-        const result = await unfavoriteCoach(mockCoachRef.path);
+        const result = await unfavoriteCoach(mockCoachRef);
+    
         // Assertions
-        expect(result).toBe(errorMessage);
         expect(auth.currentUser).toBe(mockCurrentUser);
-
+        expect(result).toBe(errorMessage);
     });
+    
     
     
 });

@@ -1,6 +1,6 @@
 import { favouriteCoach } from '@/api/player-api'; 
 import { auth } from '@/lib/firebase';
-import { getDoc,updateDoc } from 'firebase/firestore';
+import { getDoc,updateDoc ,runTransaction} from 'firebase/firestore';
 
 jest.mock('firebase/auth', () => ({
     getReactNativePersistence: jest.fn(),
@@ -18,6 +18,7 @@ jest.mock('firebase/firestore', () => ({
     getDoc: jest.fn(),
     updateDoc: jest.fn(),
     doc: jest.fn(),
+    runTransaction: jest.fn(),
 })); 
 describe('favouriteCoach function', () => {
     afterEach(() => {
@@ -30,7 +31,7 @@ describe('favouriteCoach function', () => {
         const mockCoachRef = 'coachReference';
         auth.currentUser = mockCurrentUser;
         getDoc.mockResolvedValue({ exists: jest.fn().mockReturnValue(true), data: jest.fn().mockReturnValue(mockPlayerData) });
-        updateDoc.mockResolvedValue();
+        runTransaction.mockResolvedValue();
 
         const result = await favouriteCoach(mockCoachRef);
         expect(result).toBe('Player updated favourite Coach successfully!');
@@ -43,7 +44,7 @@ describe('favouriteCoach function', () => {
         getDoc.mockResolvedValue({ exists: jest.fn().mockReturnValue(false) });
 
         const result = await favouriteCoach(mockCoachRef);
-        expect(result).toBe('Player does not exist.');
+        expect(result).toBe('There is no coach.');
     });
 
     test('User not authenticated', async () => {
@@ -55,14 +56,16 @@ describe('favouriteCoach function', () => {
 
     test('Coach already exists in the favorite list', async () => {
         const mockCurrentUser = { uid: 'user123' };
-        const mockPlayerData = { favoriteCoach: ['coachReference'] };
+        const mockPlayerData = { favoriteCoach: ['coachReference'], followedPlayer: ['user123']  };
         const mockCoachRef = 'coachReference';
+        const mockCoachSnap = { exists: jest.fn().mockReturnValue(true), data: jest.fn().mockReturnValue({ followedPlayer: ['user123'] }) };
 
         auth.currentUser = mockCurrentUser;
         getDoc.mockResolvedValue({ exists: jest.fn().mockReturnValue(true), data: jest.fn().mockReturnValue(mockPlayerData) });
+        getDoc.mockResolvedValue(mockCoachSnap);
 
         const result = await favouriteCoach(mockCoachRef);
-        expect(result).toBe('Coach already exists in the favorite list.');
+        expect(result).toBe("Player already exists in coach's followed list.");
     });
 
     test('Error updating player', async () => {
@@ -73,7 +76,7 @@ describe('favouriteCoach function', () => {
 
         auth.currentUser = mockCurrentUser;
         getDoc.mockResolvedValue({ exists: jest.fn().mockReturnValue(true), data: jest.fn().mockReturnValue(mockPlayerData) });
-        updateDoc.mockRejectedValue(new Error(errorMessage));
+        runTransaction.mockRejectedValue(new Error(errorMessage));
 
         const result = await favouriteCoach(mockCoachRef);
         expect(result).toBe(errorMessage);
