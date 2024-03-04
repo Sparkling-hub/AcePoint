@@ -129,7 +129,7 @@ export default function AccountScreen() {
           <YStack gap={15}>
             <CustomButton
               title="Privacy"
-              onPress={() => { router.push('/legal') }}
+              onPress={() => { router.navigate('/legal') }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
