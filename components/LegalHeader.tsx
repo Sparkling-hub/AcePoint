@@ -7,13 +7,13 @@ import HeaderText from "./HeaderText";
 export default function LegalHeader() {
     return (
         <CustomHeader
-            leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
+            leftIcon={<ChevronLeft size={'$3'} color={Colors.secondary} />}
             title="LEGAL"
             rightContent={
                 <TouchableOpacity onPress={() => { }}>
-                    <HeaderText text="" />
+                    <HeaderText text="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
                 </TouchableOpacity>
             }
-        />
+        ></CustomHeader>
     )
 }

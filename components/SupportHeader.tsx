@@ -11,7 +11,7 @@ export default function SupportHeader() {
             title="SUPPORT"
             rightContent={
                 <TouchableOpacity onPress={() => { }}>
-                    <HeaderText text="" />
+                    <HeaderText text="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
                 </TouchableOpacity>
             }
         />
