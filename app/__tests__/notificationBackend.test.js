@@ -23,19 +23,29 @@ describe('findOrCreateNotification', () => {
         jest.clearAllMocks();
     });
 
-    it('creates a new notification', async () => {
+    it('creates a new notification for player', async () => {
         // Setup mocks for this test case
         (retrieveData).mockResolvedValue('Player');
         (doc).mockReturnValue('docRef');
-
         // Call the function with test data
         await findOrCreateNotification('type', true);
-
         // Check if the Firestore functions were called correctly
         expect(retrieveData).toHaveBeenCalledWith('email');
         expect(retrieveData).toHaveBeenCalledWith('userType');
-
         expect(collection).toHaveBeenCalledWith(db, 'player');
+        expect(query).toHaveBeenCalled();
+        expect(getDocs).toHaveBeenCalled();
+    });
+    it('creates a new notification for coach', async () => {
+        // Setup mocks for this test case
+        (retrieveData).mockResolvedValue('Coach');
+        (doc).mockReturnValue('docRef');
+        // Call the function with test data
+        await findOrCreateNotification('type', true);
+        // Check if the Firestore functions were called correctly
+        expect(retrieveData).toHaveBeenCalledWith('email');
+        expect(retrieveData).toHaveBeenCalledWith('userType');
+        expect(collection).toHaveBeenCalledWith(db, 'coach');
         expect(query).toHaveBeenCalled();
         expect(getDocs).toHaveBeenCalled();
     });
