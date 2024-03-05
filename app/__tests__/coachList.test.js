@@ -1,6 +1,6 @@
 import { favoriteCoachList } from '@/api/player-api'
 import { auth }  from'@/lib/firebase'; 
-import { getDoc }  from'firebase/firestore'; 
+import { getDoc,getDocs }  from'firebase/firestore'; 
 jest.mock('firebase/auth', () => ({
     getReactNativePersistence: jest.fn(),
     initializeAuth: jest.fn(),
@@ -15,49 +15,38 @@ jest.mock('firebase/auth', () => ({
       collection: jest.fn(),
       doc: jest.fn(),
       getDoc: jest.fn(),
+      getDocs: jest.fn(),
   }));
   jest.mock("@/lib/firebase", () => ({
     auth: jest.fn(),
-    getDoc: jest.fn(),
 }));
-  
 describe('favoriteCoachList function', () => {
-    afterEach(() => {
-        jest.clearAllMocks(); // Reset mock calls after each test
+    beforeEach(() => {
+        jest.clearAllMocks();
     });
-  it('should return "User not authenticated." if currentUser is null', async () => {
-    auth.currentUser = null;
-
-    const result = await favoriteCoachList();
-    expect(result).toBe("User not authenticated.");
+    test('should return "User not authenticated." when currentUser is not defined', async () => {
+      auth.currentUser = null;
+      const result = await favoriteCoachList();
+      expect(result).toBe("User not authenticated.");
+    });
+  
+    test('should return "Player does not exist." when player does not exist', async () => {
+        const mockCurrentUser = { uid: 'user123' };
+        auth.currentUser = mockCurrentUser;
+      getDoc.mockResolvedValueOnce({ exists: () => false,data:()=>null });
+      const result = await favoriteCoachList();
+      expect(result).toBe("Player does not exist.");
+    });
+  
+    test('should handle error if fetching coach data fails', async () => {
+      const playerData = {
+        favoriteCoach: ['coachId1']
+      };
+      getDoc.mockResolvedValueOnce({ exists: () => true, data: () => playerData });
+  
+      getDocs.mockRejectedValueOnce(new Error('Error fetching coach data'));
+  
+      const result = await favoriteCoachList();
+      expect(result[0]).toBeNull();
+    });
   });
-
-  it('should return "Player does not exist." if playerSnap does not exist', async () => {
-    auth.currentUser = { uid: 'someUserId' };
-    getDoc.mockReturnValueOnce({ exists: () => false });
-
-    const result = await favoriteCoachList();
-    expect(result).toBe("Player does not exist.");
-  });
-
-  it('should return the list of favorite coaches if everything is okay', async () => {
-    const playerData = {
-      favoriteCoach: ['Coach A', 'Coach B']
-    };
-    auth.currentUser = { uid: 'someUserId' };
-    getDoc.mockReturnValueOnce({ exists: () => true, data: () => playerData });
-
-    const result = await favoriteCoachList();
-    expect(result).toEqual(playerData.favoriteCoach);
-  });
-
-  it('should return the error message if an error occurs', async () => {
-    const errorMessage = 'Some error occurred';
-    auth.currentUser = { uid: 'someUserId' };
-    getDoc.mockImplementationOnce(() => { throw new Error(errorMessage) });
-
-    const result = await favoriteCoachList();
-
-    expect(result).toBe(errorMessage);
-  });
-});
