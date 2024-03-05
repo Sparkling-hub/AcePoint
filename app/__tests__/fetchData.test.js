@@ -1,6 +1,6 @@
 import { fetchData }  from '@/api/player-api'; 
 import { db } from '@/lib/firebase'; 
-import { collection, query, where, getDocs } from 'firebase/firestore'; 
+import { collection, query, where, getDocs, orderBy, startAt, endAt } from 'firebase/firestore'; 
 
 // Mock the Firebase Firestore methods
 jest.mock('@/lib/firebase', () => ({
@@ -14,6 +14,9 @@ jest.mock('firebase/firestore', () => ({
   query: jest.fn(),
   where: jest.fn(),
   getDocs: jest.fn(),
+  orderBy: jest.fn(),
+  startAt: jest.fn(),
+  endAt: jest.fn(),
 }));
 
 describe('fetchData function', () => {
@@ -22,50 +25,48 @@ describe('fetchData function', () => {
     jest.clearAllMocks();
   });
 
-  test('Fetches data without query field and value', async () => {
+  it('fetches all documents from a collection when no query is provided', async () => {
     const collectionName = 'testCollection';
-    const mockData = [{ id: 1, name: 'Item 1' }, { id: 2, name: 'Item 2' }];
-    const mockSnapshot = { empty: false, docs: mockData.map(item => ({ data: () => item })) };
+    const mockDocs = [{ id: '1', data: jest.fn(() => ({ foo: 'bar' })) }];
+    const mockSnapshot = { docs: mockDocs };
 
-    // Mock getDocs to return data
+    // Mock the behavior of getDocs to return mockSnapshot
+    const { getDocs, collection } = require('firebase/firestore');
+    collection.mockReturnValueOnce({});
     getDocs.mockResolvedValueOnce(mockSnapshot);
 
-    // Call the fetchData function
     const result = await fetchData(collectionName);
-
-    // Check if the collection method is called with the correct collection name
-    expect(collection).toHaveBeenCalledWith(db, collectionName);
-
-    // Check if getDocs is called
-    expect(getDocs).toHaveBeenCalled();
-    // Check if the result matches the mocked data
-    expect(result).toEqual(mockSnapshot);
-
+    result.docs.map((club)=>{
+    expect(club.data()).toEqual({ foo: 'bar' });
+  })
+    expect(collection).toHaveBeenCalledWith(expect.anything(), collectionName);
+    expect(getDocs).toHaveBeenCalledWith({});
   });
 
-  test('Fetches data with query field and value', async () => {
+  it('fetches documents based on query when queryField and queryValue are provided', async () => {
     const collectionName = 'testCollection';
-    const queryField = 'fieldName';
-    const queryValue = 'fieldValue';
-    const mockData = [{ id: 1, name: 'Item 1' }, { id: 2, name: 'Item 2' }];
-    const mockSnapshot = { empty: false, docs: mockData.map(item => ({ data: () => item })) };
+    const queryField = 'name';
+    const queryValue = 'John';
+    const mockDocs = [{ id: '1', data: jest.fn(() => ({ name: 'John Doe' })) }];
+    const mockSnapshot = { docs: mockDocs };
 
-    // Mock getDocs to return data
+    // Mock the behavior of getDocs to return mockSnapshot
+    const { getDocs, collection, query, orderBy, startAt, endAt } = require('firebase/firestore');
+    collection.mockReturnValueOnce({});
+    query.mockReturnValueOnce({});
+    orderBy.mockReturnValueOnce({});
+    startAt.mockReturnValueOnce({});
+    endAt.mockReturnValueOnce({});
     getDocs.mockResolvedValueOnce(mockSnapshot);
 
-    // Call the fetchData function with query field and value
     const result = await fetchData(collectionName, queryField, queryValue);
-
-    // Check if the collection method is called with the correct collection name
-    expect(collection).toHaveBeenCalledWith(db, collectionName);
-
-    // Check if the query method is called with the correct query field and value
-    expect(query).toHaveBeenCalledWith(collection(db, collectionName), where(queryField, '==', queryValue));
-
-    // Check if getDocs is called
-    expect(getDocs).toHaveBeenCalled();
-
-    // Check if the result matches the mocked data
-    expect(result).toEqual(mockSnapshot);
+    result.docs.map((club)=>{
+    expect(club.data()).toEqual({ name: 'John Doe' });
+  })
+    expect(collection).toHaveBeenCalledWith(expect.anything(), collectionName);
+    expect(orderBy).toHaveBeenCalledWith(queryField);
+    expect(startAt).toHaveBeenCalledWith(queryValue);
+    expect(endAt).toHaveBeenCalledWith(queryValue + "\uf8ff");
+    expect(getDocs).toHaveBeenCalledWith({});
   });
 });

@@ -5,7 +5,7 @@ import { Info } from '@tamagui/lucide-icons';
 
 const LevlingBox = () => {
   return (
-    <Stack space="$5" alignItems="center" style={[styles.stack, styles.box]}>
+    <Stack gap="$5" alignItems="center" style={[styles.stack, styles.box]}>
       <XStack alignItems="flex-start">
         <Info size={24} color={'#3A4D6C'} />
         <YStack>

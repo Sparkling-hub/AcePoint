@@ -42,7 +42,7 @@ const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: an
     if (terms) {
       onNext(email, password, data);
     } else {
-      fireToast({message:"You must check the terms",type:"error"});
+      fireToast({message:"Please Accept terms and conditions",type:"error"});
     }
   };
 
@@ -59,17 +59,15 @@ const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: an
   const validate = async () => {
     try {
       await Yup.object().shape({
-        displayName: Yup.string().required('Name and last name are required').min(4),
-        email: Yup.string().email('Invalid email').required('Email is required'),
-        phoneNumber: Yup.string().required('Phone number is required').min(6),
-        password: Yup.string().required('Password is required').min(6).matches(/[A-Z]/, 'Password must contain at least one uppercase letter'),
-        countryCode: Yup.string().required('Country code is required'),
-      }).validate({
+        displayName: Yup.string().required('Name is required').min(4, 'Invalid Name (min 4 characters)'),
+      email: Yup.string().email('Invalid Email').required('Email is required'),
+      phoneNumber: Yup.string().required('Phone number is required').min(8, 'Invalid Phone Number (min 8 numbers)'),
+      password: Yup.string().required('Password is required').min(6, 'Invalid Password (min 6 characters)').matches(/[A-Z]/, 'Password must contain at least one uppercase letter'),
+     }).validate({
         displayName,
         email,
         phoneNumber,
         password,
-        countryCode,
       }, { abortEarly: false });
       setErrors({}); // Reset errors if validation succeeds
       return true;

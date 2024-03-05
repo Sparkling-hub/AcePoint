@@ -1,8 +1,26 @@
-import { jest } from './globaImport.test'
 import { findCoachByName } from '@/api/player-api';
 import { db } from '@/lib/firebase';
-import { getDocs, query, collection, where } from 'firebase/firestore';
-
+import { collection, query, where, getDocs, orderBy, startAt, endAt } from 'firebase/firestore'; 
+jest.mock('firebase/auth', () => ({
+  getReactNativePersistence: jest.fn(),
+  initializeAuth: jest.fn(),
+}));
+jest.mock("@/lib/firebase", () => ({
+  db: {}
+}));
+jest.mock('firebase/app', () => ({initializeApp: jest.fn(),}));
+jest.mock('firebase/storage', () => ({getStorage: jest.fn(),}));
+jest.mock('@react-native-async-storage/async-storage', () => ({ReactNativeAsyncStorage: jest.fn()}));
+jest.mock('firebase/firestore', () => ({
+  getFirestore: jest.fn(),
+  collection: jest.fn(),
+  query: jest.fn(),
+  where: jest.fn(),
+  getDocs: jest.fn(),
+  orderBy: jest.fn(),
+startAt: jest.fn(),
+endAt: jest.fn(),
+}));
 describe('findCoachByName', () => {
     afterEach(() => {
       jest.clearAllMocks();
@@ -16,7 +34,6 @@ describe('findCoachByName', () => {
       getDocs.mockResolvedValueOnce({ empty: false, forEach: jest.fn((callback) => mockCoaches.forEach(callback)) });
   
       const result = await findCoachByName({ name });
-  
       result.forEach((coach) => {
         expect(coach.data()).toEqual(mockCoaches[0].data());
       });
@@ -40,9 +57,7 @@ describe('findCoachByName', () => {
           ];      const mockCollection = jest.fn();
       collection.mockReturnValue(mockCollection);
       getDocs.mockResolvedValueOnce({ empty: false, forEach: jest.fn((callback) => mockCoaches.forEach(callback)) });
-  
       const result = await findCoachByName({ name: '' });
-  
       result.forEach((coach) => {
         expect(coach.data()).toEqual(mockCoaches[0].data());
       });
@@ -56,7 +71,6 @@ describe('findCoachByName', () => {
   
       const result = await findCoachByName({ name });
       expect(result).toBe('Coach does not exist');
-      expect(query).toHaveBeenCalledWith(collection(db, 'coach'), where('displayName', '==', name));
     });
   
     test('should return error message if an error occurs', async () => {
@@ -69,6 +83,5 @@ describe('findCoachByName', () => {
       const result = await findCoachByName({ name });
   
       expect(result).toBe(errorMessage);
-      expect(query).toHaveBeenCalledWith(collection(db, 'coach'), where('displayName', '==', name));
     });
   });

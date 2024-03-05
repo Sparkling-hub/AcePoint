@@ -1,4 +1,4 @@
-import { Platform, StyleSheet } from 'react-native';
+import { Platform } from 'react-native';
 import { Text, XStack, YStack } from 'tamagui';
 import { ChevronRight } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
@@ -7,11 +7,10 @@ import { router } from 'expo-router';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import PorfilePicture from '@/components/PorfilePicture';
-import { signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { removeItem } from '@/api/localStorage';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import { styles } from '@/components/ButtonStyles';
+import { handleLogout } from '@/components/auth/Logout';
 
 export default function AccountScreen() {
   const [username, setUsername] = useState('');
@@ -36,16 +35,6 @@ export default function AccountScreen() {
   };
 
   const paddingTop = calculatePaddingTop();
-
-  const handleLogout = async () => {
-    await ReactNativeAsyncStorage.removeItem('email');
-    await ReactNativeAsyncStorage.removeItem('image');
-    await ReactNativeAsyncStorage.removeItem('username');
-    await ReactNativeAsyncStorage.removeItem('userID');
-    await signOut(auth)
-    await removeItem('userInfo')
-    router.push('/');
-  }
 
   return (
     <YStack flex={1} paddingTop={paddingTop}>
@@ -116,7 +105,7 @@ export default function AccountScreen() {
             />
             <CustomButton
               title="Settings"
-              onPress={() => { }}
+              onPress={() => { router.push('/user/setting') }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -128,7 +117,7 @@ export default function AccountScreen() {
           <YStack>
             <CustomButton
               title="Help"
-              onPress={() => { }}
+              onPress={() => { router.push('/support') }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -140,7 +129,7 @@ export default function AccountScreen() {
           <YStack gap={15}>
             <CustomButton
               title="Privacy"
-              onPress={() => { }}
+              onPress={() => { router.navigate('/legal') }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -168,39 +157,3 @@ export default function AccountScreen() {
     </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  displayNameText: {
-    fontFamily: 'MontserratBold',
-    fontSize: 20,
-    lineHeight: 24,
-    color: Colors.secondary,
-    textAlign: 'center',
-  },
-
-  text: {
-    fontFamily: 'MontserratBold',
-    fontSize: 16,
-    lineHeight: 20,
-    color: Colors.secondary,
-    paddingLeft: 20,
-    marginBottom: 10,
-  },
-
-  button: {
-    backgroundColor: Colors.primary,
-    height: 52,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderRadius: 8,
-    padding: 16,
-    paddingHorizontal: 20,
-  },
-  buttonText: {
-    fontFamily: 'MontserratMedium',
-    fontSize: 16,
-    lineHeight: 20,
-    color: Colors.secondary,
-  },
-});

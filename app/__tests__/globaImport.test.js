@@ -28,6 +28,9 @@ jest.mock('firebase/firestore', () => ({
   query: jest.fn(),
   where: jest.fn(),
   getDocs: jest.fn(),
+  orderBy: jest.fn(),
+  startAt: jest.fn(),
+  endAt: jest.fn(),
 }));
 describe('Example ', () => {
   test('Example Test Case', () => {

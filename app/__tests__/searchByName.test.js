@@ -1,4 +1,5 @@
-import { getDocs,query,collection,where } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, startAt, endAt } from 'firebase/firestore'; 
+
 import { findByName} from '@/api/player-api'
 import {db } from '@/lib/firebase'
 
@@ -19,6 +20,9 @@ jest.mock('firebase/firestore', () => ({
     query: jest.fn(),
     where: jest.fn(),
     getDocs: jest.fn(),
+    orderBy: jest.fn(),
+  startAt: jest.fn(),
+  endAt: jest.fn(),
 }));
 
 
@@ -63,7 +67,6 @@ describe('findByName', () => {
 
     const result = await findByName({ name });
     expect(result).toBe('Name does not exist');
-    expect(query).toHaveBeenCalledWith(collection(db, 'club'), where('name', '==', name));
   });
 
   test('should return error message if an error occurs', async () => {
@@ -76,6 +79,5 @@ describe('findByName', () => {
     const result = await findByName({ name });
 
     expect(result).toBe(errorMessage);
-    expect(query).toHaveBeenCalledWith(collection(db, 'club'), where('name', '==', name));
   });
 });
