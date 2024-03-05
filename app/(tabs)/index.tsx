@@ -7,6 +7,7 @@ import { Button } from 'tamagui';
 import EditScreenInfo from '@/components/EditScreenInfo';
 
 export default function TabOneScreen() {
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab One</Text>
