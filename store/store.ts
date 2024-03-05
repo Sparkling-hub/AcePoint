@@ -4,7 +4,6 @@ import tempFilterReducer from './slices/tempFilterSlice';
 import savedFilterReducer from './slices/savedFilterSlice';
 import editProfileReducer from './slices/editProfile';
 import userRoleReducer from './slices/userRole';
-import keyboardVisibilityReducer from './slices/keyboardVisibility';
 
 export const store = configureStore({
   reducer: {
@@ -12,7 +11,6 @@ export const store = configureStore({
     userRole: userRoleReducer,
     tempFilter: tempFilterReducer,
     savedFilter: savedFilterReducer,
-    keyboardVisibility: keyboardVisibilityReducer,
   },
 });
 

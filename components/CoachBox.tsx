@@ -6,6 +6,7 @@ import { renderStars } from '@/helpers/RatingsHelper';
 import { favouriteCoach, unfavoriteCoach } from '@/api/player-api';
 import { Pressable } from 'react-native';
 import { auth } from '@/lib/firebase';
+import fireToast from './toast/Toast';
 
 interface CoachBoxProps {
   readonly name?: string;
@@ -45,6 +46,10 @@ const CoachBox: React.FC<CoachBoxProps> = ({
         await unfavoriteCoach(coachRef);
       } else {
         await favouriteCoach(coachRef);
+        fireToast({
+          message: 'Coach added to favourites',
+          type: 'success',
+        });
       }
       setIsFavorite(!isFavorite);
     } catch (error) {
@@ -58,7 +63,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
       <XStack>
         <Avatar circular borderWidth={2} borderColor={Colors.primary} size={52}>
           <Avatar.Image
-            src={image?? require('../assets/images/user-pfp.png')}
+            src={image ?? require('../assets/images/user-pfp.png')}
           />
           <Avatar.Fallback bc={'#EFEFEF'} />
         </Avatar>

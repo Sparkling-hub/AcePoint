@@ -4,7 +4,7 @@ import { Filter, StarFull } from '@tamagui/lucide-icons';
 import React, { useEffect, useState } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 
-import { Text, View, XStack, YStack } from 'tamagui';
+import { ScrollView, Text, View, XStack, YStack } from 'tamagui';
 
 import { router } from 'expo-router';
 import {
@@ -56,9 +56,13 @@ export default function BookTraining() {
           ...doc.data(),
         })) ?? [];
 
-      setClubSearchResults(
-        clubResults?.docs?.map((doc: any) => doc.data()) ?? []
-      );
+      const formattedClubResults =
+        clubResults?.docs?.map((doc: any) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) ?? [];
+
+      setClubSearchResults(formattedClubResults);
       setCoachSearchResults(formattedCoachResults);
     } else {
       setClubSearchResults([]);
@@ -154,45 +158,61 @@ export default function BookTraining() {
 
       {/* Search results */}
       {!showFavorites ? (
-        <YStack>
-          {clubSearchResults?.length > 0 && (
-            <FlatList
-              data={clubSearchResults}
-              ItemSeparatorComponent={Spacer}
-              renderItem={({ item }) => (
-                <ClubBox name={item.name} membership={'NO'} rating={5} />
-              )}
-            />
-          )}
-
-          {coachSearchResults?.length > 0 && (
-            <FlatList
-              data={coachSearchResults}
-              renderItem={({ item }) => (
-                <CoachBox
-                  coachRef={item.id}
-                  name={item.displayName}
-                  rating={5}
-                  level={2}
-                  age={42}
-                  image={item.image}
-                  followedPlayer={item.followedPlayer}
-                />
-              )}
-            />
-          )}
-
-          {clubSearchResults?.length === 0 &&
-            coachSearchResults?.length === 0 &&
-            searchQuery.trim() !== '' && (
-              <Text
-                style={{ fontFamily: 'MontserratBold' }}
-                color={Colors.secondary}
-                fontSize={16}>
-                No Data
-              </Text>
+        <ScrollView flex={1}>
+          <YStack>
+            {clubSearchResults?.length > 0 && (
+              <YStack>
+                {clubSearchResults?.map((item) => (
+                  <ClubBox
+                    key={item.id}
+                    name={item.name}
+                    membership={'NO'}
+                    rating={5}
+                  />
+                ))}
+              </YStack>
             )}
-        </YStack>
+
+            {coachSearchResults?.length > 0 && (
+              <YStack>
+                {clubSearchResults?.length > 0 && (
+                  <Text
+                    style={{ fontFamily: 'MontserratBold' }}
+                    fontSize={16}
+                    marginVertical={16}
+                    lineHeight={19}
+                    color={Colors.secondary}>
+                    Coaches
+                  </Text>
+                )}
+
+                {coachSearchResults?.map((item) => (
+                  <CoachBox
+                    key={item.id}
+                    coachRef={item.id}
+                    name={item.displayName}
+                    rating={5}
+                    level={2}
+                    age={42}
+                    image={item.image}
+                    followedPlayer={item.followedPlayer}
+                  />
+                ))}
+              </YStack>
+            )}
+
+            {clubSearchResults?.length === 0 &&
+              coachSearchResults?.length === 0 &&
+              searchQuery.trim() !== '' && (
+                <Text
+                  style={{ fontFamily: 'MontserratBold' }}
+                  color={Colors.secondary}
+                  fontSize={16}>
+                  No Data
+                </Text>
+              )}
+          </YStack>
+        </ScrollView>
       ) : (
         // Display favorite coaches
         <FlatList
@@ -214,4 +234,4 @@ export default function BookTraining() {
   );
 }
 
-const Spacer = ({ height = 22 }) => <View style={{ height }} />;
+const Spacer = ({ height = 16 }) => <View style={{ height }} />;
