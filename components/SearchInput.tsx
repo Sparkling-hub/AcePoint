@@ -1,13 +1,21 @@
 import Colors from '@/constants/Colors';
 import { Heart, Navigation } from '@tamagui/lucide-icons';
 import React from 'react';
+import { Pressable } from 'react-native';
 import { Input, InputProps, XStack } from 'tamagui';
 
 interface SearchInputProps extends InputProps {
   onSearch: () => void;
+  showFavorites: boolean;
+  setShowFavorites: (show: boolean) => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ onSearch, ...props }) => {
+const SearchInput: React.FC<SearchInputProps> = ({
+  onSearch,
+  showFavorites,
+  setShowFavorites,
+  ...props
+}) => {
   return (
     <XStack
       width={'100%'}
@@ -30,7 +38,13 @@ const SearchInput: React.FC<SearchInputProps> = ({ onSearch, ...props }) => {
       />
       <XStack gap={10} alignItems="center">
         <Navigation size={24} color={Colors.secondary} />
-        <Heart size={24} color={Colors.secondary} />
+        <Pressable onPress={() => setShowFavorites(!showFavorites)}>
+          <Heart
+            size={24}
+            color={Colors.secondary}
+            fill={showFavorites ? Colors.secondary : 'none'}
+          />
+        </Pressable>
       </XStack>
     </XStack>
   );

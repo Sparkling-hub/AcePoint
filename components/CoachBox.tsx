@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Text, View, XStack, YStack } from 'tamagui';
 import Colors from '@/constants/Colors';
 import { Heart } from '@tamagui/lucide-icons';
 import { renderStars } from '@/helpers/RatingsHelper';
 import { favouriteCoach, unfavoriteCoach } from '@/api/player-api';
 import { Pressable } from 'react-native';
+import { auth } from '@/lib/firebase';
 
 interface CoachBoxProps {
   readonly name?: string;
@@ -13,6 +14,7 @@ interface CoachBoxProps {
   readonly age: number;
   readonly image?: string;
   readonly coachRef: any;
+  readonly followedPlayer?: string[];
 }
 
 const CoachBox: React.FC<CoachBoxProps> = ({
@@ -22,17 +24,27 @@ const CoachBox: React.FC<CoachBoxProps> = ({
   age,
   image,
   coachRef,
+  followedPlayer,
 }) => {
   const [isFavorited, setIsFavorited] = useState(false);
 
+  useEffect(() => {
+    const currentUser = auth.currentUser;
+    if (
+      currentUser &&
+      followedPlayer &&
+      followedPlayer.includes(currentUser.uid)
+    ) {
+      setIsFavorited(true);
+    }
+  }, []);
+
   const handleFavoriteToggle = async () => {
-    console.log(coachRef);
     try {
       if (isFavorited) {
         await unfavoriteCoach(coachRef);
       } else {
-        await favouriteCoach(coachRef).then((res) => console.log(res));
-        // console.log(favouriteCoach(coachRef).then((res) => console.log(res)));
+        await favouriteCoach(coachRef);
       }
       setIsFavorited(!isFavorited);
     } catch (error) {
@@ -40,6 +52,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
       // Handle error
     }
   };
+
   return (
     <YStack width={'100%'}>
       <XStack>

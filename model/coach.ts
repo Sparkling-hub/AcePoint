@@ -3,6 +3,7 @@ export class Coach {
   id?: string;
   certificationId?: CollectionReference;
   clubId?: CollectionReference;
+  followedPlayer?: string[];
   createdAt?: Timestamp;
   displayName?: string;
   phoneNumber?: string;

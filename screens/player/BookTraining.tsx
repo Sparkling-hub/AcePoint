@@ -7,7 +7,11 @@ import { FlatList, TouchableOpacity } from 'react-native';
 import { Text, View, XStack, YStack } from 'tamagui';
 
 import { router } from 'expo-router';
-import { findByName, findCoachByName } from '@/api/player-api';
+import {
+  favoriteCoachList,
+  findByName,
+  findCoachByName,
+} from '@/api/player-api';
 import { Coach } from '@/model/coach';
 import ClubBox from '@/components/ClubBox';
 import { Club } from '@/model/club';
@@ -34,7 +38,9 @@ export default function BookTraining() {
   const [searchQuery, setSearchQuery] = useState('');
   const [clubSearchResults, setClubSearchResults] = useState<Club[]>([]);
   const [coachSearchResults, setCoachSearchResults] = useState<Coach[]>([]);
+  const [favoriteCoaches, setFavoriteCoaches] = useState<Coach[]>([]);
   const [submitted, setSubmitted] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
 
   // Function to handle search
   const handleSearch = async () => {
@@ -75,6 +81,20 @@ export default function BookTraining() {
     setSubmitted(false);
   }, [searchQuery]);
 
+  const loadFavoriteCoaches = async () => {
+    try {
+      const favorites = await favoriteCoachList(); // Call the function to get favorite coaches
+      // console.log(favorites);
+      setFavoriteCoaches(favorites);
+    } catch (error) {
+      console.error('Error loading favorite coaches:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadFavoriteCoaches();
+  }, [showFavorites]);
+
   return (
     <YStack flex={1} paddingTop={28} paddingHorizontal={16}>
       {/* Search input */}
@@ -83,6 +103,8 @@ export default function BookTraining() {
         value={searchQuery}
         onChangeText={setSearchQuery}
         onSearch={handleSearch}
+        setShowFavorites={setShowFavorites}
+        showFavorites={showFavorites}
       />
       <XStack marginLeft={14} marginVertical={23} gap={9}>
         {/* Filter button */}
@@ -134,45 +156,64 @@ export default function BookTraining() {
       </XStack>
 
       {/* Search results */}
-      <YStack>
-        {clubSearchResults?.length > 0 && (
-          <FlatList
-            data={clubSearchResults}
-            ItemSeparatorComponent={Spacer}
-            renderItem={({ item }) => (
-              <ClubBox name={item.name} membership={'NO'} rating={5} />
-            )}
-          />
-        )}
-
-        {coachSearchResults?.length > 0 && (
-          <FlatList
-            data={coachSearchResults}
-            renderItem={({ item }) => (
-              <CoachBox
-                coachRef={item.id}
-                name={item.displayName}
-                rating={5}
-                level={2}
-                age={42}
-                image={item.image}
-              />
-            )}
-          />
-        )}
-
-        {clubSearchResults?.length === 0 &&
-          coachSearchResults?.length === 0 &&
-          searchQuery.trim() !== '' &&
-          submitted && (
-            <Text
-              style={{ fontFamily: 'MontserratBold' }}
-              color={Colors.secondary}
-              fontSize={16}>
-              No Data
-            </Text>
+      {!showFavorites ? (
+        <YStack>
+          {clubSearchResults?.length > 0 && (
+            <FlatList
+              data={clubSearchResults}
+              ItemSeparatorComponent={Spacer}
+              renderItem={({ item }) => (
+                <ClubBox name={item.name} membership={'NO'} rating={5} />
+              )}
+            />
           )}
-      </YStack>
+
+          {coachSearchResults?.length > 0 && (
+            <FlatList
+              data={coachSearchResults}
+              renderItem={({ item }) => (
+                <CoachBox
+                  coachRef={item.id}
+                  name={item.displayName}
+                  rating={5}
+                  level={2}
+                  age={42}
+                  image={item.image}
+                  followedPlayer={item.followedPlayer}
+                />
+              )}
+            />
+          )}
+
+          {clubSearchResults?.length === 0 &&
+            coachSearchResults?.length === 0 &&
+            searchQuery.trim() !== '' &&
+            submitted && (
+              <Text
+                style={{ fontFamily: 'MontserratBold' }}
+                color={Colors.secondary}
+                fontSize={16}>
+                No Data
+              </Text>
+            )}
+        </YStack>
+      ) : (
+        // Display favorite coaches
+        <FlatList
+          data={favoriteCoaches}
+          renderItem={({ item }) => (
+            <CoachBox
+              coachRef={item.id}
+              name={item.displayName}
+              rating={5}
+              level={2}
+              age={42}
+              image={item.image}
+              followedPlayer={item.followedPlayer}
+            />
+          )}
+        />
+      )}
     </YStack>
   );
 }
