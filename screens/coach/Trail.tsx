@@ -9,7 +9,7 @@ import ProgressBar from '@/components/ProgressBar'
 const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
     const updatePlayer=()=>{
         console.log("clicked")
-        router.push('/login')
+        router.push('/')
     }
   return (
     <SafeAreaView style={styles.container}>

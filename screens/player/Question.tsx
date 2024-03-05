@@ -25,7 +25,7 @@ const Question = ({handlePrevious}:{handlePrevious:() => void}) => {
              gender:gender,
              fitness:fitness
          })
-         router.push('/login')
+         router.push('/')
 
     }
   return (
