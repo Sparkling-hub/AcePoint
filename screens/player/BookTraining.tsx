@@ -43,13 +43,20 @@ export default function BookTraining() {
         findByName({ name: searchQuery }),
         findCoachByName({ name: searchQuery }),
       ]);
+
+      // Extracting coach data and adding coach id
+      const formattedCoachResults =
+        coachResults?.docs?.map((doc: any) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) ?? [];
+
       setClubSearchResults(
         clubResults?.docs?.map((doc: any) => doc.data()) ?? []
       );
-      setCoachSearchResults(
-        coachResults?.docs?.map((doc: any) => doc.data()) ?? []
-      );
+      setCoachSearchResults(formattedCoachResults);
       setSubmitted(true);
+      console.log(formattedCoachResults);
     } else {
       setClubSearchResults([]);
       setCoachSearchResults([]);
@@ -80,7 +87,7 @@ export default function BookTraining() {
       <XStack marginLeft={14} marginVertical={23} gap={9}>
         {/* Filter button */}
         <TouchableOpacity onPress={() => router.navigate('/book/filter')}>
-          <Filter size={32} color={'#000000'} />
+          <Filter size={32} color={Colors.secondary} />
         </TouchableOpacity>
         {/* Filter items */}
         <XStack gap={7} flexWrap="wrap" flex={1}>
@@ -143,6 +150,7 @@ export default function BookTraining() {
             data={coachSearchResults}
             renderItem={({ item }) => (
               <CoachBox
+                coachRef={item.id}
                 name={item.displayName}
                 rating={5}
                 level={2}

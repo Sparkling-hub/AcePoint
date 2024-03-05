@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Avatar, Text, View, XStack, YStack } from 'tamagui';
 import Colors from '@/constants/Colors';
 import { Heart } from '@tamagui/lucide-icons';
 import { renderStars } from '@/helpers/RatingsHelper';
+import { favouriteCoach, unfavoriteCoach } from '@/api/player-api';
+import { Pressable } from 'react-native';
 
 interface CoachBoxProps {
   readonly name?: string;
@@ -10,6 +12,7 @@ interface CoachBoxProps {
   readonly level: number;
   readonly age: number;
   readonly image?: string;
+  readonly coachRef: any;
 }
 
 const CoachBox: React.FC<CoachBoxProps> = ({
@@ -18,7 +21,25 @@ const CoachBox: React.FC<CoachBoxProps> = ({
   level,
   age,
   image,
+  coachRef,
 }) => {
+  const [isFavorited, setIsFavorited] = useState(false);
+
+  const handleFavoriteToggle = async () => {
+    console.log(coachRef);
+    try {
+      if (isFavorited) {
+        await unfavoriteCoach(coachRef);
+      } else {
+        await favouriteCoach(coachRef).then((res) => console.log(res));
+        // console.log(favouriteCoach(coachRef).then((res) => console.log(res)));
+      }
+      setIsFavorited(!isFavorited);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      // Handle error
+    }
+  };
   return (
     <YStack width={'100%'}>
       <XStack>
@@ -99,7 +120,14 @@ const CoachBox: React.FC<CoachBoxProps> = ({
                 </Text>
               </Text>
             </XStack>
-            <Heart size={20} color={Colors.secondary} marginTop={'$2'} />
+            <Pressable onPress={handleFavoriteToggle}>
+              <Heart
+                size={20}
+                color={Colors.secondary}
+                marginTop={'$2'}
+                fill={isFavorited ? Colors.secondary : 'none'}
+              />
+            </Pressable>
           </XStack>
           <XStack>{renderStars(rating)}</XStack>
         </YStack>

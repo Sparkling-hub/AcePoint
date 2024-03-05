@@ -1,3 +1,4 @@
+import Colors from '@/constants/Colors';
 import { Heart, Navigation } from '@tamagui/lucide-icons';
 import React from 'react';
 import { Input, InputProps, XStack } from 'tamagui';
@@ -28,8 +29,8 @@ const SearchInput: React.FC<SearchInputProps> = ({ onSearch, ...props }) => {
         onSubmitEditing={() => onSearch()}
       />
       <XStack gap={10} alignItems="center">
-        <Navigation size={24} color={'#000000'} />
-        <Heart size={24} color={'#000000'} />
+        <Navigation size={24} color={Colors.secondary} />
+        <Heart size={24} color={Colors.secondary} />
       </XStack>
     </XStack>
   );
