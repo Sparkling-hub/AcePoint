@@ -58,7 +58,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
       <XStack>
         <Avatar circular borderWidth={2} borderColor={Colors.primary} size={52}>
           <Avatar.Image
-            src={image?image: require('../assets/images/user-pfp.png')}
+            src={image?? require('../assets/images/user-pfp.png')}
           />
           <Avatar.Fallback bc={'#EFEFEF'} />
         </Avatar>
