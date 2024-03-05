@@ -32,6 +32,7 @@ import {
   setTempRating,
   setTempTags,
 } from '@/store/slices/tempFilterSlice';
+import { debounce } from 'lodash';
 
 export default function BookTraining() {
   // State variables
@@ -42,33 +43,27 @@ export default function BookTraining() {
   const [showFavorites, setShowFavorites] = useState(false);
 
   // Function to handle search
-  const handleSearch = async () => {
-    if (searchQuery.trim() !== '') {
-      const [clubResults, coachResults] = await Promise.all([
-        findByName({ name: searchQuery }),
-        findCoachByName({ name: searchQuery }),
-      ]);
+  const handleSearch = debounce(async (query: string) => {
+    const [clubResults, coachResults] = await Promise.all([
+      findByName({ name: query }),
+      findCoachByName({ name: query }),
+    ]);
 
-      // Extracting coach data and adding coach id
-      const formattedCoachResults =
-        coachResults?.docs?.map((doc: any) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) ?? [];
+    const formattedClubResults =
+      clubResults?.docs?.map((doc: any) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) ?? [];
 
-      const formattedClubResults =
-        clubResults?.docs?.map((doc: any) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) ?? [];
+    const formattedCoachResults =
+      coachResults?.docs?.map((doc: any) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) ?? [];
 
-      setClubSearchResults(formattedClubResults);
-      setCoachSearchResults(formattedCoachResults);
-    } else {
-      setClubSearchResults([]);
-      setCoachSearchResults([]);
-    }
-  };
+    setClubSearchResults(formattedClubResults);
+    setCoachSearchResults(formattedCoachResults);
+  }, 300); // Debounce delay in milliseconds
 
   const dispatch = useDispatch();
 
@@ -78,7 +73,12 @@ export default function BookTraining() {
   );
 
   useEffect(() => {
-    handleSearch();
+    if (searchQuery.trim() !== '') {
+      handleSearch(searchQuery);
+    } else {
+      setClubSearchResults([]);
+      setCoachSearchResults([]);
+    }
   }, [searchQuery]);
 
   const loadFavoriteCoaches = async () => {
