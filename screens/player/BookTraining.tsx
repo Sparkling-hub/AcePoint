@@ -39,7 +39,6 @@ export default function BookTraining() {
   const [clubSearchResults, setClubSearchResults] = useState<Club[]>([]);
   const [coachSearchResults, setCoachSearchResults] = useState<Coach[]>([]);
   const [favoriteCoaches, setFavoriteCoaches] = useState<Coach[]>([]);
-  const [submitted, setSubmitted] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
 
   // Function to handle search
@@ -61,8 +60,6 @@ export default function BookTraining() {
         clubResults?.docs?.map((doc: any) => doc.data()) ?? []
       );
       setCoachSearchResults(formattedCoachResults);
-      setSubmitted(true);
-      console.log(formattedCoachResults);
     } else {
       setClubSearchResults([]);
       setCoachSearchResults([]);
@@ -77,15 +74,14 @@ export default function BookTraining() {
   );
 
   useEffect(() => {
-    // Reset the submitted state to false when searchQuery changes
-    setSubmitted(false);
+    handleSearch();
   }, [searchQuery]);
 
   const loadFavoriteCoaches = async () => {
     try {
       const favorites = await favoriteCoachList(); // Call the function to get favorite coaches
-      // console.log(favorites);
-      setFavoriteCoaches(favorites);
+
+      setFavoriteCoaches(favorites?.flat());
     } catch (error) {
       console.error('Error loading favorite coaches:', error);
     }
@@ -99,10 +95,11 @@ export default function BookTraining() {
     <YStack flex={1} paddingTop={28} paddingHorizontal={16}>
       {/* Search input */}
       <SearchInput
-        placeholder="Search for Club or Coach"
+        placeholder={
+          !showFavorites ? 'Search for a coach or club' : 'Favorites'
+        }
         value={searchQuery}
-        onChangeText={setSearchQuery}
-        onSearch={handleSearch}
+        setSearchQuery={setSearchQuery}
         setShowFavorites={setShowFavorites}
         showFavorites={showFavorites}
       />
@@ -187,8 +184,7 @@ export default function BookTraining() {
 
           {clubSearchResults?.length === 0 &&
             coachSearchResults?.length === 0 &&
-            searchQuery.trim() !== '' &&
-            submitted && (
+            searchQuery.trim() !== '' && (
               <Text
                 style={{ fontFamily: 'MontserratBold' }}
                 color={Colors.secondary}

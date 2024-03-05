@@ -5,17 +5,21 @@ import { Pressable } from 'react-native';
 import { Input, InputProps, XStack } from 'tamagui';
 
 interface SearchInputProps extends InputProps {
-  onSearch: () => void;
   showFavorites: boolean;
   setShowFavorites: (show: boolean) => void;
+  setSearchQuery: (query: string) => void;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
-  onSearch,
   showFavorites,
   setShowFavorites,
+  setSearchQuery,
   ...props
 }) => {
+  const handleShowFavorites = () => {
+    setShowFavorites(!showFavorites);
+    setSearchQuery('');
+  };
   return (
     <XStack
       width={'100%'}
@@ -34,11 +38,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
         fontSize={16}
         lineHeight={19}
         placeholderTextColor={'#BDBDBD'}
-        onSubmitEditing={() => onSearch()}
+        onChangeText={setSearchQuery}
       />
       <XStack gap={10} alignItems="center">
         <Navigation size={24} color={Colors.secondary} />
-        <Pressable onPress={() => setShowFavorites(!showFavorites)}>
+        <Pressable onPress={handleShowFavorites}>
           <Heart
             size={24}
             color={Colors.secondary}

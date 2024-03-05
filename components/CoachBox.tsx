@@ -13,7 +13,7 @@ interface CoachBoxProps {
   readonly level: number;
   readonly age: number;
   readonly image?: string;
-  readonly coachRef: any;
+  readonly coachRef?: any;
   readonly followedPlayer?: string[];
 }
 
@@ -26,7 +26,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
   coachRef,
   followedPlayer,
 }) => {
-  const [isFavorited, setIsFavorited] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const currentUser = auth.currentUser;
@@ -35,18 +35,18 @@ const CoachBox: React.FC<CoachBoxProps> = ({
       followedPlayer &&
       followedPlayer.includes(currentUser.uid)
     ) {
-      setIsFavorited(true);
+      setIsFavorite(true);
     }
   }, []);
 
   const handleFavoriteToggle = async () => {
     try {
-      if (isFavorited) {
+      if (isFavorite) {
         await unfavoriteCoach(coachRef);
       } else {
         await favouriteCoach(coachRef);
       }
-      setIsFavorited(!isFavorited);
+      setIsFavorite(!isFavorite);
     } catch (error) {
       console.error('Error toggling favorite:', error);
       // Handle error
@@ -138,7 +138,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
                 size={20}
                 color={Colors.secondary}
                 marginTop={'$2'}
-                fill={isFavorited ? Colors.secondary : 'none'}
+                fill={isFavorite ? Colors.secondary : 'none'}
               />
             </Pressable>
           </XStack>
