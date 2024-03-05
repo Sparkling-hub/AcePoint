@@ -9,22 +9,22 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
-import { useColorScheme } from '@/components/useColorScheme';
+import { useColorScheme } from '@/components/backend/useColorScheme';
 import { TamaguiProvider } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
 
 import { ChevronLeft, X } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
-import CustomHeader from '@/components/CustomHeader';
+import CustomHeader from '@/components/frontend/CustomHeader';
 
 import { TouchableOpacity } from 'react-native';
-import HeaderText from '@/components/HeaderText';
+import HeaderText from '@/components/frontend/HeaderText';
 import { RootState, store } from '@/store/store';
 import { Provider, useSelector } from 'react-redux';
 import { updateUser } from '@/api/user-api';
 import Toast from 'react-native-toast-message';
-import SupportHeader from '@/components/SupportHeader';
-import LegalHeader from '@/components/LegalHeader';
+import SupportHeader from '@/components/frontend/SupportHeader';
+import LegalHeader from '@/components/frontend/LegalHeader';
 
 export {
   // Catch any errors thrown by the Layout component.

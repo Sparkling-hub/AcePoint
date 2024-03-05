@@ -30,7 +30,7 @@ jest.mock('expo-router', () => ({
     push: jest.fn(),
   },
 }));
-jest.mock('@/components/auth/Logout', () => ({
+jest.mock('@/components/backend/auth/Logout', () => ({
   handleLogout: jest.fn(),
 }));
 jest.mock('firebase/app', () => ({

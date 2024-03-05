@@ -5,8 +5,8 @@ import React from 'react';
 import { styles } from '../GoogleStyleButton';
 import { Image, Stack, XStack, YStack, Button, Text } from 'tamagui';
 import { router } from 'expo-router';
-import GoogleAuthIOS from '../auth/GoogleAuthIOS';
-import GoogleAuthAndroid from '../auth/GoogleAuthAndroid';
+import GoogleAuthIOS from '../../backend/auth/GoogleAuthIOS';
+import GoogleAuthAndroid from '../../backend/auth/GoogleAuthAndroid';
 WebBrowser.maybeCompleteAuthSession();
 type PlatformType = 'ios' | 'android';
 

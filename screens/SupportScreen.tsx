@@ -1,4 +1,4 @@
-import { styles } from '@/components/ButtonStyles';
+import { styles } from '@/components/frontend/ButtonStyles';
 import { Text, YStack, } from 'tamagui';
 
 export default function SupportScreen() {

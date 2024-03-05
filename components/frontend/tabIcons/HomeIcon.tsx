@@ -1,5 +1,5 @@
 import React from 'react';
-import Home from '@/components/svg/Home';
+import Home from '@/components/frontend/svg/Home';
 import Colors from '@/constants/Colors';
 
 interface HomeIconProps {

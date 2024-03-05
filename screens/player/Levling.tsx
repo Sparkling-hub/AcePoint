@@ -2,12 +2,12 @@ import { SafeAreaView, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { RadioGroup, ScrollView, YStack } from 'tamagui'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { RadioGroupItemWithLabel } from '@/components/RadioGroupItemWithLabel';
-import Button from '@/components/Button'
+import { RadioGroupItemWithLabel } from '@/components/frontend/RadioGroupItemWithLabel';
+import Button from '@/components/frontend/Button'
 import {updateUserPlayer } from'@/api/auth-api'
-import LevlingBox from '@/components/LevlingBox';
-import ProgressBar from '@/components/ProgressBar';
-import HeaderArrow from '@/components/HeaderArrow';
+import LevlingBox from '@/components/frontend/LevlingBox';
+import ProgressBar from '@/components/frontend/ProgressBar';
+import HeaderArrow from '@/components/frontend/HeaderArrow';
 const Levling = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:() => void}) => {
   const [level, setLevel] = useState('Beginner');
   const text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo ex, dapibus sit amet nisi ut, posuere laoreet nulla. Suspendisse dignissim elit in justo efficitur."

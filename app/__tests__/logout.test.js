@@ -1,4 +1,4 @@
-import { handleLogout } from '@/components/auth/Logout';
+import { handleLogout } from '@/components/backend/auth/Logout';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { signOut } from 'firebase/auth';
 import { router } from 'expo-router';

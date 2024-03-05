@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Text, View, XStack, YStack } from 'tamagui';
 import Colors from '@/constants/Colors';
-import PorfilePicture from './PorfilePicture';
+import PorfilePicture from '../backend/PorfilePicture';
 
 interface HistoryBoxProps {
   readonly displayName: string;

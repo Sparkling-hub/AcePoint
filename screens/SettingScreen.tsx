@@ -1,12 +1,12 @@
 import { Button, Text, YStack, AlertDialog, XStack, } from 'tamagui';
 import { ChevronRight } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
-import CustomButton from '@/components/CustomButton';
+import CustomButton from '@/components/frontend/CustomButton';
 import { handleDeleteAccount } from '@/services/user';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { useState } from 'react';
-import { styles } from '@/components/ButtonStyles';
+import { styles } from '@/components/frontend/ButtonStyles';
 
 export default function SettingsScreen() {
 

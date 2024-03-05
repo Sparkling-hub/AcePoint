@@ -1,7 +1,7 @@
 import { StyleSheet, FlatList, Platform } from 'react-native';
 import { Text, YStack, XStack } from 'tamagui';
-import HistoryBox from '@/components/HistoryBox';
-import ProfileCard from '@/components/ProfileCard';
+import HistoryBox from '@/components/frontend/HistoryBox';
+import ProfileCard from '@/components/frontend/ProfileCard';
 import Colors from '@/constants/Colors';
 
 const historyData = [

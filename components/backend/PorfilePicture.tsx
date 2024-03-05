@@ -17,7 +17,7 @@ const PorfilePicture: React.FC<AvatarProps> = (props) => {
       {image ? (
         <Avatar.Image src={image} />
       ) : (
-        <Avatar.Image src={require('../assets/images/user-pfp.png')} />
+        <Avatar.Image src={require('../../assets/images/user-pfp.png')} />
       )}
       <Avatar.Fallback bc="#EFEFEF" />
     </Avatar>

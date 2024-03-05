@@ -1,5 +1,5 @@
 import { Text, YStack, } from 'tamagui';
-import { styles } from '@/components/ButtonStyles';
+import { styles } from '@/components/frontend/ButtonStyles';
 
 export default function LegalScreen() {
 

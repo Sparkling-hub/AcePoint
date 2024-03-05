@@ -2,15 +2,15 @@ import { Platform } from 'react-native';
 import { Text, XStack, YStack } from 'tamagui';
 import { ChevronRight } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
-import CustomButton from '@/components/CustomButton';
+import CustomButton from '@/components/frontend/CustomButton';
 import { router } from 'expo-router';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import PorfilePicture from '@/components/PorfilePicture';
+import PorfilePicture from '@/components/backend/PorfilePicture';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { styles } from '@/components/ButtonStyles';
-import { handleLogout } from '@/components/auth/Logout';
+import { styles } from '@/components/frontend/ButtonStyles';
+import { handleLogout } from '@/components/backend/auth/Logout';
 
 export default function AccountScreen() {
   const [username, setUsername] = useState('');
