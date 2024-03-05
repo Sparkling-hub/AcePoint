@@ -19,6 +19,8 @@ import { Provider } from 'react-redux';
 import Toast from 'react-native-toast-message';
 import AccountHeader from '@/components/headers/AccountHeader';
 import EditProfileHeader from '@/components/headers/EditProfileHeader';
+import SupportHeader from '@/components/SupportHeader';
+import LegalHeader from '@/components/LegalHeader';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -82,6 +84,20 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: AccountHeader,
+              }}
+            />
+            <Stack.Screen
+              name="legal"
+              options={{
+                headerShadowVisible: false,
+                header: LegalHeader,
+              }}
+            />
+            <Stack.Screen
+              name="support"
+              options={{
+                headerShadowVisible: false,
+                header: SupportHeader,
               }}
             />
             <Stack.Screen

@@ -1,10 +1,25 @@
-import { jest } from './globaImport.test';
-import { findByName } from '@/api/player-api';
-import { db } from '@/lib/firebase';
-import { getDocs, query, collection, where } from 'firebase/firestore';
+import { getDocs,query,collection,where } from 'firebase/firestore';
+import { findByName} from '@/api/player-api'
+import {db } from '@/lib/firebase'
 
-// Your tests for findByName go here
+jest.mock('firebase/auth', () => ({
+  getReactNativePersistence: jest.fn(),
+  initializeAuth: jest.fn(),
+}));
+jest.mock("@/lib/firebase", () => ({
+  db: {}
+}));
+jest.mock('firebase/app', () => ({initializeApp: jest.fn(),}));
+jest.mock('firebase/storage', () => ({getStorage: jest.fn(),}));
+jest.mock('@react-native-async-storage/async-storage', () => ({ReactNativeAsyncStorage: jest.fn()}));
 
+jest.mock('firebase/firestore', () => ({
+    getFirestore: jest.fn(),
+    collection: jest.fn(),
+    query: jest.fn(),
+    where: jest.fn(),
+    getDocs: jest.fn(),
+}));
 
 
 describe('findByName', () => {
@@ -47,7 +62,7 @@ describe('findByName', () => {
     getDocs.mockResolvedValueOnce({ empty: true });
 
     const result = await findByName({ name });
-    expect(result).toBe('name dose not exist');
+    expect(result).toBe('Name does not exist');
     expect(query).toHaveBeenCalledWith(collection(db, 'club'), where('name', '==', name));
   });
 

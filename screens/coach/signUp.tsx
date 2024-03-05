@@ -56,14 +56,13 @@ const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: an
   const onCheckedChangeMarketing = () => {
     setTimeout(() => setMarketing(!marketing), 0);
   };
-  console.log(terms,marketing)
   const validate = async () => {
     try {
       await Yup.object().shape({
-        displayName: Yup.string().required('Name and last name are required'),
+        displayName: Yup.string().required('Name and last name are required').min(4),
         email: Yup.string().email('Invalid email').required('Email is required'),
         phoneNumber: Yup.string().required('Phone number is required').min(6),
-        password: Yup.string().required('Password is required').min(6),
+        password: Yup.string().required('Password is required').min(6).matches(/[A-Z]/, 'Password must contain at least one uppercase letter'),
         countryCode: Yup.string().required('Country code is required'),
       }).validate({
         displayName,
@@ -75,13 +74,16 @@ const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: an
       setErrors({}); // Reset errors if validation succeeds
       return true;
     } catch (error:any) {
-      const validationErrors = error.inner.reduce((errors, currentError) => {
+      const validationErrors = error.inner.reduce((errors:any, currentError:any) => {
+        fireToast({message:currentError.message,type:"error"});
         return {
           ...errors,
           [currentError.path]: currentError.message
+          
         };
       }, {});
-      setErrors(validationErrors); // Set errors if validation fails
+      setErrors(validationErrors);// Set errors if validation fails
+       
       return false;
     }
   } 

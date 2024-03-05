@@ -25,6 +25,9 @@ const Information = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:(
          onNext()
         console.log("updated")
     } 
+    const handleChange=(text:string) =>{
+        setTimeout(() => setImage(text), 0);
+    }
   return (
     <SafeAreaView style={styles.container}>
         <YStack alignItems="center" gap={"$2"} >
@@ -38,7 +41,7 @@ const Information = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:(
           <ProgressBar value={68}/>
           </YStack>
         <YStack alignItems="center" marginBottom={20} marginTop={-25} gap={"$4"} >
-        <UploadImage getFromChild={setImage} />
+        <UploadImage getFromChild={handleChange} />
          <Text style={styles.datetext}>Upload Picture</Text>
         </YStack>
             
@@ -49,9 +52,7 @@ const Information = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:(
             borderRadius={9} 
             style={styles.box} 
             placeholder='Lorem ipsum dolor sit amet,consectetur adipiscing elit. Curabitur leo ex'
-            onChangeText={(text) => {
-                setBios(text); 
-            }}
+            onChangeText={(text) => {setBios(text)}}
             />   
             </YStack>
 

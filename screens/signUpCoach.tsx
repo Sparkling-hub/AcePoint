@@ -7,7 +7,7 @@ import { signUpCoach } from '@/api/auth-api';
 
 
 const SignUpCoach = () => {
-  const [progress, setProgress] = useState(68);
+  const [progress, setProgress] = useState(34);
   const handleNext = () => setProgress(progress + 34);
   const handlePrevious  = () => setProgress(progress - 34);
 
