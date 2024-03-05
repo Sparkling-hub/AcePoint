@@ -139,10 +139,29 @@ const favoriteCoachList = async () => {
         if (!playerSnap.exists()) {
             return "Player does not exist.";
         }
+      
         const playerData = playerSnap.data();
-        const updatedFavoriteCoaches = playerData.favoriteCoach || [];
-        return updatedFavoriteCoaches;
-    } catch (error: any) {
+
+        // Array to store promises for fetching coach data
+        const coachPromises = playerData.favoriteCoach.map(async (id: any) => {
+            try {
+                const coachQuery = query(collection(db, "coach"), where("__name__", "==", id));
+                const coachSnapshot = await getDocs(coachQuery);
+                const coachDataArray = coachSnapshot.docs.map(doc => doc.data());
+                return coachDataArray;
+            } catch (error) {
+                // Handle error if fetching coach data fails
+                return null; // or throw error if desired
+            }
+        });
+
+        // Wait for all coach data promises to resolve
+        const coaches = await Promise.all(coachPromises);
+
+        // Log the fetched coach data
+
+        return coaches;
+    } catch (error:any) {
         return error.message;
     }
 };
