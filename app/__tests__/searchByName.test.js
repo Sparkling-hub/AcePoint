@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, orderBy, startAt, endAt } from 'firebase/firestore'; 
+import { collection, query, getDocs } from 'firebase/firestore'; 
 
 import { findByName} from '@/api/player-api'
 import {db } from '@/lib/firebase'

@@ -1,6 +1,5 @@
 import { findCoachByName } from '@/api/player-api';
-import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs, orderBy, startAt, endAt } from 'firebase/firestore'; 
+import { collection, query, where, getDocs } from 'firebase/firestore'; 
 jest.mock('firebase/auth', () => ({
   getReactNativePersistence: jest.fn(),
   initializeAuth: jest.fn(),

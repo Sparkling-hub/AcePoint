@@ -1,6 +1,4 @@
 import { fetchData }  from '@/api/player-api'; 
-import { db } from '@/lib/firebase'; 
-import { collection, query, where, getDocs, orderBy, startAt, endAt } from 'firebase/firestore'; 
 
 // Mock the Firebase Firestore methods
 jest.mock('@/lib/firebase', () => ({
