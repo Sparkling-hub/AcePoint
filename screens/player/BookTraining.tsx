@@ -35,6 +35,7 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth } from '@/lib/firebase';
+import { debounce } from 'lodash';
 
 export default function BookTraining() {
   // State variables
@@ -44,7 +45,6 @@ export default function BookTraining() {
   const [favoriteCoaches, setFavoriteCoaches] = useState<Coach[]>([]);
   const [showFavorites, setShowFavorites] = useState(false);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
-  const [submitted, setSubmitted] = useState(false);
 
   const currentUser = auth.currentUser;
 
@@ -78,34 +78,36 @@ export default function BookTraining() {
   };
 
   // Function to handle search
-  const handleSearch = async (query: string) => {
-    if (query.trim() !== '') {
-      const [clubResults, coachResults] = await Promise.all([
-        findByName({ name: query }),
-        findCoachByName({ name: query }),
-      ]);
+  const handleSearch = debounce(async (query: string) => {
+    const [clubResults, coachResults] = await Promise.all([
+      findByName({ name: query }),
+      findCoachByName({ name: query }),
+    ]);
 
-      const formattedCoachResults =
-        coachResults?.docs?.map((doc: any) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) ?? [];
+    const formattedClubResults =
+      clubResults?.docs?.map((doc: any) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) ?? [];
 
-      const formattedClubResults =
-        clubResults?.docs?.map((doc: any) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) ?? [];
+    const formattedCoachResults =
+      coachResults?.docs?.map((doc: any) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) ?? [];
 
-      setClubSearchResults(formattedClubResults);
-      setCoachSearchResults(formattedCoachResults);
-      setSubmitted(true);
-      await addToSearchHistory(query);
+    setClubSearchResults(formattedClubResults);
+    setCoachSearchResults(formattedCoachResults);
+  }, 500); // Debounce delay in milliseconds
+
+  useEffect(() => {
+    if (searchQuery.trim() !== '') {
+      handleSearch(searchQuery);
     } else {
       setClubSearchResults([]);
       setCoachSearchResults([]);
     }
-  };
+  }, [searchQuery]);
 
   // Function to load search history from AsyncStorage for the current user
   const fetchSearchHistory = async () => {
@@ -128,23 +130,12 @@ export default function BookTraining() {
   // Load and filter search history based on the current search query
   const loadSearchHistory = async () => {
     const history = await fetchSearchHistory();
-    const filteredHistory = history.filter((item: any) =>
-      item.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setSearchHistory(filteredHistory);
+    setSearchHistory(history);
   };
 
   useEffect(() => {
     loadSearchHistory();
-    // Reset the submitted state to false when searchQuery changes
-    if (submitted) {
-      setSubmitted(false);
-    }
-    if (searchQuery.trim() === '') {
-      setClubSearchResults([]);
-      setCoachSearchResults([]);
-    }
-  }, [searchQuery]);
+  }, [searchHistory]);
 
   const dispatch = useDispatch();
 
@@ -156,9 +147,11 @@ export default function BookTraining() {
   // Function to load favorite coaches
   const loadFavoriteCoaches = async () => {
     try {
-      const favorites = await favoriteCoachList(); // Call the function to get favorite coaches
-      if (favorites) {
+      const favorites = await favoriteCoachList();
+      if (favorites && favorites.length > 0) {
         setFavoriteCoaches(favorites[0]);
+      } else {
+        setFavoriteCoaches([]);
       }
     } catch (error) {
       console.error('Error loading favorite coaches:', error);
@@ -170,39 +163,23 @@ export default function BookTraining() {
   }, [showFavorites]);
 
   // Function to remove search history item
-  const removeSearchHistoryItem = async (itemToRemove: string) => {
-    try {
-      if (currentUser) {
-        let historyString = await AsyncStorage.getItem(
-          `searchHistory_${currentUser.uid}`
-        );
-        let history = [];
-
-        if (historyString) {
-          history = JSON.parse(historyString);
-          const updatedHistory = history.filter(
-            (item: any) => item !== itemToRemove
-          );
-          await AsyncStorage.setItem(
-            `searchHistory_${currentUser.uid}`,
-            JSON.stringify(updatedHistory)
-          );
-
-          const filteredHistory = updatedHistory.filter((item: any) =>
-            item.toLowerCase().includes(searchQuery.toLowerCase())
-          );
-
-          setSearchHistory(filteredHistory);
-        }
-      }
-    } catch (error) {
-      console.error('Error removing search history item:', error);
+  const removeSearchHistoryItem = (itemToRemove: string) => {
+    const updatedHistory = searchHistory.filter(
+      (item: any) => item !== itemToRemove
+    );
+    setSearchHistory(updatedHistory);
+    if (currentUser) {
+      AsyncStorage.setItem(
+        `searchHistory_${currentUser.uid}`,
+        JSON.stringify(updatedHistory)
+      ).catch((error) => {
+        console.error('Error updating search history in AsyncStorage:', error);
+      });
     }
   };
 
-  const handlePressSearchItem = async (item: string) => {
+  const handlePressSearchItem = (item: string) => {
     setSearchQuery(item);
-    await handleSearch(item);
   };
 
   return (
@@ -216,7 +193,7 @@ export default function BookTraining() {
         setSearchQuery={setSearchQuery}
         setShowFavorites={setShowFavorites}
         showFavorites={showFavorites}
-        onSearch={handleSearch}
+        onSubmitEditing={() => addToSearchHistory(searchQuery)}
       />
       <XStack marginLeft={14} marginVertical={23} gap={9}>
         {/* Filter button */}
@@ -270,7 +247,7 @@ export default function BookTraining() {
       {/* Search results */}
       {!showFavorites ? (
         <ScrollView flex={1}>
-          {!submitted && searchQuery.trim() !== '' ? (
+          {searchQuery.trim() === '' ? (
             <YStack paddingLeft={42} paddingRight={16}>
               {searchHistory?.length > 0 && (
                 <YStack gap={14}>
@@ -340,8 +317,7 @@ export default function BookTraining() {
 
               {clubSearchResults?.length === 0 &&
                 coachSearchResults?.length === 0 &&
-                searchQuery.trim() !== '' &&
-                submitted && (
+                searchQuery.trim() !== '' && (
                   <Text
                     style={{ fontFamily: 'MontserratBold' }}
                     color={Colors.secondary}

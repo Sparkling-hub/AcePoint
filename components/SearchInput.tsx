@@ -8,14 +8,12 @@ interface SearchInputProps extends InputProps {
   showFavorites: boolean;
   setShowFavorites: (show: boolean) => void;
   setSearchQuery: (query: string) => void;
-  onSearch: (query: string) => void;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
   showFavorites,
   setShowFavorites,
   setSearchQuery,
-  onSearch,
   ...props
 }) => {
   const handleShowFavorites = () => {
@@ -41,7 +39,6 @@ const SearchInput: React.FC<SearchInputProps> = ({
         lineHeight={19}
         placeholderTextColor={'#BDBDBD'}
         onChangeText={setSearchQuery}
-        onSubmitEditing={() => onSearch(props.value ?? '')}
         returnKeyType="search"
         returnKeyLabel="Search"
       />
