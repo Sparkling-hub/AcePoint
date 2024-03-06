@@ -2,6 +2,7 @@ import { render, waitFor } from 'react-native-testing-library';
 import * as redux from 'react-redux';
 import * as AsyncStorage from '@react-native-async-storage/async-storage';
 import AccountScreen from '@/screens/AccountScreen';
+import Notification from '../notification';
 import Account from '../user/account';
 import Security from '../user/security';
 import Legal from '../legal'
@@ -11,15 +12,19 @@ jest.mock('tamagui', () => ({
   YStack: jest.fn(),
   Text: jest.fn(),
   XStack: jest.fn(),
+  Switch: jest.fn(),
   Button: jest.fn(),
 }));
 jest.mock('firebase/firestore', () => ({
   getFirestore: jest.fn(),
   collection: jest.fn(),
   addDoc: jest.fn(),
-  getDocs: jest.fn(() => Promise.resolve({ empty: true })),
+  getDocs: jest.fn(() => Promise.resolve({ docs: [] })),
   where: jest.fn(),
   query: jest.fn(),
+  doc: jest.fn(),
+  updateDoc: jest.fn(),
+  getDoc: jest.fn(() => Promise.resolve({ data: jest.fn() })),
 }));
 // Mocking modules and hooks
 jest.mock('react-redux', () => ({
@@ -70,6 +75,11 @@ describe('AccountScreen', () => {
     await waitFor(() => {
       expect(findByText('Test Name')).toBeTruthy();
     });
+  });
+  it('Notifications renders correctly', () => {
+    const testID = 'notification-screen';
+    const { getByTestId } = render(<Notification testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
   });
   it('Account renders correctly', () => {
     const testID = 'account-screen';

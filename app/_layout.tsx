@@ -17,6 +17,8 @@ import { store } from '@/store/store';
 import { Provider } from 'react-redux';
 
 import Toast from 'react-native-toast-message';
+import NotificationHeader from '@/components/NotificationHeader';
+import SettingsHeader from '@/components/SettingsHeader';
 import SecurityHeader from '@/components/SecurityHeader';
 import AccountHeader from '@/components/headers/AccountHeader';
 import EditProfileHeader from '@/components/headers/EditProfileHeader';
@@ -85,6 +87,20 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: AccountHeader,
+              }}
+            />
+            <Stack.Screen
+              name="user/setting"
+              options={{
+                headerShadowVisible: false,
+                header: SettingsHeader,
+              }}
+            />
+            <Stack.Screen
+              name="notification"
+              options={{
+                headerShadowVisible: false,
+                header: NotificationHeader,
               }}
             />
             <Stack.Screen

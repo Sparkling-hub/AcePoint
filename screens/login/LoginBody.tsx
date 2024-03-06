@@ -34,6 +34,9 @@ const LoginBody = ({ userType }: { userType: string }) => {
 
       if (result.user) {
         console.log("Login successful");
+        await storeData("email", result.user.user.email);
+        await storeData("userID", result.user.user.uid);
+
         router.push('/(tabs)');
         Alert.alert("Login Successful", "You have successfully logged in.");
       } else {

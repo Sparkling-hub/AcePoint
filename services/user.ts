@@ -43,6 +43,10 @@ async function findUserByEmail(
           email: email,
           displayName: displayName,
           picture: photoURL,
+          sessionNotification: true,
+          messageNotification: true,
+          promotionsViaEmail: true,
+          feedbackNotification: true
         });
         // Store the user ID in AsyncStorage
         await ReactNativeAsyncStorage.setItem('userID', newPlayerRef.id);
@@ -52,6 +56,10 @@ async function findUserByEmail(
           email: email,
           displayName: displayName,
           picture: photoURL,
+          sessionNotification: true,
+          messageNotification: true,
+          promotionsViaEmail: true,
+          feedbackNotification: true
         });
         // Store the user ID in AsyncStorage
         await ReactNativeAsyncStorage.setItem('userID', newCoachRef.id);

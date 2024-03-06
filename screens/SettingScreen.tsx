@@ -32,10 +32,9 @@ export default function SettingsScreen() {
             <YStack gap={20} paddingHorizontal={15} marginBottom={40}>
                 <YStack>
                     <YStack gap={15}>
-                        <Text style={styles.title}>Settings</Text>
                         <CustomButton
                             title="Notifications"
-                            onPress={() => { }
+                            onPress={() => { router.push('/notification') }
                             }
                             buttonStyle={styles.button}
                             textStyle={styles.buttonText}
