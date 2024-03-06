@@ -22,6 +22,9 @@ jest.mock('firebase/firestore', () => ({
   getDocs: jest.fn(() => Promise.resolve({ docs: [] })),
   where: jest.fn(),
   query: jest.fn(),
+  doc: jest.fn(),
+  updateDoc: jest.fn(),
+  getDoc: jest.fn(() => Promise.resolve({ data: jest.fn() })),
 }));
 // Mocking modules and hooks
 jest.mock('react-redux', () => ({

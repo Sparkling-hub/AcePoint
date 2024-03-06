@@ -2,34 +2,46 @@ import { retrieveData } from "@/api/localStorage"
 import { findOrCreateNotification } from "@/api/notification-api"
 import { styles } from "@/components/ButtonStyles"
 import { db } from "@/lib/firebase"
-import { collection, getDocs, query, where } from "firebase/firestore"
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { Switch, Text, XStack, YStack } from "tamagui"
 
 export default function NotificationScreen() {
 
-    const [message, setMessage] = useState(false)
-    const [feedback, setFeedback] = useState(false)
-    const [session, setSession] = useState(false)
-    const [promotion, setPromotion] = useState(false)
-
-
+    const [message, setMessage] = useState(true)
+    const [feedback, setFeedback] = useState(true)
+    const [session, setSession] = useState(true)
+    const [promotion, setPromotion] = useState(true)
 
     const handleChangeNotification = async (type: string, checked: boolean) => {
-        await findOrCreateNotification(type, checked);
+        const authMethod = await retrieveData('authMethod')
+        const userType = await retrieveData('userType')
+        if (authMethod === 'simple') {
+            const userID = await retrieveData('userID');
+            const userRef = userType === 'Player' ? doc(db, 'player', userID) : doc(db, 'coach', userID)
+            const userSnap = await getDoc(userRef);
+            const userData = userSnap.data()
+            console.log(userData);
+            await updateDoc(userRef, {
+                ...userData,
+                [type]: checked
+            })
+        } else {
+            await findOrCreateNotification(type, checked);
+        }
     }
     const getNotifications = async () => {
-        const email = await retrieveData('email')
         const userType = await retrieveData('userType')
-        const userCollection = userType === 'Player' ? collection(db, 'player') : collection(db, 'coach')
-        const notificationQuery = query(userCollection, where('email', '==', email))
-        const result = await getDocs(notificationQuery)
-        result.docs.forEach(doc => {
-            setMessage(doc.data().messageNotification)
-            setFeedback(doc.data().feedbackNotification)
-            setSession(doc.data().sessionNotification)
-            setPromotion(doc.data().promotionsViaEmail)
-        })
+        const userID = await retrieveData('userID');
+        const userRef = userType === 'Player' ? doc(db, 'player', userID) : doc(db, 'coach', userID)
+        const userSnap = await getDoc(userRef);
+        const userData = userSnap.data()
+        if (userData) {
+            setMessage(userData.messageNotification)
+            setFeedback(userData.feedbackNotification)
+            setSession(userData.sessionNotification)
+            setPromotion(userData.promotionsViaEmail)
+        }
     }
 
     useEffect(() => {
