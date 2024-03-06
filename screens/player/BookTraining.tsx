@@ -61,7 +61,7 @@ export default function BookTraining() {
           history = JSON.parse(historyString);
           // Check if the searchQuery already exists in the history
           if (!history.includes(query)) {
-            history = [query, ...history.slice(0, 4)]; // Limit search history to 5 items
+            history = [query, ...history];
           }
         } else {
           history = [query];
@@ -71,6 +71,7 @@ export default function BookTraining() {
           `searchHistory_${currentUser.uid}`,
           JSON.stringify(history)
         );
+        setSearchHistory(history.slice(0, 5));
       }
     } catch (error) {
       console.error('Error adding to search history:', error);
@@ -117,7 +118,9 @@ export default function BookTraining() {
           `searchHistory_${currentUser.uid}`
         );
         if (historyString) {
-          return JSON.parse(historyString);
+          const history = JSON.parse(historyString);
+          // Return only the last 5 items from the search history
+          return history.slice(0, 5);
         }
         return [];
       }
@@ -127,7 +130,7 @@ export default function BookTraining() {
     return [];
   };
 
-  // Load and filter search history based on the current search query
+  // Load search history
   const loadSearchHistory = async () => {
     const history = await fetchSearchHistory();
     setSearchHistory(history);
@@ -135,7 +138,7 @@ export default function BookTraining() {
 
   useEffect(() => {
     loadSearchHistory();
-  }, [searchHistory]);
+  }, []);
 
   const dispatch = useDispatch();
 
@@ -149,7 +152,7 @@ export default function BookTraining() {
     try {
       const favorites = await favoriteCoachList();
       if (favorites && favorites.length > 0) {
-        setFavoriteCoaches(favorites[0]);
+        setFavoriteCoaches(favorites.flat());
       } else {
         setFavoriteCoaches([]);
       }
@@ -163,18 +166,28 @@ export default function BookTraining() {
   }, [showFavorites]);
 
   // Function to remove search history item
-  const removeSearchHistoryItem = (itemToRemove: string) => {
-    const updatedHistory = searchHistory.filter(
-      (item: any) => item !== itemToRemove
-    );
-    setSearchHistory(updatedHistory);
-    if (currentUser) {
-      AsyncStorage.setItem(
-        `searchHistory_${currentUser.uid}`,
-        JSON.stringify(updatedHistory)
-      ).catch((error) => {
-        console.error('Error updating search history in AsyncStorage:', error);
-      });
+  const removeSearchHistoryItem = async (itemToRemove: string) => {
+    try {
+      if (currentUser) {
+        let historyString = await AsyncStorage.getItem(
+          `searchHistory_${currentUser.uid}`
+        );
+        let history = [];
+
+        if (historyString) {
+          history = JSON.parse(historyString);
+          const updatedHistory = history.filter(
+            (item: any) => item !== itemToRemove
+          );
+          await AsyncStorage.setItem(
+            `searchHistory_${currentUser.uid}`,
+            JSON.stringify(updatedHistory)
+          );
+          setSearchHistory(updatedHistory.slice(0, 5));
+        }
+      }
+    } catch (error) {
+      console.error('Error removing search history item:', error);
     }
   };
 
