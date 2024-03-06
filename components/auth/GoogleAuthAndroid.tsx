@@ -12,6 +12,7 @@ interface GoogleAuthAndroidProps{
       style={styles.ouath}
       onPress={async () => {
         await storeData("userType",userType)
+        await storeData("authMethod",'google')
         await authAndroid();
       }}>
       <Image

@@ -21,11 +21,13 @@ const Levling = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:() =>
       <ScrollView marginBottom={20} >
         <YStack alignItems="center" >
         <YStack marginBottom={25} >
-          <YStack alignItems="flex-start" gap={"$4"} marginLeft={-150}>
-          <HeaderArrow back={handlePrevious} gap={"$11"} data={"LEVELLING"} />
+          <YStack alignItems="flex-start" gap={"$4"} marginLeft={-120}>
+          <HeaderArrow back={handlePrevious} gap={"$8"} data={"LEVELLING"} />
           </YStack>
          </YStack>
-            <ProgressBar value={68} />
+         <YStack width={380} marginBottom={20} marginLeft={20} >
+          <ProgressBar value={68}/>
+          </YStack>
          <YStack marginBottom={30} marginTop={30} alignItems="center" >
         <LevlingBox/>
         </YStack>

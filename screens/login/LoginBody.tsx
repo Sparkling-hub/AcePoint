@@ -28,6 +28,8 @@ const LoginBody = ({ userType }: { userType: string }) => {
 
     try {
       await storeData("userType", userType);
+      await storeData("authMethod", 'simple')
+
       const result: any = await loginUser({ email, password });
 
       if (result.user) {

@@ -13,18 +13,15 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { TamaguiProvider } from 'tamagui';
 import tamaguiConfig from '../tamagui.config';
 
-import { ChevronLeft, X } from '@tamagui/lucide-icons';
-import Colors from '@/constants/Colors';
-import CustomHeader from '@/components/CustomHeader';
+import { store } from '@/store/store';
+import { Provider } from 'react-redux';
 
-import { TouchableOpacity } from 'react-native';
-import HeaderText from '@/components/HeaderText';
-import { RootState, store } from '@/store/store';
-import { Provider, useSelector } from 'react-redux';
-import { updateUser } from '@/api/user-api';
 import Toast from 'react-native-toast-message';
 import NotificationHeader from '@/components/NotificationHeader';
 import SettingsHeader from '@/components/SettingsHeader';
+import SecurityHeader from '@/components/SecurityHeader';
+import AccountHeader from '@/components/headers/AccountHeader';
+import EditProfileHeader from '@/components/headers/EditProfileHeader';
 import SupportHeader from '@/components/SupportHeader';
 import LegalHeader from '@/components/LegalHeader';
 
@@ -40,34 +37,6 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-const AccountHeader = () => {
-  return (
-    <CustomHeader leftIcon={<X size={'$2.5'} color={Colors.secondary} />} />
-  );
-};
-
-const EditProfileHeader = () => {
-  const userRole = useSelector((state: RootState) => state.userRole);
-  const userRoleValue = userRole.userRole;
-
-  const userData = useSelector((state: any) => state.editProfile.UserData);
-  const handleSaveProfile = () => {
-    updateUser(userData, userRoleValue);
-  };
-
-  return (
-    <CustomHeader
-      leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
-      title={userRoleValue === 'Coach' ? 'Edit Profile' : ''}
-      rightContent={
-        <TouchableOpacity onPress={handleSaveProfile}>
-          <HeaderText text="Save" />
-        </TouchableOpacity>
-      }
-    />
-  );
-};
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -97,9 +66,7 @@ export default function RootLayout() {
     return null;
   }
 
-
   return <RootLayoutNav />;
-
 }
 
 function RootLayoutNav() {
@@ -110,11 +77,9 @@ function RootLayoutNav() {
       <TamaguiProvider
         config={tamaguiConfig}
         defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}>
-
         <ThemeProvider
           value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack>
-
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
@@ -136,6 +101,13 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: NotificationHeader,
+              }}
+            />
+            <Stack.Screen
+              name="user/security"
+              options={{
+                headerShadowVisible: false,
+                header: SecurityHeader,
               }}
             />
             <Stack.Screen

@@ -3,6 +3,8 @@ import * as redux from 'react-redux';
 import * as AsyncStorage from '@react-native-async-storage/async-storage';
 import AccountScreen from '@/screens/AccountScreen';
 import Notification from '../notification';
+import Account from '../user/account';
+import Security from '../user/security';
 import Legal from '../legal'
 import Support from '../support'
 
@@ -11,6 +13,7 @@ jest.mock('tamagui', () => ({
   Text: jest.fn(),
   XStack: jest.fn(),
   Switch: jest.fn(),
+  Button: jest.fn(),
 }));
 jest.mock('firebase/firestore', () => ({
   getFirestore: jest.fn(),
@@ -73,6 +76,16 @@ describe('AccountScreen', () => {
   it('Notifications renders correctly', () => {
     const testID = 'notification-screen';
     const { getByTestId } = render(<Notification testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Account renders correctly', () => {
+    const testID = 'account-screen';
+    const { getByTestId } = render(<Account testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Security renders correctly', () => {
+    const testID = 'security-screen';
+    const { getByTestId } = render(<Security testID={testID} />);
     expect(getByTestId(testID)).toBeTruthy();
   });
   it('Support renders correctly', () => {

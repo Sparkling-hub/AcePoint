@@ -3,7 +3,7 @@ import React from 'react'
 
 const Loading = () => {
   return (
-    <YStack padding="$3" space="$4" alignItems="center">
+    <YStack padding="$3" gap="$4" alignItems="center">
       <Spinner size="large" color="$green10" />
     </YStack>
   )
