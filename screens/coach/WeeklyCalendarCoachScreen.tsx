@@ -1,11 +1,12 @@
 import Colors from "@/constants/Colors";
 import CalendarStrip from 'react-native-calendar-strip';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import AddButtonCalendar from "@/components/AddButtonCalendar";
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const times = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00'];
 const weeklyEvents: { [key: number]: { [time: string]: { name: string, spacesLeft: number, isFull?: boolean, endTime: string } } } = {
-    0: {},
+
     1: { '09:30': { name: 'Morning Yoga', spacesLeft: 2, endTime: '10:30' } },
     3: { '11:30': { name: 'Morning Yoga', spacesLeft: 0, endTime: '14:00' } },
 };
@@ -66,7 +67,7 @@ export default function WeeklyCalendarCoachScreen() {
 
                 {daysOfWeek.map((day, dayIndex) => (
                     <View key={day} style={styles.dayColumn}>
-                        <View style={[styles.gridLine, { top: 0, bottom: 0, width: 1, left: null, right: null, height: null }]} />
+                        <View style={[styles.gridLine, { top: 0, bottom: 50, width: 1, left: null, right: null, height: null }]} />
 
                         {times.map((time, index) => {
                             const event = weeklyEvents[dayIndex]?.[time];
@@ -82,22 +83,25 @@ export default function WeeklyCalendarCoachScreen() {
                                 );
                             }
                         })}
+                        
                     </View>
                 ))}
             </View>
+            <AddButtonCalendar/>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     weekGrid: {
+        marginTop:5,
         flexDirection: 'row',
         flex: 1,
     },
     timeColumn: {
         position: 'absolute',
         left: 0,
-        top: 80,
+        top: 85,
         bottom: 0,
         width: 50,
         zIndex: 1,
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: 'white',
     },
     timeSlot: {
         flexDirection: 'row',
@@ -180,9 +184,6 @@ const styles = StyleSheet.create({
         fontWeight: 'normal',
         textAlign: 'center',
     },
-    emptyEventText: {
-        color: '#dadada',
-    },
     spacesLeft: {
         color: '#ffffff',
         marginTop: 5,
@@ -190,22 +191,6 @@ const styles = StyleSheet.create({
     fullText: {
         color: '#ffffff',
         marginTop: 5,
-    },
-    addButton: {
-        position: 'absolute',
-        right: 20,
-        bottom: 20,
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: Colors.primary,
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 10,
-    },
-    addButtonText: {
-        fontSize: 30,
-        color: Colors.secondary,
     },
     gridLine: {
         position: 'absolute',

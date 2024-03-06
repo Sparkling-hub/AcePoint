@@ -1,16 +1,19 @@
+import AddButtonCalendar from "@/components/AddButtonCalendar";
 import Colors from "@/constants/Colors";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Agenda } from "react-native-calendars";
 import { Card } from "react-native-paper";
 import { Text, View } from "tamagui";
+
 export default function AgendaCoachScreen() {
+
     const [items, setItems] = useState({});
-    const timeToString = (time) => {
+    const timeToString = (time: any) => {
         const date = new Date(time);
         return date.toISOString().split('T')[0];
     };
-    const loadItems = (day) => {
+    const loadItems = (day: any) => {
         setTimeout(() => {
             for (let i = -15; i < 85; i++) {
                 const time = day.timestamp + i * 24 * 60 * 60 * 1000;
@@ -34,7 +37,7 @@ export default function AgendaCoachScreen() {
         }, 1000);
     };
 
-    const renderItem = (item) => {
+    const renderItem = (item: any) => {
         return (
             <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }}>
                 <Card>
@@ -53,23 +56,30 @@ export default function AgendaCoachScreen() {
         );
     };
     return (
-        <Agenda items={items}
-            loadItemsForMonth={loadItems}
-            selected={new Date().toString()}
-            renderItem={renderItem}
-            theme={{
-                agendaDayTextColor: Colors.primary,
-                agendaTodayTextColor: Colors.primary,
-                agendaDotColor: Colors.primary,
-                agendaSelectedDayTextColor: Colors.primary,
-                agendaSelectedDotColor: Colors.primary,
-                agendaTodayColor: Colors.primary,
-                selectedDayBackgroundColor: Colors.primary,
-                selectedDayTextColor: Colors.secondary,
-                todayTextColor: Colors.iron,
-                dotColor: Colors.primary,
-                selectedDotColor: Colors.secondary
-            }}
-        />
+        <>
+            <Agenda items={items}
+                loadItemsForMonth={loadItems}
+                selected={new Date().toString()}
+                renderItem={renderItem}
+                theme={{
+                    agendaDayTextColor: Colors.primary,
+                    agendaTodayTextColor: Colors.primary,
+                    agendaDotColor: Colors.primary,
+                    agendaSelectedDayTextColor: Colors.primary,
+                    agendaSelectedDotColor: Colors.primary,
+                    agendaTodayColor: Colors.primary,
+                    selectedDayBackgroundColor: Colors.primary,
+                    selectedDayTextColor: Colors.secondary,
+                    todayTextColor: Colors.iron,
+                    dotColor: Colors.primary,
+                    selectedDotColor: Colors.secondary,
+                    monthTextColor: Colors.secondary,
+                    dayTextColor: Colors.secondary
+                }}
+            />
+            <AddButtonCalendar />
+
+        </>
+
     )
 }
