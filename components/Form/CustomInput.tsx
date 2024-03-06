@@ -1,5 +1,4 @@
 import Colors from '@/constants/Colors';
-import { Info } from '@tamagui/lucide-icons';
 
 import React, { useRef } from 'react';
 import { TouchableOpacity } from 'react-native';
@@ -13,7 +12,7 @@ interface CustomInputProps extends InputProps {
   touched?: boolean;
   errors?: string;
   validateOnInit?: boolean;
-  hide?:boolean
+  hide?: boolean;
 }
 
 const CustomInput: React.FC<CustomInputProps> = (props) => {
@@ -46,11 +45,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
       <TouchableOpacity onPress={handleContainerPress} activeOpacity={0.5}>
         <YStack
           height={70}
-          backgroundColor={
-            (touched && errors) || (validateOnInit && errors)
-              ? '#FEECEB'
-              : Colors.iron
-          }
+          backgroundColor={Colors.iron}
           borderRadius={8}
           paddingVertical={16}
           paddingHorizontal={32}
@@ -65,6 +60,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
                   fontSize={14}
                   lineHeight={17}>
                   {placeholder}
+                  {errors && <Text color={'red'}> *</Text>}
                 </Text>
               )}
               <Input
@@ -85,17 +81,6 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
           </XStack>
         </YStack>
       </TouchableOpacity>
-      {(touched && errors) || (validateOnInit && errors) ? (
-        <XStack alignItems="center" marginTop={5} marginLeft={5}>
-          <Info size={18} color={'red'} marginRight={5} />
-          <Text
-            style={{ fontFamily: 'MontserratMedium' }}
-            color={'red'}
-            fontSize={12}>
-            {errors}
-          </Text>
-        </XStack>
-      ) : null}
     </YStack>
   );
 };
