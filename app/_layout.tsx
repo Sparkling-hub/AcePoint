@@ -17,6 +17,7 @@ import { store } from '@/store/store';
 import { Provider } from 'react-redux';
 
 import Toast from 'react-native-toast-message';
+import SecurityHeader from '@/components/SecurityHeader';
 import AccountHeader from '@/components/headers/AccountHeader';
 import EditProfileHeader from '@/components/headers/EditProfileHeader';
 import SupportHeader from '@/components/SupportHeader';
@@ -84,6 +85,13 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: AccountHeader,
+              }}
+            />
+            <Stack.Screen
+              name="user/security"
+              options={{
+                headerShadowVisible: false,
+                header: SecurityHeader,
               }}
             />
             <Stack.Screen

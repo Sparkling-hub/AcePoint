@@ -2,13 +2,16 @@ import { render, waitFor } from 'react-native-testing-library';
 import * as redux from 'react-redux';
 import * as AsyncStorage from '@react-native-async-storage/async-storage';
 import AccountScreen from '@/screens/AccountScreen';
+import Account from '../user/account';
+import Security from '../user/security';
 import Legal from '../legal'
 import Support from '../support'
 
 jest.mock('tamagui', () => ({
   YStack: jest.fn(),
   Text: jest.fn(),
-  XStack: jest.fn()
+  XStack: jest.fn(),
+  Button: jest.fn(),
 }));
 jest.mock('firebase/firestore', () => ({
   getFirestore: jest.fn(),
@@ -67,6 +70,16 @@ describe('AccountScreen', () => {
     await waitFor(() => {
       expect(findByText('Test Name')).toBeTruthy();
     });
+  });
+  it('Account renders correctly', () => {
+    const testID = 'account-screen';
+    const { getByTestId } = render(<Account testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Security renders correctly', () => {
+    const testID = 'security-screen';
+    const { getByTestId } = render(<Security testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
   });
   it('Support renders correctly', () => {
     const testID = 'support-screen';

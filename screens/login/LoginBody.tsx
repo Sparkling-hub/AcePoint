@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { router } from 'expo-router';
 
-const LoginBody = ({userType}:{userType:string}) => {
+const LoginBody = ({ userType }: { userType: string }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -20,16 +20,18 @@ const LoginBody = ({userType}:{userType:string}) => {
       Alert.alert("Please click on player or coach button");
       return;
     }
-  
+
     if (email.length === 0 || password.length === 0) {
       Alert.alert("Please fill in all the fields");
       return;
     }
-  
+
     try {
-      storeData("userType", userType);
+      await storeData("userType", userType);
+      await storeData("authMethod", 'simple')
+
       const result: any = await loginUser({ email, password });
-  
+
       if (result.user) {
         console.log("Login successful");
         router.push('/(tabs)');
@@ -66,7 +68,7 @@ const LoginBody = ({userType}:{userType:string}) => {
             autoCapitalize="none"
             style={styles.input}
           />
-          
+
           <View>
             <Input
               borderWidth={0}
@@ -130,7 +132,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     fontSize: 16,
     height: 45,
-    width:343,
+    width: 343,
     color: "#3A4D6C",
     borderRadius: 50,
 
