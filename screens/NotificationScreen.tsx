@@ -14,9 +14,12 @@ export default function NotificationScreen() {
     const [promotion, setPromotion] = useState(true)
 
     const handleChangeNotification = async (type: string, checked: boolean) => {
+        // Retrieve authentication method and user type from local storage
         const authMethod = await retrieveData('authMethod')
         const userType = await retrieveData('userType')
+
         if (authMethod === 'simple') {
+            // If authentication method is 'simple', directly update user document
             const userID = await retrieveData('userID');
             const userRef = userType === 'Player' ? doc(db, 'player', userID) : doc(db, 'coach', userID)
             const userSnap = await getDoc(userRef);
@@ -27,15 +30,19 @@ export default function NotificationScreen() {
                 [type]: checked
             })
         } else {
+            // Otherwise, use findOrCreateNotification function to update notifications
             await findOrCreateNotification(type, checked);
         }
     }
     const getNotifications = async () => {
+        // Retrieve user type and user ID from local storage
         const userType = await retrieveData('userType')
         const userID = await retrieveData('userID');
+        // Get user document reference based on user type
         const userRef = userType === 'Player' ? doc(db, 'player', userID) : doc(db, 'coach', userID)
         const userSnap = await getDoc(userRef);
         const userData = userSnap.data()
+        // Update state with notification settings if user data exists
         if (userData) {
             setMessage(userData.messageNotification)
             setFeedback(userData.feedbackNotification)
