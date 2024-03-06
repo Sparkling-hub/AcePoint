@@ -2,7 +2,7 @@ import { retrieveData } from "@/api/localStorage"
 import { findOrCreateNotification } from "@/api/notification-api"
 import { styles } from "@/components/ButtonStyles"
 import { db } from "@/lib/firebase"
-import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore"
+import { doc, getDoc, updateDoc } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { Switch, Text, XStack, YStack } from "tamagui"
 
