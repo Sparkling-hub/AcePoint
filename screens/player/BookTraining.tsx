@@ -275,15 +275,14 @@ export default function BookTraining() {
               {searchHistory?.length > 0 && (
                 <YStack gap={14}>
                   {searchHistory?.map((item, index) => (
-                    <XStack justifyContent="space-between">
+                    <XStack key={index} justifyContent="space-between">
                       <TouchableOpacity
                         onPress={() => handlePressSearchItem(item)}>
                         <Text
                           style={{ fontFamily: 'MontserratBold' }}
                           fontSize={16}
                           lineHeight={19}
-                          color={Colors.secondary}
-                          key={index}>
+                          color={Colors.secondary}>
                           {item}
                         </Text>
                       </TouchableOpacity>
