@@ -5,7 +5,7 @@ export default function WeeklyCalendarCoachScreen() {
         <CalendarStrip
             calendarAnimation={{ type: 'sequence', duration: 30 }}
             daySelectionAnimation={{ type: 'border', duration: 200, borderWidth: 1, borderHighlightColor: Colors.primary }}
-            style={{ height: 100, paddingTop: 20, paddingBottom: 10, borderRadius:20, marginLeft: 70, marginRight:20 }}
+            style={{ height: 100, paddingTop: 20, paddingBottom: 10, borderRadius: 20, marginLeft: 10, marginRight: 10 }}
             calendarHeaderStyle={{ color: 'white' }}
             calendarColor={Colors.secondary}
             dateNumberStyle={{ color: 'white' }}
