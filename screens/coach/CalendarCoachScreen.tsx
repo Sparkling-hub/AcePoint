@@ -1,36 +1,56 @@
 import { useSelector } from "react-redux";
 import AgendaCoachScreen from "./AgendaCoachScreen";
 import WeeklyCalendarCoachScreen from "./WeeklyCalendarCoachScreen";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Colors from "@/constants/Colors";
 
-const TimeSlot = ({ time, event, isFull }: { time: string, event: any, isFull: boolean }) => {
-    return (
-        <View style={styles.timeSlot}>
-            <Text style={styles.timeText}>{time}</Text>
-            {event && (
-                <View style={[styles.event, isFull && styles.fullEvent]}>
-                    <Text style={styles.eventText}>{event.name}</Text>
-                    {!isFull && <Text style={styles.spacesLeft}>{event.spacesLeft} Spaces left</Text>}
-                    {isFull && <Text style={styles.fullText}>Full</Text>}
-                </View>
-            )}
-        </View>
-    );
-};
+const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const times = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00'];
+
+
 export default function CalendarCoachScreen() {
     const result = useSelector((state: any) => state.calendarOption);
-    const events = {
-        '09:30': { name: 'Morning Squid', spacesLeft: 2 },
-        '12:00': { name: 'Adi Antone', spacesLeft: 0, isFull: true },
-        '13:30': { name: 'Summer Camp', spacesLeft: 3 },
+    const weeklyEvents: { [key: number]: { [time: string]: { name: string, spacesLeft: number, isFull?: boolean } } } = {
+        0: {},
+        1: { '09:30': { name: 'Morning Yoga', spacesLeft: 2 } },
+        3: { '11:30': { name: 'Morning Yoga', spacesLeft: 0 } },
     };
-
-    const times = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00'];
     return (
         <>
             {result.option === 'W'
-                ? <View flex={1} justifyContent="flex-start">
+                ? <View style={styles.container}>
                     <WeeklyCalendarCoachScreen />
+                    <View style={styles.weekGrid}>
+                        <View style={styles.timeColumn}>
+                            {times.map((time) => (
+                                <View key={time} style={styles.timeCell}>
+                                    <Text style={styles.timeText}>{time}</Text>
+                                </View>
+                            ))}
+                        </View>
+                        {/* Day Columns */}
+                        {daysOfWeek.map((day, dayIndex) => (
+                            <View key={day} style={styles.dayColumn}>
+                                {times.map((time) => {
+                                    const event = weeklyEvents[dayIndex]?.[time];
+                                    return (
+                                        <View key={day + time} style={styles.eventCell}>
+                                            {event ? (
+                                                <Text style={styles.eventText}>
+                                                    {event.name} {event.isFull ? 'Full' : `${event.spacesLeft} Spaces left`}
+                                                </Text>
+                                            ) : (
+                                                <Text style={styles.emptyEventText}>No Event</Text>
+                                            )}
+                                        </View>
+                                    );
+                                })}
+                            </View>
+                        ))}
+                    </View>
+                    <TouchableOpacity style={styles.addButton}>
+                        <Text style={styles.addButtonText}>+</Text>
+                    </TouchableOpacity>
                 </View>
                 : <AgendaCoachScreen />
             }
@@ -38,6 +58,48 @@ export default function CalendarCoachScreen() {
     );
 }
 const styles = StyleSheet.create({
+    weekGrid: {
+        flexDirection: 'row',
+        flex: 1,
+    },
+    daySelector: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingVertical: 10,
+        backgroundColor: '#f0f0f0',
+    },
+    dayButton: {
+        padding: 10,
+    },
+    selectedDay: {
+        borderBottomWidth: 2,
+        borderBottomColor: '#007AFF',
+    },
+    dayText: {
+        fontSize: 16,
+    },
+    timeColumn: {
+        width: 50,
+    },
+    timeCell: {
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0',
+    },
+    dayColumn: {
+        flex: 1,
+        borderLeftWidth: 1,
+        borderLeftColor: '#e0e0e0',
+    },
+    eventCell: {
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0',
+    },
     container: {
         flex: 1,
         backgroundColor: '#f0f0f0',
@@ -55,15 +117,18 @@ const styles = StyleSheet.create({
     },
     event: {
         flex: 1,
-        backgroundColor: '#4e68d9',
+        backgroundColor: Colors.secondary,
         padding: 10,
         borderRadius: 5,
     },
     fullEvent: {
-        backgroundColor: '#d9534f',
+        backgroundColor: Colors.secondary,
     },
     eventText: {
         color: '#ffffff',
+    },
+    emptyEventText: {
+        color: '#dadada',
     },
     spacesLeft: {
         color: '#ffffff',
@@ -80,12 +145,12 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: '#4e68d9',
+        backgroundColor: Colors.primary,
         justifyContent: 'center',
         alignItems: 'center',
     },
     addButtonText: {
         fontSize: 30,
-        color: '#ffffff',
+        color: Colors.secondary,
     },
 });
