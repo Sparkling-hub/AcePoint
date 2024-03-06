@@ -274,8 +274,8 @@ export default function BookTraining() {
             <YStack paddingLeft={42} paddingRight={16}>
               {searchHistory?.length > 0 && (
                 <YStack gap={14}>
-                  {searchHistory?.map((item, index) => (
-                    <XStack key={index} justifyContent="space-between">
+                  {searchHistory?.map((item) => (
+                    <XStack key={item} justifyContent="space-between">
                       <TouchableOpacity
                         onPress={() => handlePressSearchItem(item)}>
                         <Text
