@@ -11,6 +11,81 @@ import {
   startAt,
   where,
 } from 'firebase/firestore';
+import GetLocation from 'react-native-get-location'
+
+const calculateDistance = (
+  currentLat: number,
+  currentLon: number,
+  data:any,
+  radius:number
+): any => {
+  console.log("currentLat ",currentLat)
+  console.log("currentLon ",currentLon)
+  const earthRadius = 6371; // Earth's radius in kilometers
+  // Convert latitude and longitude from degrees to radians
+  const lat1Rad = (currentLat * Math.PI) / 180;
+  const lon1Rad = (currentLon * Math.PI) / 180;
+  const lat2Rad = (data.latitude * Math.PI) / 180;
+  const lon2Rad = (data.longitude * Math.PI) / 180;
+  // Haversine formula
+  const dLat = lat2Rad - lat1Rad;
+  const dLon = lon2Rad - lon1Rad;
+  const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1Rad) *
+          Math.cos(lat2Rad) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = earthRadius * c;
+  console.log(distance <= radius)
+  console.log("distance user from club ",distance)
+  console.log(radius)
+    if((distance <= radius)===true){
+      
+      console.log("In Range",data)
+      return data;
+    }else{
+      console.log("Not in Range",data)
+      return data; 
+    }
+  //return parseFloat(distance.toFixed(1)); // Distance in kilometers
+};
+const distanceCalculation =async (currentLatitude:number,currentLongitude:number,radious:number)=>{
+  try {
+  console.log('distanceCalculation')
+  const clubs= await fetchData("club")
+  if (clubs.empty) {
+    return "there is no club"
+  }
+  await clubs.docs.flatMap((doc => {
+    setTimeout(() => {
+        return calculateDistance(currentLatitude,currentLongitude,doc.data(),radious)
+    }, 1000);
+    //return doc.data().location
+  }))
+  } catch (error) {
+    console.log("error",error)
+  }
+}
+
+const locationPosition = (): Promise<{ latitude: number; longitude: number }> => {
+  return new Promise((resolve, reject) => {
+      GetLocation.getCurrentPosition({
+          enableHighAccuracy: false,
+          timeout: 60000, 
+      })
+      .then(location => {
+          const { latitude, longitude } = location;
+          resolve({ latitude, longitude });
+      })
+      .catch(error => {
+          const { code, message } = error;
+          reject({ code, message });
+      });
+  });
+}
+
 
 // Function to fetch data from Firestore
 const fetchData = async (
@@ -170,9 +245,9 @@ const favoriteCoachList = async () => {
     if (!playerSnap.exists()) {
       return 'Player does not exist.';
     }
-
+ 
     const playerData = playerSnap.data();
-
+ 
     // Array to store promises for fetching coach data
     const coachPromises = playerData.favoriteCoach.map(async (id: any) => {
       try {
@@ -185,23 +260,28 @@ const favoriteCoachList = async () => {
           id: doc.id,
           ...doc.data(),
         }));
+ 
         return coachDataArray;
       } catch (error) {
         // Handle error if fetching coach data fails
         return null; // or throw error if desired
       }
     });
-
+ 
     // Wait for all coach data promises to resolve
     const coaches = await Promise.all(coachPromises);
-
+ 
     // Log the fetched coach data
-
-    return coaches;
+    if (coaches?.flat().length === 0) {
+      return [];
+    }
+    return coaches.flat();
   } catch (error: any) {
     return error.message;
   }
 };
+
+
 
 export {
   findByName,
@@ -210,4 +290,6 @@ export {
   unfavoriteCoach,
   favoriteCoachList,
   fetchData,
+  locationPosition,
+  distanceCalculation
 };

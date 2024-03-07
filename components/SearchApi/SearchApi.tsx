@@ -30,7 +30,7 @@ const SearchApi = ({
     console.log(details);
     console.log('name :', name);
     addClub({
-      club: { name: name, location: `Latitude:${lat} Longitude:${lng}` },
+      club: { name: name,latitude:parseFloat(lat),longitude:parseFloat(lng) },
     });
     handleData(name);
     setClose(true);

@@ -9,7 +9,8 @@ const addClub = async ({ club }: { club:Club }) => {
         console.log("storage data: " + coachId);
         let clubData = {   
             name: club.name,
-            location: club.location,
+            latitude: club.latitude,
+            longitude: club.longitude,
             createdAt:Timestamp.now()    
         }; 
         const clubCollection = collection(db, 'club')
