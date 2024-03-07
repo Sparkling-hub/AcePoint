@@ -2,13 +2,10 @@ import { db, auth } from '@/lib/firebase';
 import {
   collection,
   doc,
-  endAt,
   getDoc,
   getDocs,
-  orderBy,
   query,
   runTransaction,
-  startAt,
   where,
 } from 'firebase/firestore';
 
@@ -19,18 +16,37 @@ const fetchData = async (
   queryValue: string | null = null
 ) => {
   let data;
-  if (queryField && queryValue) {
-    const q = query(
-      collection(db, collectionName),
-      orderBy(queryField),
-      startAt(queryValue),
-      endAt(queryValue + '\uf8ff')
-    );
-    data = await getDocs(q);
-  } else {
-    data = await getDocs(collection(db, collectionName));
+  let result: any = [];
+  let Data;
+  data = await getDocs(collection(db, collectionName));
+  if (collectionName === 'coach') {
+    data?.forEach((coach: any) => {
+      if (queryField && queryValue) {
+        if (
+          coach
+            .data()
+            .displayName.toLowerCase()
+            .includes(queryValue.toLowerCase())
+        ) {
+          Data = coach.data();
+          Data.id = coach.id;
+          return result.push(Data);
+        }
+      }
+    });
   }
-  return data;
+  if (collectionName === 'club') {
+    data?.forEach((club: any) => {
+      if (queryField && queryValue) {
+        if (club.data().name.toLowerCase().includes(queryValue.toLowerCase())) {
+          Data = club.data();
+          Data.id = club.id;
+          return result.push(Data);
+        }
+      }
+    });
+  }
+  return result;
 };
 
 // Function to find clubs by name
@@ -39,8 +55,9 @@ const findByName = async ({ name }: { name: string }) => {
     if (name.length !== 0) {
       // Fetch clubs by name
       const clubs = await fetchData('club', 'name', name);
-      if (clubs.empty) {
-        return 'Name does not exist';
+
+      if (clubs.length === 0) {
+        return [];
       }
       return clubs;
     } else {
@@ -59,8 +76,9 @@ const findCoachByName = async ({ name }: { name: string }) => {
     if (name.length !== 0) {
       // Fetch coaches by display name
       const coaches = await fetchData('coach', 'displayName', name);
-      if (coaches.empty) {
-        return 'Coach does not exist';
+
+      if (coaches.length === 0) {
+        return [];
       }
       return coaches;
     } else {

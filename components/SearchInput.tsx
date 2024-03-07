@@ -38,7 +38,6 @@ const SearchInput: React.FC<SearchInputProps> = ({
         fontSize={16}
         lineHeight={19}
         placeholderTextColor={'#BDBDBD'}
-        onChangeText={setSearchQuery}
         returnKeyType="search"
         returnKeyLabel="Search"
       />

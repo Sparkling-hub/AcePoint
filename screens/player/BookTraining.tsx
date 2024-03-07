@@ -4,7 +4,7 @@ import { Filter, StarFull, X } from '@tamagui/lucide-icons';
 import React, { useEffect, useState } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 
-import { ScrollView, Text, View, XStack, YStack } from 'tamagui';
+import { ScrollView, Text, XStack, YStack } from 'tamagui';
 
 import { router } from 'expo-router';
 import {
@@ -35,7 +35,7 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth } from '@/lib/firebase';
-import { debounce } from 'lodash';
+import CoachSkeleton from '@/components/skeletons/CoachSkeleton';
 
 export default function BookTraining() {
   // State variables
@@ -45,6 +45,8 @@ export default function BookTraining() {
   const [favoriteCoaches, setFavoriteCoaches] = useState<Coach[]>([]);
   const [showFavorites, setShowFavorites] = useState(false);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [loadingFavorites, setLoadingFavorites] = useState(true);
 
   const currentUser = auth.currentUser;
 
@@ -79,27 +81,22 @@ export default function BookTraining() {
   };
 
   // Function to handle search
-  const handleSearch = debounce(async (query: string) => {
-    const [clubResults, coachResults] = await Promise.all([
-      findByName({ name: query }),
-      findCoachByName({ name: query }),
-    ]);
-
-    const formattedClubResults =
-      clubResults?.docs?.map((doc: any) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) ?? [];
-
-    const formattedCoachResults =
-      coachResults?.docs?.map((doc: any) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) ?? [];
-
-    setClubSearchResults(formattedClubResults);
-    setCoachSearchResults(formattedCoachResults);
-  }, 500); // Debounce delay in milliseconds
+  const handleSearch = async (query: string) => {
+    setSearching(true);
+    try {
+      const [clubResults, coachResults] = await Promise.all([
+        findByName({ name: query }),
+        findCoachByName({ name: query }),
+      ]);
+      setClubSearchResults(clubResults);
+      setCoachSearchResults(coachResults);
+    } catch (error) {
+      console.error('Error searching:', error);
+      // Handle error, show error message, etc.
+    } finally {
+      setSearching(false);
+    }
+  };
 
   useEffect(() => {
     if (searchQuery.trim() !== '') {
@@ -150,6 +147,7 @@ export default function BookTraining() {
   // Function to load favorite coaches
   const loadFavoriteCoaches = async () => {
     try {
+      setLoadingFavorites(true);
       const favorites = await favoriteCoachList();
       // console.log('favorites', favorites);
       if (favorites.length > 0) {
@@ -159,11 +157,17 @@ export default function BookTraining() {
       }
     } catch (error) {
       console.error('Error loading favorite coaches:', error);
+    } finally {
+      setLoadingFavorites(false);
     }
   };
 
   useEffect(() => {
-    loadFavoriteCoaches();
+    if (showFavorites) {
+      loadFavoriteCoaches();
+    } else {
+      setFavoriteCoaches([]);
+    }
   }, [showFavorites]);
 
   // Function to remove search history item
@@ -204,6 +208,7 @@ export default function BookTraining() {
           !showFavorites ? 'Search for a coach or club' : 'Favorites'
         }
         value={searchQuery}
+        onChangeText={setSearchQuery}
         setSearchQuery={setSearchQuery}
         setShowFavorites={setShowFavorites}
         showFavorites={showFavorites}
@@ -261,7 +266,13 @@ export default function BookTraining() {
       {/* Search results */}
       {!showFavorites ? (
         <ScrollView flex={1}>
-          {searchQuery.trim() === '' ? (
+          {searching ? (
+            <YStack gap={'$8'}>
+              <CoachSkeleton />
+              <CoachSkeleton />
+              <CoachSkeleton />
+            </YStack>
+          ) : searchQuery.trim() === '' ? (
             <YStack paddingLeft={42} paddingRight={16}>
               {searchHistory?.length > 0 && (
                 <YStack gap={14}>
@@ -301,7 +312,7 @@ export default function BookTraining() {
                 </YStack>
               )}
 
-              {coachSearchResults?.length > 0 && (
+              {coachSearchResults?.length > 0 ? (
                 <YStack>
                   {clubSearchResults?.length > 0 && (
                     <Text
@@ -319,39 +330,41 @@ export default function BookTraining() {
                       key={item.id}
                       coachRef={item.id}
                       name={item.displayName}
-                      rating={5}
-                      level={2}
+                      rating={item.rating}
+                      level={item.level}
                       age={42}
                       image={item.image}
                       followedPlayer={item.followedPlayer}
                     />
                   ))}
                 </YStack>
-              )}
-
-              {clubSearchResults?.length === 0 &&
-                coachSearchResults?.length === 0 &&
-                searchQuery.trim() !== '' && (
-                  <Text
-                    style={{ fontFamily: 'MontserratBold' }}
-                    color={Colors.secondary}
-                    fontSize={16}>
-                    No Data
-                  </Text>
-                )}
+              ) : clubSearchResults?.length === 0 ? (
+                <Text
+                  style={{ fontFamily: 'MontserratMedium' }}
+                  textAlign="center"
+                  color={Colors.secondary}
+                  fontSize={16}>
+                  No club or coach found
+                </Text>
+              ) : null}
             </YStack>
           )}
         </ScrollView>
+      ) : loadingFavorites ? (
+        <YStack gap={'$8'}>
+          <CoachSkeleton />
+          <CoachSkeleton />
+          <CoachSkeleton />
+        </YStack>
       ) : (
-        // Display favorite coaches
         <FlatList
           data={favoriteCoaches}
           renderItem={({ item }) => (
             <CoachBox
               coachRef={item.id}
               name={item.displayName}
-              rating={5}
-              level={2}
+              rating={item.rating}
+              level={item.level}
               age={42}
               image={item.image}
               followedPlayer={item.followedPlayer}
@@ -362,5 +375,3 @@ export default function BookTraining() {
     </YStack>
   );
 }
-
-const Spacer = ({ height = 16 }) => <View style={{ height }} />;

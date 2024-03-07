@@ -1,5 +1,5 @@
-import { fetchData }  from '@/api/player-api'; 
-
+import { fetchData } from '@/api/player-api';
+import { getDocs } from 'firebase/firestore';
 // Mock the Firebase Firestore methods
 jest.mock('@/lib/firebase', () => ({
   db: {
@@ -17,54 +17,62 @@ jest.mock('firebase/firestore', () => ({
   endAt: jest.fn(),
 }));
 
-describe('fetchData function', () => {
-  beforeEach(() => {
-    // Clear mock calls before each test
-    jest.clearAllMocks();
+describe('fetchData', () => {
+  // Test case for 'coach' collection with queryField and queryValue
+  it('fetches coach data with query', async () => {
+    const mockDoc = {
+      data: () => ({ displayName: 'SomeName' }),
+      id: 'someId',
+    };
+    const mockSnapshot = { forEach: jest.fn((cb) => cb(mockDoc)) };
+    getDocs.mockResolvedValue(mockSnapshot);
+
+    const result = await fetchData('coach', 'displayName', 'SomeName');
+    expect(result).toEqual([{ displayName: 'SomeName', id: 'someId' }]);
   });
 
-  it('fetches all documents from a collection when no query is provided', async () => {
-    const collectionName = 'testCollection';
-    const mockDocs = [{ id: '1', data: jest.fn(() => ({ foo: 'bar' })) }];
-    const mockSnapshot = { docs: mockDocs };
+  // Test case for 'club' collection with queryField and queryValue
+  it('fetches club data with query', async () => {
+    const mockDoc = {
+      data: () => ({ name: 'SomeClub' }),
+      id: 'someId',
+    };
+    const mockSnapshot = { forEach: jest.fn((cb) => cb(mockDoc)) };
+    getDocs.mockResolvedValue(mockSnapshot);
 
-    // Mock the behavior of getDocs to return mockSnapshot
-    const { getDocs, collection } = require('firebase/firestore');
-    collection.mockReturnValueOnce({});
-    getDocs.mockResolvedValueOnce(mockSnapshot);
-
-    const result = await fetchData(collectionName);
-    result.docs.map((club)=>{
-    expect(club.data()).toEqual({ foo: 'bar' });
-  })
-    expect(collection).toHaveBeenCalledWith(expect.anything(), collectionName);
-    expect(getDocs).toHaveBeenCalledWith({});
+    const result = await fetchData('club', 'name', 'SomeClub');
+    expect(result).toEqual([{ name: 'SomeClub', id: 'someId' }]);
   });
 
-  it('fetches documents based on query when queryField and queryValue are provided', async () => {
-    const collectionName = 'testCollection';
-    const queryField = 'name';
-    const queryValue = 'John';
-    const mockDocs = [{ id: '1', data: jest.fn(() => ({ name: 'John Doe' })) }];
-    const mockSnapshot = { docs: mockDocs };
+  // Test case for 'coach' collection without query
+  it('fetches coach data without query', async () => {
+    const mockDoc = {
+      data: () => ({ displayName: 'SomeName' }),
+      id: 'someId',
+    };
+    const mockSnapshot = { forEach: jest.fn((cb) => cb(mockDoc)) };
+    getDocs.mockResolvedValue(mockSnapshot);
 
-    // Mock the behavior of getDocs to return mockSnapshot
-    const { getDocs, collection, query, orderBy, startAt, endAt } = require('firebase/firestore');
-    collection.mockReturnValueOnce({});
-    query.mockReturnValueOnce({});
-    orderBy.mockReturnValueOnce({});
-    startAt.mockReturnValueOnce({});
-    endAt.mockReturnValueOnce({});
-    getDocs.mockResolvedValueOnce(mockSnapshot);
+    const result = await fetchData('coach', 'displayName', 'SomeName');
+    expect(result).toEqual([{ displayName: 'SomeName', id: 'someId' }]);
+  });
 
-    const result = await fetchData(collectionName, queryField, queryValue);
-    result.docs.map((club)=>{
-    expect(club.data()).toEqual({ name: 'John Doe' });
-  })
-    expect(collection).toHaveBeenCalledWith(expect.anything(), collectionName);
-    expect(orderBy).toHaveBeenCalledWith(queryField);
-    expect(startAt).toHaveBeenCalledWith(queryValue);
-    expect(endAt).toHaveBeenCalledWith(queryValue + "\uf8ff");
-    expect(getDocs).toHaveBeenCalledWith({});
+  // Test case for 'club' collection without query
+  it('fetches club data without query', async () => {
+    const mockDoc = {
+      data: () => ({ name: 'SomeClub' }),
+      id: 'someId',
+    };
+    const mockSnapshot = { forEach: jest.fn((cb) => cb(mockDoc)) };
+    getDocs.mockResolvedValue(mockSnapshot);
+
+    const result = await fetchData('club', 'name', 'SomeClub');
+    expect(result).toEqual([{ name: 'SomeClub', id: 'someId' }]);
+  });
+
+  // Test case when collectionName is neither 'coach' nor 'club'
+  it('returns empty array for unknown collection', async () => {
+    const result = await fetchData('unknownCollection');
+    expect(result).toEqual([]);
   });
 });

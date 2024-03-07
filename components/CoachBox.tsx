@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Avatar, Text, View, XStack, YStack } from 'tamagui';
 import Colors from '@/constants/Colors';
 import { Heart } from '@tamagui/lucide-icons';
@@ -10,8 +10,8 @@ import fireToast from './toast/Toast';
 
 interface CoachBoxProps {
   readonly name?: string;
-  readonly rating: number;
-  readonly level: number;
+  readonly rating?: number;
+  readonly level?: number;
   readonly age: number;
   readonly image?: string;
   readonly coachRef?: any;
@@ -61,6 +61,13 @@ const CoachBox: React.FC<CoachBoxProps> = ({
       // Handle error
     }
   };
+
+  const starsComponent = useMemo(() => {
+    if (rating) {
+      return renderStars(rating);
+    }
+    return null;
+  }, [rating]);
 
   return (
     <YStack width={'100%'}>
@@ -151,7 +158,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
               />
             </Pressable>
           </XStack>
-          <XStack>{renderStars(rating)}</XStack>
+          <XStack>{starsComponent}</XStack>
         </YStack>
       </XStack>
       <View

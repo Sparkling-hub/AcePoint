@@ -8,6 +8,7 @@ export class Coach {
   displayName?: string;
   phoneNumber?: string;
   rating?: number;
+  level?: number;
   subscription?: boolean;
   image?: string;
   age?: Date;
