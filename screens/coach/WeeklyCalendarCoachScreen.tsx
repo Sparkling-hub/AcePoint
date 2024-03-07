@@ -1,12 +1,12 @@
 import Colors from "@/constants/Colors";
 import CalendarStrip from 'react-native-calendar-strip';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import AddButtonCalendar from "@/components/AddButtonCalendar";
+import { ScrollView } from "tamagui";
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const times = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00'];
+const times = ['08:00', '08:30', , '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'];
 const weeklyEvents: { [key: number]: { [time: string]: { name: string, spacesLeft: number, isFull?: boolean, endTime: string } } } = {
-
     1: { '09:30': { name: 'Morning Yoga', spacesLeft: 2, endTime: '10:30' } },
     3: { '11:30': { name: 'Morning Yoga', spacesLeft: 0, endTime: '14:00' } },
 };
@@ -49,59 +49,61 @@ export default function WeeklyCalendarCoachScreen() {
                 iconLeftStyle={{ tintColor: 'white' }}
                 iconRightStyle={{ tintColor: 'white' }}
             />
-            <View style={styles.timeColumn}>
-                {times.map((time, index) => (
-                    <View key={`time-${time}`} style={styles.timeCell}>
-                        <Text style={styles.timeText}>{time}</Text>
-                    </View>
-                ))}
-            </View>
+            <ScrollView>
+                <View style={styles.timeColumn}>
+                    {times.map((time) => (
+                        <View key={`time-${time}`} style={styles.timeCell}>
+                            <Text style={styles.timeText}>{time}</Text>
+                        </View>
+                    ))}
+                </View>
 
-            <View style={styles.weekGrid}>
-                {times.map((time, index) => {
-                    const topOffset = calculateEventTopOffset(time);
-                    return (
-                        <View key={`line-${time}`} style={[styles.gridLine, { top: topOffset }]} />
-                    );
-                })}
+                <View style={styles.weekGrid}>
+                    {times.map((time) => {
+                        const topOffset = calculateEventTopOffset(time);
+                        return (
+                            <View key={`line-${time}`} style={[styles.gridLine, { top: topOffset }]} />
+                        );
+                    })}
 
-                {daysOfWeek.map((day, dayIndex) => (
-                    <View key={day} style={styles.dayColumn}>
-                        <View style={[styles.gridLine, { top: 0, bottom: 50, width: 1, left: null, right: null, height: null }]} />
+                    {daysOfWeek.map((day, dayIndex) => (
+                        <View key={day} style={styles.dayColumn}>
+                            <View style={[styles.gridLine, { top: 0, width: 1, left: null, right: null, height: 20000 }]} />
 
-                        {times.map((time, index) => {
-                            const event = weeklyEvents[dayIndex]?.[time];
-                            if (event) {
-                                const eventTopOffset = calculateEventTopOffset(time);
-                                const eventHeight = calculateEventHeight(time, event.endTime);
-                                return (
-                                    <View key={day + time} style={[styles.eventCell, { top: eventTopOffset, height: eventHeight }]}>
-                                        <Text style={styles.eventTime}>{time} - {event.endTime}</Text>
-                                        <Text style={styles.eventText}>{event.name}</Text>
-                                        <Text style={styles.eventTime}>{event.spacesLeft} Spaces left</Text>
-                                    </View>
-                                );
-                            }
-                        })}
-                        
-                    </View>
-                ))}
-            </View>
-            <AddButtonCalendar/>
+                            {times.map((time) => {
+                                const event = weeklyEvents[dayIndex]?.[time];
+                                if (event) {
+                                    const eventTopOffset = calculateEventTopOffset(time);
+                                    const eventHeight = calculateEventHeight(time, event.endTime);
+                                    return (
+                                        <View key={day + time} style={[styles.eventCell, { top: eventTopOffset, height: eventHeight }]}>
+                                            <Text style={styles.eventTime}>{time} - {event.endTime}</Text>
+                                            <Text style={styles.eventText}>{event.name}</Text>
+                                            <Text style={styles.eventTime}>{event.spacesLeft} Spaces left</Text>
+                                        </View>
+                                    );
+                                }
+                            })}
+
+                        </View>
+                    ))}
+                </View>
+            </ScrollView>
+            <AddButtonCalendar />
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     weekGrid: {
-        marginTop:5,
+        position: 'absolute',
+        marginTop: 35,
         flexDirection: 'row',
         flex: 1,
     },
     timeColumn: {
-        position: 'absolute',
         left: 0,
-        top: 85,
+        top: 20,
         bottom: 0,
         width: 50,
         zIndex: 1,
@@ -125,7 +127,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     eventCell: {
-        position: 'absolute',
         left: 0,
         right: 0,
         backgroundColor: Colors.secondary,
@@ -134,18 +135,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         zIndex: 2,
     },
-    emptyEventCell: {
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     halfHourTimeCell: {
         borderBottomWidth: 1,
         borderBottomColor: '#e0e0e0',
         zIndex: 0,
     },
     hourSeparator: {
-        position: 'absolute',
         left: 50,
         right: 0,
         bottom: 0,
