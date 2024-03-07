@@ -21,18 +21,20 @@ const Levling = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:() =>
       <ScrollView marginBottom={20} >
         <YStack alignItems="center" >
         <YStack marginBottom={25} >
-          <YStack alignItems="flex-start" gap={"$4"} marginLeft={-150}>
-          <HeaderArrow back={handlePrevious} gap={"$11"} data={"LEVELLING"} />
+          <YStack alignItems="flex-start" gap={"$4"} marginLeft={-120}>
+          <HeaderArrow back={handlePrevious} gap={"$8"} data={"LEVELLING"} />
           </YStack>
          </YStack>
-            <ProgressBar value={68} />
+         <YStack width={380} marginBottom={20} marginLeft={20} >
+          <ProgressBar value={68}/>
+          </YStack>
          <YStack marginBottom={30} marginTop={30} alignItems="center" >
         <LevlingBox/>
         </YStack>
         <RadioGroup aria-labelledby="Select one item"
         onValueChange={value => setLevel(value)} value={level}
             >
-        <YStack width={300} alignItems="center" space="$5">
+        <YStack width={300} alignItems="center" gap="$5">
             <RadioGroupItemWithLabel size="$3" value="Beginner" label="Beginner" level={level} text={text} />
             <RadioGroupItemWithLabel size="$3" value="Intermediate" label="Intermediate" level={level} text={text} />
             <RadioGroupItemWithLabel size="$3" value="Intermediate high" label="Intermediate high" level={level} text={text} />

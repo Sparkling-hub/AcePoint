@@ -61,4 +61,11 @@ export const styles = StyleSheet.create({
         lineHeight: 20,
         color: Colors.secondary,
     },
+    header: {
+        fontFamily: 'MontserratBold',
+        fontSize: 20,
+        lineHeight: 20,
+        color: Colors.secondary,
+        paddingLeft: 20,
+    }
 });

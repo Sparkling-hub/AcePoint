@@ -5,17 +5,27 @@ import CustomButton from '@/components/CustomButton';
 import { handleDeleteAccount } from '@/services/user';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styles } from '@/components/ButtonStyles';
+import { router } from 'expo-router';
+import { retrieveData } from '@/api/localStorage';
 
 export default function SettingsScreen() {
 
     const userRole = useSelector((state: RootState) => state.userRole);
     const userRoleValue = userRole.userRole;
+    const [authMethod, setAuthMethod] = useState('')
     const [show, setShow] = useState(false)
     const handleShow = () => {
         setShow(!show);
     }
+    const getAuthMethod = async () => {
+        const data = await retrieveData('authMethod');
+        if(data) setAuthMethod(data)
+    }
+    useEffect(() => {
+        getAuthMethod()
+    }, [])
 
     return (
         <YStack flex={1} paddingTop={60}>
@@ -24,19 +34,20 @@ export default function SettingsScreen() {
                     <YStack gap={15}>
                         <CustomButton
                             title="Notifications"
-                            onPress={() => { }
+                            onPress={() => { router.push('/notification') }
                             }
                             buttonStyle={styles.button}
                             textStyle={styles.buttonText}
                             icon={<ChevronRight size="$2" color={Colors.secondary} />}
                         />
-                        <CustomButton
+                        {authMethod === 'simple' && <CustomButton
                             title="Security"
-                            onPress={() => { }}
+                            onPress={() => { router.push('/user/security') }}
                             buttonStyle={styles.button}
                             textStyle={styles.buttonText}
                             icon={<ChevronRight size="$2" color={Colors.secondary} />}
-                        />
+                        />}
+
                     </YStack>
                 </YStack>
                 <YStack marginTop={30}>
