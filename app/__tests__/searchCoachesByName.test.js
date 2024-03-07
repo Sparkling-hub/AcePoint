@@ -72,9 +72,9 @@ describe('findCoachByName', () => {
     });
   });
 
-  it('returns "Coach does not exist" when name is provided but coach does not exist', async () => {
+  it('returns empty array when name is provided but coach does not exist', async () => {
     const result = await findCoachByName({ name: 'NonExistentCoach' });
-    expect(result).toBe('Coach does not exist');
+    expect(result).toEqual([]);
   });
 
   test('should return error message if an error occurs', async () => {

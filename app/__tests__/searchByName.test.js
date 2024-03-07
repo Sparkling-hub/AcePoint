@@ -59,9 +59,9 @@ describe('findByName', () => {
     });
   });
 
-  test('should return "name does not exist" if no clubs found', async () => {
+  test('should return empty array if no clubs found', async () => {
     const result = await findByName({ name: 'NonExistentCoach' });
-    expect(result).toBe('Name does not exist');
+    expect(result).toEqual([]);
   });
 
   test('should return error message if an error occurs', async () => {
