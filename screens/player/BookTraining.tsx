@@ -151,8 +151,9 @@ export default function BookTraining() {
   const loadFavoriteCoaches = async () => {
     try {
       const favorites = await favoriteCoachList();
-      if (favorites && favorites.length > 0) {
-        setFavoriteCoaches(favorites.flat());
+      // console.log('favorites', favorites);
+      if (favorites.length > 0) {
+        setFavoriteCoaches(favorites);
       } else {
         setFavoriteCoaches([]);
       }

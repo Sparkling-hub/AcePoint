@@ -21,9 +21,10 @@ const fetchData = async (
   let data;
   if (queryField && queryValue) {
     const q = query(
-      collection(db, collectionName),orderBy(queryField),startAt(queryValue),
-      endAt(queryValue + "\uf8ff")
-
+      collection(db, collectionName),
+      orderBy(queryField),
+      startAt(queryValue),
+      endAt(queryValue + '\uf8ff')
     );
     data = await getDocs(q);
   } else {
@@ -185,6 +186,7 @@ const favoriteCoachList = async () => {
           id: doc.id,
           ...doc.data(),
         }));
+
         return coachDataArray;
       } catch (error) {
         // Handle error if fetching coach data fails
@@ -196,8 +198,10 @@ const favoriteCoachList = async () => {
     const coaches = await Promise.all(coachPromises);
 
     // Log the fetched coach data
-
-    return coaches;
+    if (coaches?.flat().length === 0) {
+      return [];
+    }
+    return coaches.flat();
   } catch (error: any) {
     return error.message;
   }
