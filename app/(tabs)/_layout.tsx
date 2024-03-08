@@ -20,12 +20,10 @@ import HomeIcon from '@/components/tabIcons/HomeIcon';
 import HomeIconLabel from '@/components/tabIcons/HomeIconLabel';
 import ProfileHeader from '@/components/headers/ProfileHeader';
 
-type CalendarHeaderProps = {
+const CalendarHeader = ({ handleState, getButtonStyle }: {
   handleState: (selected: string) => void;
   getButtonStyle: (key: string) => React.CSSProperties;
-};
-
-const CalendarHeader: React.FC<CalendarHeaderProps> = ({ handleState, getButtonStyle }) => {
+}) => {
   return (
     <CustomHeader
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
@@ -73,9 +71,9 @@ export default function TabLayout() {
 
   const renderCalendarHeader = () => {
     return (
-      <CalendarHeader 
-        handleState={(selected: any) => handleState(selected as ButtonKey)} 
-        getButtonStyle={(key: any) => getButtonStyle(key as ButtonKey)} 
+      <CalendarHeader
+        handleState={(selected: any) => handleState(selected as ButtonKey)}
+        getButtonStyle={(key: any) => getButtonStyle(key as ButtonKey)}
       />
     );
   };
