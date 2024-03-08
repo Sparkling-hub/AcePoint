@@ -71,6 +71,15 @@ export default function TabLayout() {
     color: state[key] ? Colors.iron : Colors.secondary,
   });
 
+  const renderCalendarHeader = () => {
+    return (
+      <CalendarHeader 
+        handleState={(selected: any) => handleState(selected as ButtonKey)} 
+        getButtonStyle={(key: any) => getButtonStyle(key as ButtonKey)} 
+      />
+    );
+  };
+
   return (
     <Tabs
       screenOptions={{
@@ -100,7 +109,7 @@ export default function TabLayout() {
           title: 'Calendar',
           tabBarIcon: CalendarIcon,
           tabBarLabel: CalendarIconLabel,
-          header: () => <CalendarHeader handleState={(selected: any) => handleState(selected as ButtonKey)} getButtonStyle={(key: any) => getButtonStyle(key as ButtonKey)} />,
+          header: renderCalendarHeader,
           headerShadowVisible: false,
         }}
       />

@@ -24,10 +24,13 @@ describe('getLessonsByCoachId', () => {
     it('fetches lessons successfully', async () => {
         const mockLessons = [{ id: '1', name: 'Lesson 1' }, { id: '2', name: 'Lesson 2' }];
         const mockGetDocs = getDocs;
+        
+        const mockForEachImplementation = callback => {
+            mockLessons.forEach(lesson => callback({ id: lesson.id, data: () => lesson }));
+        };
+        
         mockGetDocs.mockResolvedValue({
-            forEach: jest.fn().mockImplementation(callback => {
-                mockLessons.forEach(lesson => callback({ id: lesson.id, data: () => lesson }));
-            }),
+            forEach: jest.fn().mockImplementation(mockForEachImplementation),
         });
 
         const lessons = await getLessonsByCoachId();
