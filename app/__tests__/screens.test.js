@@ -10,6 +10,8 @@ import Support from '../support'
 import AddButtonCalendar from '@/components/AddButtonCalendar'
 import CalendarIconLabel from '@/components/tabIcons/CalendarIconLabel'
 import CalendarIcon from '@/components/tabIcons/CalendarIcon'
+import Calendar from '@/components/svg/Calendar';
+import Colors from '@/constants/Colors';
 
 jest.mock('tamagui', () => ({
   YStack: jest.fn(),
@@ -114,9 +116,16 @@ describe('AccountScreen', () => {
     expect(getByTestId(testID)).toBeTruthy();
   });
   it('Calendar icon renders correctly', () => {
-    const testID = 'calendar-icon-label-calendar';
+    const testID = 'calendar-icon-calendar';
     const { getByTestId } = render(<CalendarIcon testID={testID} focused={true} />);
     expect(getByTestId(testID)).toBeTruthy();
+  });
+
+  it('renders with the correct fill color when focused', () => {
+    const testID = 'calendar';
+    const { getByTestId } = render(<Calendar testID={testID} focused />);
+    const calendarElement = getByTestId(testID);
+    expect(calendarElement.props.fill).toBe(Colors.secondary);
   });
 
 });
