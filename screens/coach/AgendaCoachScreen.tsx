@@ -6,35 +6,68 @@ import { Agenda } from "react-native-calendars";
 import { Card } from "react-native-paper";
 import { Text, View } from "tamagui";
 
-export default function AgendaCoachScreen() {
+export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[] }) {
 
     const [items, setItems] = useState({});
-    const timeToString = (time: any) => {
-        const date = new Date(time);
-        return date.toISOString().split('T')[0];
+    const date = (time: any) => {
+        const date = new Date(time * 1000);
+        const formattedDate = date.toISOString().split('T')[0];
+        return formattedDate;
     };
-    const loadItems = (day: any) => {
-        setTimeout(() => {
-            for (let i = -15; i < 85; i++) {
-                const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-                const strTime = timeToString(time);
-                if (!items[strTime]) {
-                    items[strTime] = [];
-                    const numItems = Math.floor(Math.random() * 3 + 1);
-                    for (let j = 0; j < numItems; j++) {
-                        items[strTime].push({
-                            name: 'Item for ' + strTime + ' #' + j,
-                            height: Math.max(50, Math.floor(Math.random() * 150)),
-                        });
-                    }
+    const time = (time: any) => {
+        const date = new Date(time * 1000);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        return `${hours}:${minutes}`;
+    };
+    function addDurationToStartDate(startDate: string, duration: string): string {
+        const [hours, minutes] = startDate.split(':').map(Number);
+        const [durationHours, durationMinutes] = duration.split(':').map(Number);
+        let newHours = hours + durationHours;
+        let newMinutes = minutes + durationMinutes;
+        if (newMinutes >= 60) {
+            newHours += Math.floor(newMinutes / 60);
+            newMinutes = '00';
+        }
+
+        return `${newHours}:${newMinutes}`;
+    }
+    const loadItems = () => {
+        const itemsByDate = lessons.reduce((acc, lesson) => {
+            let lessonDate = new Date(lesson.startDate.seconds * 1000);
+            const endDate = new Date(lesson.endDate.seconds * 1000);
+            while (lessonDate <= endDate) {
+                const formattedDate = date(lessonDate.getTime() / 1000);
+                if (!acc[formattedDate]) {
+                    acc[formattedDate] = [];
+                }
+                acc[formattedDate].push(lesson);
+                switch (lesson.recurrence) {
+                    case 'Weekly':
+                        lessonDate.setDate(lessonDate.getDate() + 7);
+                        break;
+                    case 'Daily':
+                        lessonDate.setDate(lessonDate.getDate() + 1);
+                        break;
+                    case 'Monthly':
+                        lessonDate.setMonth(lessonDate.getMonth() + 1);
+                        break;
+                    case 'EveryWeekDay':
+                        if (lessonDate.getDay() === 5) { // Friday
+                            lessonDate.setDate(lessonDate.getDate() + 3); // Skip to Monday
+                        } else if (lessonDate.getDay() === 6) { // Saturday
+                            lessonDate.setDate(lessonDate.getDate() + 2); // Skip to Monday
+                        } else {
+                            lessonDate.setDate(lessonDate.getDate() + 1);
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
-            const newItems = {};
-            Object.keys(items).forEach((key) => {
-                newItems[key] = items[key];
-            });
-            setItems(newItems);
-        }, 1000);
+            return acc;
+        }, {});
+        setItems(itemsByDate);
     };
 
     const renderItem = (item: any) => {
@@ -48,7 +81,9 @@ export default function AgendaCoachScreen() {
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                             }}>
-                            <Text>{item.name}</Text>
+                            <Text>{item.organiser}</Text>
+                            <Text>{item.club}</Text>
+                            <Text>{time(item.startDate)} - {addDurationToStartDate(time(item.startDate), item.duration)}</Text>
                         </View>
                     </Card.Content>
                 </Card>

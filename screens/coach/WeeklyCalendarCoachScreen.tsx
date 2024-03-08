@@ -3,13 +3,10 @@ import CalendarStrip from 'react-native-calendar-strip';
 import { View, Text, StyleSheet } from 'react-native';
 import AddButtonCalendar from "@/components/AddButtonCalendar";
 import { ScrollView } from "tamagui";
+import { useEffect, useState } from "react";
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const times = ['08:00', '08:30', , '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'];
-const weeklyEvents: { [key: number]: { [time: string]: { name: string, spacesLeft: number, isFull?: boolean, endTime: string } } } = {
-    1: { '09:30': { name: 'Morning Yoga', spacesLeft: 2, endTime: '10:30' } },
-    3: { '11:30': { name: 'Morning Yoga', spacesLeft: 0, endTime: '14:00' } },
-};
+const times = ['07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'];
 
 function getTimeIndex(time: string): number {
     const baseTime = times[0];
@@ -30,7 +27,43 @@ function calculateEventHeight(startTime: string, endTime: string): number {
     return (endIndex - startIndex) * 40;
 }
 
-export default function WeeklyCalendarCoachScreen() {
+export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { readonly lessons: any[], readonly currentWeek: string }) {
+    const [weeklyEvents, setWeeklyEvents] = useState({})
+    const [week, setWeek] = useState(currentWeek)
+    useEffect(() => {
+        function mapLessonsToWeeklyEvents(lessons: any[]): void {
+            const weeklyEvents: { [key: number]: { [time: string]: { name: string, spacesLeft: number, isFull?: boolean, endTime: string } } } = {};
+            const [currentWeekStart, currentWeekEnd] = week.split(' ').map(date => new Date(date));
+            lessons.forEach(lesson => {
+                const startDate = new Date(lesson.startDate.seconds * 1000);
+                const duration = lesson.duration;
+                const endDate = new Date(startDate.getTime() + (Number(duration.split(':')[0]) * 60 * 60 * 1000) + (Number(duration.split(':')[1]) * 60 * 1000));
+                if (startDate >= currentWeekStart && startDate <= currentWeekEnd) {
+                    const dayOfWeek = (startDate.getDay() || 7) - 1;
+                    console.log('day of week', dayOfWeek);
+
+                    const startTime = `${startDate.getHours().toString().padStart(2, '0')}:${startDate.getMinutes().toString().padStart(2, '0')}`;
+                    const endTime = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
+                    const spacesLeft = lesson.maxPeople - lesson.players.length;
+                    const isFull = spacesLeft <= 0;
+
+                    if (!weeklyEvents[dayOfWeek]) {
+                        weeklyEvents[dayOfWeek] = {};
+                    }
+
+                    weeklyEvents[dayOfWeek][startTime] = {
+                        name: lesson.description,
+                        spacesLeft,
+                        isFull,
+                        endTime
+                    };
+                }
+            });
+            setWeeklyEvents(weeklyEvents);
+        }
+
+        mapLessonsToWeeklyEvents(lessons);
+    }, [week])
     return (
         <View style={styles.container}>
             <CalendarStrip
@@ -48,6 +81,7 @@ export default function WeeklyCalendarCoachScreen() {
                 iconContainer={{ flex: 0.1 }}
                 iconLeftStyle={{ tintColor: 'white' }}
                 iconRightStyle={{ tintColor: 'white' }}
+                onWeekChanged={(start, end) => setWeek(`${start.toISOString()} ${end.toISOString()}`)}
             />
             <ScrollView>
                 <View style={styles.timeColumn}>
