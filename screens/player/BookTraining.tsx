@@ -85,28 +85,33 @@ export default function BookTraining() {
     [currentUser]
   );
 
-  // Function to handle search
-  const debouncedSearch = useCallback(
-    debounce(async (query: string) => {
-      if (query.trim() !== '') {
-        setSearching(true);
-        try {
-          const [clubResults, coachResults] = await Promise.all([
-            findByName({ name: query }),
-            findCoachByName({ name: query }),
-          ]);
-          setClubSearchResults(clubResults);
-          setCoachSearchResults(coachResults);
-        } catch (error) {
-          console.error('Error searching:', error);
-          // Handle error, show error message, etc.
-        } finally {
-          setSearching(false);
-        }
-      } else {
-        setClubSearchResults([]);
-        setCoachSearchResults([]);
+  // Function to perform the search
+  const performSearch = async (query: string) => {
+    if (query.trim() !== '') {
+      setSearching(true);
+      try {
+        const [clubResults, coachResults] = await Promise.all([
+          findByName({ name: query }),
+          findCoachByName({ name: query }),
+        ]);
+        setClubSearchResults(clubResults);
+        setCoachSearchResults(coachResults);
+      } catch (error) {
+        console.error('Error searching:', error);
+        // Handle error, show error message, etc.
+      } finally {
+        setSearching(false);
       }
+    } else {
+      setClubSearchResults([]);
+      setCoachSearchResults([]);
+    }
+  };
+
+  // Function to handle search with debounce
+  const debouncedSearch = useCallback(
+    debounce((query: string) => {
+      performSearch(query);
     }, 400),
     []
   );
@@ -211,9 +216,10 @@ export default function BookTraining() {
 
   const handlePressSearchItem = useCallback(
     (item: string) => {
-      handleSearch(item);
+      setSearchQuery(item);
+      performSearch(item);
     },
-    [handleSearch]
+    [performSearch]
   );
 
   return (
