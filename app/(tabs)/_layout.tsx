@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Tabs } from 'expo-router';
+import { StyleSheet } from 'react-native';
 import Colors from '@/constants/Colors';
-import CustomHeader from '@/components/CustomHeader';
-import Bars from '@/components/svg/Bars';
 import { useDispatch } from 'react-redux';
 import { setUserRole } from '@/store/slices/userRole';
 import { retrieveData } from '@/api/localStorage';
 import CalendarIcon from '@/components/tabIcons/CalendarIcon';
 import CalendarIconLabel from '@/components/tabIcons/CalendarIconLabel';
-import { ChevronLeft } from '@tamagui/lucide-icons';
-import { Button, View } from 'tamagui';
-import { StyleSheet } from "react-native";
-import Calendar from '@/components/svg/Calendar';
 import { setCalendarOption } from '@/store/slices/calendarSlice';
 import ProfileIcon from '@/components/tabIcons/ProfileIcon';
 import PorfileIconLabel from '@/components/tabIcons/PorfileIconLabel';
@@ -21,7 +15,7 @@ import BookIconLabel from '@/components/tabIcons/BookIconLabel';
 import HomeIcon from '@/components/tabIcons/HomeIcon';
 import HomeIconLabel from '@/components/tabIcons/HomeIconLabel';
 import ProfileHeader from '@/components/headers/ProfileHeader';
-
+import CalendarHeader from '@/components/headers/CalendarHeader'; 
 export default function TabLayout() {
   const dispatch = useDispatch();
   const getUserRole = async () => {
@@ -33,24 +27,6 @@ export default function TabLayout() {
     getUserRole();
   }, [dispatch]);
 
-  const renderHeader = () => {
-    return (
-      <CustomHeader
-        rightContent={
-          <Link href="/user/account" asChild>
-            <Pressable>
-              {({ pressed }) => (
-                <Bars
-                  fill={Colors.secondary}
-                  style={{ opacity: pressed ? 0.5 : 1 }}
-                />
-              )}
-            </Pressable>
-          </Link>
-        }
-      />
-    );
-  };
   const [state, setState] = useState({
     "D": true,
     "W": false,
@@ -68,23 +44,6 @@ export default function TabLayout() {
     backgroundColor: state[key] ? Colors.secondary : Colors.iron,
     color: state[key] ? Colors.iron : Colors.secondary,
   });
-  const CalendarHeader = () => {
-    return (
-      <CustomHeader
-        leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
-        rightContent={
-          <View style={styles.header}>
-            <Calendar fill={Colors.secondary} style={{ marginRight: 20, marginTop: 3 }}></Calendar>
-            {['D', 'W', 'M'].map((key) => (
-              <Button key={key} style={getButtonStyle(key as ButtonKey)} onPress={() => handleState(key as ButtonKey)}>
-                {key}
-              </Button>
-            ))}
-          </View>
-        }
-      />
-    );
-  };
 
   return (
     <Tabs
@@ -115,7 +74,7 @@ export default function TabLayout() {
           title: 'Calendar',
           tabBarIcon: CalendarIcon,
           tabBarLabel: CalendarIconLabel,
-          header: CalendarHeader,
+          header: () => <CalendarHeader handleState={handleState as (selected: string) => void} getButtonStyle={getButtonStyle as (key: string) => object} />,
           headerShadowVisible: false,
         }}
       />

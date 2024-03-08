@@ -3,7 +3,7 @@ import Colors from '@/constants/Colors';
 import Calendar from '../svg/Calendar';
 
 interface CalendarProps {
-  focused: boolean;
+  readonly focused: boolean;
 }
 
 const CalendarIcon: React.FC<CalendarProps> = ({ focused }) => {
