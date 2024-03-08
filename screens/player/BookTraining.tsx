@@ -1,10 +1,9 @@
-import CoachBox from '@/components/CoachBox';
 import SearchInput from '@/components/SearchInput';
-import { Filter, StarFull, X } from '@tamagui/lucide-icons';
-import React, { useEffect, useState } from 'react';
-import { FlatList, TouchableOpacity } from 'react-native';
+import { Filter, StarFull } from '@tamagui/lucide-icons';
+import React, { useCallback, useEffect, useState } from 'react';
+import { TouchableOpacity } from 'react-native';
 
-import { ScrollView, Text, XStack, YStack } from 'tamagui';
+import { XStack, YStack } from 'tamagui';
 
 import { router } from 'expo-router';
 import {
@@ -13,7 +12,7 @@ import {
   findCoachByName,
 } from '@/api/player-api';
 import { Coach } from '@/model/coach';
-import ClubBox from '@/components/ClubBox';
+
 import { Club } from '@/model/club';
 import Colors from '@/constants/Colors';
 import { RootState } from '@/store/store';
@@ -35,7 +34,10 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth } from '@/lib/firebase';
-import CoachSkeleton from '@/components/skeletons/CoachSkeleton';
+
+import { debounce } from 'lodash';
+import SearchResults from '@/components/SearchResults';
+import FavoriteCoaches from '@/components/FavoriteCoaches';
 
 export default function BookTraining() {
   // State variables
@@ -51,64 +53,74 @@ export default function BookTraining() {
   const currentUser = auth.currentUser;
 
   // Function to add search query to search history
-  const addToSearchHistory = async (query: string) => {
-    try {
-      if (currentUser) {
-        let historyString = await AsyncStorage.getItem(
-          `searchHistory_${currentUser.uid}`
-        );
-        let history = [];
+  const addToSearchHistory = useCallback(
+    async (query: string) => {
+      try {
+        if (currentUser) {
+          let historyString = await AsyncStorage.getItem(
+            `searchHistory_${currentUser.uid}`
+          );
+          let history = [];
 
-        if (historyString) {
-          history = JSON.parse(historyString);
-          // Check if the searchQuery already exists in the history
-          if (!history.includes(query)) {
-            history = [query, ...history];
+          if (historyString) {
+            history = JSON.parse(historyString);
+            // Check if the searchQuery already exists in the history
+            if (!history.includes(query)) {
+              history = [query, ...history];
+            }
+          } else {
+            history = [query];
           }
-        } else {
-          history = [query];
-        }
 
-        await AsyncStorage.setItem(
-          `searchHistory_${currentUser.uid}`,
-          JSON.stringify(history)
-        );
-        setSearchHistory(history.slice(0, 5));
+          await AsyncStorage.setItem(
+            `searchHistory_${currentUser.uid}`,
+            JSON.stringify(history)
+          );
+          setSearchHistory(history.slice(0, 5));
+        }
+      } catch (error) {
+        console.error('Error adding to search history:', error);
       }
-    } catch (error) {
-      console.error('Error adding to search history:', error);
-    }
-  };
+    },
+    [currentUser]
+  );
 
   // Function to handle search
-  const handleSearch = async (query: string) => {
-    setSearching(true);
-    try {
-      const [clubResults, coachResults] = await Promise.all([
-        findByName({ name: query }),
-        findCoachByName({ name: query }),
-      ]);
-      setClubSearchResults(clubResults);
-      setCoachSearchResults(coachResults);
-    } catch (error) {
-      console.error('Error searching:', error);
-      // Handle error, show error message, etc.
-    } finally {
-      setSearching(false);
-    }
-  };
+  const debouncedSearch = useCallback(
+    debounce(async (query: string) => {
+      if (query.trim() !== '') {
+        setSearching(true);
+        try {
+          const [clubResults, coachResults] = await Promise.all([
+            findByName({ name: query }),
+            findCoachByName({ name: query }),
+          ]);
+          setClubSearchResults(clubResults);
+          setCoachSearchResults(coachResults);
+        } catch (error) {
+          console.error('Error searching:', error);
+          // Handle error, show error message, etc.
+        } finally {
+          setSearching(false);
+        }
+      } else {
+        setClubSearchResults([]);
+        setCoachSearchResults([]);
+      }
+    }, 400),
+    []
+  );
 
-  useEffect(() => {
-    if (searchQuery.trim() !== '') {
-      handleSearch(searchQuery);
-    } else {
-      setClubSearchResults([]);
-      setCoachSearchResults([]);
-    }
-  }, [searchQuery]);
+  const handleSearch = useCallback(
+    (query: string) => {
+      setSearchQuery(query);
+      debouncedSearch(query);
+    },
+    [debouncedSearch]
+  );
 
   // Function to load search history from AsyncStorage for the current user
-  const fetchSearchHistory = async () => {
+  const fetchSearchHistory = useCallback(async () => {
     try {
       if (currentUser) {
         const historyString = await AsyncStorage.getItem(
@@ -125,17 +137,16 @@ export default function BookTraining() {
       console.error('Error fetching search history:', error);
     }
     return [];
-  };
-
-  // Load search history
-  const loadSearchHistory = async () => {
-    const history = await fetchSearchHistory();
-    setSearchHistory(history);
-  };
+  }, [currentUser]);
 
   useEffect(() => {
+    const loadSearchHistory = async () => {
+      const history = await fetchSearchHistory();
+      setSearchHistory(history);
+    };
+
     loadSearchHistory();
-  }, []);
+  }, [fetchSearchHistory]);
 
   const dispatch = useDispatch();
 
@@ -149,7 +160,6 @@ export default function BookTraining() {
     try {
       setLoadingFavorites(true);
       const favorites = await favoriteCoachList();
-      // console.log('favorites', favorites);
       if (favorites.length > 0) {
         setFavoriteCoaches(favorites);
       } else {
@@ -171,34 +181,40 @@ export default function BookTraining() {
   }, [showFavorites]);
 
   // Function to remove search history item
-  const removeSearchHistoryItem = async (itemToRemove: string) => {
-    try {
-      if (currentUser) {
-        let historyString = await AsyncStorage.getItem(
-          `searchHistory_${currentUser.uid}`
-        );
-        let history = [];
+  const removeSearchHistoryItem = useCallback(
+    async (itemToRemove: string) => {
+      try {
+        if (currentUser) {
+          let historyString = await AsyncStorage.getItem(
+            `searchHistory_${currentUser.uid}`
+          );
+          let history = [];
 
-        if (historyString) {
-          history = JSON.parse(historyString);
-          const updatedHistory = history.filter(
-            (item: any) => item !== itemToRemove
-          );
-          await AsyncStorage.setItem(
-            `searchHistory_${currentUser.uid}`,
-            JSON.stringify(updatedHistory)
-          );
-          setSearchHistory(updatedHistory.slice(0, 5));
+          if (historyString) {
+            history = JSON.parse(historyString);
+            const updatedHistory = history.filter(
+              (item: any) => item !== itemToRemove
+            );
+            await AsyncStorage.setItem(
+              `searchHistory_${currentUser.uid}`,
+              JSON.stringify(updatedHistory)
+            );
+            setSearchHistory(updatedHistory.slice(0, 5));
+          }
         }
+      } catch (error) {
+        console.error('Error removing search history item:', error);
       }
-    } catch (error) {
-      console.error('Error removing search history item:', error);
-    }
-  };
+    },
+    [currentUser]
+  );
 
-  const handlePressSearchItem = (item: string) => {
-    setSearchQuery(item);
-  };
+  const handlePressSearchItem = useCallback(
+    (item: string) => {
+      handleSearch(item);
+    },
+    [handleSearch]
+  );
 
   return (
     <YStack flex={1} paddingTop={28} paddingHorizontal={16}>
@@ -208,7 +224,7 @@ export default function BookTraining() {
           !showFavorites ? 'Search for a coach or club' : 'Favorites'
         }
         value={searchQuery}
-        onChangeText={setSearchQuery}
+        onChangeText={handleSearch}
         setSearchQuery={setSearchQuery}
         setShowFavorites={setShowFavorites}
         showFavorites={showFavorites}
@@ -263,113 +279,20 @@ export default function BookTraining() {
         </XStack>
       </XStack>
 
-      {/* Search results */}
       {!showFavorites ? (
-        <ScrollView flex={1}>
-          {searching ? (
-            <YStack gap={'$8'}>
-              <CoachSkeleton />
-              <CoachSkeleton />
-              <CoachSkeleton />
-            </YStack>
-          ) : searchQuery.trim() === '' ? (
-            <YStack paddingLeft={42} paddingRight={16}>
-              {searchHistory?.length > 0 && (
-                <YStack gap={14}>
-                  {searchHistory?.map((item) => (
-                    <XStack key={item} justifyContent="space-between">
-                      <TouchableOpacity
-                        onPress={() => handlePressSearchItem(item)}>
-                        <Text
-                          style={{ fontFamily: 'MontserratBold' }}
-                          fontSize={16}
-                          lineHeight={19}
-                          color={Colors.secondary}>
-                          {item}
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => removeSearchHistoryItem(item)}>
-                        <X size={20} color={Colors.secondary} />
-                      </TouchableOpacity>
-                    </XStack>
-                  ))}
-                </YStack>
-              )}
-            </YStack>
-          ) : (
-            <YStack>
-              {clubSearchResults?.length > 0 && (
-                <YStack>
-                  {clubSearchResults?.map((item) => (
-                    <ClubBox
-                      key={item.id}
-                      name={item.name}
-                      membership={'NO'}
-                      rating={5}
-                    />
-                  ))}
-                </YStack>
-              )}
-
-              {coachSearchResults?.length > 0 ? (
-                <YStack>
-                  {clubSearchResults?.length > 0 && (
-                    <Text
-                      style={{ fontFamily: 'MontserratBold' }}
-                      fontSize={16}
-                      marginVertical={16}
-                      lineHeight={19}
-                      color={Colors.secondary}>
-                      Coaches
-                    </Text>
-                  )}
-
-                  {coachSearchResults?.map((item) => (
-                    <CoachBox
-                      key={item.id}
-                      coachRef={item.id}
-                      name={item.displayName}
-                      rating={item.rating}
-                      level={item.level}
-                      age={42}
-                      image={item.image}
-                      followedPlayer={item.followedPlayer}
-                    />
-                  ))}
-                </YStack>
-              ) : clubSearchResults?.length === 0 ? (
-                <Text
-                  style={{ fontFamily: 'MontserratMedium' }}
-                  textAlign="center"
-                  color={Colors.secondary}
-                  fontSize={16}>
-                  No club or coach found
-                </Text>
-              ) : null}
-            </YStack>
-          )}
-        </ScrollView>
-      ) : loadingFavorites ? (
-        <YStack gap={'$8'}>
-          <CoachSkeleton />
-          <CoachSkeleton />
-          <CoachSkeleton />
-        </YStack>
+        <SearchResults
+          searchQuery={searchQuery}
+          loading={searching}
+          searchHistory={searchHistory}
+          handlePressSearchItem={handlePressSearchItem}
+          removeSearchHistoryItem={removeSearchHistoryItem}
+          clubSearchResults={clubSearchResults}
+          coachSearchResults={coachSearchResults}
+        />
       ) : (
-        <FlatList
-          data={favoriteCoaches}
-          renderItem={({ item }) => (
-            <CoachBox
-              coachRef={item.id}
-              name={item.displayName}
-              rating={item.rating}
-              level={item.level}
-              age={42}
-              image={item.image}
-              followedPlayer={item.followedPlayer}
-            />
-          )}
+        <FavoriteCoaches
+          favoriteCoaches={favoriteCoaches}
+          loading={loadingFavorites}
         />
       )}
     </YStack>

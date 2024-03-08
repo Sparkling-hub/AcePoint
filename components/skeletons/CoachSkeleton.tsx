@@ -1,4 +1,3 @@
-import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
