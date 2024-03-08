@@ -2,12 +2,9 @@ import React from 'react';
 import Colors from '@/constants/Colors';
 import Calendar from '../svg/Calendar';
 
-interface CalendarProps {
-  readonly focused: boolean;
-}
 
-const CalendarIcon: React.FC<CalendarProps> = ({ focused }) => {
-  return <Calendar fill={focused ? Colors.secondary : Colors.primary} />;
+const CalendarIcon = ({ focused, testID }: { readonly focused: boolean, readonly testID?: string }) => {
+  return <Calendar testID={testID} fill={focused ? Colors.secondary : Colors.primary} />;
 };
 
 export default CalendarIcon;

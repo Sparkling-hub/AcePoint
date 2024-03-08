@@ -7,6 +7,9 @@ import Account from '../user/account';
 import Security from '../user/security';
 import Legal from '../legal'
 import Support from '../support'
+import AddButtonCalendar from '@/components/AddButtonCalendar'
+import CalendarIconLabel from '@/components/tabIcons/CalendarIconLabel'
+import CalendarIcon from '@/components/tabIcons/CalendarIcon'
 
 jest.mock('tamagui', () => ({
   YStack: jest.fn(),
@@ -26,7 +29,6 @@ jest.mock('firebase/firestore', () => ({
   updateDoc: jest.fn(),
   getDoc: jest.fn(() => Promise.resolve({ data: jest.fn() })),
 }));
-// Mocking modules and hooks
 jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
 }));
@@ -99,6 +101,21 @@ describe('AccountScreen', () => {
   it('Legal renders correctly', () => {
     const testID = 'legal-screen';
     const { getByTestId } = render(<Legal testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Add button calendar renders correctly', () => {
+    const testID = 'add-button-calendar';
+    const { getByTestId } = render(<AddButtonCalendar testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Calendar icon label renders correctly', () => {
+    const testID = 'calendar-icon-label-calendar';
+    const { getByTestId } = render(<CalendarIconLabel testID={testID} focused={true} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Calendar icon renders correctly', () => {
+    const testID = 'calendar-icon-label-calendar';
+    const { getByTestId } = render(<CalendarIcon testID={testID} focused={true} />);
     expect(getByTestId(testID)).toBeTruthy();
   });
 

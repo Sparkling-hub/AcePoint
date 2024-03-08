@@ -2,9 +2,9 @@ import Colors from "@/constants/Colors";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "tamagui";
 
-export default function AddButtonCalendar() {
+export default function AddButtonCalendar({ testID }: { readonly testID: string }) {
     return (
-        <TouchableOpacity style={styles.addButton}>
+        <TouchableOpacity testID={testID} style={styles.addButton}>
             <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
     )
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 10,
-        paddingBottom:15
+        paddingBottom: 15
     },
     addButtonText: {
         fontSize: 39,
