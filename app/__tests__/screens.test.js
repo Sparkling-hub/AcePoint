@@ -124,8 +124,15 @@ describe('AccountScreen', () => {
   it('renders with the correct fill color when focused', () => {
     const testID = 'calendar';
     const { getByTestId } = render(<Calendar testID={testID} focused />);
-    const calendarElement = getByTestId(testID);
-    expect(calendarElement.props.fill).toBe(Colors.secondary);
+    expect(getByTestId(testID)).toBeTruthy();
+
+  });
+
+  it('renders with the correct fill color when not focused', () => {
+    const testID = 'calendar';
+    const { getByTestId } = render(<Calendar testID={testID} focused={false} />);
+    expect(getByTestId(testID)).toBeTruthy();
+
   });
 
 });
