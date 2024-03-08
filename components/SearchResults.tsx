@@ -79,7 +79,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
           </YStack>
         )}
 
-        {coachSearchResults?.length > 0 ? (
+        {coachSearchResults?.length > 0 && (
           <YStack>
             {clubSearchResults?.length > 0 && (
               <Text
@@ -105,15 +105,18 @@ const SearchResults: React.FC<SearchResultsProps> = ({
               />
             ))}
           </YStack>
-        ) : clubSearchResults?.length === 0 ? (
-          <Text
-            style={{ fontFamily: 'MontserratMedium' }}
-            textAlign="center"
-            color={Colors.secondary}
-            fontSize={16}>
-            No club or coach found
-          </Text>
-        ) : null}
+        )}
+
+        {clubSearchResults?.length === 0 &&
+          coachSearchResults?.length === 0 && (
+            <Text
+              style={{ fontFamily: 'MontserratMedium' }}
+              textAlign="center"
+              color={Colors.secondary}
+              fontSize={16}>
+              No club or coach found
+            </Text>
+          )}
       </YStack>
     </ScrollView>
   );
