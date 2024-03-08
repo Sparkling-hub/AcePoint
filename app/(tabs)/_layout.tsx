@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { Link, Tabs } from 'expo-router';
+import { Pressable } from 'react-native';
 import Colors from '@/constants/Colors';
+import CustomHeader from '@/components/CustomHeader';
+import Bars from '@/components/svg/Bars';
 import { useDispatch } from 'react-redux';
 import { setUserRole } from '@/store/slices/userRole';
 import { retrieveData } from '@/api/localStorage';
 import CalendarIcon from '@/components/tabIcons/CalendarIcon';
 import CalendarIconLabel from '@/components/tabIcons/CalendarIconLabel';
+import { ChevronLeft } from '@tamagui/lucide-icons';
+import { Button, View } from 'tamagui';
+import { StyleSheet } from "react-native";
+import Calendar from '@/components/svg/Calendar';
 import { setCalendarOption } from '@/store/slices/calendarSlice';
 import ProfileIcon from '@/components/tabIcons/ProfileIcon';
 import PorfileIconLabel from '@/components/tabIcons/PorfileIconLabel';
@@ -15,7 +21,29 @@ import BookIconLabel from '@/components/tabIcons/BookIconLabel';
 import HomeIcon from '@/components/tabIcons/HomeIcon';
 import HomeIconLabel from '@/components/tabIcons/HomeIconLabel';
 import ProfileHeader from '@/components/headers/ProfileHeader';
-import CalendarHeader from '@/components/headers/CalendarHeader'; 
+
+type CalendarHeaderProps = {
+  handleState: (selected: string) => void;
+  getButtonStyle: (key: string) => React.CSSProperties | any;
+};
+
+const CalendarHeader: React.FC<CalendarHeaderProps> = ({ handleState, getButtonStyle }) => {
+  return (
+    <CustomHeader
+      leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
+      rightContent={
+        <View style={styles.header}>
+          <Calendar fill={Colors.secondary} style={{ marginRight: 20, marginTop: 3 }} />
+          {['D', 'W', 'M'].map((key) => (
+            <Button key={key} style={getButtonStyle(key)} onPress={() => handleState(key)}>
+              {key}
+            </Button>
+          ))}
+        </View>
+      }
+    />
+  );
+};
 export default function TabLayout() {
   const dispatch = useDispatch();
   const getUserRole = async () => {
@@ -74,7 +102,7 @@ export default function TabLayout() {
           title: 'Calendar',
           tabBarIcon: CalendarIcon,
           tabBarLabel: CalendarIconLabel,
-          header: () => <CalendarHeader handleState={handleState as (selected: string) => void} getButtonStyle={getButtonStyle as (key: string) => object} />,
+          header: () => <CalendarHeader handleState={(selected: any) => handleState(selected as ButtonKey)} getButtonStyle={(key: any) => getButtonStyle(key as ButtonKey)} />,
           headerShadowVisible: false,
         }}
       />
