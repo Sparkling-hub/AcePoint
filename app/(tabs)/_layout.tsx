@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Tabs } from 'expo-router';
 import Colors from '@/constants/Colors';
 import CustomHeader from '@/components/CustomHeader';
-import Bars from '@/components/svg/Bars';
 import { useDispatch } from 'react-redux';
 import { setUserRole } from '@/store/slices/userRole';
 import { retrieveData } from '@/api/localStorage';
@@ -24,7 +22,7 @@ import ProfileHeader from '@/components/headers/ProfileHeader';
 
 type CalendarHeaderProps = {
   handleState: (selected: string) => void;
-  getButtonStyle: (key: string) => React.CSSProperties | any;
+  getButtonStyle: (key: string) => React.CSSProperties;
 };
 
 const CalendarHeader: React.FC<CalendarHeaderProps> = ({ handleState, getButtonStyle }) => {
