@@ -10,7 +10,6 @@ import Support from '../support'
 import AddButtonCalendar from '@/components/AddButtonCalendar'
 import CalendarIconLabel from '@/components/tabIcons/CalendarIconLabel'
 import CalendarIcon from '@/components/tabIcons/CalendarIcon'
-import Calendar from '@/components/svg/Calendar';
 import Colors from '@/constants/Colors';
 
 jest.mock('tamagui', () => ({
@@ -115,24 +114,21 @@ describe('AccountScreen', () => {
     const { getByTestId } = render(<CalendarIconLabel testID={testID} focused={true} />);
     expect(getByTestId(testID)).toBeTruthy();
   });
-  it('Calendar icon renders correctly', () => {
+  it('Calendar icon renders correctly when focused', () => {
     const testID = 'calendar-icon-calendar';
     const { getByTestId } = render(<CalendarIcon testID={testID} focused={true} />);
-    expect(getByTestId(testID)).toBeTruthy();
+    const calendarIcon = getByTestId(testID);
+    expect(calendarIcon).toBeTruthy();
+    expect(calendarIcon.props.fill).toEqual(Colors.secondary);
   });
 
-  it('renders with the correct fill color when focused', () => {
-    const testID = 'calendar';
-    const { getByTestId } = render(<Calendar testID={testID} focused />);
-    expect(getByTestId(testID)).toBeTruthy();
-
+  it('Calendar icon renders correctly when not focused', () => {
+    const testID = 'calendar-icon-calendar';
+    const { getByTestId } = render(<CalendarIcon testID={testID} focused={false} />);
+    const calendarIcon = getByTestId(testID);
+    expect(calendarIcon).toBeTruthy();
+    expect(calendarIcon.props.fill).toEqual(Colors.primary);
   });
 
-  it('renders with the correct fill color when not focused', () => {
-    const testID = 'calendar';
-    const { getByTestId } = render(<Calendar testID={testID} focused={false} />);
-    expect(getByTestId(testID)).toBeTruthy();
-
-  });
 
 });
