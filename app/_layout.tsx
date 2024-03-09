@@ -17,13 +17,15 @@ import { store } from '@/store/store';
 import { Provider } from 'react-redux';
 
 import Toast from 'react-native-toast-message';
-import NotificationHeader from '@/components/NotificationHeader';
-import SettingsHeader from '@/components/SettingsHeader';
-import SecurityHeader from '@/components/SecurityHeader';
+import NotificationHeader from '@/components/headers/NotificationHeader';
+import SettingsHeader from '@/components/headers/SettingsHeader';
+import SecurityHeader from '@/components/headers/SecurityHeader';
 import AccountHeader from '@/components/headers/AccountHeader';
 import EditProfileHeader from '@/components/headers/EditProfileHeader';
-import SupportHeader from '@/components/SupportHeader';
-import LegalHeader from '@/components/LegalHeader';
+import SupportHeader from '@/components/headers/SupportHeader';
+import LegalHeader from '@/components/headers/LegalHeader';
+import NewTrainingHeader from '@/components/headers/NewTrainingHeader';
+
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -87,6 +89,13 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: AccountHeader,
+              }}
+            />
+            <Stack.Screen
+              name="new-training"
+              options={{
+                headerShadowVisible: false,
+                header: NewTrainingHeader,
               }}
             />
             <Stack.Screen

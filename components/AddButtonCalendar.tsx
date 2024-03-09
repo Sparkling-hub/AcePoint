@@ -1,10 +1,12 @@
 import Colors from "@/constants/Colors";
+import { useRouter } from "expo-router";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "tamagui";
 
 export default function AddButtonCalendar({ testID }: { readonly testID: string }) {
+    const router = useRouter()
     return (
-        <TouchableOpacity testID={testID} style={styles.addButton}>
+        <TouchableOpacity testID={testID} style={styles.addButton} onPress={() => { router.push("/new-training") }}>
             <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
     )

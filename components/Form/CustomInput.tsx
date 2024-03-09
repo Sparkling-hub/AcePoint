@@ -41,7 +41,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
   };
 
   return (
-    <YStack>
+    <YStack width={props.width}>
       <TouchableOpacity onPress={handleContainerPress} activeOpacity={0.5}>
         <YStack
           height={70}
