@@ -112,7 +112,7 @@ export default function BookTraining() {
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       performSearch(query);
-    }, 400),
+    }, 300),
     []
   );
 
