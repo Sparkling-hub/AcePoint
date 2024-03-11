@@ -1,7 +1,10 @@
 import Colors from '@/constants/Colors';
+import { setShowMaps } from '@/store/slices/showMapsSlice';
+import { RootState } from '@/store/store';
 import { Heart, Navigation } from '@tamagui/lucide-icons';
 import React from 'react';
 import { Pressable } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { Input, InputProps, XStack } from 'tamagui';
 
 interface SearchInputProps extends InputProps {
@@ -16,7 +19,12 @@ const SearchInput: React.FC<SearchInputProps> = ({
   setSearchQuery,
   ...props
 }) => {
+  const { showMaps } = useSelector((state: RootState) => state.showMaps);
+  const dispatch = useDispatch();
   const handleShowFavorites = () => {
+    if (showMaps) {
+      dispatch(setShowMaps(false));
+    }
     setShowFavorites(!showFavorites);
     setSearchQuery('');
   };

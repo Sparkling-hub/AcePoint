@@ -38,6 +38,7 @@ import { auth } from '@/lib/firebase';
 import { debounce } from 'lodash';
 import SearchResults from '@/components/SearchResults';
 import FavoriteCoaches from '@/components/FavoriteCoaches';
+import NearbyClubsMap from '@/components/NearbyClubsMap';
 
 export default function BookTraining() {
   // State variables
@@ -50,7 +51,15 @@ export default function BookTraining() {
   const [searching, setSearching] = useState(false);
   const [loadingFavorites, setLoadingFavorites] = useState(true);
 
+  // Selecting values from Redux store
+  const { distance, level, rating, tags } = useSelector(
+    (state: RootState) => state.savedFilter
+  );
+  const { showMaps } = useSelector((state: RootState) => state.showMaps);
+
   const currentUser = auth.currentUser;
+
+  const dispatch = useDispatch();
 
   // Function to add search query to search history
   const addToSearchHistory = useCallback(
@@ -112,7 +121,7 @@ export default function BookTraining() {
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       performSearch(query);
-    }, 300),
+    }, 475),
     []
   );
 
@@ -152,13 +161,6 @@ export default function BookTraining() {
 
     loadSearchHistory();
   }, [fetchSearchHistory]);
-
-  const dispatch = useDispatch();
-
-  // Selecting filter values from Redux store
-  const { distance, level, rating, tags } = useSelector(
-    (state: RootState) => state.savedFilter
-  );
 
   // Function to load favorite coaches
   const loadFavoriteCoaches = async () => {
@@ -222,85 +224,98 @@ export default function BookTraining() {
     [performSearch]
   );
 
-  return (
-    <YStack flex={1} paddingTop={28} paddingHorizontal={16}>
-      {/* Search input */}
-      <SearchInput
-        placeholder={
-          !showFavorites ? 'Search for a coach or club' : 'Favorites'
-        }
-        value={searchQuery}
-        onChangeText={handleSearch}
-        setSearchQuery={setSearchQuery}
-        setShowFavorites={setShowFavorites}
-        showFavorites={showFavorites}
-        onSubmitEditing={() => addToSearchHistory(searchQuery)}
-      />
-      <XStack marginLeft={14} marginVertical={23} gap={9}>
-        {/* Filter button */}
-        <TouchableOpacity onPress={() => router.navigate('/book/filter')}>
-          <Filter size={32} color={Colors.secondary} />
-        </TouchableOpacity>
-        {/* Filter items */}
-        <XStack gap={7} flexWrap="wrap" flex={1}>
-          {tags?.map((tag) => (
-            <FilterItem
-              title={tag}
-              key={tag}
-              onPress={() => {
-                dispatch(setTags(tags.filter((t) => t !== tag)));
-                dispatch(setTempTags(tags.filter((t) => t !== tag)));
-              }}
-            />
-          ))}
-          {distance[0] !== 0 && (
-            <FilterItem
-              title={`${distance}km`}
-              onPress={() => {
-                dispatch(setDistance([0]));
-                dispatch(setTempDistance([0]));
-              }}
-            />
-          )}
-          {rating[0] !== 0 && (
-            <FilterItem
-              leftIcon={<StarFull size={15} color={'white'} />}
-              title={`${rating}`}
-              onPress={() => {
-                dispatch(setRating([0]));
-                dispatch(setTempRating([0]));
-              }}
-            />
-          )}
-          {level[0] !== 0 && (
-            <FilterItem
-              leftIcon={<Level />}
-              title={`${level}`}
-              onPress={() => {
-                dispatch(setLevel([0]));
-                dispatch(setTempLevel([0]));
-              }}
-            />
-          )}
-        </XStack>
-      </XStack>
+  const renderView = () => {
+    if (showMaps) {
+      return <NearbyClubsMap />;
+    } else {
+      if (showFavorites) {
+        return (
+          <FavoriteCoaches
+            favoriteCoaches={favoriteCoaches}
+            loading={loadingFavorites}
+          />
+        );
+      } else {
+        return (
+          <SearchResults
+            searchQuery={searchQuery}
+            loading={searching}
+            searchHistory={searchHistory}
+            handlePressSearchItem={handlePressSearchItem}
+            removeSearchHistoryItem={removeSearchHistoryItem}
+            clubSearchResults={clubSearchResults}
+            coachSearchResults={coachSearchResults}
+          />
+        );
+      }
+    }
+  };
 
-      {!showFavorites ? (
-        <SearchResults
-          searchQuery={searchQuery}
-          loading={searching}
-          searchHistory={searchHistory}
-          handlePressSearchItem={handlePressSearchItem}
-          removeSearchHistoryItem={removeSearchHistoryItem}
-          clubSearchResults={clubSearchResults}
-          coachSearchResults={coachSearchResults}
+  return (
+    <YStack flex={1} paddingTop={28}>
+      <YStack paddingHorizontal={16}>
+        {/* Search input */}
+        <SearchInput
+          placeholder={
+            !showFavorites ? 'Search for a coach or club' : 'Favorites'
+          }
+          value={searchQuery}
+          onChangeText={handleSearch}
+          setSearchQuery={setSearchQuery}
+          setShowFavorites={setShowFavorites}
+          showFavorites={showFavorites}
+          onSubmitEditing={() => addToSearchHistory(searchQuery)}
         />
-      ) : (
-        <FavoriteCoaches
-          favoriteCoaches={favoriteCoaches}
-          loading={loadingFavorites}
-        />
-      )}
+        <XStack marginLeft={14} marginVertical={23} gap={9}>
+          {/* Filter button */}
+          <TouchableOpacity onPress={() => router.navigate('/book/filter')}>
+            <Filter size={24} color={Colors.secondary} />
+          </TouchableOpacity>
+          {/* Filter items */}
+          <XStack gap={7} flexWrap="wrap" flex={1}>
+            {tags?.map((tag) => (
+              <FilterItem
+                title={tag}
+                key={tag}
+                onPress={() => {
+                  dispatch(setTags(tags.filter((t) => t !== tag)));
+                  dispatch(setTempTags(tags.filter((t) => t !== tag)));
+                }}
+              />
+            ))}
+            {distance[0] !== 0 && (
+              <FilterItem
+                title={`${distance}km`}
+                onPress={() => {
+                  dispatch(setDistance([0]));
+                  dispatch(setTempDistance([0]));
+                }}
+              />
+            )}
+            {rating[0] !== 0 && (
+              <FilterItem
+                leftIcon={<StarFull size={15} color={'white'} />}
+                title={`${rating}`}
+                onPress={() => {
+                  dispatch(setRating([0]));
+                  dispatch(setTempRating([0]));
+                }}
+              />
+            )}
+            {level[0] !== 0 && (
+              <FilterItem
+                leftIcon={<Level />}
+                title={`${level}`}
+                onPress={() => {
+                  dispatch(setLevel([0]));
+                  dispatch(setTempLevel([0]));
+                }}
+              />
+            )}
+          </XStack>
+        </XStack>
+      </YStack>
+      {renderView()}
     </YStack>
   );
 }

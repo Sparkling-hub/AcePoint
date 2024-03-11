@@ -62,7 +62,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
     }
   };
 
-  const starsComponent = useMemo(() => {
+  const stars = useMemo(() => {
     if (rating) {
       return renderStars(rating);
     }
@@ -158,7 +158,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
               />
             </Pressable>
           </XStack>
-          <XStack>{starsComponent}</XStack>
+          <XStack>{stars}</XStack>
         </YStack>
       </XStack>
       <View

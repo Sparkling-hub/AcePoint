@@ -21,7 +21,7 @@ const FilterItem: React.FC<FilterItemProps> = ({
       gap={4}
       paddingHorizontal={8}
       paddingVertical={4}
-      height={32}
+      height={28}
       backgroundColor={Colors.secondary}
       borderRadius={8}>
       {leftIcon}
