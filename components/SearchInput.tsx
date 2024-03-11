@@ -1,4 +1,5 @@
 import Colors from '@/constants/Colors';
+import { setShowFavorites } from '@/store/slices/showFavoritesSlice';
 import { setShowMaps } from '@/store/slices/showMapsSlice';
 import { RootState } from '@/store/store';
 import { Heart, Navigation } from '@tamagui/lucide-icons';
@@ -8,24 +9,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Input, InputProps, XStack } from 'tamagui';
 
 interface SearchInputProps extends InputProps {
-  showFavorites: boolean;
-  setShowFavorites: (show: boolean) => void;
   setSearchQuery: (query: string) => void;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
-  showFavorites,
-  setShowFavorites,
   setSearchQuery,
   ...props
 }) => {
   const { showMaps } = useSelector((state: RootState) => state.showMaps);
+  const { showFavorites } = useSelector(
+    (state: RootState) => state.showFavorites
+  );
   const dispatch = useDispatch();
   const handleShowFavorites = () => {
     if (showMaps) {
       dispatch(setShowMaps(false));
     }
-    setShowFavorites(!showFavorites);
+    dispatch(setShowFavorites(!showFavorites));
     setSearchQuery('');
   };
   return (

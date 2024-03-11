@@ -46,7 +46,6 @@ export default function BookTraining() {
   const [clubSearchResults, setClubSearchResults] = useState<Club[]>([]);
   const [coachSearchResults, setCoachSearchResults] = useState<Coach[]>([]);
   const [favoriteCoaches, setFavoriteCoaches] = useState<Coach[]>([]);
-  const [showFavorites, setShowFavorites] = useState(false);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [searching, setSearching] = useState(false);
   const [loadingFavorites, setLoadingFavorites] = useState(true);
@@ -56,6 +55,9 @@ export default function BookTraining() {
     (state: RootState) => state.savedFilter
   );
   const { showMaps } = useSelector((state: RootState) => state.showMaps);
+  const { showFavorites } = useSelector(
+    (state: RootState) => state.showFavorites
+  );
 
   const currentUser = auth.currentUser;
 
@@ -227,28 +229,28 @@ export default function BookTraining() {
   const renderView = () => {
     if (showMaps) {
       return <NearbyClubsMap />;
-    } else {
-      if (showFavorites) {
-        return (
-          <FavoriteCoaches
-            favoriteCoaches={favoriteCoaches}
-            loading={loadingFavorites}
-          />
-        );
-      } else {
-        return (
-          <SearchResults
-            searchQuery={searchQuery}
-            loading={searching}
-            searchHistory={searchHistory}
-            handlePressSearchItem={handlePressSearchItem}
-            removeSearchHistoryItem={removeSearchHistoryItem}
-            clubSearchResults={clubSearchResults}
-            coachSearchResults={coachSearchResults}
-          />
-        );
-      }
     }
+
+    if (showFavorites) {
+      return (
+        <FavoriteCoaches
+          favoriteCoaches={favoriteCoaches}
+          loading={loadingFavorites}
+        />
+      );
+    }
+
+    return (
+      <SearchResults
+        searchQuery={searchQuery}
+        loading={searching}
+        searchHistory={searchHistory}
+        handlePressSearchItem={handlePressSearchItem}
+        removeSearchHistoryItem={removeSearchHistoryItem}
+        clubSearchResults={clubSearchResults}
+        coachSearchResults={coachSearchResults}
+      />
+    );
   };
 
   return (
@@ -262,8 +264,6 @@ export default function BookTraining() {
           value={searchQuery}
           onChangeText={handleSearch}
           setSearchQuery={setSearchQuery}
-          setShowFavorites={setShowFavorites}
-          showFavorites={showFavorites}
           onSubmitEditing={() => addToSearchHistory(searchQuery)}
         />
         <XStack marginLeft={14} marginVertical={23} gap={9}>

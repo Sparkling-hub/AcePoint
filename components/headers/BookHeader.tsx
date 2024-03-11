@@ -6,11 +6,20 @@ import { RootState } from '@/store/store';
 import { setShowMaps } from '@/store/slices/showMapsSlice';
 import { List, MapPinned } from '@tamagui/lucide-icons';
 import Colors from '@/constants/Colors';
+import { setShowFavorites } from '@/store/slices/showFavoritesSlice';
 
 const BookHeader = () => {
-  const dispatch = useDispatch();
   const { showMaps } = useSelector((state: RootState) => state.showMaps);
+  const { showFavorites } = useSelector(
+    (state: RootState) => state.showFavorites
+  );
+
+  const dispatch = useDispatch();
+
   const toggleMaps = () => {
+    if (showFavorites) {
+      dispatch(setShowFavorites(false));
+    }
     dispatch(setShowMaps(!showMaps));
   };
   return (

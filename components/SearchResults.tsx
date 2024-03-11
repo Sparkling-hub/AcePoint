@@ -20,7 +20,7 @@ interface SearchResultsProps {
   coachSearchResults: Coach[];
 }
 
-const Spacer = ({ height = 16 }) => <View style={{ height }} />;
+const Spacer = ({ height = 14 }) => <View style={{ height }} />;
 
 const SearchResults: React.FC<SearchResultsProps> = ({
   loading,
@@ -47,7 +47,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
           <FlatList
             data={searchHistory}
             keyExtractor={(item) => item}
-            ItemSeparatorComponent={() => <Spacer height={14} />}
+            ItemSeparatorComponent={Spacer}
             renderItem={({ item }) => (
               <SearchHistoryItem
                 item={item}
