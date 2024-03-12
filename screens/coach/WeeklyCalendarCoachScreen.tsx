@@ -5,7 +5,7 @@ import AddButtonCalendar from "@/components/AddButtonCalendar";
 import { ScrollView } from "tamagui";
 import { useEffect, useState } from "react";
 
-const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const times = ['07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'];
 
 function getTimeIndex(time: string): number {
@@ -34,12 +34,14 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
         function mapLessonsToWeeklyEvents(lessons: any[]): void {
             const weeklyEvents: { [key: number]: { [time: string]: { name: string, spacesLeft: number, isFull?: boolean, endTime: string } } } = {};
             const [currentWeekStart, currentWeekEnd] = week.split(' ').map(date => new Date(date));
+            if (currentWeekEnd)
+                currentWeekEnd.setHours(currentWeekEnd.getHours() + 11);
             lessons.forEach(lesson => {
                 const startDate = new Date(lesson.startDate.seconds * 1000);
                 const duration = lesson.duration;
                 const endDate = new Date(startDate.getTime() + (Number(duration.split(':')[0]) * 60 * 60 * 1000) + (Number(duration.split(':')[1]) * 60 * 1000));
                 if (startDate >= currentWeekStart && startDate <= currentWeekEnd) {
-                    const dayOfWeek = (startDate.getDay() || 7) - 1;
+                    const dayOfWeek = (startDate.getDay() + 6) % 7 + 1;
                     const startTime = `${startDate.getHours().toString().padStart(2, '0')}:${startDate.getMinutes().toString().padStart(2, '0')}`;
                     const endTime = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
                     const spacesLeft = lesson.maxPeople - lesson.players.length;
@@ -67,7 +69,7 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
             <CalendarStrip
                 calendarAnimation={{ type: 'sequence', duration: 30 }}
                 daySelectionAnimation={{ type: 'border', duration: 200, borderWidth: 1, borderHighlightColor: Colors.primary }}
-                style={{ height: 100, paddingTop: 20, paddingBottom: 10, borderRadius: 20, marginLeft: 50, marginRight: 5 }}
+                style={{ height: 100, paddingTop: 20, paddingBottom: 10, borderRadius: 20, marginLeft: 20, marginRight: 5 }}
                 calendarHeaderStyle={{ color: 'white' }}
                 calendarColor={Colors.secondary}
                 dateNumberStyle={{ color: 'white' }}
@@ -101,9 +103,8 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
                     {daysOfWeek.map((day, dayIndex) => (
                         <View key={day} style={styles.dayColumn}>
                             <View style={[styles.gridLine, { top: 0, width: 1, left: null, right: null, height: 20000 }]} />
-
                             {times.map((time) => {
-                                const event = weeklyEvents[dayIndex]?.[time];
+                                const event = weeklyEvents[dayIndex + 1]?.[time];
                                 if (event) {
                                     const eventTopOffset = calculateEventTopOffset(time);
                                     const eventHeight = calculateEventHeight(time, event.endTime);
@@ -132,6 +133,7 @@ const styles = StyleSheet.create({
         marginTop: 35,
         flexDirection: 'row',
         flex: 1,
+        marginStart: 50
     },
     timeColumn: {
         left: 0,
@@ -221,7 +223,7 @@ const styles = StyleSheet.create({
     },
     gridLine: {
         position: 'absolute',
-        left: 50,
+        left: 0,
         right: 0,
         height: 1,
         backgroundColor: '#e0e0e0',

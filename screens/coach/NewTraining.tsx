@@ -22,11 +22,16 @@ import { StyleSheet } from "react-native";
 import { retrieveData } from "@/api/localStorage";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { storeLesson } from "@/api/lesson-api";
+import fireToast from "@/services/toast";
+import NewTrainingSkeleton from "@/components/skeletons/NewTrainingSkeleton";
 
 
 export default function NewTrainingScreen() {
     const [showStartDate, setShowStartDate] = useState(false);
     const [showEndDate, setShowEndDate] = useState(false);
+    const [startTime, setStartTime] = useState('')
+    const [isLoading, setIsLoading] = useState(true)
     const handleShow = (field: string) => {
         field === 'startDate' ? setShowStartDate(!showStartDate) : setShowEndDate(!showEndDate)
     };
@@ -76,17 +81,21 @@ export default function NewTrainingScreen() {
     const handleChange = (name: string, value: any) => {
         formik.setFieldValue(name, value);
     };
-    const handleSubmit = (values: any) => {
-        console.log(values);
+    const handleSubmit = async () => {
+        (Object.keys(formik.errors).length === 0) ? await storeLesson(formik.values, startTime) : fireToast('error', 'Please fill all the fields !')
     }
 
     const formik = useFormik({
         validateOnMount: true,
         initialValues,
         validationSchema,
-        onSubmit: (values) => handleSubmit(values),
+        onSubmit: () => handleSubmit(),
     });
     const handleConfirm = (field: string, date: Date) => {
+        if (field === "startDate") {
+            const dateParts = date.toISOString().split('T')
+            setStartTime(dateParts[1])
+        }
         handleChange(field, date.toLocaleDateString())
         handleShow(field);
     };
@@ -100,13 +109,23 @@ export default function NewTrainingScreen() {
                 const result = await getDoc(doc(userCollection, userID))
                 const user = result.data()
                 if (user) {
+                    handleChange('coachId', userID)
                     handleChange('organiser', user.displayName)
                     handleChange('club', user.club)
                 }
             }
+            setIsLoading(false)
         }
         getUserName()
     }, [])
+
+    if (isLoading) {
+        return (
+            <YStack flex={1} paddingTop={35} paddingHorizontal={16}>
+                <NewTrainingSkeleton />
+            </YStack>
+        );
+    }
     return (
         <ScrollView style={styles.scrollview}>
             <YStack style={styles.container}>
@@ -155,7 +174,8 @@ export default function NewTrainingScreen() {
                     />
                     <DateTimePickerModal
                         isVisible={showStartDate}
-                        mode="date"
+                        mode="datetime"
+                        minuteInterval={30}
                         onConfirm={(date) => {
                             handleConfirm('startDate', date)
                             setDate(date, formik.values.endDate, 'startDate')
@@ -324,7 +344,7 @@ export default function NewTrainingScreen() {
                     {formik.errors.minAge && <Text style={styles.errormessage}>{formik.errors.minAge}</Text>}
                 </YStack>
                 <YStack style={styles.ystack} alignItems="center" alignSelf="center">
-                    <CustomButton title="PUBLISH" onPress={() => { }}></CustomButton>
+                    <CustomButton title="PUBLISH" onPress={() => { handleSubmit() }}></CustomButton>
                 </YStack>
             </YStack>
         </ScrollView>

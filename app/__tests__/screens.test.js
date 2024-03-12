@@ -60,7 +60,9 @@ jest.mock('firebase/storage', () => ({
   uploadBytesResumable: jest.fn(),
   getStorage: jest.fn(),
 }));
-
+jest.mock('expo-router', () => ({
+  useRouter: jest.fn()
+}))
 describe('AccountScreen', () => {
   beforeEach(() => {
     // Reset mocks before each test

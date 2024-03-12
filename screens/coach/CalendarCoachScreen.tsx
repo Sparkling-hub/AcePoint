@@ -54,8 +54,9 @@ export default function CalendarCoachScreen() {
             const lastDayISO = lastDay.toISOString();
             setCurrentWeek(`${firstDayISO} ${lastDayISO}`);
         }
-        getCurrentWeek()
-        getLessons()
+        result.option === 'W' ?
+            getCurrentWeek() :
+            getLessons()
     }, [])
     return (
         <>
