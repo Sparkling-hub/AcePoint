@@ -2,13 +2,10 @@ import { db, auth } from '@/lib/firebase';
 import {
   collection,
   doc,
-  endAt,
   getDoc,
   getDocs,
-  orderBy,
   query,
   runTransaction,
-  startAt,
   where,
 } from 'firebase/firestore';
 import GetLocation from 'react-native-get-location'
@@ -19,8 +16,6 @@ const calculateDistance = (
   data:any,
   radius:number
 ): any => {
-  console.log("currentLat ",currentLat)
-  console.log("currentLon ",currentLon)
   const earthRadius = 6371; // Earth's radius in kilometers
   // Convert latitude and longitude from degrees to radians
   const lat1Rad = (currentLat * Math.PI) / 180;
@@ -53,8 +48,7 @@ const calculateDistance = (
 };
 const distanceCalculation =async (currentLatitude:number,currentLongitude:number,radious:number)=>{
   try {
-  console.log('distanceCalculation')
-  const clubs= await fetchData("club")
+  const clubs= await getDocs(collection(db, "club"));
   if (clubs.empty) {
     return "there is no club"
   }
@@ -65,7 +59,7 @@ const distanceCalculation =async (currentLatitude:number,currentLongitude:number
     //return doc.data().location
   }))
   } catch (error) {
-    console.log("error",error)
+    return error
   }
 }
 
@@ -85,7 +79,37 @@ const locationPosition = (): Promise<{ latitude: number; longitude: number }> =>
       });
   });
 }
+const FilterCoach=async (rating:number,level:number,tags:string)=>{
+  let Data;
+  let result:any=[];
+  const q = query(
+    collection(db, "coach"),
+    where("rating", "==", rating),
+    where("level", "==", level),
+  );
+  try {
+    const querySnapshot = await getDocs(q);
+    const coaches = querySnapshot.docs.map((doc) => {
+    if(doc.data().tags.toLowerCase().includes(tags.toLowerCase())){
+      Data= doc.data()
+      Data.id=doc.id
+      return result.push(Data)
+    }else return "there is no tag with that name"
+    });
 
+    if (result.length > 0) {
+      console.log("Found coaches:", coaches);
+      console.log(result)
+      return result;
+    } else {
+      console.log("No coaches found");
+      return "no data";
+    }
+  } catch (error) {
+    console.log("Error getting coaches:", error);
+    return error;
+  }
+}
 
 // Function to fetch data from Firestore
 const fetchData = async (
@@ -94,18 +118,35 @@ const fetchData = async (
   queryValue: string | null = null
 ) => {
   let data;
-  if (queryField && queryValue) {
-    const q = query(
-      collection(db, collectionName),orderBy(queryField),startAt(queryValue),
-      endAt(queryValue + "\uf8ff")
-
-    );
-    data = await getDocs(q);
-  } else {
-    data = await getDocs(collection(db, collectionName));
+  let result:any=[];
+  let Data;
+  data = await getDocs(collection(db, collectionName));
+  if (collectionName==="coach") {
+    data?.forEach((coach)=>{
+      if (queryField &&queryValue ) {
+        if (coach.data().displayName.toLowerCase().includes(queryValue.toLowerCase())) {
+          Data= coach.data()
+          Data.id=coach.id
+          return result.push(Data)
+        }
+      }
+    })
   }
-  return data;
+  if (collectionName==="club") {
+    data?.forEach((club)=>{
+      if (queryField &&queryValue ) {
+        if (club.data().name.toLowerCase().includes(queryValue.toLowerCase())) {
+          Data= club.data()
+          Data.id=club.id
+          return result.push(Data)
+        }
+      }
+    })
+  }
+  return result ;
 };
+
+
 
 // Function to find clubs by name
 const findByName = async ({ name }: { name: string }) => {
@@ -113,7 +154,7 @@ const findByName = async ({ name }: { name: string }) => {
     if (name.length !== 0) {
       // Fetch clubs by name
       const clubs = await fetchData('club', 'name', name);
-      if (clubs.empty) {
+      if (clubs.length===0) {
         return 'Name does not exist';
       }
       return clubs;
@@ -133,7 +174,7 @@ const findCoachByName = async ({ name }: { name: string }) => {
     if (name.length !== 0) {
       // Fetch coaches by display name
       const coaches = await fetchData('coach', 'displayName', name);
-      if (coaches.empty) {
+      if (coaches.length===0) {
         return 'Coach does not exist';
       }
       return coaches;
@@ -291,5 +332,6 @@ export {
   favoriteCoachList,
   fetchData,
   locationPosition,
-  distanceCalculation
+  distanceCalculation,
+  FilterCoach,calculateDistance
 };

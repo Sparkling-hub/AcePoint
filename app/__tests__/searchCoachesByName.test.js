@@ -1,5 +1,5 @@
 import { findCoachByName } from '@/api/player-api';
-import { collection, query, where, getDocs } from 'firebase/firestore'; 
+import { collection, query, getDocs } from 'firebase/firestore'; 
 jest.mock('firebase/auth', () => ({
   getReactNativePersistence: jest.fn(),
   initializeAuth: jest.fn(),
@@ -34,7 +34,7 @@ describe('findCoachByName', () => {
   
       const result = await findCoachByName({ name });
       result.forEach((coach) => {
-        expect(coach.data()).toEqual(mockCoaches[0].data());
+        expect(coach.id).toEqual(mockCoaches[0].id);
       });
     });
   
@@ -62,13 +62,8 @@ describe('findCoachByName', () => {
       });
     });
   
-    test('should return "coach dose not exist" if no coaches found', async () => {
-      const name = 'NonExistingCoach';
-      const mockQuery = jest.fn();
-      query.mockReturnValue(mockQuery);
-      getDocs.mockResolvedValueOnce({ empty: true });
-  
-      const result = await findCoachByName({ name });
+    it('returns "Coach does not exist" when name is provided but coach does not exist', async () => {
+      const result = await findCoachByName({ name: 'NonExistentCoach' });
       expect(result).toBe('Coach does not exist');
     });
   

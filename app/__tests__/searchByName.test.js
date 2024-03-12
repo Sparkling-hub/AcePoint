@@ -1,14 +1,9 @@
 import { collection, query, getDocs } from 'firebase/firestore'; 
-
 import { findByName} from '@/api/player-api'
-import {db } from '@/lib/firebase'
 
 jest.mock('firebase/auth', () => ({
   getReactNativePersistence: jest.fn(),
   initializeAuth: jest.fn(),
-}));
-jest.mock("@/lib/firebase", () => ({
-  db: {}
 }));
 jest.mock('firebase/app', () => ({initializeApp: jest.fn(),}));
 jest.mock('firebase/storage', () => ({getStorage: jest.fn(),}));
@@ -40,7 +35,7 @@ describe('findByName', () => {
 
     const result = await findByName({ name });
     result.forEach((club)=>{
-      expect(club.data()).toEqual(mockClubs[0].data());
+      expect(club.name).toEqual(mockClubs[0].data().name);
     })
     
     
@@ -60,12 +55,7 @@ describe('findByName', () => {
   });
 
   test('should return "name does not exist" if no clubs found', async () => {
-    const name = 'NonExistingClub';
-    const mockQuery = jest.fn();
-    query.mockReturnValue(mockQuery);
-    getDocs.mockResolvedValueOnce({ empty: true });
-
-    const result = await findByName({ name });
+    const result = await findByName( { name: 'NonExistentCoach' } );
     expect(result).toBe('Name does not exist');
   });
 

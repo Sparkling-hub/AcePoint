@@ -81,7 +81,7 @@ export default function BookTraining() {
     try {
       const favorites = await favoriteCoachList(); // Call the function to get favorite coaches
 
-      setFavoriteCoaches(favorites?.flat());
+      setFavoriteCoaches(favorites);
     } catch (error) {
       console.error('Error loading favorite coaches:', error);
     }
