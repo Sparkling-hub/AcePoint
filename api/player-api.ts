@@ -44,41 +44,48 @@ const calculateDistance = (
       console.log("Not in Range",data)
       return data; 
     }
-  //return parseFloat(distance.toFixed(1)); // Distance in kilometers
 };
-const distanceCalculation =async (currentLatitude:number,currentLongitude:number,radious:number)=>{
+const distanceCalculation = async (currentLatitude: number, currentLongitude: number, radious: number) => {
   try {
-  const clubs= await getDocs(collection(db, "club"));
-  if (clubs.empty) {
-    return "there is no club"
-  }
-  await clubs.docs.flatMap((doc => {
-    setTimeout(() => {
-        return calculateDistance(currentLatitude,currentLongitude,doc.data(),radious)
-    }, 1000);
-    //return doc.data().location
-  }))
+    const clubs = await getDocs(collection(db, "club"));
+    if (clubs.empty) {
+      return "there is no club";
+    }
+
+    const distancePromises = clubs.docs.map(doc => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const distance = calculateDistance(currentLatitude, currentLongitude, doc.data(), radious);
+          resolve(distance);
+        }, 1000);
+      });
+    });
+
+    const distances = await Promise.all(distancePromises);
+    return distances;
   } catch (error) {
-    return error
+    return error;
   }
-}
+};
+
 
 const locationPosition = (): Promise<{ latitude: number; longitude: number }> => {
   return new Promise((resolve, reject) => {
-      GetLocation.getCurrentPosition({
-          enableHighAccuracy: false,
-          timeout: 60000, 
-      })
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: false,
+      timeout: 60000,
+    })
       .then(location => {
-          const { latitude, longitude } = location;
-          resolve({ latitude, longitude });
+        const { latitude, longitude } = location;
+        resolve({ latitude, longitude });
       })
       .catch(error => {
-          const { code, message } = error;
-          reject({ code, message });
+        const { code, message } = error;
+        reject(new Error(`Location error: ${code} - ${message}`)); // Create a new Error object
       });
   });
-}
+};
+
 const FilterCoach=async (rating:number,level:number,tags:string)=>{
   let Data;
   let result:any=[];
