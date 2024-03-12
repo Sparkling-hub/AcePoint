@@ -52,7 +52,7 @@ const distanceCalculation = async (
   try {
     const clubs = await getDocs(collection(db, 'club'));
     if (clubs.empty) {
-      return 'there is no club';
+      return [];
     }
 
     const distancePromises = clubs.docs.map((doc) => {
@@ -96,7 +96,7 @@ const locationPosition = (): Promise<{
   });
 };
 
-const FilterCoach = async (rating: number, level: number, tags: string) => {
+const filterCoach = async (rating: number, level: number, tags: string) => {
   let Data;
   let result: any = [];
   const q = query(
@@ -120,7 +120,7 @@ const FilterCoach = async (rating: number, level: number, tags: string) => {
       return result;
     } else {
       console.log('No coaches found');
-      return 'no data';
+      return [];
     }
   } catch (error) {
     console.log('Error getting coaches:', error);
@@ -352,6 +352,6 @@ export {
   fetchData,
   locationPosition,
   distanceCalculation,
-  FilterCoach,
+  filterCoach,
   calculateDistance,
 };
