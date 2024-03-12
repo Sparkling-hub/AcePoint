@@ -10,6 +10,7 @@ import Colors from '@/constants/Colors';
 import { FormikHandlers } from 'formik';
 
 interface CustomDropDownProps {
+  readonly placeholder? : string,
   readonly options: option[];
   readonly selectedItem: string;
   readonly handleChange: FormikHandlers['handleChange'];
@@ -21,6 +22,7 @@ interface CustomDropDownProps {
 
 export default function CustomDropdown(props: CustomDropDownProps) {
   const {
+    placeholder,
     options,
     selectedItem,
     handleChange,
@@ -44,7 +46,7 @@ export default function CustomDropdown(props: CustomDropDownProps) {
   return (
     <YStack zIndex={1}>
       <CustomInput
-        placeholder="Gender"
+        placeholder={placeholder ? placeholder : "Gender"}
         touched={!clicked && touched}
         errors={!clicked ? errors : ''}
         validateOnInit={validateOnInit}

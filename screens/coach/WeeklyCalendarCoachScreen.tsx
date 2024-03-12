@@ -40,8 +40,6 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
                 const endDate = new Date(startDate.getTime() + (Number(duration.split(':')[0]) * 60 * 60 * 1000) + (Number(duration.split(':')[1]) * 60 * 1000));
                 if (startDate >= currentWeekStart && startDate <= currentWeekEnd) {
                     const dayOfWeek = (startDate.getDay() || 7) - 1;
-                    console.log('day of week', dayOfWeek);
-
                     const startTime = `${startDate.getHours().toString().padStart(2, '0')}:${startDate.getMinutes().toString().padStart(2, '0')}`;
                     const endTime = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
                     const spacesLeft = lesson.maxPeople - lesson.players.length;

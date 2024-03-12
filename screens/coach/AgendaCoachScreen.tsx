@@ -74,16 +74,16 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
         return (
             <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }}>
                 <Card>
-                    <Card.Content>
+                    <Card.Content style={{ backgroundColor: Colors.secondary, borderRadius: 10 }}>
                         <View
                             style={{
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                             }}>
-                            <Text>{item.organiser}</Text>
-                            <Text>{item.club}</Text>
-                            <Text>{time(item.startDate)} - {addDurationToStartDate(time(item.startDate), item.duration)}</Text>
+                            <Text style={{ color: Colors.iron }}>{item.organiser}</Text>
+                            <Text style={{ color: Colors.iron }}>{item.club}</Text>
+                            <Text style={{ color: Colors.iron }}>{time(item.startDate)} - {addDurationToStartDate(time(item.startDate), item.duration)}</Text>
                         </View>
                     </Card.Content>
                 </Card>
@@ -92,7 +92,8 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
     };
     return (
         <>
-            <Agenda items={items}
+            <Agenda
+                items={items}
                 loadItemsForMonth={loadItems}
                 selected={new Date().toString()}
                 renderItem={renderItem}
