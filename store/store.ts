@@ -12,7 +12,6 @@ export const store = configureStore({
     userRole: userRoleReducer,
     tempFilter: tempFilterReducer,
     savedFilter: savedFilterReducer,
-    keyboardVisibility: keyboardVisibilityReducer,
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Avatar, Text, View, XStack, YStack } from 'tamagui';
 import Colors from '@/constants/Colors';
 import { Heart } from '@tamagui/lucide-icons';
@@ -6,11 +6,12 @@ import { renderStars } from '@/helpers/RatingsHelper';
 import { favouriteCoach, unfavoriteCoach } from '@/api/player-api';
 import { Pressable } from 'react-native';
 import { auth } from '@/lib/firebase';
+import fireToast from './toast/Toast';
 
 interface CoachBoxProps {
   readonly name?: string;
-  readonly rating: number;
-  readonly level: number;
+  readonly rating?: number;
+  readonly level?: number;
   readonly age: number;
   readonly image?: string;
   readonly coachRef?: any;
@@ -41,24 +42,39 @@ const CoachBox: React.FC<CoachBoxProps> = ({
 
   const handleFavoriteToggle = async () => {
     try {
+      // Optimistically update UI
+      setIsFavorite(!isFavorite);
+
       if (isFavorite) {
         await unfavoriteCoach(coachRef);
       } else {
         await favouriteCoach(coachRef);
+        fireToast({
+          message: 'Coach added to favourites',
+          type: 'success',
+        });
       }
-      setIsFavorite(!isFavorite);
     } catch (error) {
+      // If request fails, roll back UI changes and display error message
+      setIsFavorite(!isFavorite);
       console.error('Error toggling favorite:', error);
       // Handle error
     }
   };
+
+  const starsComponent = useMemo(() => {
+    if (rating) {
+      return renderStars(rating);
+    }
+    return null;
+  }, [rating]);
 
   return (
     <YStack width={'100%'}>
       <XStack>
         <Avatar circular borderWidth={2} borderColor={Colors.primary} size={52}>
           <Avatar.Image
-            src={image?? require('../assets/images/user-pfp.png')}
+            src={image ?? require('../assets/images/user-pfp.png')}
           />
           <Avatar.Fallback bc={'#EFEFEF'} />
         </Avatar>
@@ -142,7 +158,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
               />
             </Pressable>
           </XStack>
-          <XStack>{renderStars(rating)}</XStack>
+          <XStack>{starsComponent}</XStack>
         </YStack>
       </XStack>
       <View

@@ -8,13 +8,13 @@ import {
   runTransaction,
   where,
 } from 'firebase/firestore';
-import GetLocation from 'react-native-get-location'
+import GetLocation from 'react-native-get-location';
 
 const calculateDistance = (
   currentLat: number,
   currentLon: number,
-  data:any,
-  radius:number
+  data: any,
+  radius: number
 ): any => {
   const earthRadius = 6371; // Earth's radius in kilometers
   // Convert latitude and longitude from degrees to radians
@@ -26,36 +26,44 @@ const calculateDistance = (
   const dLat = lat2Rad - lat1Rad;
   const dLon = lon2Rad - lon1Rad;
   const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1Rad) *
-          Math.cos(lat2Rad) *
-          Math.sin(dLon / 2) *
-          Math.sin(dLon / 2);
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1Rad) *
+      Math.cos(lat2Rad) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = earthRadius * c;
-  console.log(distance <= radius)
-  console.log("distance user from club ",distance)
-  console.log(radius)
-    if((distance <= radius)===true){
-      
-      console.log("In Range",data)
-      return data;
-    }else{
-      console.log("Not in Range",data)
-      return data; 
-    }
+  console.log(distance <= radius);
+  console.log('distance user from club ', distance);
+  console.log(radius);
+  if (distance <= radius === true) {
+    console.log('In Range', data);
+    return data;
+  } else {
+    console.log('Not in Range', data);
+    return data;
+  }
 };
-const distanceCalculation = async (currentLatitude: number, currentLongitude: number, radious: number) => {
+const distanceCalculation = async (
+  currentLatitude: number,
+  currentLongitude: number,
+  radious: number
+) => {
   try {
-    const clubs = await getDocs(collection(db, "club"));
+    const clubs = await getDocs(collection(db, 'club'));
     if (clubs.empty) {
-      return "there is no club";
+      return 'there is no club';
     }
 
-    const distancePromises = clubs.docs.map(doc => {
+    const distancePromises = clubs.docs.map((doc) => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          const distance = calculateDistance(currentLatitude, currentLongitude, doc.data(), radious);
+          const distance = calculateDistance(
+            currentLatitude,
+            currentLongitude,
+            doc.data(),
+            radious
+          );
           resolve(distance);
         }, 1000);
       });
@@ -68,55 +76,57 @@ const distanceCalculation = async (currentLatitude: number, currentLongitude: nu
   }
 };
 
-
-const locationPosition = (): Promise<{ latitude: number; longitude: number }> => {
+const locationPosition = (): Promise<{
+  latitude: number;
+  longitude: number;
+}> => {
   return new Promise((resolve, reject) => {
     GetLocation.getCurrentPosition({
       enableHighAccuracy: false,
       timeout: 60000,
     })
-      .then(location => {
+      .then((location) => {
         const { latitude, longitude } = location;
         resolve({ latitude, longitude });
       })
-      .catch(error => {
+      .catch((error) => {
         const { code, message } = error;
         reject(new Error(`Location error: ${code} - ${message}`)); // Create a new Error object
       });
   });
 };
 
-const FilterCoach=async (rating:number,level:number,tags:string)=>{
+const FilterCoach = async (rating: number, level: number, tags: string) => {
   let Data;
-  let result:any=[];
+  let result: any = [];
   const q = query(
-    collection(db, "coach"),
-    where("rating", "==", rating),
-    where("level", "==", level),
+    collection(db, 'coach'),
+    where('rating', '==', rating),
+    where('level', '==', level)
   );
   try {
     const querySnapshot = await getDocs(q);
     const coaches = querySnapshot.docs.map((doc) => {
-    if(doc.data().tags.toLowerCase().includes(tags.toLowerCase())){
-      Data= doc.data()
-      Data.id=doc.id
-      return result.push(Data)
-    }else return "there is no tag with that name"
+      if (doc.data().tags.toLowerCase().includes(tags.toLowerCase())) {
+        Data = doc.data();
+        Data.id = doc.id;
+        return result.push(Data);
+      } else return 'there is no tag with that name';
     });
 
     if (result.length > 0) {
-      console.log("Found coaches:", coaches);
-      console.log(result)
+      console.log('Found coaches:', coaches);
+      console.log(result);
       return result;
     } else {
-      console.log("No coaches found");
-      return "no data";
+      console.log('No coaches found');
+      return 'no data';
     }
   } catch (error) {
-    console.log("Error getting coaches:", error);
+    console.log('Error getting coaches:', error);
     return error;
   }
-}
+};
 
 // Function to fetch data from Firestore
 const fetchData = async (
@@ -125,35 +135,38 @@ const fetchData = async (
   queryValue: string | null = null
 ) => {
   let data;
-  let result:any=[];
+  let result: any = [];
   let Data;
   data = await getDocs(collection(db, collectionName));
-  if (collectionName==="coach") {
-    data?.forEach((coach)=>{
-      if (queryField &&queryValue ) {
-        if (coach.data().displayName.toLowerCase().includes(queryValue.toLowerCase())) {
-          Data= coach.data()
-          Data.id=coach.id
-          return result.push(Data)
+  if (collectionName === 'coach') {
+    data?.forEach((coach: any) => {
+      if (queryField && queryValue) {
+        if (
+          coach
+            .data()
+            .displayName.toLowerCase()
+            .includes(queryValue.toLowerCase())
+        ) {
+          Data = coach.data();
+          Data.id = coach.id;
+          return result.push(Data);
         }
       }
-    })
+    });
   }
-  if (collectionName==="club") {
-    data?.forEach((club)=>{
-      if (queryField &&queryValue ) {
+  if (collectionName === 'club') {
+    data?.forEach((club: any) => {
+      if (queryField && queryValue) {
         if (club.data().name.toLowerCase().includes(queryValue.toLowerCase())) {
-          Data= club.data()
-          Data.id=club.id
-          return result.push(Data)
+          Data = club.data();
+          Data.id = club.id;
+          return result.push(Data);
         }
       }
-    })
+    });
   }
-  return result ;
+  return result;
 };
-
-
 
 // Function to find clubs by name
 const findByName = async ({ name }: { name: string }) => {
@@ -161,8 +174,9 @@ const findByName = async ({ name }: { name: string }) => {
     if (name.length !== 0) {
       // Fetch clubs by name
       const clubs = await fetchData('club', 'name', name);
-      if (clubs.length===0) {
-        return 'Name does not exist';
+
+      if (clubs.length === 0) {
+        return [];
       }
       return clubs;
     } else {
@@ -181,8 +195,9 @@ const findCoachByName = async ({ name }: { name: string }) => {
     if (name.length !== 0) {
       // Fetch coaches by display name
       const coaches = await fetchData('coach', 'displayName', name);
-      if (coaches.length===0) {
-        return 'Coach does not exist';
+
+      if (coaches.length === 0) {
+        return [];
       }
       return coaches;
     } else {
@@ -293,9 +308,9 @@ const favoriteCoachList = async () => {
     if (!playerSnap.exists()) {
       return 'Player does not exist.';
     }
- 
+
     const playerData = playerSnap.data();
- 
+
     // Array to store promises for fetching coach data
     const coachPromises = playerData.favoriteCoach.map(async (id: any) => {
       try {
@@ -308,17 +323,16 @@ const favoriteCoachList = async () => {
           id: doc.id,
           ...doc.data(),
         }));
- 
         return coachDataArray;
       } catch (error) {
         // Handle error if fetching coach data fails
         return null; // or throw error if desired
       }
     });
- 
+
     // Wait for all coach data promises to resolve
     const coaches = await Promise.all(coachPromises);
- 
+
     // Log the fetched coach data
     if (coaches?.flat().length === 0) {
       return [];
@@ -329,8 +343,6 @@ const favoriteCoachList = async () => {
   }
 };
 
-
-
 export {
   findByName,
   favouriteCoach,
@@ -340,5 +352,6 @@ export {
   fetchData,
   locationPosition,
   distanceCalculation,
-  FilterCoach,calculateDistance
+  FilterCoach,
+  calculateDistance,
 };

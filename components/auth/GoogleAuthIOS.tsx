@@ -53,6 +53,7 @@ export default function GoogleAuthIOS(props : GoogleAuthIOSProps) {
       style={styles.ouath}
       onPress={async () => {
         await storeData("userType",userType)
+        await storeData("authMethod",'apple')
         await promptAsync();
       }}>
       <Image

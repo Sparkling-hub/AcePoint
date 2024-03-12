@@ -11,8 +11,6 @@ import BookIconLabel from '@/components/tabIcons/BookIconLabel';
 import HomeIcon from '@/components/tabIcons/HomeIcon';
 import HomeIconLabel from '@/components/tabIcons/HomeIconLabel';
 import ProfileHeader from '@/components/headers/ProfileHeader';
-import { Keyboard } from 'react-native';
-import { setKeyboardVisibility } from '@/store/slices/keyboardVisibility';
 
 export default function TabLayout() {
   const dispatch = useDispatch();
@@ -25,26 +23,6 @@ export default function TabLayout() {
     getUserRole();
   }, [dispatch]);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        dispatch(setKeyboardVisibility(true));
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        dispatch(setKeyboardVisibility(false));
-      }
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, [dispatch]);
-
   return (
     <Tabs
       screenOptions={{
@@ -54,7 +32,9 @@ export default function TabLayout() {
           shadowOpacity: 0,
           elevation: 0,
           paddingHorizontal: 30,
-          paddingBottom: 20,
+          height: 80,
+          flexDirection: 'row',
+          alignItems: 'center',
         },
         tabBarHideOnKeyboard: true,
       }}>

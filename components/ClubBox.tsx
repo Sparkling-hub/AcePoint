@@ -12,7 +12,7 @@ interface ClubBoxProps {
 
 const ClubBox: React.FC<ClubBoxProps> = ({ name, membership, rating }) => {
   return (
-    <XStack alignItems="center" width={'100%'}>
+    <XStack alignItems="center" width={'100%'} marginBottom={16}>
       <Avatar circular borderWidth={3} borderColor={Colors.primary} size={67}>
         {/* <Avatar.Image src={image} /> */}
         <Avatar.Fallback bc={Colors.secondary} />
