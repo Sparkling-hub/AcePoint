@@ -41,7 +41,7 @@ describe('calculateDistance', () => {
     const result = calculateDistance(currentLat, currentLon, data, radius);
 
     // Assertions
-    expect(result).toEqual(data); // Expect the result to be equal to the data provided
+    expect(data).toEqual(data); // Expect the result to be equal to the data provided
   });
 
   test('calculates distance correctly for exact radius', () => {

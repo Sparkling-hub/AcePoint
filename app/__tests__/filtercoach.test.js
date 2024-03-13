@@ -1,4 +1,4 @@
-import { FilterCoach } from '@/api/player-api'
+import { filterCoach } from '@/api/player-api'
 import { getDocs } from 'firebase/firestore'
 // Mocking Firebase Firestore functions
 jest.mock('firebase/firestore', () => ({
@@ -15,7 +15,7 @@ jest.mock('firebase/auth', () => ({
 jest.mock('firebase/app', () => ({initializeApp: jest.fn(),}));
 jest.mock('firebase/storage', () => ({getStorage: jest.fn(),}));
 jest.mock('@react-native-async-storage/async-storage', () => ({ReactNativeAsyncStorage: jest.fn()}));
-describe('FilterCoach function', () => {
+describe('filterCoach function', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
@@ -24,9 +24,9 @@ describe('FilterCoach function', () => {
       const mockQuerySnapshot = { docs: [] };
       getDocs.mockResolvedValueOnce(mockQuerySnapshot);
   
-      const result = await FilterCoach(4, 3, 'tag');
+      const result = await filterCoach(4, 3, 'tag');
   
-      expect(result).toBe('no data');
+      expect(result).toEqual([]);
       expect(getDocs).toHaveBeenCalledTimes(1);
     });
   
@@ -36,7 +36,7 @@ describe('FilterCoach function', () => {
       const mockQuerySnapshot = { docs: [mockDoc1, mockDoc2] };
       getDocs.mockResolvedValueOnce(mockQuerySnapshot);
   
-      const result = await FilterCoach(4, 3, 'tag1');
+      const result = await filterCoach(4, 3, 'tag1');
   
       expect(result).toEqual([{ id: 'coach1', tags: 'tag1', rating: 4, level: 3 }]);
       expect(getDocs).toHaveBeenCalledTimes(1);
@@ -47,7 +47,7 @@ describe('FilterCoach function', () => {
       const mockQuerySnapshot = { docs: [mockDoc1] };
       getDocs.mockResolvedValueOnce(mockQuerySnapshot);
   
-      const result = await FilterCoach(4, 3, 'tag1');
+      const result = await filterCoach(4, 3, 'tag1');
   
       expect(result).toEqual([{ id: 'coach1', tags: 'Tag1', rating: 4, level: 3 }]);
       expect(getDocs).toHaveBeenCalledTimes(1);

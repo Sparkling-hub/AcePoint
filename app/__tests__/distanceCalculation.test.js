@@ -21,7 +21,7 @@ describe('distanceCalculation', () => {
     it('should return "there is no club" if clubs collection is empty', async () => {
         getDocs.mockResolvedValueOnce({ empty: true });
         const result = await distanceCalculation(40.7128, -74.0060, 1000);
-        expect(result).toBe('there is no club');
+        expect(result).toEqual([]);
         expect(getDocs).toHaveBeenCalledWith(collection(db, "club"));
     });
     it('should handle errors gracefully', async () => {

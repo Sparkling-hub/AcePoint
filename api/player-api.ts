@@ -33,16 +33,10 @@ const calculateDistance = (
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = earthRadius * c;
-  console.log(distance <= radius);
-  console.log('distance user from club ', distance);
-  console.log(radius);
   if (distance <= radius === true) {
-    console.log('In Range', data);
     return data;
-  } else {
-    console.log('Not in Range', data);
-    return data;
-  }
+  } 
+  
 };
 const distanceCalculation = async (
   currentLatitude: number,
@@ -54,7 +48,6 @@ const distanceCalculation = async (
     if (clubs.empty) {
       return [];
     }
-
     const distancePromises = clubs.docs.map((doc) => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -70,11 +63,14 @@ const distanceCalculation = async (
     });
 
     const distances = await Promise.all(distancePromises);
-    return distances;
+    const filteredDistances = distances.filter(distance => distance !== undefined);
+    // console.log("distances"), filteredDistances;
+    return filteredDistances;
   } catch (error) {
     return error;
   }
 };
+
 
 const locationPosition = (): Promise<{
   latitude: number;
