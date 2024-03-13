@@ -1,0 +1,40 @@
+name:  Run test
+on:
+  push:
+    branches: '**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [18.x]
+    steps:
+    - name: 🏗 Setup repo
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: 🏗 Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node }}
+
+    - name: 🏗 Setup Expo and EAS
+      uses: expo/expo-github-action@v7
+      with:
+        token: ${{ secrets.EXPO_TOKEN }}
+        expo-version: latest
+        eas-version: latest
+
+    - name: 📦 Install dependencies
+      run: yarn
+
+    - name: 📋 Test project
+      run: yarn test --coverage
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  

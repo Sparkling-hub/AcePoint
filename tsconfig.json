@@ -5,13 +5,21 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "typeRoots": [
+        "./src/types"
+      ],
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "app/__tests__/androidAuth.test.js",
+    "app/__tests__/user.test.js",
+    "app/__tests__/login.test.js",
+    "app/__tests__/accountScreen.js",
+    "app/__tests__/toastcomponent.test.js"
   ]
 }
