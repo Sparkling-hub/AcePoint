@@ -38,12 +38,12 @@ import { debounce } from 'lodash';
 import SearchResults from '@/components/SearchResults';
 import FavoriteCoaches from '@/components/FavoriteCoaches';
 import NearbyClubsMap from '@/components/NearbyClubsMap';
+import { setClubSearchResults } from '@/store/slices/clubSearchResultsSlice';
+import { setCoachSearchResults } from '@/store/slices/coachSearchResultsSlice';
 
 export default function BookTraining() {
   // State variables
   const [searchQuery, setSearchQuery] = useState('');
-  const [clubSearchResults, setClubSearchResults] = useState<Club[]>([]);
-  const [coachSearchResults, setCoachSearchResults] = useState<Coach[]>([]);
   const [favoriteCoaches, setFavoriteCoaches] = useState<Coach[]>([]);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [searching, setSearching] = useState(false);
@@ -104,8 +104,8 @@ export default function BookTraining() {
           findByName({ name: query }),
           findCoachByName({ name: query }),
         ]);
-        setClubSearchResults(clubResults);
-        setCoachSearchResults(coachResults);
+        dispatch(setClubSearchResults(clubResults));
+        dispatch(setCoachSearchResults(coachResults));
       } catch (error) {
         console.error('Error searching:', error);
         // Handle error, show error message, etc.
@@ -113,8 +113,8 @@ export default function BookTraining() {
         setSearching(false);
       }
     } else {
-      setClubSearchResults([]);
-      setCoachSearchResults([]);
+      dispatch(setClubSearchResults([]));
+      dispatch(setCoachSearchResults([]));
     }
   };
 
@@ -246,8 +246,6 @@ export default function BookTraining() {
         searchHistory={searchHistory}
         handlePressSearchItem={handlePressSearchItem}
         removeSearchHistoryItem={removeSearchHistoryItem}
-        clubSearchResults={clubSearchResults}
-        coachSearchResults={coachSearchResults}
       />
     );
   };
@@ -268,7 +266,7 @@ export default function BookTraining() {
         <XStack marginLeft={14} marginVertical={23} gap={9}>
           {/* Filter button */}
           <TouchableOpacity onPress={() => router.navigate('/book/filter')}>
-            <Filter size={24} color={Colors.secondary} />
+            <Filter size={28} color={Colors.secondary} />
           </TouchableOpacity>
           {/* Filter items */}
           <XStack gap={7} flexWrap="wrap" flex={1}>

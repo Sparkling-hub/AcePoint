@@ -5,6 +5,7 @@ import { View } from 'tamagui';
 
 import CustomLocationButton from './CustomLocationButton';
 import * as Location from 'expo-location';
+import fireToast from './toast/Toast';
 
 const NearbyClubsMap = () => {
   const mapRef = useRef<MapView>(null);
@@ -27,7 +28,10 @@ const NearbyClubsMap = () => {
       // Center the map to the user's current location
       mapRef?.current?.animateToRegion(region);
     } catch (error) {
-      console.error('Error getting location:', error);
+      fireToast({
+        message: 'Please enable location services',
+        type: 'error',
+      });
     }
   };
 

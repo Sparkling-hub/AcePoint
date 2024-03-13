@@ -14,13 +14,13 @@ interface GoogleAuthProps {
   userType: string;
 }
 
-// const GoogleAuth: React.FC<GoogleAuthProps> = ({ platform, userType }) => {
-//   if (platform === 'ios') {
-//     return <GoogleAuthIOS userType={userType} />;
-//   } else if (platform === 'android') {
-//     return <GoogleAuthAndroid userType={userType} />;
-//   }
-// };
+const GoogleAuth: React.FC<GoogleAuthProps> = ({ platform, userType }) => {
+  if (platform === 'ios') {
+    return <GoogleAuthIOS userType={userType} />;
+  } else if (platform === 'android') {
+    return <GoogleAuthAndroid userType={userType} />;
+  }
+};
 const Footer = ({ userType }: { userType: string }) => {
   const redirectSignUp = () => {
     if (userType === 'Player') {
@@ -53,7 +53,10 @@ const Footer = ({ userType }: { userType: string }) => {
               style={[{ width: 23, height: 28 }]}
             />
           </Button>
-          {/* <GoogleAuth userType={userType} platform={Platform.OS as PlatformType} /> */}
+          <GoogleAuth
+            userType={userType}
+            platform={Platform.OS as PlatformType}
+          />
         </XStack>
 
         <Image

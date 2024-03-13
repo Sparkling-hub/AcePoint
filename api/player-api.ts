@@ -34,9 +34,11 @@ const calculateDistance = (
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = earthRadius * c;
   if (distance <= radius === true) {
+    console.log('In Range', data);
     return data;
-  } 
-  
+  } else {
+    console.log('Not in Range', data);
+  }
 };
 const distanceCalculation = async (
   currentLatitude: number,
@@ -63,14 +65,15 @@ const distanceCalculation = async (
     });
 
     const distances = await Promise.all(distancePromises);
-    const filteredDistances = distances.filter(distance => distance !== undefined);
+    const filteredDistances = distances.filter(
+      (distance) => distance !== undefined
+    );
     // console.log("distances"), filteredDistances;
     return filteredDistances;
   } catch (error) {
     return error;
   }
 };
-
 
 const locationPosition = (): Promise<{
   latitude: number;

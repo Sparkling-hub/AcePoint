@@ -1,14 +1,14 @@
 import React from 'react';
 import { ScrollView, Text, View, YStack } from 'tamagui';
 import CoachSkeleton from '@/components/skeletons/CoachSkeleton';
-import { Club } from '@/model/club';
-import { Coach } from '@/model/coach';
 import Colors from '@/constants/Colors';
 import ClubBox from '@/components/ClubBox';
 import CoachBox from '@/components/CoachBox';
 
 import SearchHistoryItem from './SearchHistoryItem';
 import { FlatList } from 'react-native';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 
 interface SearchResultsProps {
   loading: boolean;
@@ -16,8 +16,6 @@ interface SearchResultsProps {
   searchHistory: string[];
   handlePressSearchItem: (item: string) => void;
   removeSearchHistoryItem: (item: string) => void;
-  clubSearchResults: Club[];
-  coachSearchResults: Coach[];
 }
 
 const Spacer = ({ height = 14 }) => <View style={{ height }} />;
@@ -28,9 +26,13 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   searchHistory,
   handlePressSearchItem,
   removeSearchHistoryItem,
-  clubSearchResults,
-  coachSearchResults,
 }) => {
+  const { clubSearchResults } = useSelector(
+    (state: RootState) => state.clubSearchResults
+  );
+  const { coachSearchResults } = useSelector(
+    (state: RootState) => state.coachSearchResults
+  );
   if (loading) {
     return (
       <YStack gap={'$8'} paddingHorizontal={16}>
@@ -40,7 +42,11 @@ const SearchResults: React.FC<SearchResultsProps> = ({
         <CoachSkeleton />
       </YStack>
     );
-  } else if (searchQuery.trim() === '') {
+  } else if (
+    searchQuery.trim() === '' &&
+    clubSearchResults?.length === 0 &&
+    coachSearchResults?.length === 0
+  ) {
     return (
       <YStack paddingLeft={58} paddingRight={32}>
         {searchHistory?.length > 0 && (
