@@ -25,9 +25,12 @@ import { db } from "@/lib/firebase";
 import { storeLesson } from "@/api/lesson-api";
 import fireToast from "@/services/toast";
 import NewTrainingSkeleton from "@/components/skeletons/NewTrainingSkeleton";
+import { useRouter } from "expo-router";
 
 
 export default function NewTrainingScreen() {
+    const router = useRouter()
+
     const [showStartDate, setShowStartDate] = useState(false);
     const [showEndDate, setShowEndDate] = useState(false);
     const [startTime, setStartTime] = useState('')
@@ -82,7 +85,13 @@ export default function NewTrainingScreen() {
         formik.setFieldValue(name, value);
     };
     const handleSubmit = async () => {
-        (Object.keys(formik.errors).length === 0) ? await storeLesson(formik.values, startTime) : fireToast('error', 'Please fill all the fields !')
+        if (Object.keys(formik.errors).length === 0) {
+            await storeLesson(formik.values, startTime)
+            router.navigate('/calendar-coach')
+        }
+        else {
+            fireToast('error', 'Please fill all the fields !')
+        }
     }
 
     const formik = useFormik({
@@ -141,7 +150,6 @@ export default function NewTrainingScreen() {
                         validateOnInit
                         icon={<Badge />}
                     />
-                    {formik.errors.organiser && <Text style={styles.errormessage}>{formik.errors.organiser}</Text>}
                 </YStack>
                 <YStack style={styles.ystack}>
                     <CustomInput
@@ -155,7 +163,6 @@ export default function NewTrainingScreen() {
                         placeholder="Description"
                         icon={<Sutitles />}
                     />
-                    {formik.errors.description && <Text style={styles.errormessage}>{formik.errors.description}</Text>}
                 </YStack>
                 <YStack style={styles.ystackselect}>
                     <CustomInput
@@ -196,10 +203,7 @@ export default function NewTrainingScreen() {
                         icon={<Alarm />}
                     />
                 </YStack>
-                <View style={styles.ystackselect}>
-                    {formik.errors.startDate && <Text style={{ ...styles.errormessage, marginRight: 20 }}>{formik.errors.startDate}</Text>}
-                    {formik.errors.duration && <Text style={styles.errormessage}>{formik.errors.duration}</Text>}
-                </View>
+                
                 <YStack style={styles.ystackselect}>
                     <CustomInput
                         value={formik.values.maxPeople}
@@ -228,10 +232,7 @@ export default function NewTrainingScreen() {
                         icon={<Person />}
                     />
                 </YStack>
-                <View style={styles.ystackselect}>
-                    {formik.errors.maxPeople && <Text style={{ ...styles.errormessage, marginRight: 20 }}>{formik.errors.maxPeople}</Text>}
-                    {formik.errors.minPeople && <Text style={styles.errormessage}>{formik.errors.minPeople}</Text>}
-                </View>
+                
                 <YStack style={styles.ystack}>
                     <CustomInput
                         value={formik.values.endDate}
@@ -246,8 +247,7 @@ export default function NewTrainingScreen() {
                         onPress={() => { handleShow('endDate') }}
                         icon={<CalendarDays color={Colors.secondary} />}
                     />
-                    {formik.errors.buffer && <Text style={styles.errormessage}>{formik.errors.buffer}</Text>}
-                    {formik.errors.endDate && <Text style={styles.errormessage}>{formik.errors.endDate}</Text>}
+                    
                     <DateTimePickerModal
                         isVisible={showEndDate}
                         mode="date"
@@ -270,7 +270,6 @@ export default function NewTrainingScreen() {
                         placeholder="Club"
                         icon={<Tennis />}
                     />
-                    {formik.errors.club && <Text style={styles.errormessage}>{formik.errors.club}</Text>}
                 </YStack>
                 <YStack style={styles.ystack}>
                     <CustomInput
@@ -284,7 +283,6 @@ export default function NewTrainingScreen() {
                         placeholder="Court"
                         icon={<Portrait />}
                     />
-                    {formik.errors.court && <Text style={styles.errormessage}>{formik.errors.court}</Text>}
                 </YStack>
                 <YStack style={styles.ystack}>
                     <CustomDropdown
@@ -300,7 +298,6 @@ export default function NewTrainingScreen() {
                             { label: 'Weekly', value: 'Weekly' },
                             { label: 'Monthly', value: 'Monthly' }
                         ]} />
-                    {formik.errors.recurrence && <Text style={styles.errormessage}>{formik.errors.recurrence}</Text>}
                 </YStack>
                 <YStack style={styles.ystack}>
                     <CustomInput
@@ -314,7 +311,6 @@ export default function NewTrainingScreen() {
                         placeholder="Tags"
                         icon={<StyleIcon />}
                     />
-                    {formik.errors.tags && <Text style={styles.errormessage}>{formik.errors.tags}</Text>}
                 </YStack>
                 <YStack style={styles.ystack}>
                     <CustomDropdownMultiSelect
@@ -327,7 +323,6 @@ export default function NewTrainingScreen() {
                         ]}
                         errors={formik.errors.paymentMode}
                         validateOnInit />
-                    {formik.errors.paymentMode && <Text style={styles.errormessage}>{formik.errors.paymentMode}</Text>}
                 </YStack>
                 <YStack style={styles.ystack}>
                     <CustomInput
@@ -341,7 +336,6 @@ export default function NewTrainingScreen() {
                         placeholder="Min age"
                         icon={<TimeIcon />}
                     />
-                    {formik.errors.minAge && <Text style={styles.errormessage}>{formik.errors.minAge}</Text>}
                 </YStack>
                 <YStack style={styles.ystack} alignItems="center" alignSelf="center">
                     <CustomButton title="PUBLISH" onPress={() => { handleSubmit() }}></CustomButton>

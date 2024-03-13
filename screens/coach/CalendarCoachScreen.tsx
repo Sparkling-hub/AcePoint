@@ -3,12 +3,15 @@ import AgendaCoachScreen from "./AgendaCoachScreen";
 import WeeklyCalendarCoachScreen from "./WeeklyCalendarCoachScreen";
 import { useEffect, useState } from "react";
 import { getLessonsByCoachId } from "@/api/lesson-api";
+import { useIsFocused } from '@react-navigation/native';
 
 export default function CalendarCoachScreen() {
     const result = useSelector((state: any) => state.calendarOption);
     const [lessons, setLessons] = useState([]);
     const [lessonsForWeeklyView, setLessonsForWeeklyView] = useState([]);
     const [currentWeek, setCurrentWeek] = useState('');
+    const isFocused = useIsFocused(); 
+
     useEffect(() => {
         const getLessons = async () => {
             const lessons = await getLessonsByCoachId();
@@ -54,10 +57,11 @@ export default function CalendarCoachScreen() {
             const lastDayISO = lastDay.toISOString();
             setCurrentWeek(`${firstDayISO} ${lastDayISO}`);
         }
-        result.option === 'W' ?
-            getCurrentWeek() :
-            getLessons()
-    }, [])
+        if (isFocused) {
+            result.option === 'W' ? getCurrentWeek() : getLessons();
+        }
+    }, [isFocused, result.option]); 
+
     return (
         <>
             {result.option === 'W'

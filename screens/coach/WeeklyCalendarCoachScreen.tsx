@@ -82,6 +82,7 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
                 iconLeftStyle={{ tintColor: 'white' }}
                 iconRightStyle={{ tintColor: 'white' }}
                 onWeekChanged={(start, end) => setWeek(`${start.toISOString()} ${end.toISOString()}`)}
+                selectedDate={new Date()}
             />
             <ScrollView>
                 <View style={styles.timeColumn}>
@@ -92,7 +93,7 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
                     ))}
                 </View>
 
-                <View style={styles.weekGrid}>
+                <View style={{ ...styles.weekGrid, marginRight: 35 }}>
                     {times.map((time) => {
                         const topOffset = calculateEventTopOffset(time);
                         return (
@@ -109,7 +110,7 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
                                     const eventTopOffset = calculateEventTopOffset(time);
                                     const eventHeight = calculateEventHeight(time, event.endTime);
                                     return (
-                                        <View key={day + time} style={[styles.eventCell, { top: eventTopOffset, height: eventHeight }]}>
+                                        <View key={day + time} style={[styles.eventCell, { top: eventTopOffset, height: eventHeight, borderWidth: 1, borderColor: Colors.primary }]}>
                                             <Text style={styles.eventTime}>{time} - {event.endTime}</Text>
                                             <Text style={styles.eventText}>{event.name}</Text>
                                             <Text style={styles.eventTime}>{event.spacesLeft} Spaces left</Text>

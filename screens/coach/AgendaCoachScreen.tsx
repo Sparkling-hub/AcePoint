@@ -1,6 +1,6 @@
 import AddButtonCalendar from "@/components/AddButtonCalendar";
 import Colors from "@/constants/Colors";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Agenda } from "react-native-calendars";
 import { Card } from "react-native-paper";
@@ -32,16 +32,15 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
 
         return `${newHours}:${newMinutes}`;
     }
-    const loadItems = () => {
+    const loadItems = useCallback(() => {
         const itemsByDate = lessons.reduce((acc, lesson) => {
             let lessonDate = new Date(lesson.startDate.seconds * 1000);
             const endDate = new Date(lesson.endDate.seconds * 1000);
             while (lessonDate <= endDate) {
                 const formattedDate = date(lessonDate.getTime() / 1000);
-                if (!acc[formattedDate]) {
-                    acc[formattedDate] = [];
-                }
+                acc[formattedDate] = acc[formattedDate] || [];
                 acc[formattedDate].push(lesson);
+
                 switch (lesson.recurrence) {
                     case 'Weekly':
                         lessonDate.setDate(lessonDate.getDate() + 7);
@@ -53,22 +52,18 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
                         lessonDate.setMonth(lessonDate.getMonth() + 1);
                         break;
                     case 'EveryWeekDay':
-                        if (lessonDate.getDay() === 5) { // Friday
-                            lessonDate.setDate(lessonDate.getDate() + 3); // Skip to Monday
-                        } else if (lessonDate.getDay() === 6) { // Saturday
-                            lessonDate.setDate(lessonDate.getDate() + 2); // Skip to Monday
-                        } else {
-                            lessonDate.setDate(lessonDate.getDate() + 1);
-                        }
+                        const day = lessonDate.getDay();
+                        lessonDate.setDate(lessonDate.getDate() + (day === 5 ? 3 : day === 6 ? 2 : 1));
                         break;
                     default:
                         break;
+
                 }
             }
             return acc;
         }, {});
         setItems(itemsByDate);
-    };
+    }, [lessons, setItems]);
 
     const renderItem = (item: any) => {
         return (

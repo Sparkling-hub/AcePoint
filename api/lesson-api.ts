@@ -2,7 +2,6 @@ import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { retrieveData } from './localStorage';
 import fireToast from '@/services/toast';
-import { useRouter } from 'expo-router';
 
 const getLessonsByCoachId = async () => {
     const coachId = await retrieveData('userID')
@@ -22,7 +21,6 @@ const getLessonsByCoachId = async () => {
 };
 
 const storeLesson = async (lessonData: any, startTime: string) => {
-    const router = useRouter()
     const datePartsStartDate = lessonData.startDate.split("/")
     const timePartsStartDate = startTime.split(":")
     const startDate = new Date(parseInt(datePartsStartDate[2], 10), parseInt(datePartsStartDate[0], 10) - 1, parseInt(datePartsStartDate[1], 10), parseInt(timePartsStartDate[0], 10), parseInt(timePartsStartDate[1], 10));
@@ -43,7 +41,6 @@ const storeLesson = async (lessonData: any, startTime: string) => {
     try {
         await addDoc(lessonsRef, lesson);
         fireToast('success', 'New training added successfully !')
-        router.replace('/calendar-coach')
     } catch (error) {
         fireToast('error', 'Something went wrong !')
     }
