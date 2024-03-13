@@ -16,7 +16,7 @@ const FavoriteCoaches: React.FC<FavoriteCoachesProps> = ({
 }) => {
   if (loading) {
     return (
-      <YStack gap={'$8'}>
+      <YStack gap={'$8'} paddingHorizontal={16}>
         <CoachSkeleton />
         <CoachSkeleton />
         <CoachSkeleton />
@@ -25,20 +25,22 @@ const FavoriteCoaches: React.FC<FavoriteCoachesProps> = ({
     );
   }
   return (
-    <FlatList
-      data={favoriteCoaches}
-      renderItem={({ item }) => (
-        <CoachBox
-          coachRef={item.id}
-          name={item.displayName}
-          rating={item.rating}
-          level={item.level}
-          age={42}
-          image={item.image}
-          followedPlayer={item.followedPlayer}
-        />
-      )}
-    />
+    <YStack paddingHorizontal={16}>
+      <FlatList
+        data={favoriteCoaches}
+        renderItem={({ item }) => (
+          <CoachBox
+            coachRef={item.id}
+            name={item.displayName}
+            rating={item.rating}
+            level={item.level}
+            age={42}
+            image={item.image}
+            followedPlayer={item.followedPlayer}
+          />
+        )}
+      />
+    </YStack>
   );
 };
 

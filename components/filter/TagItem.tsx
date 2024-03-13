@@ -15,9 +15,9 @@ const TagItem: React.FC<TagItemProps> = ({ title, isActive, onPress }) => {
       <View
         alignItems="center"
         justifyContent="center"
-        paddingVertical={6}
         paddingHorizontal={20}
         borderRadius={8}
+        height={28}
         marginVertical={12}
         borderWidth={1}
         borderColor={Colors.secondary}

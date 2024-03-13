@@ -1,13 +1,14 @@
-import { TouchableOpacity } from 'react-native';
 import React from 'react';
-import { ScrollView, Text, XStack, YStack } from 'tamagui';
+import { ScrollView, Text, View, YStack } from 'tamagui';
 import CoachSkeleton from '@/components/skeletons/CoachSkeleton';
 import { Club } from '@/model/club';
 import { Coach } from '@/model/coach';
 import Colors from '@/constants/Colors';
 import ClubBox from '@/components/ClubBox';
 import CoachBox from '@/components/CoachBox';
-import { X } from '@tamagui/lucide-icons';
+
+import SearchHistoryItem from './SearchHistoryItem';
+import { FlatList } from 'react-native';
 
 interface SearchResultsProps {
   loading: boolean;
@@ -18,6 +19,8 @@ interface SearchResultsProps {
   clubSearchResults: Club[];
   coachSearchResults: Coach[];
 }
+
+const Spacer = ({ height = 14 }) => <View style={{ height }} />;
 
 const SearchResults: React.FC<SearchResultsProps> = ({
   loading,
@@ -30,7 +33,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
 }) => {
   if (loading) {
     return (
-      <YStack gap={'$8'}>
+      <YStack gap={'$8'} paddingHorizontal={16}>
         <CoachSkeleton />
         <CoachSkeleton />
         <CoachSkeleton />
@@ -39,32 +42,26 @@ const SearchResults: React.FC<SearchResultsProps> = ({
     );
   } else if (searchQuery.trim() === '') {
     return (
-      <YStack paddingLeft={42} paddingRight={16}>
+      <YStack paddingLeft={58} paddingRight={32}>
         {searchHistory?.length > 0 && (
-          <YStack gap={14}>
-            {searchHistory?.map((item) => (
-              <XStack key={item} justifyContent="space-between">
-                <TouchableOpacity onPress={() => handlePressSearchItem(item)}>
-                  <Text
-                    style={{ fontFamily: 'MontserratBold' }}
-                    fontSize={16}
-                    lineHeight={19}
-                    color={Colors.secondary}>
-                    {item}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => removeSearchHistoryItem(item)}>
-                  <X size={20} color={Colors.secondary} />
-                </TouchableOpacity>
-              </XStack>
-            ))}
-          </YStack>
+          <FlatList
+            data={searchHistory}
+            keyExtractor={(item) => item}
+            ItemSeparatorComponent={Spacer}
+            renderItem={({ item }) => (
+              <SearchHistoryItem
+                item={item}
+                handlePressSearchItem={handlePressSearchItem}
+                removeSearchHistoryItem={removeSearchHistoryItem}
+              />
+            )}
+          />
         )}
       </YStack>
     );
   }
   return (
-    <ScrollView flex={1}>
+    <ScrollView flex={1} paddingHorizontal={16}>
       <YStack>
         {clubSearchResults?.length > 0 && (
           <YStack>
