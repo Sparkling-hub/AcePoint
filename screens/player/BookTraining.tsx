@@ -12,7 +12,6 @@ import {
   findCoachByName,
 } from '@/api/player-api';
 import { Coach } from '@/model/coach';
-import { Club } from '@/model/club';
 import Colors from '@/constants/Colors';
 import { RootState } from '@/store/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -56,6 +55,9 @@ export default function BookTraining() {
   const { showMaps } = useSelector((state: RootState) => state.showMaps);
   const { showFavorites } = useSelector(
     (state: RootState) => state.showFavorites
+  );
+  const { filterIsLoading } = useSelector(
+    (state: RootState) => state.filterIsLoading
   );
 
   const currentUser = auth.currentUser;
@@ -262,10 +264,13 @@ export default function BookTraining() {
           onChangeText={handleSearch}
           setSearchQuery={setSearchQuery}
           onSubmitEditing={() => addToSearchHistory(searchQuery)}
+          disabled={filterIsLoading}
         />
         <XStack marginLeft={14} marginVertical={23} gap={9}>
           {/* Filter button */}
-          <TouchableOpacity onPress={() => router.navigate('/book/filter')}>
+          <TouchableOpacity
+            onPress={() => router.navigate('/book/filter')}
+            disabled={filterIsLoading}>
             <Filter size={28} color={Colors.secondary} />
           </TouchableOpacity>
           {/* Filter items */}

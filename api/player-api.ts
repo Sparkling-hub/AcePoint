@@ -98,20 +98,42 @@ const locationPosition = (): Promise<{
 const filterCoach = async (rating: number, level: number, tags: string) => {
   let Data;
   let result: any = [];
-  const q = query(
-    collection(db, 'coach'),
-    where('rating', '==', rating),
-    where('level', '==', level)
-  );
+  let q;
+
+  if (rating === 0 && level !== 0) {
+    q = query(collection(db, 'coach'), where('level', '==', level));
+  } else if (rating !== 0 && level === 0) {
+    q = query(collection(db, 'coach'), where('rating', '==', rating));
+  } else if (rating === 0 && level === 0) {
+    q = collection(db, 'coach');
+  } else {
+    q = query(
+      collection(db, 'coach'),
+      where('rating', '==', rating),
+      where('level', '==', level)
+    );
+  }
+
   try {
     const querySnapshot = await getDocs(q);
-    const coaches = querySnapshot.docs.map((doc) => {
-      if (doc.data().tags.toLowerCase().includes(tags.toLowerCase())) {
+    const coaches = querySnapshot.docs;
+    if (tags !== undefined) {
+      coaches.map((doc) => {
+        if (doc.data().tags.toLowerCase().includes(tags.toLowerCase())) {
+          Data = doc.data();
+          Data.id = doc.id;
+          return result.push(Data);
+        }
+      });
+    } else if (rating === 0 && level === 0 && tags === undefined) {
+      return result;
+    } else {
+      coaches.map((doc) => {
         Data = doc.data();
         Data.id = doc.id;
         return result.push(Data);
-      } else return 'there is no tag with that name';
-    });
+      });
+    }
 
     if (result.length > 0) {
       console.log('Found coaches:', coaches);

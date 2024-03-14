@@ -21,7 +21,7 @@ export default function TabLayout() {
 
   useEffect(() => {
     getUserRole();
-  }, [dispatch]);
+  }, []);
 
   return (
     <Tabs

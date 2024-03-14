@@ -2,17 +2,21 @@ import { authAndroid } from '@/services/auth';
 import { Button, Image } from 'tamagui';
 import { storeData } from '@/api/localStorage';
 import { styles } from '../GoogleStyleButton';
-interface GoogleAuthAndroidProps{
-  readonly userType:string
+import { setUserRole } from '@/store/slices/userRole';
+import { useDispatch } from 'react-redux';
+interface GoogleAuthAndroidProps {
+  readonly userType: string;
 }
- export default function GoogleAuthAndroid(props : GoogleAuthAndroidProps) {
+export default function GoogleAuthAndroid(props: GoogleAuthAndroidProps) {
   const { userType } = props;
+  const dispatch = useDispatch();
   return (
     <Button
       style={styles.ouath}
       onPress={async () => {
-        await storeData("userType",userType)
-        await storeData("authMethod",'google')
+        await storeData('userType', userType);
+        dispatch(setUserRole(userType));
+        await storeData('authMethod', 'google');
         await authAndroid();
       }}>
       <Image

@@ -8,6 +8,7 @@ import showMapsReducer from './slices/showMapsSlice';
 import showFavoritesReducer from './slices/showFavoritesSlice';
 import coachSearchResultsReducer from './slices/coachSearchResultsSlice';
 import clubSearchResultsReducer from './slices/clubSearchResultsSlice';
+import filterIsLoadingReducer from './slices/filterIsLoadingSlice';
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     showFavorites: showFavoritesReducer,
     coachSearchResults: coachSearchResultsReducer,
     clubSearchResults: clubSearchResultsReducer,
+    filterIsLoading: filterIsLoadingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),

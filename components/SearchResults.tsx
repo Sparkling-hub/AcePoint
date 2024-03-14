@@ -33,7 +33,11 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   const { coachSearchResults } = useSelector(
     (state: RootState) => state.coachSearchResults
   );
-  if (loading) {
+  const { filterIsLoading } = useSelector(
+    (state: RootState) => state.filterIsLoading
+  );
+
+  if (loading || filterIsLoading) {
     return (
       <YStack gap={'$8'} paddingHorizontal={16}>
         <CoachSkeleton />
