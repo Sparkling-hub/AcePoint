@@ -18,15 +18,17 @@ describe('calculateDistance', () => {
     const currentLon = -74.006;
     const data = { latitude: 40.7306, longitude: -73.9352 }; // New York City coordinates
     const radius = 10; // 10 kilometers
+    const id = '123';
 
     // Expected result
     const expectedResult = {
       latitude: 40.7306,
       longitude: -73.9352,
+      id: '123',
     };
 
     // Call the function
-    const result = calculateDistance(currentLat, currentLon, data, radius);
+    const result = calculateDistance(currentLat, currentLon, data, id, radius);
 
     // Assertions
     expect(result).toEqual(expectedResult); // Expect the result to be equal to the data provided
@@ -52,15 +54,17 @@ describe('calculateDistance', () => {
     const currentLon = -74.006;
     const data = { latitude: 40.7306, longitude: -73.9352 }; // New York City coordinates
     const radius = 9.594; // 9.594 kilometers (distance between NYC and Manhattan)
+    const id = '123';
 
     // Expected result
     const expectedResult = {
       latitude: 40.7306,
       longitude: -73.9352,
+      id: '123',
     };
 
     // Call the function
-    const result = calculateDistance(currentLat, currentLon, data, radius);
+    const result = calculateDistance(currentLat, currentLon, data, id, radius);
 
     // Assertions
     expect(result).toEqual(expectedResult); // Expect the result to be equal to the data provided

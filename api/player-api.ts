@@ -14,6 +14,7 @@ const calculateDistance = (
   currentLat: number,
   currentLon: number,
   data: any,
+  id: string,
   radius: number
 ): any => {
   const earthRadius = 6371; // Earth's radius in kilometers
@@ -35,7 +36,7 @@ const calculateDistance = (
   const distance = earthRadius * c;
   if (distance <= radius === true) {
     console.log('In Range', data);
-    return data;
+    return { ...data, id };
   } else {
     console.log('Not in Range', data);
   }
@@ -57,6 +58,7 @@ const distanceCalculation = async (
             currentLatitude,
             currentLongitude,
             doc.data(),
+            doc.id,
             radious
           );
           resolve(distance);
