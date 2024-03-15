@@ -55,7 +55,7 @@ export default function TrainingInformations() {
     }, [])
     if (isLoading) {
         return (
-            <Text>Loading...</Text>
+            <></>
         )
     }
     return (

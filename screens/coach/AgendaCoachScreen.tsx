@@ -26,7 +26,14 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
                 else if (lesson.recurrence === 'Monthly') lessonDate.setMonth(lessonDate.getMonth() + 1);
                 else if (lesson.recurrence === 'EveryWeekDay') {
                     const day = lessonDate.getDay();
-                    const lessonDuration = day === 5 ? 3 : day === 6 ? 2 : 1;
+                    let lessonDuration;
+                    if (day === 5) {
+                        lessonDuration = 3;
+                    } else if (day === 6) {
+                        lessonDuration = 2;
+                    } else {
+                        lessonDuration = 1;
+                    }
                     lessonDate.setDate(lessonDate.getDate() + lessonDuration);
                 }
             }

@@ -46,7 +46,7 @@ export default function CustomDropdown(props: CustomDropDownProps) {
   return (
     <YStack zIndex={1}>
       <CustomInput
-        placeholder={placeholder || "Gender"}
+        placeholder={placeholder ?? "Gender"}
         touched={!clicked && touched}
         errors={!clicked ? errors : ''}
         validateOnInit={validateOnInit}
