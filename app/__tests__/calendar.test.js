@@ -1,5 +1,4 @@
 import { expect, jest, describe, it } from '@jest/globals';
-
 import { getLessonsByCoachId } from '../../api/lesson-api';
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs } from "firebase/firestore";
