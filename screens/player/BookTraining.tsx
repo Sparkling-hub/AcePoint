@@ -39,6 +39,7 @@ import FavoriteCoaches from '@/components/FavoriteCoaches';
 import NearbyClubsMap from '@/components/NearbyClubsMap';
 import { setClubSearchResults } from '@/store/slices/clubSearchResultsSlice';
 import { setCoachSearchResults } from '@/store/slices/coachSearchResultsSlice';
+import { useFilter } from '@/hooks/useFilter';
 
 export default function BookTraining() {
   // State variables
@@ -63,6 +64,8 @@ export default function BookTraining() {
   const currentUser = auth.currentUser;
 
   const dispatch = useDispatch();
+
+  const { performFilter } = useFilter();
 
   // Function to add search query to search history
   const addToSearchHistory = useCallback(
@@ -282,6 +285,12 @@ export default function BookTraining() {
                 onPress={() => {
                   dispatch(setTags(tags.filter((t) => t !== tag)));
                   dispatch(setTempTags(tags.filter((t) => t !== tag)));
+                  performFilter(
+                    distance[0],
+                    rating[0],
+                    level[0],
+                    tags.filter((t) => t !== tag)
+                  );
                 }}
               />
             ))}
@@ -291,6 +300,7 @@ export default function BookTraining() {
                 onPress={() => {
                   dispatch(setDistance([0]));
                   dispatch(setTempDistance([0]));
+                  performFilter(0, rating[0], level[0], tags);
                 }}
               />
             )}
@@ -301,6 +311,7 @@ export default function BookTraining() {
                 onPress={() => {
                   dispatch(setRating([0]));
                   dispatch(setTempRating([0]));
+                  performFilter(distance[0], 0, level[0], tags);
                 }}
               />
             )}
@@ -311,6 +322,7 @@ export default function BookTraining() {
                 onPress={() => {
                   dispatch(setLevel([0]));
                   dispatch(setTempLevel([0]));
+                  performFilter(distance[0], rating[0], 0, tags);
                 }}
               />
             )}

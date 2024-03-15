@@ -44,7 +44,7 @@ const FilterHeader = () => {
     );
     // Navigate back to the previous screen
     router.navigate('/(tabs)/book');
-    performFilter(tempDistance[0], tempRating[0], tempLevel[0], tempTags[0]);
+    performFilter(tempDistance[0], tempRating[0], tempLevel[0], tempTags);
   };
 
   return (

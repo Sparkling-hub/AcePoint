@@ -95,7 +95,7 @@ const locationPosition = (): Promise<{
   });
 };
 
-const filterCoach = async (rating: number, level: number, tags: string) => {
+const filterCoach = async (rating: number, level: number, tags: string[]) => {
   let Data;
   let result: any = [];
   let q;
@@ -117,18 +117,18 @@ const filterCoach = async (rating: number, level: number, tags: string) => {
   try {
     const querySnapshot = await getDocs(q);
     const coaches = querySnapshot.docs;
-    if (tags !== undefined) {
-      coaches.map((doc) => {
-        if (doc.data().tags.toLowerCase().includes(tags.toLowerCase())) {
+    if (tags.length !== 0) {
+      coaches.forEach((doc) => {
+        if (tags.some((tag) => doc.data().tags.includes(tag))) {
           Data = doc.data();
           Data.id = doc.id;
           return result.push(Data);
         }
       });
-    } else if (rating === 0 && level === 0 && tags === undefined) {
+    } else if (rating === 0 && level === 0 && tags.length === 0) {
       return result;
     } else {
-      coaches.map((doc) => {
+      coaches.forEach((doc) => {
         Data = doc.data();
         Data.id = doc.id;
         return result.push(Data);

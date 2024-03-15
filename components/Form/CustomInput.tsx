@@ -11,7 +11,6 @@ interface CustomInputProps extends InputProps {
   inputStyle?: object;
   touched?: boolean;
   errors?: string;
-  validateOnInit?: boolean;
   hide?: boolean;
 }
 
@@ -26,7 +25,6 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     touched,
     errors,
     hide,
-    validateOnInit,
     ...rest
   } = props;
   const textInputRef = useRef<Input>(null);

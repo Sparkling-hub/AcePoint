@@ -11,7 +11,7 @@ export const useFilter = () => {
 
   const filterClubs = async (distance: number) => {
     if (distance === 0) {
-      return;
+      return [];
     }
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -33,7 +33,11 @@ export const useFilter = () => {
     }
   };
 
-  const filterCoaches = async (rating: number, level: number, tags: string) => {
+  const filterCoaches = async (
+    rating: number,
+    level: number,
+    tags: string[]
+  ) => {
     try {
       let result: any = [];
       result = await filterCoach(rating, level, tags);
@@ -48,7 +52,7 @@ export const useFilter = () => {
     distance: number,
     rating: number,
     level: number,
-    tags: string
+    tags: string[]
   ) => {
     dispatch(setFilterIsLoading(true));
     try {
