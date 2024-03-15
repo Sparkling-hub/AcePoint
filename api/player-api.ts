@@ -21,7 +21,7 @@ const fetchData = async (
   let data;
   if (queryField && queryValue) {
     const q = query(
-      collection(db, collectionName),orderBy(queryField),startAt(queryValue),
+      collection(db, collectionName), orderBy(queryField), startAt(queryValue),
       endAt(queryValue + "\uf8ff")
 
     );
@@ -203,6 +203,17 @@ const favoriteCoachList = async () => {
   }
 };
 
+const getPlayerById = async (id: string) => {
+  const docRef = doc(db, "player", id);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    console.log("No such document!");
+    return null
+  }
+}
+
 export {
   findByName,
   favouriteCoach,
@@ -210,4 +221,5 @@ export {
   unfavoriteCoach,
   favoriteCoachList,
   fetchData,
+  getPlayerById
 };

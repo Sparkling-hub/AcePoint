@@ -25,6 +25,7 @@ import EditProfileHeader from '@/components/headers/EditProfileHeader';
 import SupportHeader from '@/components/headers/SupportHeader';
 import LegalHeader from '@/components/headers/LegalHeader';
 import NewTrainingHeader from '@/components/headers/NewTrainingHeader';
+import TrainingHeader from '@/components/headers/TrainingHeader';
 
 
 export {
@@ -96,6 +97,13 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: NewTrainingHeader,
+              }}
+            />
+            <Stack.Screen
+              name="training"
+              options={{
+                headerShadowVisible: false,
+                header: TrainingHeader,
               }}
             />
             <Stack.Screen

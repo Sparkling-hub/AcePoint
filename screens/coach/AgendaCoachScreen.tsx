@@ -1,5 +1,8 @@
+import { storeData } from "@/api/localStorage";
 import AddButtonCalendar from "@/components/AddButtonCalendar";
 import Colors from "@/constants/Colors";
+import { addDurationToStartDate, date, time } from "@/services/dateService";
+import { router } from "expo-router";
 import { useCallback, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Agenda } from "react-native-calendars";
@@ -9,29 +12,7 @@ import { Text, View } from "tamagui";
 export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[] }) {
 
     const [items, setItems] = useState({});
-    const date = (time: any) => {
-        const date = new Date(time * 1000);
-        const formattedDate = date.toISOString().split('T')[0];
-        return formattedDate;
-    };
-    const time = (time: any) => {
-        const date = new Date(time * 1000);
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        return `${hours}:${minutes}`;
-    };
-    function addDurationToStartDate(startDate: string, duration: string): string {
-        const [hours, minutes] = startDate.split(':').map(Number);
-        const [durationHours, durationMinutes] = duration.split(':').map(Number);
-        let newHours = hours + durationHours;
-        let newMinutes = minutes + durationMinutes;
-        if (newMinutes >= 60) {
-            newHours += Math.floor(newMinutes / 60);
-            newMinutes = '00';
-        }
 
-        return `${newHours}:${newMinutes}`;
-    }
     const loadItems = useCallback(() => {
         const itemsByDate = lessons.reduce((acc, lesson) => {
             let lessonDate = new Date(lesson.startDate.seconds * 1000);
@@ -67,7 +48,10 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
 
     const renderItem = (item: any) => {
         return (
-            <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }}>
+            <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }} onPress={async () => {
+                await storeData('trainingID', item.id)
+                router.navigate('/training')
+            }}>
                 <Card>
                     <Card.Content style={{ backgroundColor: Colors.secondary, borderRadius: 10 }}>
                         <View

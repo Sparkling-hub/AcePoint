@@ -1,9 +1,11 @@
 import Colors from "@/constants/Colors";
 import CalendarStrip from 'react-native-calendar-strip';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import AddButtonCalendar from "@/components/AddButtonCalendar";
 import { ScrollView } from "tamagui";
 import { useEffect, useState } from "react";
+import { storeData } from "@/api/localStorage";
+import { router } from "expo-router";
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const times = ['07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'];
@@ -32,7 +34,7 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
     const [week, setWeek] = useState(currentWeek)
     useEffect(() => {
         function mapLessonsToWeeklyEvents(lessons: any[]): void {
-            const weeklyEvents: { [key: number]: { [time: string]: { name: string, spacesLeft: number, isFull?: boolean, endTime: string } } } = {};
+            const weeklyEvents: { [key: number]: { [time: string]: { name: string, spacesLeft: number, isFull?: boolean, endTime: string, eventId: string } } } = {};
             const [currentWeekStart, currentWeekEnd] = week.split(' ').map(date => new Date(date));
             if (currentWeekEnd)
                 currentWeekEnd.setHours(currentWeekEnd.getHours() + 11);
@@ -55,7 +57,8 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
                         name: lesson.description,
                         spacesLeft,
                         isFull,
-                        endTime
+                        endTime,
+                        eventId: lesson.id
                     };
                 }
             });
@@ -103,18 +106,24 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
 
                     {daysOfWeek.map((day, dayIndex) => (
                         <View key={day} style={styles.dayColumn}>
-                            <View style={[styles.gridLine, { top: 0, width: 1, left: null, right: null, height: 20000 }]} />
+                            <View style={[styles.gridLine, { top: 0, width: 1, left: null, right: 0, height: 20000 }]} />
                             {times.map((time) => {
                                 const event = weeklyEvents[dayIndex + 1]?.[time];
                                 if (event) {
                                     const eventTopOffset = calculateEventTopOffset(time);
                                     const eventHeight = calculateEventHeight(time, event.endTime);
                                     return (
-                                        <View key={day + time} style={[styles.eventCell, { top: eventTopOffset, height: eventHeight, borderWidth: 1, borderColor: Colors.primary }]}>
-                                            <Text style={styles.eventTime}>{time} - {event.endTime}</Text>
-                                            <Text style={styles.eventText}>{event.name}</Text>
-                                            <Text style={styles.eventTime}>{event.spacesLeft} Spaces left</Text>
-                                        </View>
+                                        <TouchableOpacity onPress={async () => {
+                                            await storeData('trainingID', event.eventId)
+                                            router.navigate('/training')
+                                        }}
+                                            key={time}>
+                                            <View key={day + time} style={[styles.eventCell, { top: eventTopOffset, height: eventHeight, borderWidth: 1, borderColor: Colors.primary }]}>
+                                                <Text style={styles.eventTime}>{time} - {event.endTime}</Text>
+                                                <Text style={styles.eventText}>{event.name}</Text>
+                                                <Text style={styles.eventTime}>{event.spacesLeft} Spaces left</Text>
+                                            </View>
+                                        </TouchableOpacity>
                                     );
                                 }
                             })}

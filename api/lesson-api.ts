@@ -1,11 +1,12 @@
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc, getDoc, doc } from "firebase/firestore";
 import { retrieveData } from './localStorage';
 import fireToast from '@/services/toast';
 
+const lessonsRef = collection(db, "lesson");
+
 const getLessonsByCoachId = async () => {
     const coachId = await retrieveData('userID')
-    const lessonsRef = collection(db, "lesson");
     const q = query(lessonsRef, where("coachId", "==", coachId));
     try {
         const querySnapshot = await getDocs(q);
@@ -27,6 +28,7 @@ const storeLesson = async (lessonData: any, startTime: string) => {
     const datePartsEndDate = lessonData.endDate.split("/")
     const endDate = new Date(parseInt(datePartsEndDate[2], 10), parseInt(datePartsEndDate[0], 10) - 1, parseInt(datePartsEndDate[1], 10));
     const duration = lessonData.duration + ":00";
+    const tagsArray = lessonData.tags.split(',').map(tag => tag.trim());    
     const lesson = {
         ...lessonData,
         minAge: parseInt(lessonData.minAge),
@@ -35,9 +37,9 @@ const storeLesson = async (lessonData: any, startTime: string) => {
         duration: duration,
         startDate: startDate,
         endDate: endDate,
-        players: []
+        players: [],
+        tags: tagsArray
     }
-    const lessonsRef = collection(db, "lesson");
     try {
         await addDoc(lessonsRef, lesson);
         fireToast('success', 'New training added successfully !')
@@ -45,6 +47,15 @@ const storeLesson = async (lessonData: any, startTime: string) => {
         fireToast('error', 'Something went wrong !')
     }
 };
+const getLessonById = async (id: string) => {
+    const docRef = doc(db, "lesson", id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        return docSnap.data();
+    } else {
+        console.log("No such document!");
+    }
+}
 
-export { getLessonsByCoachId, storeLesson };
+export { getLessonsByCoachId, storeLesson, getLessonById };
 
