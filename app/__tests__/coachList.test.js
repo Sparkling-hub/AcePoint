@@ -1,8 +1,16 @@
 import { favoriteCoachList } from '@/api/player-api'
 import { getCoachById } from '@/api/coach-api'
-
+import { storeLesson, getLessonById } from '@/api/lesson-api';
 import { auth, db } from '@/lib/firebase';
-import { getDoc, getDocs, doc } from 'firebase/firestore';
+import { getDoc, getDocs, doc, addDoc } from 'firebase/firestore';
+import fireToast from "@/services/toast";
+
+jest.mock("@/services/toast", () => {
+    return {
+        __esModule: true,
+        default: jest.fn()
+    };
+});
 jest.mock('firebase/auth', () => ({
   getReactNativePersistence: jest.fn(),
   initializeAuth: jest.fn(),
@@ -18,6 +26,7 @@ jest.mock('firebase/firestore', () => ({
   doc: jest.fn(),
   getDoc: jest.fn(),
   getDocs: jest.fn(),
+  addDoc: jest.fn()
 }));
 jest.mock("@/lib/firebase", () => ({
   auth: jest.fn(),
@@ -87,6 +96,102 @@ describe('getCoachById', () => {
 
     // Assert
     expect(doc).toHaveBeenCalledWith(db, 'coach', fakeId);
+    expect(getDoc).toHaveBeenCalled();
+    expect(consoleSpy).toHaveBeenCalledWith('No such document!');
+    expect(result).toBeUndefined();
+
+    // Cleanup
+    consoleSpy.mockRestore();
+  });
+});
+describe('storeLesson', () => {
+  beforeEach(() => {
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+  });
+
+  it('successfully stores a lesson and shows success toast', async () => {
+    // Given
+    const lessonData = {
+      startDate: "12/31/2023",
+      endDate: "01/01/2024",
+      duration: "1",
+      tags: "tag1, tag2",
+      minAge: "18",
+      minPeople: "5",
+      maxPeople: "10",
+    };
+    const startTime = "14:00";
+    (addDoc).mockResolvedValue({});
+
+    // When
+    await storeLesson(lessonData, startTime);
+
+    // Then
+    expect(addDoc).toHaveBeenCalled();
+    expect(fireToast).toHaveBeenCalledWith('success', 'New training added successfully !');
+  });
+
+  it('shows error toast when storing a lesson fails', async () => {
+    // Given
+    const lessonData = {
+      startDate: "12/31/2023",
+      endDate: "01/01/2024",
+      duration: "1",
+      tags: "tag1, tag2",
+      minAge: "18",
+      minPeople: "5",
+      maxPeople: "10",
+    }
+    const startTime = "14:00";
+    (addDoc).mockRejectedValue(new Error('Failed to add document'));
+
+    // When
+    await storeLesson(lessonData, startTime);
+
+    // Then
+    expect(fireToast).toHaveBeenCalledWith('error', 'Something went wrong !');
+  });
+});
+describe('getLessonById', () => {
+  beforeEach(() => {
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+  });
+
+  it('returns lesson data if document exists', async () => {
+    // Given
+    const fakeId = '123';
+    const fakeLessonData = { title: 'Test Lesson', description: 'This is a test' };
+    const docSnapMock = {
+      exists: jest.fn().mockReturnValue(true),
+      data: jest.fn().mockReturnValue(fakeLessonData),
+    };
+    (getDoc).mockResolvedValue(docSnapMock);
+
+    // When
+    const result = await getLessonById(fakeId);
+
+    // Then
+    expect(doc).toHaveBeenCalledWith(db, 'lesson', fakeId);
+    expect(getDoc).toHaveBeenCalled();
+    expect(result).toEqual(fakeLessonData);
+  });
+
+  it('logs an error and returns undefined if document does not exist', async () => {
+    // Given
+    const fakeId = 'nonexistent';
+    const consoleSpy = jest.spyOn(console, 'log');
+    const docSnapMock = {
+      exists: jest.fn().mockReturnValue(false),
+    };
+    (getDoc).mockResolvedValue(docSnapMock);
+
+    // When
+    const result = await getLessonById(fakeId);
+
+    // Then
+    expect(doc).toHaveBeenCalledWith(db, 'lesson', fakeId);
     expect(getDoc).toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalledWith('No such document!');
     expect(result).toBeUndefined();

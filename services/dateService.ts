@@ -5,9 +5,10 @@ const date = (time: any) => {
 };
 const time = (time: any) => {
     const date = new Date(time * 1000);
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    return `${hours}:${minutes}`;
+    const hours = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    return `${hours}:${formattedMinutes}`;
 };
 function addDurationToStartDate(startDate: string, duration: string): string {
     const [hours, minutes] = startDate.split(':').map(Number);
