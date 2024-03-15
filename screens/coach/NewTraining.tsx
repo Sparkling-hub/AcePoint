@@ -8,7 +8,7 @@ import Colors from "@/constants/Colors";
 import Portrait from "@/components/svg/Portrait";
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { CalendarDays } from "@tamagui/lucide-icons";
-import { ScrollView, View, YStack } from "tamagui";
+import { ScrollView, YStack } from "tamagui";
 import StyleIcon from "@/components/svg/StyleIcon";
 import TimeIcon from "@/components/svg/TimeIcon";
 import CustomButton from "@/components/CustomButton";
@@ -17,7 +17,6 @@ import CustomDropdownMultiSelect from "@/components/Form/dropdown/CustomDropDown
 import CustomDropdown from "@/components/Form/dropdown/CustomDropdown";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import { Text } from "tamagui";
 import { StyleSheet } from "react-native";
 import { retrieveData } from "@/api/localStorage";
 import { collection, doc, getDoc } from "firebase/firestore";

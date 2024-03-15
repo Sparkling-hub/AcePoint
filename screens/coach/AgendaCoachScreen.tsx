@@ -21,24 +21,13 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
                 const formattedDate = date(lessonDate.getTime() / 1000);
                 acc[formattedDate] = acc[formattedDate] || [];
                 acc[formattedDate].push(lesson);
-
-                switch (lesson.recurrence) {
-                    case 'Weekly':
-                        lessonDate.setDate(lessonDate.getDate() + 7);
-                        break;
-                    case 'Daily':
-                        lessonDate.setDate(lessonDate.getDate() + 1);
-                        break;
-                    case 'Monthly':
-                        lessonDate.setMonth(lessonDate.getMonth() + 1);
-                        break;
-                    case 'EveryWeekDay':
-                        const day = lessonDate.getDay();
-                        lessonDate.setDate(lessonDate.getDate() + (day === 5 ? 3 : day === 6 ? 2 : 1));
-                        break;
-                    default:
-                        break;
-
+                if (lesson.recurrence === 'Weekly') lessonDate.setDate(lessonDate.getDate() + 7);
+                else if (lesson.recurrence === 'Daily') lessonDate.setDate(lessonDate.getDate() + 1);
+                else if (lesson.recurrence === 'Monthly') lessonDate.setMonth(lessonDate.getMonth() + 1);
+                else if (lesson.recurrence === 'EveryWeekDay') {
+                    const day = lessonDate.getDay();
+                    const lessonDuration = day === 5 ? 3 : day === 6 ? 2 : 1;
+                    lessonDate.setDate(lessonDate.getDate() + lessonDuration);
                 }
             }
             return acc;

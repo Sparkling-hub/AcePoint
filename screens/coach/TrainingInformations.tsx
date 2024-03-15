@@ -90,7 +90,7 @@ export default function TrainingInformations() {
                             borderWidth={3}
                             borderColor={Colors.primary}
                         >
-                            {coach.image &&
+                            {!!coach.image &&
                                 <Avatar.Image src={coach.image} />
                             }
                         </Avatar>
@@ -114,7 +114,7 @@ export default function TrainingInformations() {
                     <Text style={styles.title}>Tags</Text>
                     <YStack flexDirection="row" flexWrap="wrap" padding={20} marginEnd={20} rowGap={'$3'}>
                         {training.tags.map((tag, index) => (
-                            <YStack key={index} style={styles.tags}>
+                            <YStack key={index + 123321} style={styles.tags}>
                                 <Text style={styles.tagText}>{tag}</Text>
                             </YStack>
                         ))}
@@ -128,7 +128,8 @@ export default function TrainingInformations() {
                     <Text style={styles.title}>Players {training.players.length}/{training.maxPeople}</Text>
                     <YStack flexDirection="row" flexWrap="wrap">
                         {players.map((element, index) => (
-                            <Avatar key={index} circular
+                            <Avatar key={element.image}
+                                circular
                                 size="$5"
                                 marginTop={30}
                                 marginLeft={20}
@@ -136,7 +137,7 @@ export default function TrainingInformations() {
                                 borderColor={Colors.primary}
                                 backgroundColor={Colors.secondary}
                             >
-                                {element.image &&
+                                {!!element.image &&
                                     <Avatar.Image src={element.image} />
                                 }
                             </Avatar>

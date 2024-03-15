@@ -7,6 +7,7 @@ import DropDownItem from './DropDownItem';
 
 import { option } from '@/types/options';
 import Colors from '@/constants/Colors';
+import { StyleSheet } from 'react-native';
 
 interface CustomDropDownMultiSelectProps {
     readonly placeholder: string,
@@ -53,13 +54,6 @@ export default function CustomDropdownMultiSelect(props: CustomDropDownMultiSele
     return (
         <YStack zIndex={1}>
             <CustomInput
-                placeholder={placeholder}
-                touched={!clicked && touched}
-                errors={!clicked ? errors : ''}
-                validateOnInit={validateOnInit}
-                value={selectedItems.join(', ')}
-                textTransform="capitalize"
-                readOnly
                 icon={
                     clicked ? (
                         <ChevronUp color={Colors.secondary} />
@@ -68,23 +62,24 @@ export default function CustomDropdownMultiSelect(props: CustomDropDownMultiSele
                     )
                 }
                 onPress={handleClick}
+                value={selectedItems.join(', ')}
+                placeholder={placeholder}
+                touched={!clicked && touched}
+                errors={!clicked ? errors : ''}
+                validateOnInit={validateOnInit}
+                textTransform="capitalize"
+                readOnly={true}
             />
             <YStack marginTop={8} paddingHorizontal={5}>
                 {clicked && (
                     <YStack
-                        maxHeight={300}
-                        width={'100%'}
-                        elevation={4}
                         $platform-ios={{
                             shadowColor: 'rgba(0, 0, 0, 0.1)',
                             shadowOffset: { width: 2, height: 2 },
                             shadowOpacity: 0.8,
                             shadowRadius: 4,
                         }}
-                        backgroundColor={'white'}
-                        borderRadius={8}
-                        paddingVertical={10}
-                        paddingHorizontal={16}>
+                        style={styles.ystack}>
                         {options.map((option) => {
                             let index = selectedItems.indexOf(option.value)
                             return (<DropDownItem
@@ -100,3 +95,14 @@ export default function CustomDropdownMultiSelect(props: CustomDropDownMultiSele
         </YStack>
     );
 }
+const styles = StyleSheet.create({
+    ystack: {
+        maxHeight: 300,
+        width: '100%',
+        elevation: 4,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+    }
+})
