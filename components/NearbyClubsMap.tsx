@@ -82,10 +82,10 @@ const NearbyClubsMap = () => {
               <Marker
                 key={club.id}
                 coordinate={{
-                  latitude: club.latitude || 0,
-                  longitude: club.longitude || 0,
+                  latitude: club.latitude ?? 0,
+                  longitude: club.longitude ?? 0,
                 }}
-                onPress={() => handleMarkerPress(club.id || '')}
+                onPress={() => handleMarkerPress(club.id ?? '')}
                 image={
                   club.id === selectedMarkerId
                     ? require('../assets/images/location_on.png')
