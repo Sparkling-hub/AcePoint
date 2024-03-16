@@ -22,7 +22,7 @@ const NearbyClubsMap = () => {
   const mapRef = useRef<MapView>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchNearbyClubs = async () => {
+  const getCurrentLocation = async () => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -38,14 +38,29 @@ const NearbyClubsMap = () => {
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121,
       };
-      setCurrentLocation(region);
-      const clubs: any = await distanceCalculation(latitude, longitude, 50);
-      setNearbyClubs(clubs);
+      return region;
     } catch (error) {
       fireToast({
         message: 'Please enable location services',
         type: 'error',
       });
+    }
+  };
+
+  const fetchNearbyClubs = async () => {
+    try {
+      const region = await getCurrentLocation();
+      if (region) {
+        setCurrentLocation(region);
+        const clubs: any = await distanceCalculation(
+          region.latitude,
+          region.longitude,
+          50
+        );
+        setNearbyClubs(clubs);
+      }
+    } catch (error) {
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -55,9 +70,11 @@ const NearbyClubsMap = () => {
     fetchNearbyClubs();
   }, []);
 
-  const handleLocationPress = () => {
-    if (currentLocation) {
-      mapRef.current?.animateToRegion(currentLocation, 1000);
+  const handleLocationPress = async () => {
+    const region = await getCurrentLocation();
+    if (region) {
+      setCurrentLocation(region);
+      mapRef.current?.animateToRegion(region, 1000);
     }
   };
 
@@ -78,34 +95,35 @@ const NearbyClubsMap = () => {
             showsUserLocation={true}
             showsMyLocationButton={false}
             initialRegion={currentLocation}>
-            {nearbyClubs.map((club) => (
-              <Marker
-                key={club.id}
-                coordinate={{
-                  latitude: club.latitude ?? 0,
-                  longitude: club.longitude ?? 0,
-                }}
-                onPress={() => handleMarkerPress(club.id ?? '')}
-                image={
-                  club.id === selectedMarkerId
-                    ? require('../assets/images/location_on.png')
-                    : require('../assets/images/location.png')
-                }>
-                <Callout tooltip>
-                  <View>
-                    <View
-                      height={32}
-                      paddingHorizontal={13}
-                      alignItems="center"
-                      justifyContent="center"
-                      borderRadius={20}
-                      backgroundColor={'rgba(58, 77, 108, 0.9)'}>
-                      <Text color={'white'}>{club.name}</Text>
+            {nearbyClubs?.length > 0 &&
+              nearbyClubs.map((club) => (
+                <Marker
+                  key={club.id}
+                  coordinate={{
+                    latitude: club.latitude ?? 0,
+                    longitude: club.longitude ?? 0,
+                  }}
+                  onPress={() => handleMarkerPress(club.id ?? '')}
+                  image={
+                    club.id === selectedMarkerId
+                      ? require('../assets/images/location_on.png')
+                      : require('../assets/images/location.png')
+                  }>
+                  <Callout tooltip>
+                    <View>
+                      <View
+                        height={32}
+                        paddingHorizontal={13}
+                        alignItems="center"
+                        justifyContent="center"
+                        borderRadius={20}
+                        backgroundColor={'rgba(58, 77, 108, 0.9)'}>
+                        <Text color={'white'}>{club.name}</Text>
+                      </View>
                     </View>
-                  </View>
-                </Callout>
-              </Marker>
-            ))}
+                  </Callout>
+                </Marker>
+              ))}
           </MapView>
           <CustomLocationButton onPress={handleLocationPress} />
         </>
