@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, YStack } from 'tamagui';
 import CustomInput from '../CustomInput';
 import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
-
 import DropDownItem from './DropDownItem';
-
 import { option } from '@/types/options';
 import Colors from '@/constants/Colors';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 interface CustomDropDownMultiSelectProps {
     readonly placeholder: string,
@@ -18,6 +16,7 @@ interface CustomDropDownMultiSelectProps {
     readonly errors?: any;
     readonly validateOnInit?: boolean;
     readonly scrollViewRef?: React.RefObject<ScrollView>;
+    readonly testID?: string
 }
 
 export default function CustomDropdownMultiSelect(props: CustomDropDownMultiSelectProps) {
@@ -30,6 +29,7 @@ export default function CustomDropdownMultiSelect(props: CustomDropDownMultiSele
         errors,
         validateOnInit,
         scrollViewRef,
+        testID
     } = props;
     const [clicked, setClicked] = useState(false);
 
@@ -53,7 +53,9 @@ export default function CustomDropdownMultiSelect(props: CustomDropDownMultiSele
 
     return (
         <YStack zIndex={1}>
+            <TouchableOpacity testID={testID} />
             <CustomInput
+                testID="custom-input" // Added testID for testing
                 icon={
                     clicked ? (
                         <ChevronUp color={Colors.secondary} />
@@ -73,6 +75,7 @@ export default function CustomDropdownMultiSelect(props: CustomDropDownMultiSele
             <YStack marginTop={8} paddingHorizontal={5}>
                 {clicked && (
                     <YStack
+                        testID="dropdown-options" // Added testID for testing
                         $platform-ios={{
                             shadowColor: 'rgba(0, 0, 0, 0.1)',
                             shadowOffset: { width: 2, height: 2 },
@@ -84,6 +87,7 @@ export default function CustomDropdownMultiSelect(props: CustomDropDownMultiSele
                             let index = selectedItems.indexOf(option.value)
                             return (<DropDownItem
                                 key={option.value}
+                                testID={`dropdown-item-${index}`} // Added testID for testing
                                 handleItemClick={handleItemClick}
                                 selectedItem={selectedItems[index]}
                                 item={option}

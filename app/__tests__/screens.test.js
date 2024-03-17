@@ -1,4 +1,4 @@
-import { render, waitFor } from 'react-native-testing-library';
+import { render, waitFor, fireEvent } from 'react-native-testing-library';
 import * as redux from 'react-redux';
 import * as AsyncStorage from '@react-native-async-storage/async-storage';
 import AccountScreen from '@/screens/AccountScreen';
@@ -11,6 +11,8 @@ import AddButtonCalendar from '@/components/AddButtonCalendar'
 import CalendarIconLabel from '@/components/tabIcons/CalendarIconLabel'
 import CalendarIcon from '@/components/tabIcons/CalendarIcon'
 import Colors from '@/constants/Colors';
+import CustomDropdownMultiSelect from '@/components/Form/dropdown/CustomDropdownMultiSelectProps';
+import React from 'react';
 
 jest.mock('tamagui', () => ({
   YStack: jest.fn(),
@@ -37,6 +39,10 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(),
 }));
 jest.mock('expo-router', () => ({
+  useNavigation: () => ({
+    navigate: jest.fn(),
+    goBack: jest.fn(),
+  }),
   router: {
     push: jest.fn(),
   },
@@ -133,4 +139,26 @@ describe('AccountScreen', () => {
   });
 
 
+});
+
+describe('CustomDropdownMultiSelect', () => {
+  const options = [
+    { label: 'Option 1', value: 'option1' },
+    { label: 'Option 2', value: 'option2' },
+  ];
+  const selectedItems = [];
+  const handleChange = jest.fn();
+
+  it('CustomDropdownMultiSelect renders correctly', () => {
+    const testID = 'CustomDropdownMultiSelect';
+    const { getByTestId } = render(<CustomDropdownMultiSelect
+      testID={testID}
+      placeholder="Select Options"
+      options={options}
+      selectedItems={selectedItems}
+      handleChange={handleChange}
+    />);
+    const dropdown = getByTestId(testID);
+    expect(dropdown).toBeTruthy();
+  });
 });

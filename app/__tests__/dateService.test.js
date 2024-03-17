@@ -20,14 +20,6 @@ describe('date', () => {
     });
 });
 
-// describe('time', () => {
-//     // it('should return the correct time', () => {
-//     //     const timeS = 1630000000;
-//     //     const expected = "19:46";
-//     //     const result = time(timeS);
-//     //     expect(result).toBe(expected);
-//     // });
-// });
 
 describe('time', () => {
     it('converts UNIX timestamp to human-readable time', () => {

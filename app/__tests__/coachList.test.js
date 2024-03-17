@@ -1,4 +1,4 @@
-import { favoriteCoachList } from '@/api/player-api'
+import { favoriteCoachList, getPlayerById } from '@/api/player-api'
 import { getCoachById } from '@/api/coach-api'
 import { storeLesson, getLessonById } from '@/api/lesson-api';
 import { auth, db } from '@/lib/firebase';
@@ -195,6 +195,54 @@ describe('getLessonById', () => {
     expect(getDoc).toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalledWith('No such document!');
     expect(result).toBeUndefined();
+
+    // Cleanup
+    consoleSpy.mockRestore();
+  });
+});
+
+describe('getPlayerById', () => {
+  beforeEach(() => {
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+  });
+
+  it('returns player data if document exists', async () => {
+    // Given
+    const fakeId = '123';
+    const fakePlayerData = { name: 'John Doe', age: 30 };
+    const docSnapMock = {
+      exists: jest.fn().mockReturnValue(true),
+      data: jest.fn().mockReturnValue(fakePlayerData),
+    };
+    (getDoc).mockResolvedValue(docSnapMock);
+
+    // When
+    const result = await getPlayerById(fakeId);
+
+    // Then
+    expect(doc).toHaveBeenCalledWith(db, 'player', fakeId);
+    expect(getDoc).toHaveBeenCalled();
+    expect(result).toEqual(fakePlayerData);
+  });
+
+  it('logs an error and returns null if document does not exist', async () => {
+    // Given
+    const fakeId = 'nonexistent';
+    const consoleSpy = jest.spyOn(console, 'log');
+    const docSnapMock = {
+      exists: jest.fn().mockReturnValue(false),
+    };
+    (getDoc).mockResolvedValue(docSnapMock);
+
+    // When
+    const result = await getPlayerById(fakeId);
+
+    // Then
+    expect(doc).toHaveBeenCalledWith(db, 'player', fakeId);
+    expect(getDoc).toHaveBeenCalled();
+    expect(consoleSpy).toHaveBeenCalledWith('No such document!');
+    expect(result).toBeNull();
 
     // Cleanup
     consoleSpy.mockRestore();
