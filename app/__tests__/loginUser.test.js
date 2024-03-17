@@ -34,8 +34,8 @@ jest.mock('firebase/auth', () => ({
       getDoc.mockResolvedValue(coachSnap);
       // Mock Firebase authentication
       signInWithEmailAndPassword.mockResolvedValueOnce({ user: { uid: 'mockUid' } });
-      const result = await loginUser({ email: 'coach@example.com', password: 'password', usertype: 'Coach' });
-      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(), 'coach@example.com', 'password');
+      const result = await loginUser({ email: 'coach@example.com', password: 'passworduser123', usertype: 'Coach' });
+      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(), 'coach@example.com', 'passworduser123');
       expect(signOut).not.toHaveBeenCalled();
       expect(result).toEqual({
         user: { user: { uid: 'mockUid' } },
@@ -51,9 +51,9 @@ jest.mock('firebase/auth', () => ({
       // Mock Firebase authentication
       signInWithEmailAndPassword.mockResolvedValueOnce({ user: { uid: 'mockUid' } });
   
-      const result = await loginUser({ email: 'player@example.com', password: 'password', usertype: 'Player' });
+      const result = await loginUser({ email: 'player@example.com', password: 'passworduser123', usertype: 'Player' });
   
-      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(), 'player@example.com', 'password');
+      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(), 'player@example.com', 'passworduser123');
       expect(signOut).not.toHaveBeenCalled();
       expect(result).toEqual({ user: { user: { uid: 'mockUid' } }, playerData: { playerData: 'mockPlayerData' } });
     });
@@ -62,9 +62,9 @@ jest.mock('firebase/auth', () => ({
       // Mock Firebase authentication error
       signInWithEmailAndPassword.mockRejectedValueOnce('Login error');
   
-      const result = await loginUser({ email: 'invalid@example.com', password: 'password', usertype: 'Player' });
+      const result = await loginUser({ email: 'invalid@example.com', password: 'passworduser123', usertype: 'Player' });
   
-      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(), 'invalid@example.com', 'password');
+      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(), 'invalid@example.com', 'passworduser123');
       expect(result).toEqual('Login error');
     });
   });

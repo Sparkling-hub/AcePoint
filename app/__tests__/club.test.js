@@ -1,6 +1,6 @@
 import { addClub } from '@/api/club-api';
 import { retrieveData } from '@/api/localStorage';
-import {  setDoc,collection,doc } from 'firebase/firestore'; 
+import {  setDoc,doc } from 'firebase/firestore'; 
 
 jest.mock('firebase/auth', () => ({
     getReactNativePersistence: jest.fn(),
