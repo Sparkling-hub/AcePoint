@@ -28,7 +28,7 @@ const LoginBody = ({ userType }: { userType: string }) => {
     }
 
     try {
-      const usertype= await storeData("userType", userType);
+      await storeData("userType", userType);
       await storeData("authMethod", 'simple')
 
       const result: any = await loginUser({ email, password,usertype:userType });
@@ -46,7 +46,7 @@ const LoginBody = ({ userType }: { userType: string }) => {
       }
     } catch (error: any) {
       console.error("Error occurred during login:", error.message);
-      fireToast({message:`Login Failed ${error.message}` ?? "An unknown error occurred.",type:"error"});
+      fireToast({message:`Login Failed ${error.message} An unknown error occurred`,type:"error"});
     }
   };
   return (

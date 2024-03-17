@@ -14,7 +14,7 @@ import { refreshAllData } from '@/store/slices/signup';
 const Trail = ({handlePrevious,onNext}:{handlePrevious:() => void,onNext:() => void}) => {
   const dispatch=useDispatch()
     const updatePlayer=async()=>{
-      await onNext()
+    onNext()
       router.push('/')
       dispatch(refreshAllData())
     }

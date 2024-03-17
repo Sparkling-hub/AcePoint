@@ -24,7 +24,7 @@ const Question = ({handlePrevious,onNext}:{handlePrevious:() => void,onNext:() =
     const [fitness, setFitness] = useState('Normal');
     const updatePlayer=async()=>{
       dispatch(signUpData({age:age,gender:gender,fitness:fitness}))     
-      await onNext()
+      onNext()
       router.push('/')
   }
   return (

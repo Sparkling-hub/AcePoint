@@ -53,21 +53,6 @@ const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: an
     }
    
    }
-  // const sign = () => {
-  //   let data = {
-  //     displayName: displayName,
-  //     phoneNumber: countryCode + phoneNumber,
-  //     marketing: marketing,
-  //     terms: terms
-  //   };
-
-  //   if (terms) {
-  //     onNext(email, password, data);
-  //   } else {
-  //     fireToast({message:"Please Accept terms and conditions",type:"error"});
-  //   }
-  // };
-
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
