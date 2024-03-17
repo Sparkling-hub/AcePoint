@@ -33,16 +33,6 @@ const signUpCoach = async ({ email, password, coach }: { email: string, password
   }
 };
 
-
-const signup = async ({ email, password }: { email: any, password: any }) => {
-  try {
-
-    await createUserWithEmailAndPassword(auth, email, password)
-  } catch (error) {
-    console.log(error)
-  }
-}
-
 const signUpPlayer = async ({ email, password, player }: { email: string, password: string, player: Player }): Promise<string> => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -114,4 +104,4 @@ const loginUser = async ({ email, password,usertype }: { email: string, password
 }
 
 
-export { signUpCoach, signUpPlayer, loginUser, signup }
+export { signUpCoach, signUpPlayer, loginUser }
