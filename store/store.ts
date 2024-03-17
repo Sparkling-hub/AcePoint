@@ -4,6 +4,7 @@ import tempFilterReducer from './slices/tempFilterSlice';
 import savedFilterReducer from './slices/savedFilterSlice';
 import editProfileReducer from './slices/editProfile';
 import userRoleReducer from './slices/userRole';
+import signUpReducer from './slices/signup';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     userRole: userRoleReducer,
     tempFilter: tempFilterReducer,
     savedFilter: savedFilterReducer,
+    signUp: signUpReducer,
   },
 });
 

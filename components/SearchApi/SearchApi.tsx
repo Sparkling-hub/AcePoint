@@ -6,6 +6,8 @@ import { View } from 'tamagui';
 import { Search } from '@tamagui/lucide-icons';
 import { addClub } from '@/api/club-api';
 import { GOOGLE_MAPS_KEY_ANDROID } from '@env';
+import { useDispatch } from 'react-redux';
+import { signUpData } from '@/store/slices/signup';
 const SearchApi = ({
   setOpen,
   setClose,
@@ -16,12 +18,12 @@ const SearchApi = ({
   handleData?: any;
 }) => {
   const [error, setError] = useState(null);
-
+  const dispatch=useDispatch()
   useEffect(() => {
     if (error !== null) return Alert.alert(error);
   }, [error]);
 
-  const handlePlacePress = (data: any, details: any) => {
+  const handlePlacePress =async (data: any, details: any) => {
     const { geometry, name } = details;
     const { location } = geometry;
     const { lat, lng } = location;
@@ -29,13 +31,17 @@ const SearchApi = ({
     console.log('Longitude:======', lng);
     console.log(details);
     console.log('name :', name);
-    addClub({
-      club: { name: name, location: `Latitude:${lat} Longitude:${lng}` },
+    const club=await addClub({
+      club: { name: name, latitude: lat, longitude:lng}
     });
+    dispatch(signUpData({clubId:club}))
     handleData(name);
     setClose(true);
     setOpen(false);
   };
+  
+
+  
   const renderRightButton = () => {
     return (
       <Search

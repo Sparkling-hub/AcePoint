@@ -14,6 +14,6 @@ export class Coach {
   country?: string;
   marketing?: boolean;
   terms?: boolean;
-  tags?: string;
+  tags?: string[];
   bios?: string;
 }
