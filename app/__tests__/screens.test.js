@@ -1,4 +1,4 @@
-import { render, waitFor, fireEvent } from 'react-native-testing-library';
+import { render, waitFor } from 'react-native-testing-library';
 import * as redux from 'react-redux';
 import * as AsyncStorage from '@react-native-async-storage/async-storage';
 import AccountScreen from '@/screens/AccountScreen';
@@ -11,7 +11,7 @@ import AddButtonCalendar from '@/components/AddButtonCalendar'
 import CalendarIconLabel from '@/components/tabIcons/CalendarIconLabel'
 import CalendarIcon from '@/components/tabIcons/CalendarIcon'
 import Colors from '@/constants/Colors';
-import CustomDropdownMultiSelect from '@/components/Form/dropdown/CustomDropdownMultiSelectProps';
+import CustomDropdownMultiSelect from '@/components/Form/dropdown/CustomDropDownMultiSelectProps';
 import React from 'react';
 
 jest.mock('tamagui', () => ({
@@ -150,7 +150,7 @@ describe('CustomDropdownMultiSelect', () => {
   const handleChange = jest.fn();
 
   it('CustomDropdownMultiSelect renders correctly', () => {
-    const testID = 'CustomDropdownMultiSelect';
+    const testID = 'Custom-Dropdown-Multi-Select';
     const { getByTestId } = render(<CustomDropdownMultiSelect
       testID={testID}
       placeholder="Select Options"
