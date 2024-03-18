@@ -51,4 +51,65 @@ describe('filterCoach function', () => {
     ]);
     expect(getDocs).toHaveBeenCalledTimes(1);
   });
+  it('should return all coaches when tags array is empty', async () => {
+    const mockDoc = {
+      id: 'mockCoachId', // Include the id property
+      data: jest.fn().mockReturnValue({}),
+    };
+    const mockQuerySnapshot = { docs: [mockDoc] };
+    getDocs.mockResolvedValueOnce(mockQuerySnapshot);
+  
+    const result = await filterCoach(4, 3, []);
+    expect(result).toEqual([{ id: 'mockCoachId' }]);
+    expect(getDocs).toHaveBeenCalledTimes(1);
+  });
+  
+  it('should return all coaches when both rating and level are zero', async () => {
+    const mockDoc = {
+      id: 'mockCoachId',
+      data: jest.fn().mockReturnValue({ tags: [], rating: 0, level: 0 }),
+    };
+    const mockQuerySnapshot = { docs: [mockDoc] };
+    getDocs.mockResolvedValueOnce(mockQuerySnapshot);
+  
+    const result = await filterCoach(0, 0, []);
+    console.log(result)
+    expect(result).toEqual([]);
+    expect(getDocs).toHaveBeenCalledTimes(1);
+  });
+  
+  
+  it('should return coaches based on level when rating is zero and tags array is empty', async () => {
+    const mockDoc = {
+      id: 'mockCoachId', // Include the id property
+      data: jest.fn().mockReturnValue({}),
+    };
+    const mockQuerySnapshot = { docs: [mockDoc] };
+    getDocs.mockResolvedValueOnce(mockQuerySnapshot);
+    const result = await filterCoach(0, 3, []);
+    expect(result).toEqual([{ id: 'mockCoachId' }]);
+    expect(getDocs).toHaveBeenCalledTimes(1);
+  });
+  
+  it('should return an empty array if no coaches match the criteria', async () => {
+    const mockQuerySnapshot = { docs: [] };
+    getDocs.mockResolvedValueOnce(mockQuerySnapshot);
+  
+    const result = await filterCoach(4, 3, ['tag']);
+  
+    expect(result).toEqual([]);
+    expect(getDocs).toHaveBeenCalledTimes(1);
+  });
+  
+  it('should handle error when fetching coaches', async () => {
+    const errorMessage = 'Error fetching coaches';
+    getDocs.mockRejectedValueOnce(new Error(errorMessage));
+  
+    const result = await filterCoach(4, 3, ['tag']);
+  
+    expect(result).toBeInstanceOf(Error);
+    expect(result.message).toEqual(errorMessage);
+    expect(getDocs).toHaveBeenCalledTimes(1);
+  });
+  
 });
