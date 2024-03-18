@@ -55,8 +55,8 @@ export default function TabLayout() {
   const { userRole } = useSelector((state: RootState) => state.userRole);
 
   const [state, setState] = useState({
-    "D": true,
-    "W": false,
+    "D": false,
+    "W": true,
     "M": false,
   })
   type ButtonKey = 'D' | 'W' | 'M';

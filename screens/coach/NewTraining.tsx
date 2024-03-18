@@ -38,11 +38,14 @@ export default function NewTrainingScreen() {
     const handleShow = (field: string) => {
         field === 'startDate' ? setShowStartDate(!showStartDate) : setShowEndDate(!showEndDate)
     };
+    const currentDate = new Date()
+    const timstamp = currentDate.setDate(currentDate.getDate() + 2)
+    const endDate = new Date(timstamp)
     const initialValues = {
         organiser: '',
         description: '',
         startDate: new Date().toLocaleDateString('en-US'),
-        endDate: '',
+        endDate: endDate.toLocaleDateString('en-US'),
         duration: '',
         maxPeople: '',
         minPeople: '1',
@@ -77,11 +80,17 @@ export default function NewTrainingScreen() {
     const handleChange = (name: string, value: any) => {
         formik.setFieldValue(name, value);
     };
+    const storeAndRedirect = async () => {
+        await storeLesson(formik.values, startTime);
+        router.navigate('/calendar-coach');
+    }
     const handleSubmit = async () => {
-        if (Object.keys(formik.errors).length === 0 || formik.values.recurrence === 'Does not repeat') {
-            await storeLesson(formik.values, startTime);
-            router.navigate('/calendar-coach');
-        } else {
+        if (Object.keys(formik.errors).length === 0) {
+            storeAndRedirect()
+        } else if (formik.values.recurrence === 'Does not repeat') {
+            storeAndRedirect()
+        }
+        else {
             fireToast('error', 'Please fill all the fields!');
         }
     }
@@ -96,7 +105,7 @@ export default function NewTrainingScreen() {
         if (field === "startDate") {
             const dateParts = date.toISOString().split('T')
             setStartTime(dateParts[1])
-            const endDate = date.setDate(date.getDate() + 1)
+            const endDate = date.setDate(date.getDate() + 5)
             handleChange('endDate', new Date(endDate).toLocaleDateString('en-US'))
         }
         handleChange(field, date.toLocaleDateString())
@@ -107,7 +116,7 @@ export default function NewTrainingScreen() {
             const userInfo = await retrieveData('userInfo')
             if (userInfo) {
                 const json = JSON.parse(userInfo)
-                const userID = json.user.uid
+                const userID = json.user._tokenResponse.localId
                 const userCollection = collection(db, 'coach');
                 const result = await getDoc(doc(userCollection, userID))
                 const user = result.data()
@@ -186,9 +195,6 @@ export default function NewTrainingScreen() {
                     <CustomInput
                         readOnly
                         value={formik.values.duration}
-                        // onChangeText={(value: any) => {
-                        //     handleChange('duration', value)
-                        // }}
                         onPress={() => { setShowDuration(true) }}
                         onBlur={formik.handleBlur('duration')}
                         errors={formik.errors.duration}

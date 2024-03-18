@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  option: 'D',
+  option: 'W',
 };
 
 const calendarSlice = createSlice({
