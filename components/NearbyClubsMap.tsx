@@ -9,11 +9,11 @@ import MapView, {
 import { Spinner, Text, View } from 'tamagui';
 
 import CustomLocationButton from './CustomLocationButton';
-import * as Location from 'expo-location';
-import fireToast from './toast/Toast';
+
 import { Club } from '@/model/club';
 import { distanceCalculation } from '@/api/player-api';
 import Colors from '@/constants/Colors';
+import { getCurrentLocation } from '@/utils/LocationUtil';
 
 const NearbyClubsMap = () => {
   const [currentLocation, setCurrentLocation] = useState<Region>();
@@ -21,31 +21,6 @@ const NearbyClubsMap = () => {
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
   const mapRef = useRef<MapView>(null);
   const [loading, setLoading] = useState(true);
-
-  const getCurrentLocation = async () => {
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permission to access location was denied');
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({});
-      const { latitude, longitude } = location.coords;
-      const region = {
-        latitude,
-        longitude,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
-      };
-      return region;
-    } catch (error) {
-      fireToast({
-        message: 'Please enable location services',
-        type: 'error',
-      });
-    }
-  };
 
   const fetchNearbyClubs = async () => {
     try {
