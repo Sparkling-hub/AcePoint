@@ -3,6 +3,7 @@ import * as Location from 'expo-location';
 import * as playerApi from '../../api/player-api';
 import { setClubSearchResults } from '../../store/slices/clubSearchResultsSlice';
 import { setCoachSearchResults } from '../../store/slices/coachSearchResultsSlice';
+import { setNearbyClubs } from '../../store/slices/nearbyClubsSlice';
 
 import { useDispatch } from 'react-redux';
 
@@ -22,6 +23,10 @@ jest.mock('../../store/slices/coachSearchResultsSlice.ts', () => ({
 
 jest.mock('../../store/slices/clubSearchResultsSlice.ts', () => ({
   setClubSearchResults: jest.fn(),
+}));
+
+jest.mock('../../store/slices/nearbyClubsSlice.ts', () => ({
+  setNearbyClubs: jest.fn(),
 }));
 
 jest.mock('../../api/player-api', () => ({
@@ -87,6 +92,7 @@ describe('useFilter', () => {
     expect(mockDispatch).toHaveBeenCalledWith(
       setClubSearchResults(clubResults)
     );
+    expect(mockDispatch).toHaveBeenCalledWith(setNearbyClubs(clubResults));
     expect(mockDispatch).toHaveBeenCalledWith(
       setCoachSearchResults(coachResults)
     );

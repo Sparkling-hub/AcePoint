@@ -8,21 +8,29 @@ import MapView, {
 } from 'react-native-maps';
 import { Spinner, Text, View } from 'tamagui';
 
-import CustomLocationButton from './CustomLocationButton';
-
-import { Club } from '@/model/club';
 import { distanceCalculation } from '@/api/player-api';
 import Colors from '@/constants/Colors';
 import { getCurrentLocation } from '@/utils/LocationUtil';
+import CustomLocationButton from '@/components/CustomLocationButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { setNearbyClubs } from '@/store/slices/nearbyClubsSlice';
 
 const NearbyClubsMap = () => {
   const [currentLocation, setCurrentLocation] = useState<Region>();
-  const [nearbyClubs, setNearbyClubs] = useState<Club[]>([]);
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
   const mapRef = useRef<MapView>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const { nearbyClubs } = useSelector((state: RootState) => state.nearbyClubs);
+  const { filterIsLoading } = useSelector(
+    (state: RootState) => state.filterIsLoading
+  );
+
+  const dispatch = useDispatch();
 
   const fetchNearbyClubs = async () => {
+    setLoading(true);
     try {
       const region = await getCurrentLocation();
       if (region) {
@@ -32,7 +40,7 @@ const NearbyClubsMap = () => {
           region.longitude,
           50
         );
-        setNearbyClubs(clubs);
+        dispatch(setNearbyClubs(clubs));
       }
     } catch (error) {
       console.error(error);
@@ -42,14 +50,36 @@ const NearbyClubsMap = () => {
   };
 
   useEffect(() => {
-    fetchNearbyClubs();
+    const fetchData = async () => {
+      if (nearbyClubs?.length === 0) {
+        await fetchNearbyClubs();
+      } else {
+        setLoading(true);
+        try {
+          const region = await getCurrentLocation();
+          if (region) {
+            setCurrentLocation(region);
+          }
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleLocationPress = async () => {
-    const region = await getCurrentLocation();
-    if (region) {
-      setCurrentLocation(region);
-      mapRef.current?.animateToRegion(region, 1000);
+    if (currentLocation) {
+      mapRef.current?.animateToRegion(currentLocation, 1000);
+    } else {
+      const region = await getCurrentLocation();
+      if (region) {
+        setCurrentLocation(region);
+        mapRef.current?.animateToRegion(region, 1000);
+      }
     }
   };
 
@@ -59,7 +89,7 @@ const NearbyClubsMap = () => {
 
   return (
     <View style={styles.container}>
-      {loading ? (
+      {loading || filterIsLoading ? (
         <Spinner size="large" color={Colors.secondary} />
       ) : (
         <>
@@ -81,8 +111,8 @@ const NearbyClubsMap = () => {
                   onPress={() => handleMarkerPress(club.id ?? '')}
                   image={
                     club.id === selectedMarkerId
-                      ? require('../assets/images/location_on.png')
-                      : require('../assets/images/location.png')
+                      ? require('../../assets/images/location_on.png')
+                      : require('../../assets/images/location.png')
                   }>
                   <Callout tooltip>
                     <View>

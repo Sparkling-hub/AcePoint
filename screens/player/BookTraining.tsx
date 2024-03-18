@@ -36,10 +36,11 @@ import { auth } from '@/lib/firebase';
 import { debounce } from 'lodash';
 import SearchResults from '@/components/SearchResults';
 import FavoriteCoaches from '@/components/FavoriteCoaches';
-import NearbyClubsMap from '@/components/NearbyClubsMap';
+
 import { setClubSearchResults } from '@/store/slices/clubSearchResultsSlice';
 import { setCoachSearchResults } from '@/store/slices/coachSearchResultsSlice';
 import { useFilter } from '@/hooks/useFilter';
+import NearbyClubsMap from './NearbyClubsMap';
 
 export default function BookTraining() {
   // State variables
@@ -267,7 +268,7 @@ export default function BookTraining() {
           onChangeText={handleSearch}
           setSearchQuery={setSearchQuery}
           onSubmitEditing={() => addToSearchHistory(searchQuery)}
-          disabled={filterIsLoading}
+          disabled={filterIsLoading || showMaps}
         />
         <XStack marginLeft={14} marginVertical={23} gap={9}>
           {/* Filter button */}

@@ -9,6 +9,7 @@ import showFavoritesReducer from './slices/showFavoritesSlice';
 import coachSearchResultsReducer from './slices/coachSearchResultsSlice';
 import clubSearchResultsReducer from './slices/clubSearchResultsSlice';
 import filterIsLoadingReducer from './slices/filterIsLoadingSlice';
+import nearbyClubsReducer from './slices/nearbyClubsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -21,6 +22,7 @@ export const store = configureStore({
     coachSearchResults: coachSearchResultsReducer,
     clubSearchResults: clubSearchResultsReducer,
     filterIsLoading: filterIsLoadingReducer,
+    nearbyClubs: nearbyClubsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),

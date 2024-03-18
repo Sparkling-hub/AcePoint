@@ -5,6 +5,7 @@ import fireToast from '@/components/toast/Toast';
 import { setFilterIsLoading } from '@/store/slices/filterIsLoadingSlice';
 import { setClubSearchResults } from '@/store/slices/clubSearchResultsSlice';
 import { setCoachSearchResults } from '@/store/slices/coachSearchResultsSlice';
+import { setNearbyClubs } from '@/store/slices/nearbyClubsSlice';
 
 export const useFilter = () => {
   const dispatch = useDispatch();
@@ -62,6 +63,7 @@ export const useFilter = () => {
       ]);
 
       dispatch(setClubSearchResults(clubResults));
+      dispatch(setNearbyClubs(clubResults));
       dispatch(setCoachSearchResults(coachResults));
     } catch (error) {
       console.error('Error filtering:', error);
