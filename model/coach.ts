@@ -8,12 +8,13 @@ export class Coach {
   displayName?: string;
   phoneNumber?: string;
   rating?: number;
+  level?: number;
   subscription?: boolean;
   image?: string;
   age?: Date;
   country?: string;
   marketing?: boolean;
   terms?: boolean;
-  tags?: string;
+  tags?: string[];
   bios?: string;
 }

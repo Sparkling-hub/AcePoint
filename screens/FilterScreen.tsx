@@ -38,6 +38,8 @@ const FilterScreen = () => {
     (state: RootState) => state.tempFilter
   );
 
+  const { showMaps } = useSelector((state: RootState) => state.showMaps);
+
   const handlePressTag = (tag: string) => {
     if (tempTags.includes(tag)) {
       dispatch(setTempTags(tempTags.filter((t) => t !== tag)));
@@ -64,41 +66,56 @@ const FilterScreen = () => {
           setSliderValue={(value) => dispatch(setTempDistance(value))}
         />
       </YStack>
-      <YStack>
-        <FilterHeader title="Coach" containerStyles={{ marginBottom: 13 }} />
-        <XStack alignItems="center" marginTop={13} marginBottom={24} gap={'$1'}>
-          <FilterText title="Rating: > " sliderValue={tempRating} />
-          <StarFull size={16} color={Colors.primary} />
-        </XStack>
-        <CustomSlider
-          min={0}
-          max={5}
-          sliderValue={tempRating}
-          setSliderValue={(value) => dispatch(setTempRating(value))}
-        />
-      </YStack>
-      <YStack>
-        <FilterText title="Level: " sliderValue={tempLevel} marginBottom={24} />
-        <CustomSlider
-          min={0}
-          max={5}
-          sliderValue={tempLevel}
-          setSliderValue={(value) => dispatch(setTempLevel(value))}
-        />
-      </YStack>
-      <YStack gap={'$2'}>
-        <FilterText title="Tags:" />
-        <XStack gap={13} justifyContent="center">
-          {tagsData.map((tag) => (
-            <TagItem
-              key={tag.id}
-              title={tag.title}
-              isActive={tempTags.includes(tag.title)}
-              onPress={() => handlePressTag(tag.title)}
+      {!showMaps && (
+        <YStack gap={hp('3%')}>
+          <YStack>
+            <FilterHeader
+              title="Coach"
+              containerStyles={{ marginBottom: 13 }}
             />
-          ))}
-        </XStack>
-      </YStack>
+            <XStack
+              alignItems="center"
+              marginTop={13}
+              marginBottom={24}
+              gap={'$1'}>
+              <FilterText title="Rating: > " sliderValue={tempRating} />
+              <StarFull size={16} color={Colors.primary} />
+            </XStack>
+            <CustomSlider
+              min={0}
+              max={5}
+              sliderValue={tempRating}
+              setSliderValue={(value) => dispatch(setTempRating(value))}
+            />
+          </YStack>
+          <YStack>
+            <FilterText
+              title="Level: "
+              sliderValue={tempLevel}
+              marginBottom={24}
+            />
+            <CustomSlider
+              min={0}
+              max={5}
+              sliderValue={tempLevel}
+              setSliderValue={(value) => dispatch(setTempLevel(value))}
+            />
+          </YStack>
+          <YStack gap={'$2'}>
+            <FilterText title="Tags:" />
+            <XStack gap={13} justifyContent="center">
+              {tagsData.map((tag) => (
+                <TagItem
+                  key={tag.id}
+                  title={tag.title}
+                  isActive={tempTags.includes(tag.title)}
+                  onPress={() => handlePressTag(tag.title)}
+                />
+              ))}
+            </XStack>
+          </YStack>
+        </YStack>
+      )}
     </YStack>
   );
 };

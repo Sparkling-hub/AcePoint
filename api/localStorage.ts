@@ -5,7 +5,7 @@ const storeData = async (storageName: string, value: any) => {
         console.log(value)
         return "Data stored successfully"
     } catch (error) {
-        console.error('Error storing data:', error);
+        console.log('Error storing data:', error);
     }
 };
 const retrieveData = async (storageName: string) => {
@@ -16,7 +16,7 @@ const retrieveData = async (storageName: string) => {
         }
         console.log("there is no data");
     } catch (error) {
-        console.error('Error retrieving data:', error);
+        console.log('Error retrieving data:', error);
     }
 };
 const removeItem = async (storageName: string) => {
@@ -24,7 +24,7 @@ const removeItem = async (storageName: string) => {
         await AsyncStorage.removeItem(storageName);
         return "Item removed successfully"
     } catch (error) {
-        console.error('Error removing item:', error);
+        console.log('Error removing item:', error);
     }
 };
 

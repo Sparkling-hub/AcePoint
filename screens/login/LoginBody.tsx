@@ -1,4 +1,4 @@
-import { StyleSheet, Alert } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { Button, Input, Text, View, YStack } from 'tamagui'
 import { loginUser } from '@/api/auth-api'
@@ -7,6 +7,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { router } from 'expo-router';
+import fireToast from '@/components/toast/Toast'
 
 const LoginBody = ({ userType }: { userType: string }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -17,12 +18,12 @@ const LoginBody = ({ userType }: { userType: string }) => {
   };
   const login = async () => {
     if (userType === '') {
-      Alert.alert("Please click on player or coach button");
+      fireToast({message:"Please click on player or coach button",type:"error"});
       return;
     }
 
     if (email.length === 0 || password.length === 0) {
-      Alert.alert("Please fill in all the fields");
+      fireToast({message:"Please fill in all the fields",type:"error"});
       return;
     }
 
@@ -30,7 +31,7 @@ const LoginBody = ({ userType }: { userType: string }) => {
       await storeData("userType", userType);
       await storeData("authMethod", 'simple')
 
-      const result: any = await loginUser({ email, password });
+      const result: any = await loginUser({ email, password,usertype:userType });
 
       if (result.user) {
         console.log("Login successful");
@@ -38,14 +39,14 @@ const LoginBody = ({ userType }: { userType: string }) => {
         await storeData("userID", result.user.user.uid);
 
         router.push('/(tabs)');
-        Alert.alert("Login Successful", "You have successfully logged in.");
+        fireToast({message:"You have successfully logged in.",type:"success"});
       } else {
         console.log("Error occurred during login:", result.message);
-        Alert.alert("Login Failed", "Invalid credentials");
+        fireToast({message:"Login Failed Invalid credentials",type:"error"});
       }
     } catch (error: any) {
       console.error("Error occurred during login:", error.message);
-      Alert.alert("Login Failed", error.message ?? "An unknown error occurred.");
+      fireToast({message:`Login Failed ${error.message} An unknown error occurred`,type:"error"});
     }
   };
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Avatar, Text, View, XStack, YStack } from 'tamagui';
 import Colors from '@/constants/Colors';
 import { Heart } from '@tamagui/lucide-icons';
@@ -10,8 +10,8 @@ import fireToast from './toast/Toast';
 
 interface CoachBoxProps {
   readonly name?: string;
-  readonly rating: number;
-  readonly level: number;
+  readonly rating?: number;
+  readonly level?: number;
   readonly age: number;
   readonly image?: string;
   readonly coachRef?: any;
@@ -42,6 +42,9 @@ const CoachBox: React.FC<CoachBoxProps> = ({
 
   const handleFavoriteToggle = async () => {
     try {
+      // Optimistically update UI
+      setIsFavorite(!isFavorite);
+
       if (isFavorite) {
         await unfavoriteCoach(coachRef);
       } else {
@@ -51,12 +54,20 @@ const CoachBox: React.FC<CoachBoxProps> = ({
           type: 'success',
         });
       }
-      setIsFavorite(!isFavorite);
     } catch (error) {
+      // If request fails, roll back UI changes and display error message
+      setIsFavorite(!isFavorite);
       console.error('Error toggling favorite:', error);
       // Handle error
     }
   };
+
+  const stars = useMemo(() => {
+    if (rating) {
+      return renderStars(rating);
+    }
+    return null;
+  }, [rating]);
 
   return (
     <YStack width={'100%'}>
@@ -147,7 +158,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
               />
             </Pressable>
           </XStack>
-          <XStack>{renderStars(rating)}</XStack>
+          <XStack>{stars}</XStack>
         </YStack>
       </XStack>
       <View

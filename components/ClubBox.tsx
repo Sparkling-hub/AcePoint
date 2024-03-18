@@ -1,7 +1,7 @@
 import Colors from '@/constants/Colors';
 import { renderStars } from '@/helpers/RatingsHelper';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Avatar, Text, XStack, YStack } from 'tamagui';
 
 interface ClubBoxProps {
@@ -11,6 +11,13 @@ interface ClubBoxProps {
 }
 
 const ClubBox: React.FC<ClubBoxProps> = ({ name, membership, rating }) => {
+  const stars = useMemo(() => {
+    if (rating) {
+      return renderStars(rating);
+    }
+    return null;
+  }, [rating]);
+
   return (
     <XStack alignItems="center" width={'100%'} marginBottom={16}>
       <Avatar circular borderWidth={3} borderColor={Colors.primary} size={67}>
@@ -40,7 +47,7 @@ const ClubBox: React.FC<ClubBoxProps> = ({ name, membership, rating }) => {
           </Text>
         </YStack>
         <YStack gap={5}>
-          <XStack>{renderStars(rating)}</XStack>
+          <XStack>{stars}</XStack>
           <Text
             style={{ fontFamily: 'Montserrat' }}
             fontSize={14}

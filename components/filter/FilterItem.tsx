@@ -3,6 +3,8 @@ import React from 'react';
 import { Text, XStack } from 'tamagui';
 import Close from '../svg/Close';
 import { TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 interface FilterItemProps {
   title: string;
@@ -15,13 +17,16 @@ const FilterItem: React.FC<FilterItemProps> = ({
   leftIcon,
   onPress,
 }) => {
+  const { filterIsLoading } = useSelector(
+    (state: RootState) => state.filterIsLoading
+  );
   return (
     <XStack
       alignItems="center"
       gap={4}
       paddingHorizontal={8}
       paddingVertical={4}
-      height={32}
+      height={28}
       backgroundColor={Colors.secondary}
       borderRadius={8}>
       {leftIcon}
@@ -32,7 +37,10 @@ const FilterItem: React.FC<FilterItemProps> = ({
         lineHeight={19}>
         {title}
       </Text>
-      <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={onPress}
+        disabled={filterIsLoading}>
         <Close />
       </TouchableOpacity>
     </XStack>
