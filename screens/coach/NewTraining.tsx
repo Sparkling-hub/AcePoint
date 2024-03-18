@@ -25,11 +25,12 @@ import { storeLesson } from "@/api/lesson-api";
 import fireToast from "@/services/toast";
 import NewTrainingSkeleton from "@/components/skeletons/NewTrainingSkeleton";
 import { useRouter } from "expo-router";
+import { TimerPickerModal } from "react-native-timer-picker";
 
 
 export default function NewTrainingScreen() {
     const router = useRouter()
-
+    const [showDuration, setShowDuration] = useState(false);
     const [showStartDate, setShowStartDate] = useState(false);
     const [showEndDate, setShowEndDate] = useState(false);
     const [startTime, setStartTime] = useState('')
@@ -40,38 +41,31 @@ export default function NewTrainingScreen() {
     const initialValues = {
         organiser: '',
         description: '',
-        startDate: '',
+        startDate: new Date().toLocaleDateString('en-US'),
         endDate: '',
         duration: '',
         maxPeople: '',
-        minPeople: '',
+        minPeople: '1',
         club: '',
         court: '',
-        recurrence: '',
+        recurrence: 'Does not repeat',
         tags: '',
         minAge: '',
         paymentMode: ['On App'],
         buffer: ''
     }
     const validationSchema = Yup.object().shape({
-        organiser: Yup.string()
-            .min(2, 'Organiser is too short!')
-            .max(50, 'Organiser is too long!')
-            .required('Organiser is required'),
         description: Yup.string()
             .min(5, 'Description is too short!')
             .max(200, 'Description is too long!')
             .required('Description is required'),
         startDate: Yup.string().required('Start date is required !'),
         endDate: Yup.string().required('End date is required !'),
-        buffer: Yup.string().required('The end date cannot be before the start date.'),
-        duration: Yup.number().min(1, 'Minimum value is 1 !').max(12, 'Maximum value is 12 !').required('Duration is required !'),
-        maxPeople: Yup.number().min(1, 'Minimum value is 1 !').max(20, 'Maximum value is 20 !').required('Max people is required !'),
+        duration: Yup.string().required('Duration is required !'),
+        maxPeople: Yup.number().min(1, 'Minimum value is 1 !').max(50, 'Maximum value is 50 !').required('Max people is required !'),
         minPeople: Yup.number().min(1, 'Minimum value is 1 !').max(20, 'Maximum value is 20 !').required('Min people is required !'),
-        club: Yup.string().min(3, 'Description is too short!').max(200, 'Description is too long!').required('Club is required !'),
-        court: Yup.string().min(3, 'Court is too short!').max(200, 'Court is too long!').required('Court is required !'),
+        court: Yup.string().min(3, 'Court is too short!').max(200, 'Court is too long!'),
         recurrence: Yup.string().required('Recurrence is required !'),
-        tags: Yup.string().required('Tags is required !'),
         paymentMode: Yup.array().required('Payement mode is required !'),
         minAge: Yup.number().min(1, 'Minimum value is 1 !').max(200, 'No !').required('Min age is required !'),
     });
@@ -85,6 +79,11 @@ export default function NewTrainingScreen() {
     };
     const handleSubmit = async () => {
         if (Object.keys(formik.errors).length === 0) {
+            await storeLesson(formik.values, startTime)
+            router.navigate('/calendar-coach')
+        }
+        else if (formik.values.recurrence === 'Does not repeat') {
+
             await storeLesson(formik.values, startTime)
             router.navigate('/calendar-coach')
         }
@@ -103,6 +102,8 @@ export default function NewTrainingScreen() {
         if (field === "startDate") {
             const dateParts = date.toISOString().split('T')
             setStartTime(dateParts[1])
+            const endDate = date.setDate(date.getDate() + 1)
+            handleChange('endDate', new Date(endDate).toLocaleDateString('en-US'))
         }
         handleChange(field, date.toLocaleDateString())
         handleShow(field);
@@ -189,20 +190,37 @@ export default function NewTrainingScreen() {
                         onCancel={() => { handleShow('startDate') }}
                     />
                     <CustomInput
+                        readOnly
                         value={formik.values.duration}
-                        onChangeText={(value: any) => {
-                            handleChange('duration', value)
-                        }}
+                        // onChangeText={(value: any) => {
+                        //     handleChange('duration', value)
+                        // }}
+                        onPress={() => { setShowDuration(true) }}
                         onBlur={formik.handleBlur('duration')}
                         errors={formik.errors.duration}
                         validateOnInit
                         width={'48%'}
-                        keyboardType="numeric"
                         placeholder="Duration"
                         icon={<Alarm />}
                     />
+                    <TimerPickerModal
+                        hideSeconds
+                        visible={showDuration}
+                        setIsVisible={setShowDuration}
+                        hourLimit={{ max: 8 }}
+                        onConfirm={(pickedDuration) => {
+                            handleChange('duration', `${pickedDuration.hours}:${pickedDuration.minutes}`)
+                            setShowDuration(false)
+                        }}
+                        modalTitle="Set Duration"
+                        onCancel={() => setShowEndDate(false)}
+                        closeOnOverlayPress
+                        modalProps={{
+                            overlayOpacity: 0.2,
+                        }}
+                    />
                 </YStack>
-                
+
                 <YStack style={styles.ystackselect}>
                     <CustomInput
                         value={formik.values.maxPeople}
@@ -231,32 +249,7 @@ export default function NewTrainingScreen() {
                         icon={<Person />}
                     />
                 </YStack>
-                
-                <YStack style={styles.ystack}>
-                    <CustomInput
-                        value={formik.values.endDate}
-                        onChangeText={(value: any) => {
-                            handleChange('endDate', value)
-                        }}
-                        onBlur={formik.handleBlur('endDate')}
-                        errors={formik.errors.endDate}
-                        validateOnInit
-                        placeholder="End Date"
-                        readOnly
-                        onPress={() => { handleShow('endDate') }}
-                        icon={<CalendarDays color={Colors.secondary} />}
-                    />
-                    
-                    <DateTimePickerModal
-                        isVisible={showEndDate}
-                        mode="date"
-                        onConfirm={(date) => {
-                            handleConfirm('endDate', date)
-                            setDate(formik.values.startDate, date, 'endDate')
-                        }}
-                        onCancel={() => { handleShow('endDate') }}
-                    />
-                </YStack>
+
                 <YStack style={styles.ystack}>
                     <CustomInput
                         value={formik.values.club}
@@ -298,6 +291,32 @@ export default function NewTrainingScreen() {
                             { label: 'Monthly', value: 'Monthly' }
                         ]} />
                 </YStack>
+                {(formik.values.recurrence !== 'Does not repeat') &&
+                    <YStack style={styles.ystack}>
+                        <CustomInput
+                            value={formik.values.endDate}
+                            onChangeText={(value: any) => {
+                                handleChange('endDate', value)
+                            }}
+                            onBlur={formik.handleBlur('endDate')}
+                            errors={formik.errors.endDate}
+                            validateOnInit
+                            placeholder="End Date"
+                            readOnly
+                            onPress={() => { handleShow('endDate') }}
+                            icon={<CalendarDays color={Colors.secondary} />}
+                        />
+                        <DateTimePickerModal
+                            isVisible={showEndDate}
+                            mode="date"
+                            onConfirm={(date) => {
+                                handleConfirm('endDate', date)
+                                setDate(formik.values.startDate, date, 'endDate')
+                            }}
+                            onCancel={() => { handleShow('endDate') }}
+                        />
+                    </YStack>
+                }
                 <YStack style={styles.ystack}>
                     <CustomInput
                         value={formik.values.tags}

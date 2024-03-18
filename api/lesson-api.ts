@@ -27,8 +27,8 @@ const storeLesson = async (lessonData: any, startTime: string) => {
     const startDate = new Date(parseInt(datePartsStartDate[2], 10), parseInt(datePartsStartDate[0], 10) - 1, parseInt(datePartsStartDate[1], 10), parseInt(timePartsStartDate[0], 10), parseInt(timePartsStartDate[1], 10));
     const datePartsEndDate = lessonData.endDate.split("/")
     const endDate = new Date(parseInt(datePartsEndDate[2], 10), parseInt(datePartsEndDate[0], 10) - 1, parseInt(datePartsEndDate[1], 10));
-    const duration = lessonData.duration + ":00";
-    const tagsArray = lessonData.tags.split(',').map(tag => tag.trim());    
+    const duration = lessonData.duration;
+    const tagsArray = lessonData.tags.split(',').map(tag => tag.trim());
     const lesson = {
         ...lessonData,
         minAge: parseInt(lessonData.minAge),
@@ -45,6 +45,8 @@ const storeLesson = async (lessonData: any, startTime: string) => {
         fireToast('success', 'New training added successfully !')
     } catch (error) {
         fireToast('error', 'Something went wrong !')
+        console.log(error);
+
     }
 };
 const getLessonById = async (id: string) => {

@@ -12,8 +12,10 @@ import { Text, View } from "tamagui";
 export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[] }) {
 
     const [items, setItems] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     const loadItems = useCallback(() => {
+        setIsLoading(true);
         const itemsByDate = lessons.reduce((acc, lesson) => {
             let lessonDate = new Date(lesson.startDate.seconds * 1000);
             const endDate = new Date(lesson.endDate.seconds * 1000);
@@ -35,11 +37,16 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
                         lessonDuration = 1;
                     }
                     lessonDate.setDate(lessonDate.getDate() + lessonDuration);
+
+                }
+                else {
+                    lessonDate.setDate(lessonDate.getTime())
                 }
             }
             return acc;
         }, {});
         setItems(itemsByDate);
+        setIsLoading(false);
     }, [lessons, setItems]);
 
     const renderItem = (item: any) => {
@@ -72,6 +79,21 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
                 loadItemsForMonth={loadItems}
                 selected={new Date().toString()}
                 renderItem={renderItem}
+                renderEmptyData={() => {
+                    if (isLoading) {
+                        setIsLoading(false);
+                    }
+                    return (<View style={{
+                        height: 15,
+                        flex: 1,
+                        paddingTop: 30,
+                        alignSelf: 'center',
+                    }}>
+                        <Text style={{
+                            color: Colors.secondary
+                        }}>This is empty date !</Text>
+                    </View>)
+                }}
                 theme={{
                     agendaDayTextColor: Colors.primary,
                     agendaTodayTextColor: Colors.primary,
@@ -88,8 +110,10 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
                     dayTextColor: Colors.secondary
                 }}
             />
+            {isLoading && (
+                <Text>Loading...</Text>
+            )}
             <AddButtonCalendar />
-
         </>
 
     )

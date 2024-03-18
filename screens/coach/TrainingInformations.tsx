@@ -39,7 +39,6 @@ export default function TrainingInformations() {
                     const coachDoc = await getCoachById(trainingDoc.coachId)
                     if (coachDoc) setCoach(coachDoc)
                     const arrayPlayers = trainingDoc.players
-                    console.log(trainingDoc);
                     arrayPlayers.forEach(async (element: string) => {
                         const player = await getPlayerById(element)
                         if (player) {

@@ -21,14 +21,12 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 30,
         backgroundColor: Colors.primary,
-        justifyContent: 'center',
-        alignItems: 'center',
         zIndex: 10,
-        paddingBottom: 15
     },
     addButtonText: {
         fontSize: 39,
         color: Colors.secondary,
+        textAlign:'center'
     },
 });
 
