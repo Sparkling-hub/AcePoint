@@ -164,7 +164,7 @@ export default function EditProfileScreen() {
     const getUserData = async () => {
       try {
         const email = await ReactNativeAsyncStorage.getItem('email');
-        let querySnapshot = null
+        let querySnapshot = null;
         if (userRoleValue === 'Coach')
           querySnapshot = await getDocs(
             query(collection(db, 'coach'), where('email', '==', email))
@@ -249,7 +249,6 @@ export default function EditProfileScreen() {
                 }}
                 onBlur={formik.handleBlur('name')}
                 errors={formik.errors.name}
-                validateOnInit
               />
             </YStack>
             <YStack>
@@ -262,7 +261,6 @@ export default function EditProfileScreen() {
                 }}
                 onBlur={formik.handleBlur('email')}
                 errors={formik.errors.email}
-                validateOnInit
               />
             </YStack>
           </YStack>
@@ -275,7 +273,6 @@ export default function EditProfileScreen() {
                   handleChange('countryCode', value);
                 }}
                 errors={formik.errors.countryCode}
-                validateOnInit
               />
             </YStack>
             <YStack flex={2}>
@@ -290,7 +287,6 @@ export default function EditProfileScreen() {
                   }}
                   onBlur={formik.handleBlur('phone')}
                   errors={formik.errors.phone}
-                  validateOnInit
                 />
               </YStack>
             </YStack>
@@ -305,7 +301,6 @@ export default function EditProfileScreen() {
                 handleChange('gender', value);
               }}
               errors={formik.errors.gender}
-              validateOnInit
             />
             <DatePicker
               date={formik.values.dateOfBirth}
@@ -314,7 +309,6 @@ export default function EditProfileScreen() {
                 handleChange('dateOfBirth', value);
               }}
               errors={formik.errors.dateOfBirth}
-              validateOnInit
             />
             {userRoleValue === 'Coach' && (
               <CustomInput
@@ -327,7 +321,6 @@ export default function EditProfileScreen() {
                 }}
                 onBlur={formik.handleBlur('club')}
                 errors={formik.errors.club}
-                validateOnInit
               />
             )}
           </YStack>

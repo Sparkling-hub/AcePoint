@@ -16,7 +16,6 @@ interface CustomDropDownProps {
   readonly handleChange: FormikHandlers['handleChange'];
   readonly touched?: boolean;
   readonly errors?: string;
-  readonly validateOnInit?: boolean;
   readonly scrollViewRef?: React.RefObject<ScrollView>;
 }
 
@@ -28,7 +27,6 @@ export default function CustomDropdown(props: CustomDropDownProps) {
     handleChange,
     touched,
     errors,
-    validateOnInit,
     scrollViewRef,
   } = props;
   const [clicked, setClicked] = useState(false);
@@ -49,7 +47,6 @@ export default function CustomDropdown(props: CustomDropDownProps) {
         placeholder={placeholder ?? "Gender"}
         touched={!clicked && touched}
         errors={!clicked ? errors : ''}
-        validateOnInit={validateOnInit}
         value={selectedItem}
         textTransform="capitalize"
         readOnly

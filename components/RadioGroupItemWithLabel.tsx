@@ -9,16 +9,17 @@ export function RadioGroupItemWithLabel(props: Readonly<{
   label: string;
   level?: string;
   text?: string
+  id:string
 }>) {
-  const id = `radiogroup-${props.value}`
+  // const id = `radiogroup-${props.value}`
   return (
     <XStack width={300} alignItems="center" gap="$3">
       <YStack gap={'$3'}>
         <XStack gap={'$3'}>
-          <RadioGroup.Item value={props.value} id={id} size={props.size} style={{ backgroundColor: "#D9D9D9" }}>
+          <RadioGroup.Item  value={props.value} id={props.id} size={props.size} style={{ backgroundColor: "#D9D9D9" }}>
             <RadioGroup.Indicator style={{ backgroundColor: "#3A4D6C", height: 8, width: 8 }} />
           </RadioGroup.Item>
-          <Label size={props.size} htmlFor={id} style={styles.label}>
+          <Label size={props.size} htmlFor={props.id} style={styles.label}>
             {props.label}
           </Label>
         </XStack>

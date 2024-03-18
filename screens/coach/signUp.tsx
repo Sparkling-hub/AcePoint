@@ -11,6 +11,8 @@ import { XStack, YStack } from 'tamagui';
 import { CheckboxWithLabel } from '@/components/CheckboxWithLabel';
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import fireToast from '@/components/toast/Toast'
+import { signUpData, userEmailPassword } from '@/store/slices/signup';
+import { useDispatch } from 'react-redux';
 const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: any) => void }) => {
   const [passwordVisible, setPasswordVisible] = useState(true);
   const [email, setEmail] = useState<string>('');
@@ -26,26 +28,31 @@ const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: an
     email:undefined,
     password:undefined,
   }); // State to hold validation errors
+  const dispatch=useDispatch()
 
   const back = () => {
     router.back();
   };
-
-  const sign = () => {
+  const sign=()=>{
     let data = {
-      displayName: displayName,
-      phoneNumber: countryCode + phoneNumber,
-      marketing: marketing,
-      terms: terms
+      displayName: displayName, 
+      phoneNumber: countryCode+phoneNumber,
+      marketing: marketing, 
+      terms: terms,
     };
-
-    if (terms) {
-      onNext(email, password, data);
-    } else {
+    let EmailPassword={
+      password:password ,
+      email:email
+    }
+    if(terms){
+        dispatch(signUpData(data))
+        dispatch(userEmailPassword(EmailPassword))
+        onNext(email, password, data);
+    }else{
       fireToast({message:"Please Accept terms and conditions",type:"error"});
     }
-  };
-
+   
+   }
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -69,7 +76,12 @@ const SignUp = ({ onNext }: { onNext: (email: string, password: string, data: an
         phoneNumber,
         password,
       }, { abortEarly: false });
-      setErrors({}); // Reset errors if validation succeeds
+      setErrors({
+        displayName:undefined,
+        phoneNumber:undefined,
+        email:undefined,
+        password:undefined,
+      }); // Reset errors if validation succeeds
       return true;
     } catch (error:any) {
       const validationErrors = error.inner.reduce((errors:any, currentError:any) => {

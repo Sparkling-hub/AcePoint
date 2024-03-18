@@ -2,7 +2,6 @@ import React from 'react';
 import { MotiView } from 'moti';
 import { XStack, YStack } from 'tamagui';
 import { Skeleton } from 'moti/skeleton';
-import { USER_ROLE } from '@/constants/User';
 
 export default function EditProfileSkeleton() {
   return (
@@ -30,9 +29,6 @@ export default function EditProfileSkeleton() {
         <YStack gap={'$3'}>
           <Skeleton colorMode="light" width={'100%'} height={70} />
           <Skeleton colorMode="light" width={'100%'} height={70} />
-          {USER_ROLE === 'coach' && (
-            <Skeleton colorMode="light" width={'100%'} height={70} />
-          )}
         </YStack>
       </YStack>
     </MotiView>

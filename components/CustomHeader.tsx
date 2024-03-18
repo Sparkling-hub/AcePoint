@@ -17,6 +17,7 @@ interface CustomHeaderProps {
   onLeftPress?: () => void;
   rightContent?: React.ReactNode;
   headerTextStyle?: StyleProp<TextStyle>;
+  isLoading?: boolean;
 }
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({
@@ -25,6 +26,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   onLeftPress,
   rightContent,
   headerTextStyle,
+  isLoading = false,
 }) => {
   const navigation = useNavigation();
 
@@ -36,7 +38,9 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       paddingHorizontal={16}
       paddingTop={(StatusBar.currentHeight ?? 0) + 29}>
       {leftIcon && (
-        <TouchableOpacity onPress={onLeftPress || (() => navigation.goBack())}>
+        <TouchableOpacity
+          onPress={onLeftPress || (() => navigation.goBack())}
+          disabled={isLoading}>
           {leftIcon}
         </TouchableOpacity>
       )}

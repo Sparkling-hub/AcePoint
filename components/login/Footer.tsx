@@ -1,4 +1,3 @@
-
 import { Platform } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
@@ -23,8 +22,6 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ platform, userType }) => {
   }
 };
 const Footer = ({ userType }: { userType: string }) => {
-
-
   const redirectSignUp = () => {
     if (userType === 'Player') {
       router.push('/signUp/playersignup');
@@ -56,7 +53,10 @@ const Footer = ({ userType }: { userType: string }) => {
               style={[{ width: 23, height: 28 }]}
             />
           </Button>
-          <GoogleAuth userType={userType} platform={Platform.OS as PlatformType} />
+          <GoogleAuth
+            userType={userType}
+            platform={Platform.OS as PlatformType}
+          />
         </XStack>
 
         <Image

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Tabs } from 'expo-router';
 import Colors from '@/constants/Colors';
 import CustomHeader from '@/components/CustomHeader';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUserRole } from '@/store/slices/userRole';
 import { retrieveData } from '@/api/localStorage';
 import CalendarIcon from '@/components/tabIcons/CalendarIcon';
@@ -19,6 +19,7 @@ import BookIconLabel from '@/components/tabIcons/BookIconLabel';
 import HomeIcon from '@/components/tabIcons/HomeIcon';
 import HomeIconLabel from '@/components/tabIcons/HomeIconLabel';
 import ProfileHeader from '@/components/headers/ProfileHeader';
+import { RootState } from '@/store/store';
 
 const CalendarHeader = ({ handleState, getButtonStyle }: {
   handleState: (selected: string) => void;
@@ -49,7 +50,9 @@ export default function TabLayout() {
 
   useEffect(() => {
     getUserRole();
-  }, [dispatch]);
+  }, []);
+
+  const { userRole } = useSelector((state: RootState) => state.userRole);
 
   const [state, setState] = useState({
     "D": true,
@@ -117,6 +120,7 @@ export default function TabLayout() {
           tabBarIcon: BookIcon,
           tabBarLabel: BookIconLabel,
           headerShown: false,
+          href: userRole === 'Player' ? '/(tabs)/book' : null,
         }}
       />
       <Tabs.Screen
