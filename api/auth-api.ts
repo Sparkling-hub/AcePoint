@@ -37,6 +37,10 @@ const signUpCoach = async ({ email, password, coach }: { email: string, password
 const signUpPlayer = async ({ email, password, player }: { email: string, password: string, player: Player }): Promise<string> => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    console.log("gender=========>",player.gender)
+    console.log("fitness=========>",player.fitness)
+    console.log("age=========>",player.age)
+    console.log("player=========>",player)
     const userData = {
       displayName: player.displayName,
       phoneNumber: player.phoneNumber,
@@ -47,16 +51,16 @@ const signUpPlayer = async ({ email, password, player }: { email: string, passwo
       messageNotification: true,
       promotionsViaEmail: true,
       feedbackNotification: true,
-      gender: player.gender,
+      tennisLevel: player.tennisLevel,
       fitness: player.fitness,
       age: player.age,
-      tennisLevel: player.tennisLevel,
       favoriteCoach:[],
+      gender: player.gender,
     };
     
     // Add logging for better visibility
     console.log("User added successfully!");
-    const docRef = doc(db, 'player', userCredential?.user?.uid);
+    const docRef = doc(db, 'player', userCredential.user.uid);
     // Add await to ensure setDoc is executed before signOut
     await setDoc(docRef, userData);
     

@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 
 const SignUpPlayer = () => {
   const select=useSelector((state:any) => state.signUp)
-  console.log(select)
   const [progress, setProgress] = useState(34);
   const handleNext = () => setProgress(progress + 34);
   const signUp = async () => {

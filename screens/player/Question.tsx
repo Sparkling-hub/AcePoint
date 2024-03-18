@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RadioGroup, Text, YStack } from 'tamagui';
 import { RadioGroupItemWithLabel } from '@/components/RadioGroupItemWithLabel';
 import Button from '@/components/Button';
@@ -20,13 +20,17 @@ const Question = ({handlePrevious,onNext}:{handlePrevious:() => void,onNext:() =
         const [month, day, year] = datePart.split('/');
         return `${month.trim()}/${day.trim()}/${year.trim()}`;
     })
-    const [gender, setGender] = useState('Female');
+    const [gender, setGender] = useState('Male');
     const [fitness, setFitness] = useState('Normal');
+    useEffect(() => {
+      dispatch(signUpData({ age: age, gender: gender, fitness: fitness }))
+    }, [age,gender,fitness])
+    
     const updatePlayer=async()=>{
-      dispatch(signUpData({age:age,gender:gender,fitness:fitness}))     
       onNext()
       router.push('/')
   }
+  
   return (
     <SafeAreaView style={styles.container}>
       <YStack gap={'$5'} alignItems="center">
