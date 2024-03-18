@@ -72,14 +72,10 @@ const NearbyClubsMap = () => {
   }, []);
 
   const handleLocationPress = async () => {
-    if (currentLocation) {
-      mapRef.current?.animateToRegion(currentLocation, 1000);
-    } else {
-      const region = await getCurrentLocation();
-      if (region) {
-        setCurrentLocation(region);
-        mapRef.current?.animateToRegion(region, 1000);
-      }
+    const region = await getCurrentLocation();
+    if (region) {
+      setCurrentLocation(region);
+      mapRef.current?.animateToRegion(region, 1000);
     }
   };
 

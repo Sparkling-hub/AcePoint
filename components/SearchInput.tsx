@@ -1,4 +1,6 @@
 import Colors from '@/constants/Colors';
+import { setClubSearchResults } from '@/store/slices/clubSearchResultsSlice';
+import { setCoachSearchResults } from '@/store/slices/coachSearchResultsSlice';
 import { setShowFavorites } from '@/store/slices/showFavoritesSlice';
 import { setShowMaps } from '@/store/slices/showMapsSlice';
 import { RootState } from '@/store/store';
@@ -27,6 +29,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
     }
     dispatch(setShowFavorites(!showFavorites));
     setSearchQuery('');
+    dispatch(setClubSearchResults([]));
+    dispatch(setCoachSearchResults([]));
   };
   return (
     <XStack

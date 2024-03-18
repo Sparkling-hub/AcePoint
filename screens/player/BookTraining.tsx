@@ -46,6 +46,9 @@ export default function BookTraining() {
   // State variables
   const [searchQuery, setSearchQuery] = useState('');
   const [favoriteCoaches, setFavoriteCoaches] = useState<Coach[]>([]);
+  const [filteredFavoriteCoaches, setFilteredFavoriteCoaches] = useState<
+    Coach[]
+  >([]);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [searching, setSearching] = useState(false);
   const [loadingFavorites, setLoadingFavorites] = useState(true);
@@ -176,8 +179,10 @@ export default function BookTraining() {
       const favorites = await favoriteCoachList();
       if (favorites.length > 0) {
         setFavoriteCoaches(favorites);
+        setFilteredFavoriteCoaches(favorites);
       } else {
         setFavoriteCoaches([]);
+        setFilteredFavoriteCoaches([]);
       }
     } catch (error) {
       console.error('Error loading favorite coaches:', error);
@@ -191,8 +196,21 @@ export default function BookTraining() {
       loadFavoriteCoaches();
     } else {
       setFavoriteCoaches([]);
+      setFilteredFavoriteCoaches([]);
     }
   }, [showFavorites]);
+
+  const searchFavoriteCoaches = (query: string) => {
+    setSearchQuery(query);
+    if (query !== '') {
+      const filteredCoaches = favoriteCoaches.filter((coach) =>
+        coach.displayName?.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredFavoriteCoaches(filteredCoaches);
+    } else {
+      setFilteredFavoriteCoaches(favoriteCoaches);
+    }
+  };
 
   // Function to remove search history item
   const removeSearchHistoryItem = useCallback(
@@ -231,6 +249,12 @@ export default function BookTraining() {
     [performSearch]
   );
 
+  const handleOnSubmitEditing = () => {
+    if (!showFavorites) {
+      addToSearchHistory(searchQuery);
+    }
+  };
+
   const renderView = () => {
     if (showMaps) {
       return <NearbyClubsMap />;
@@ -239,7 +263,7 @@ export default function BookTraining() {
     if (showFavorites) {
       return (
         <FavoriteCoaches
-          favoriteCoaches={favoriteCoaches}
+          favoriteCoaches={filteredFavoriteCoaches}
           loading={loadingFavorites}
         />
       );
@@ -265,9 +289,9 @@ export default function BookTraining() {
             !showFavorites ? 'Search for a coach or club' : 'Favorites'
           }
           value={searchQuery}
-          onChangeText={handleSearch}
+          onChangeText={showFavorites ? searchFavoriteCoaches : handleSearch}
           setSearchQuery={setSearchQuery}
-          onSubmitEditing={() => addToSearchHistory(searchQuery)}
+          onSubmitEditing={handleOnSubmitEditing}
           disabled={filterIsLoading || showMaps}
         />
         <XStack marginLeft={14} marginVertical={23} gap={9}>
