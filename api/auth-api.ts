@@ -22,6 +22,7 @@ const signUpCoach = async ({ email, password, coach }: { email: string, password
       tags: coach.tags,
       bios: coach.bios,
       clubId: coach.clubId ??null,
+      followedPlayer:[]
     };
     const docRef = doc(db, 'coach', userCredential?.user?.uid);
     await setDoc(docRef, userData);
@@ -50,6 +51,7 @@ const signUpPlayer = async ({ email, password, player }: { email: string, passwo
       fitness: player.fitness,
       age: player.age,
       tennisLevel: player.tennisLevel,
+      favoriteCoach:[],
     };
     
     // Add logging for better visibility
