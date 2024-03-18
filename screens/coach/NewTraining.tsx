@@ -78,17 +78,11 @@ export default function NewTrainingScreen() {
         formik.setFieldValue(name, value);
     };
     const handleSubmit = async () => {
-        if (Object.keys(formik.errors).length === 0) {
-            await storeLesson(formik.values, startTime)
-            router.navigate('/calendar-coach')
-        }
-        else if (formik.values.recurrence === 'Does not repeat') {
-
-            await storeLesson(formik.values, startTime)
-            router.navigate('/calendar-coach')
-        }
-        else {
-            fireToast('error', 'Please fill all the fields !')
+        if (Object.keys(formik.errors).length === 0 || formik.values.recurrence === 'Does not repeat') {
+            await storeLesson(formik.values, startTime);
+            router.navigate('/calendar-coach');
+        } else {
+            fireToast('error', 'Please fill all the fields!');
         }
     }
 
