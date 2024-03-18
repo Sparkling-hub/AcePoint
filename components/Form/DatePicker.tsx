@@ -42,6 +42,7 @@ const DatePicker = function DatePicker(props: DatePickerProps) {
         placeholder="Date of birth"
         readOnly
         onPress={showDatePicker}
+        
         icon={<CalendarDays color={Colors.secondary} />}
       />
 

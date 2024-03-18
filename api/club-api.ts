@@ -1,8 +1,7 @@
-import {setDoc,db,doc} from'@/lib/firebase'
-import { Timestamp, collection } from "firebase/firestore";
+import {db} from'@/lib/firebase'
+import { Timestamp, collection,doc,setDoc } from "firebase/firestore";
 import { Club } from '@/model/club';
 import {retrieveData} from '@/api/localStorage'
-
 const addClub = async ({ club }: { club:Club }) => {
     try {
         const coachId = await retrieveData("coachId");
@@ -14,10 +13,12 @@ const addClub = async ({ club }: { club:Club }) => {
             createdAt:Timestamp.now()    
         }; 
         const clubCollection = collection(db, 'club')
-        setDoc(doc(clubCollection,coachId), clubData)
-        console.log("club added successfully!");     
-    } catch (error) {
-          console.error("Error adding club: ", error);
+        const docRef = doc(clubCollection, coachId);
+      await setDoc(docRef, clubData)
+       console.log("club added successfully!",docRef.id);   
+       return docRef.id
+    } catch (error:any) {
+          return error.message;
     }  
 };
   

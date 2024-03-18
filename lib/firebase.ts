@@ -10,10 +10,10 @@ import {
 } from 'firebase/firestore';
 import {
   getReactNativePersistence,
-  signOut,
+  
   initializeAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+
 } from 'firebase/auth';
 import {
   ref,
@@ -65,7 +65,5 @@ export {
   setDoc,
   getDocs,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
   updateDoc,
 };

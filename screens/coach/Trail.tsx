@@ -8,11 +8,15 @@ import { Button, Image, Stack, YStack } from 'tamagui';
 import HeaderArrow from '@/components/HeaderArrow';
 import { router } from 'expo-router';
 import ProgressBar from '@/components/ProgressBar';
+import { useDispatch } from 'react-redux';
+import { refreshAllData } from '@/store/slices/signup';
 
-const Trail = ({handlePrevious}:{handlePrevious:() => void}) => {
-    const updatePlayer=()=>{
-        console.log("clicked")
-        router.push('/')
+const Trail = ({handlePrevious,onNext}:{handlePrevious:() => void,onNext:() => void}) => {
+  const dispatch=useDispatch()
+    const updatePlayer=async()=>{
+    onNext()
+      router.push('/')
+      dispatch(refreshAllData())
     }
   return (
     <SafeAreaView style={styles.container}>

@@ -4,15 +4,18 @@ import { RadioGroup, ScrollView, YStack } from 'tamagui'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { RadioGroupItemWithLabel } from '@/components/RadioGroupItemWithLabel';
 import Button from '@/components/Button'
-import {updateUserPlayer } from'@/api/auth-api'
 import LevlingBox from '@/components/LevlingBox';
 import ProgressBar from '@/components/ProgressBar';
 import HeaderArrow from '@/components/HeaderArrow';
+import { useDispatch } from 'react-redux';
+import { signUpData } from '@/store/slices/signup';
 const Levling = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:() => void}) => {
   const [level, setLevel] = useState('Beginner');
+  const dispatch=useDispatch()
+
   const text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo ex, dapibus sit amet nisi ut, posuere laoreet nulla. Suspendisse dignissim elit in justo efficitur."
   const updatePlayer=()=>{
-    updateUserPlayer({tennisLevel:level})
+    dispatch(signUpData({tennisLevel:level}))
     onNext()
   }
   return (
@@ -35,11 +38,11 @@ const Levling = ({onNext,handlePrevious}:{onNext:() => void,handlePrevious:() =>
         onValueChange={value => setLevel(value)} value={level}
             >
         <YStack width={300} alignItems="center" gap="$5">
-            <RadioGroupItemWithLabel size="$3" value="Beginner" label="Beginner" level={level} text={text} />
-            <RadioGroupItemWithLabel size="$3" value="Intermediate" label="Intermediate" level={level} text={text} />
-            <RadioGroupItemWithLabel size="$3" value="Intermediate high" label="Intermediate high" level={level} text={text} />
-            <RadioGroupItemWithLabel size="$3" value="Advanced" label="Advanced" level={level} text={text} />
-            <RadioGroupItemWithLabel size="$3" value="Competition" label="Competition" level={level} text={text} />
+            <RadioGroupItemWithLabel size="$3" value="Beginner" label="Beginner" level={level} text={text} id='Beginner' />
+            <RadioGroupItemWithLabel size="$3" value="Intermediate" label="Intermediate" level={level} text={text} id='Intermediate' />
+            <RadioGroupItemWithLabel size="$3" value="Intermediate high" label="Intermediate high" level={level} text={text} id='Intermediate high' />
+            <RadioGroupItemWithLabel size="$3" value="Advanced" label="Advanced" level={level} text={text} id='Advanced' />
+            <RadioGroupItemWithLabel size="$3" value="Competition" label="Competition" level={level} text={text} id='Competition' />
         </YStack>
         </RadioGroup>
         <YStack marginTop={"20%"}>
