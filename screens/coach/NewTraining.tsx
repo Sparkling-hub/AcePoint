@@ -28,18 +28,22 @@ import { useRouter } from "expo-router";
 import { TimerPickerModal } from "react-native-timer-picker";
 import { useDispatch } from "react-redux";
 import { setCalendarOption } from "@/store/slices/calendarSlice";
+import { Path, Svg } from "react-native-svg";
 
 
 export default function NewTrainingScreen() {
     const router = useRouter()
     const [showDuration, setShowDuration] = useState(false);
     const [showStartDate, setShowStartDate] = useState(false);
+    const [showSignInDeadLine, setShowSignInDeadLine] = useState(false);
     const [showEndDate, setShowEndDate] = useState(false);
     const [startTime, setStartTime] = useState('12:30:00.000Z')
     const [isLoading, setIsLoading] = useState(true)
     const dispatch = useDispatch()
     const handleShow = (field: string) => {
-        field === 'startDate' ? setShowStartDate(!showStartDate) : setShowEndDate(!showEndDate)
+        if (field === 'startDate') setShowStartDate(!showStartDate)
+        if (field === 'endDate') setShowEndDate(!showEndDate)
+        if (field === 'signInDeadLine') setShowSignInDeadLine(!showSignInDeadLine)
     };
     const currentDate = new Date()
     const timstamp = currentDate.setDate(currentDate.getDate() + 2)
@@ -58,7 +62,9 @@ export default function NewTrainingScreen() {
         tags: '',
         minAge: '',
         paymentMode: ['On App'],
-        buffer: ''
+        trainingTitle: '',
+        price: '',
+        signInDeadLine: new Date().toLocaleDateString('en-US')
     }
     const validationSchema = Yup.object().shape({
         description: Yup.string()
@@ -66,6 +72,9 @@ export default function NewTrainingScreen() {
             .max(200, 'Description is too long!')
             .required('Description is required'),
         startDate: Yup.string().required('Start date is required !'),
+        price: Yup.number().min(1, 'Price at least 1 !').required('Price is required !'),
+        trainingTitle: Yup.string().required('Training title is required !'),
+        signInDeadLine: Yup.string().required('Training title is required !'),
         endDate: Yup.string().required('End date is required !'),
         duration: Yup.string().required('Duration is required !'),
         maxPeople: Yup.number().min(1, 'Minimum value is 1 !').max(50, 'Maximum value is 50 !').required('Max people is required !'),
@@ -86,7 +95,7 @@ export default function NewTrainingScreen() {
     const handleSubmit = async () => {
         if (Object.keys(formik.errors).length === 0) {
             storeAndRedirect()
-        } 
+        }
         else {
             fireToast('error', 'Please fill all the fields!');
         }
@@ -246,7 +255,65 @@ export default function NewTrainingScreen() {
                         icon={<Person />}
                     />
                 </YStack>
-
+                <YStack style={styles.ystack}>
+                    <CustomInput
+                        value={formik.values.trainingTitle}
+                        onChangeText={(value: any) => {
+                            handleChange('trainingTitle', value)
+                        }}
+                        onBlur={formik.handleBlur('trainingTitle')}
+                        errors={formik.errors.trainingTitle}
+                        validateOnInit
+                        placeholder="Training Title"
+                        icon={<Sutitles />}
+                    />
+                </YStack>
+                <YStack style={styles.ystack}>
+                    <CustomInput
+                        value={formik.values.signInDeadLine}
+                        onChangeText={(value: any) => {
+                            handleChange('signInDeadLine', value)
+                        }}
+                        onBlur={formik.handleBlur('signInDeadLine')}
+                        errors={formik.errors.signInDeadLine}
+                        validateOnInit
+                        placeholder="Sign In Dead Line"
+                        readOnly
+                        onPress={() => { handleShow('signInDeadLine') }}
+                        icon={<CalendarDays color={Colors.secondary} />}
+                    />
+                    <DateTimePickerModal
+                        isVisible={showSignInDeadLine}
+                        mode="datetime"
+                        minuteInterval={30}
+                        onConfirm={(date) => {
+                            handleConfirm('signInDeadLine', date)
+                        }}
+                        onCancel={() => { handleShow('signInDeadLine') }}
+                    />
+                </YStack>
+                <YStack style={styles.ystack}>
+                    <CustomInput
+                        value={formik.values.price}
+                        onChangeText={(value: any) => {
+                            handleChange('price', value)
+                        }}
+                        onBlur={formik.handleBlur('price')}
+                        errors={formik.errors.price}
+                        validateOnInit
+                        keyboardType="numeric"
+                        placeholder="Price"
+                        icon={<Svg
+                            width={20}
+                            height={20}
+                            viewBox="-96 0 512 512"
+                        >
+                            <Path
+                                fill="#3A4D6C"
+                                d="M308 352h-45.495c-6.627 0-12 5.373-12 12v50.848H128V288h84c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12h-84v-63.556c0-32.266 24.562-57.086 61.792-57.086 23.658 0 45.878 11.505 57.652 18.849 5.151 3.213 11.888 2.051 15.688-2.685l28.493-35.513c4.233-5.276 3.279-13.005-2.119-17.081C273.124 54.56 236.576 32 187.931 32 106.026 32 48 84.742 48 157.961V224H20c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h28v128H12c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h296c6.627 0 12-5.373 12-12V364c0-6.627-5.373-12-12-12z" />
+                        </Svg>}
+                    />
+                </YStack>
                 <YStack style={styles.ystack}>
                     <CustomInput
                         value={formik.values.club}

@@ -18,7 +18,10 @@ export default function TrainingInformations() {
         players: [],
         maxPeople: '',
         startDate: '',
-        duration: ''
+        duration: '',
+        trainingTitle: '',
+        signInDeadLine: '',
+        price:''
     })
     const [players, setPlayers] = useState([])
     const [coach, setCoach] = useState({
@@ -29,13 +32,12 @@ export default function TrainingInformations() {
     })
     const [rating, setRating] = useState(50)
     useEffect(() => {
-
         const getInformations = async () => {
             const trainingID = await retrieveData('trainingID')
             if (trainingID) {
                 const trainingDoc = await getLessonById(trainingID)
                 if (trainingDoc) {
-                    setTraining(trainingDoc)
+                    setTraining(trainingDoc)                    
                     const coachDoc = await getCoachById(trainingDoc.coachId)
                     if (coachDoc) setCoach(coachDoc)
                     const arrayPlayers = trainingDoc.players
@@ -73,7 +75,7 @@ export default function TrainingInformations() {
                         </Avatar>
                     </YStack>
                     <YStack paddingTop={30} alignSelf="center" marginLeft={30}>
-                        <Text fontSize={30} fontWeight={'bold'} color={Colors.secondary}>Training Team</Text>
+                        <Text fontSize={30} fontWeight={'bold'} color={Colors.secondary}>{training.trainingTitle}</Text>
                         <Text fontSize={15} color={Colors.secondary}>{time(training.startDate)} - {addDurationToStartDate(time(training.startDate), training.duration)}</Text>
                     </YStack>
                 </YStack>
@@ -121,7 +123,7 @@ export default function TrainingInformations() {
                 </YStack>
                 <YStack>
                     <Text style={styles.title}>Sign in dead line</Text>
-                    <Text marginLeft={20} color={Colors.secondary} marginRight={20}>Thursday 27th 8:00 AM</Text>
+                    <Text marginLeft={20} color={Colors.secondary} marginRight={20}>{new Date(training.signInDeadLine.seconds * 1000).toString()}</Text>
                 </YStack>
                 <YStack marginTop={20}>
                     <Text style={styles.title}>Players {training.players.length}/{training.maxPeople}</Text>

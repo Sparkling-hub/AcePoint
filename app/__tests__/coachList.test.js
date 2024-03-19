@@ -115,6 +115,7 @@ describe('storeLesson', () => {
     const lessonData = {
       startDate: "12/31/2023",
       endDate: "01/01/2024",
+      signInDeadLine: "01/01/2024",
       duration: "1",
       tags: "tag1, tag2",
       minAge: "18",
@@ -137,6 +138,7 @@ describe('storeLesson', () => {
     const lessonData = {
       startDate: "12/31/2023",
       endDate: "01/01/2024",
+      signInDeadLine: "01/01/2024",
       duration: "1",
       tags: "tag1, tag2",
       minAge: "18",

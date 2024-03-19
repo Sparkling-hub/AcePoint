@@ -27,6 +27,8 @@ const storeLesson = async (lessonData: any, startTime: string) => {
     const startDate = new Date(parseInt(datePartsStartDate[2], 10), parseInt(datePartsStartDate[0], 10) - 1, parseInt(datePartsStartDate[1], 10), parseInt(timePartsStartDate[0], 10), parseInt(timePartsStartDate[1], 10));
     const datePartsEndDate = lessonData.endDate.split("/")
     const endDate = new Date(parseInt(datePartsEndDate[2], 10), parseInt(datePartsEndDate[0], 10) - 1, parseInt(datePartsEndDate[1], 10), 23, 59);
+    const datePartsSignInDeadLine = lessonData.signInDeadLine.split("/")
+    const signInDeadLine = new Date(parseInt(datePartsSignInDeadLine[2], 10), parseInt(datePartsSignInDeadLine[0], 10) - 1, parseInt(datePartsSignInDeadLine[1], 10), parseInt(datePartsSignInDeadLine[0], 10), parseInt(datePartsSignInDeadLine[1], 10));
     const duration = lessonData.duration;
     const tagsArray = lessonData.tags.split(',').map(tag => tag.trim());
     const lesson = {
@@ -38,7 +40,8 @@ const storeLesson = async (lessonData: any, startTime: string) => {
         startDate: startDate,
         endDate: endDate,
         players: [],
-        tags: tagsArray
+        tags: tagsArray,
+        signInDeadLine: signInDeadLine
     }
     try {
         await addDoc(lessonsRef, lesson);
@@ -46,7 +49,6 @@ const storeLesson = async (lessonData: any, startTime: string) => {
     } catch (error) {
         fireToast('error', 'Something went wrong !')
         console.log(error);
-
     }
 };
 const getLessonById = async (id: string) => {
