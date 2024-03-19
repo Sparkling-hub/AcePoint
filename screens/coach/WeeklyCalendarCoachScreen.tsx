@@ -8,7 +8,7 @@ import { storeData } from "@/api/localStorage";
 import { router } from "expo-router";
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const times = ['07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'];
+const times = ['06:00', '06:30','07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'];
 
 function getTimeIndex(time: string): number {
     const baseTime = times[0];
@@ -36,8 +36,12 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
         function mapLessonsToWeeklyEvents(lessons: any[]): void {
             const weeklyEvents: { [key: number]: { [time: string]: { name: string, spacesLeft: number, isFull?: boolean, endTime: string, eventId: string } } } = {};
             const [currentWeekStart, currentWeekEnd] = week.split(' ').map(date => new Date(date));
-            if (currentWeekEnd)
+            if (currentWeekStart)
+                currentWeekStart.setHours(currentWeekStart.getHours() - 12);
+            if (currentWeekEnd) {
                 currentWeekEnd.setHours(currentWeekEnd.getHours() + 11);
+                currentWeekEnd.setMinutes(currentWeekEnd.getMinutes() + 59);
+            }
             lessons.forEach(lesson => {
                 const startDate = new Date(lesson.startDate.seconds * 1000);
                 const duration = lesson.duration;

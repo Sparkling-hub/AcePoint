@@ -6,14 +6,16 @@ import { getLessonsByCoachId } from "@/api/lesson-api";
 import { useIsFocused } from '@react-navigation/native';
 
 export default function CalendarCoachScreen() {
+    const [isLoading, setIsLoading] = useState(true)
     const result = useSelector((state: any) => state.calendarOption);
     const [lessons, setLessons] = useState([]);
     const [lessonsForWeeklyView, setLessonsForWeeklyView] = useState([]);
     const [currentWeek, setCurrentWeek] = useState('');
-    const isFocused = useIsFocused(); 
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const getLessons = async () => {
+            setIsLoading(true)
             const lessons = await getLessonsByCoachId();
             setLessons(lessons);
             const updatedLessonsForWeeklyView = lessons.reduce((acc, lesson) => {
@@ -44,8 +46,10 @@ export default function CalendarCoachScreen() {
                 return acc;
             }, []);
             setLessonsForWeeklyView(updatedLessonsForWeeklyView);
+            setIsLoading(false)
         }
         const getCurrentWeek = () => {
+            setIsLoading(true)
             const currentDate = new Date();
             const firstDayOfWeek = currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1);
             const lastDayOfWeek = firstDayOfWeek + 6;
@@ -56,12 +60,14 @@ export default function CalendarCoachScreen() {
             const firstDayISO = firstDay.toISOString();
             const lastDayISO = lastDay.toISOString();
             setCurrentWeek(`${firstDayISO} ${lastDayISO}`);
+            setIsLoading(false)
         }
         if (isFocused) {
             result.option === 'W' ? getCurrentWeek() : getLessons();
         }
-    }, [isFocused, result.option]); 
+    }, [isFocused, result.option]);
 
+    if (isLoading) return (<></>)
     return (
         <>
             {result.option === 'W'

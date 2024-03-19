@@ -26,6 +26,8 @@ import fireToast from "@/services/toast";
 import NewTrainingSkeleton from "@/components/skeletons/NewTrainingSkeleton";
 import { useRouter } from "expo-router";
 import { TimerPickerModal } from "react-native-timer-picker";
+import { useDispatch } from "react-redux";
+import { setCalendarOption } from "@/store/slices/calendarSlice";
 
 
 export default function NewTrainingScreen() {
@@ -33,8 +35,9 @@ export default function NewTrainingScreen() {
     const [showDuration, setShowDuration] = useState(false);
     const [showStartDate, setShowStartDate] = useState(false);
     const [showEndDate, setShowEndDate] = useState(false);
-    const [startTime, setStartTime] = useState('')
+    const [startTime, setStartTime] = useState('12:30:00.000Z')
     const [isLoading, setIsLoading] = useState(true)
+    const dispatch = useDispatch()
     const handleShow = (field: string) => {
         field === 'startDate' ? setShowStartDate(!showStartDate) : setShowEndDate(!showEndDate)
     };
@@ -72,24 +75,18 @@ export default function NewTrainingScreen() {
         paymentMode: Yup.array().required('Payement mode is required !'),
         minAge: Yup.number().min(1, 'Minimum value is 1 !').max(200, 'No !').required('Min age is required !'),
     });
-    const setDate = (startDate: any, endDate: any, mode: string) => {
-        const dateParts = mode === 'endDate' ? startDate.split("/") : endDate.split("/")
-        const s1 = new Date(parseInt(dateParts[2], 10), parseInt(dateParts[0], 10) - 1, parseInt(dateParts[1], 10));
-        (s1 < endDate && mode === 'endDate') ? formik.setFieldValue('buffer', 'error') : formik.setFieldValue('buffer', '')
-    }
     const handleChange = (name: string, value: any) => {
         formik.setFieldValue(name, value);
     };
     const storeAndRedirect = async () => {
         await storeLesson(formik.values, startTime);
-        router.navigate('/calendar-coach');
+        dispatch(setCalendarOption('D'))
+        router.replace('/calendar-coach');
     }
     const handleSubmit = async () => {
         if (Object.keys(formik.errors).length === 0) {
             storeAndRedirect()
-        } else if (formik.values.recurrence === 'Does not repeat') {
-            storeAndRedirect()
-        }
+        } 
         else {
             fireToast('error', 'Please fill all the fields!');
         }
@@ -107,6 +104,7 @@ export default function NewTrainingScreen() {
             setStartTime(dateParts[1])
             const endDate = date.setDate(date.getDate() + 5)
             handleChange('endDate', new Date(endDate).toLocaleDateString('en-US'))
+            date.setDate(date.getDate() - 5)
         }
         handleChange(field, date.toLocaleDateString())
         handleShow(field);
@@ -188,7 +186,6 @@ export default function NewTrainingScreen() {
                         minuteInterval={30}
                         onConfirm={(date) => {
                             handleConfirm('startDate', date)
-                            setDate(date, formik.values.endDate, 'startDate')
                         }}
                         onCancel={() => { handleShow('startDate') }}
                     />
@@ -311,7 +308,6 @@ export default function NewTrainingScreen() {
                             mode="date"
                             onConfirm={(date) => {
                                 handleConfirm('endDate', date)
-                                setDate(formik.values.startDate, date, 'endDate')
                             }}
                             onCancel={() => { handleShow('endDate') }}
                         />

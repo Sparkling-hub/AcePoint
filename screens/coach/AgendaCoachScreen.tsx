@@ -3,7 +3,7 @@ import AddButtonCalendar from "@/components/AddButtonCalendar";
 import Colors from "@/constants/Colors";
 import { addDurationToStartDate, date, time } from "@/services/dateService";
 import { router } from "expo-router";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Agenda } from "react-native-calendars";
 import { Card } from "react-native-paper";
@@ -12,7 +12,6 @@ import { Text, View } from "tamagui";
 export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[] }) {
 
     const [items, setItems] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
 
     const loadItems = () => {
         const itemsByDate = lessons.reduce((acc, lesson) => {

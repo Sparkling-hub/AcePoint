@@ -26,7 +26,7 @@ const storeLesson = async (lessonData: any, startTime: string) => {
     const timePartsStartDate = startTime.split(":")
     const startDate = new Date(parseInt(datePartsStartDate[2], 10), parseInt(datePartsStartDate[0], 10) - 1, parseInt(datePartsStartDate[1], 10), parseInt(timePartsStartDate[0], 10), parseInt(timePartsStartDate[1], 10));
     const datePartsEndDate = lessonData.endDate.split("/")
-    const endDate = new Date(parseInt(datePartsEndDate[2], 10), parseInt(datePartsEndDate[0], 10) - 1, parseInt(datePartsEndDate[1], 10));
+    const endDate = new Date(parseInt(datePartsEndDate[2], 10), parseInt(datePartsEndDate[0], 10) - 1, parseInt(datePartsEndDate[1], 10), 23, 59);
     const duration = lessonData.duration;
     const tagsArray = lessonData.tags.split(',').map(tag => tag.trim());
     const lesson = {
