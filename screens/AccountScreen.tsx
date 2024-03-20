@@ -53,7 +53,7 @@ export default function AccountScreen() {
             lineHeight={24}
             color={Colors.secondary}
             textAlign="center">
-            {username ?? 'Daniel Antone'}
+            {username !== '' ? username : 'Daniel Antone'}
           </Text>
         </YStack>
       ) : (
@@ -68,7 +68,7 @@ export default function AccountScreen() {
               fontSize={20}
               lineHeight={24}
               color={Colors.secondary}>
-              {username ?? 'Daniel Antone'}
+              {username !== '' ? username : 'Daniel Antone'}
             </Text>
             <Text
               style={{ fontFamily: 'Montserrat' }}
@@ -105,7 +105,9 @@ export default function AccountScreen() {
             />
             <CustomButton
               title="Settings"
-              onPress={() => { router.push('/user/setting') }}
+              onPress={() => {
+                router.push('/user/setting');
+              }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -117,7 +119,9 @@ export default function AccountScreen() {
           <YStack>
             <CustomButton
               title="Help"
-              onPress={() => { router.push('/support') }}
+              onPress={() => {
+                router.push('/support');
+              }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -129,7 +133,9 @@ export default function AccountScreen() {
           <YStack gap={15}>
             <CustomButton
               title="Privacy"
-              onPress={() => { router.navigate('/legal') }}
+              onPress={() => {
+                router.navigate('/legal');
+              }}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               icon={<ChevronRight size="$2" color={Colors.secondary} />}
@@ -137,7 +143,9 @@ export default function AccountScreen() {
             {userRoleValue === 'Coach' && (
               <CustomButton
                 title="Subscription"
-                onPress={() => { }}
+                onPress={() => {
+                  router.push('/subscription');
+                }}
                 buttonStyle={styles.button}
                 textStyle={styles.buttonText}
                 icon={<ChevronRight size="$2" color={Colors.secondary} />}
