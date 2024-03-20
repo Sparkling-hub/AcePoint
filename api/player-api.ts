@@ -366,17 +366,6 @@ const favoriteCoachList = async () => {
   }
 };
 
-const getPlayerById = async (id: string) => {
-  const docRef = doc(db, 'player', id);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    return docSnap.data();
-  } else {
-    console.log('No such document!');
-    return null;
-  }
-};
-
 export {
   findByName,
   favouriteCoach,
@@ -388,5 +377,4 @@ export {
   distanceCalculation,
   filterCoach,
   calculateDistance,
-  getPlayerById,
 };

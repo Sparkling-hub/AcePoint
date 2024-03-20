@@ -44,6 +44,8 @@ const SubscriptionScreen = () => {
         return '#DB3E00';
       case 'TRIAL':
         return '#DBD200';
+      case 'EXPIRED':
+        return '#EA0000';
     }
   }, [status]);
 
@@ -75,6 +77,17 @@ const SubscriptionScreen = () => {
         return (
           <CustomButton
             title="Upgrade my subscription"
+            buttonStyle={styles.button}
+            onPress={() => {
+              changeSubscription({ subscription: subscriptionEnum.ACTIVE });
+              setStatus('ACTIVE');
+            }}
+          />
+        );
+      case 'EXPIRED':
+        return (
+          <CustomButton
+            title="Renew my Subscription"
             buttonStyle={styles.button}
             onPress={() => {
               changeSubscription({ subscription: subscriptionEnum.ACTIVE });

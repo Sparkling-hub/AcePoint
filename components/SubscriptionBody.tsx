@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, { useMemo } from 'react';
-import { Image, XStack, YStack } from 'tamagui';
+import { Image, Text, XStack, YStack } from 'tamagui';
 import Colors from '@/constants/Colors';
 
 interface SubscriptionBodyProps {
@@ -64,6 +64,19 @@ const SubscriptionBody: React.FC<SubscriptionBodyProps> = ({ status }) => {
               <Text style={[{ fontFamily: 'MontserratMedium' }, styles.text]}>
                 Trial Expires on:{' '}
                 <Text style={[{ fontFamily: 'MontserratBold' }, styles.text]}>
+                  01.01.2024
+                </Text>
+              </Text>
+            </YStack>
+          </XStack>
+        );
+      case 'EXPIRED':
+        return (
+          <XStack marginBottom={20}>
+            <YStack gap={9}>
+              <Text style={[{ fontFamily: 'MontserratBold' }, styles.text]}>
+                Your subscription expired on:{' '}
+                <Text color="#EA0000" style={{ fontFamily: 'MontserratBold' }}>
                   01.01.2024
                 </Text>
               </Text>
