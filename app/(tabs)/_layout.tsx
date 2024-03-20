@@ -12,6 +12,8 @@ import HomeIcon from '@/components/tabIcons/HomeIcon';
 import HomeIconLabel from '@/components/tabIcons/HomeIconLabel';
 import ProfileHeader from '@/components/headers/ProfileHeader';
 import { RootState } from '@/store/store';
+import StatisticsIcon from '@/components/tabIcons/StatisticsIcon';
+import StatisticsIconLabel from '@/components/tabIcons/StatisticsIconLabel';
 
 export default function TabLayout() {
   const dispatch = useDispatch();
@@ -56,6 +58,15 @@ export default function TabLayout() {
           tabBarLabel: BookIconLabel,
           headerShown: false,
           href: userRole === 'Player' ? '/(tabs)/book' : null,
+        }}
+      />
+      <Tabs.Screen
+        name="statistics"
+        options={{
+          tabBarIcon: StatisticsIcon,
+          tabBarLabel: StatisticsIconLabel,
+          headerShown: false,
+          href: userRole === 'Coach' ? '/(tabs)/statistics' : null,
         }}
       />
       <Tabs.Screen

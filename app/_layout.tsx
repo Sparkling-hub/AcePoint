@@ -24,6 +24,7 @@ import AccountHeader from '@/components/headers/AccountHeader';
 import EditProfileHeader from '@/components/headers/EditProfileHeader';
 import SupportHeader from '@/components/SupportHeader';
 import LegalHeader from '@/components/LegalHeader';
+import SubscriptionHeader from '@/components/headers/SubscriptionHeader';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -122,6 +123,13 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: SupportHeader,
+              }}
+            />
+            <Stack.Screen
+              name="subscription"
+              options={{
+                headerShadowVisible: false,
+                header: SubscriptionHeader,
               }}
             />
             <Stack.Screen

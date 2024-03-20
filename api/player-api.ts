@@ -80,7 +80,7 @@ const distanceCalculation = async (
 const locationPosition = (): Promise<{
   latitude: number;
   longitude: number;
-  }> => {
+}> => {
   return new Promise((resolve, reject) => {
     GetLocation.getCurrentPosition({
       enableHighAccuracy: false,
@@ -139,7 +139,7 @@ const filterCoach = async (rating: number, level: number, tags: string[]) => {
 
     if (result.length > 0) {
       console.log('Found coaches:', coaches);
-      console.log('result:',result);
+      console.log('result:', result);
       return result;
     } else {
       console.log('No coaches found');
@@ -366,6 +366,17 @@ const favoriteCoachList = async () => {
   }
 };
 
+const getPlayerById = async (id: string) => {
+  const docRef = doc(db, 'player', id);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    console.log('No such document!');
+    return null;
+  }
+};
+
 export {
   findByName,
   favouriteCoach,
@@ -377,4 +388,5 @@ export {
   distanceCalculation,
   filterCoach,
   calculateDistance,
+  getPlayerById,
 };
