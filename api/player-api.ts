@@ -80,7 +80,7 @@ const distanceCalculation = async (
 const locationPosition = (): Promise<{
   latitude: number;
   longitude: number;
-}> => {
+  }> => {
   return new Promise((resolve, reject) => {
     GetLocation.getCurrentPosition({
       enableHighAccuracy: false,

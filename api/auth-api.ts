@@ -89,7 +89,7 @@ const loginUser = async ({ email, password,usertype }: { email: string, password
         }
         
         const coachData = coachSnap.data();
-        storeData("userInfo",JSON.stringify({user,coachData}) )
+        storeData("userInfo",JSON.stringify({user:user.user,coachData}) )
         return {user,coachData}
     }
     if (usertype==="Player") {
@@ -101,7 +101,7 @@ const loginUser = async ({ email, password,usertype }: { email: string, password
           return 'player does not exist.';
         }
         const playerData = playerSnap.data();
-        storeData("userInfo",JSON.stringify({user,playerData}))
+        storeData("userInfo",JSON.stringify({user:user.user,playerData}))
         return {user,playerData}
     }
   } catch (error) {
