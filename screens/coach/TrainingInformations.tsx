@@ -8,7 +8,7 @@ import { StyleSheet } from "react-native";
 import ProgressBar from "@/components/ProgressBar";
 import { getPlayerById } from "@/api/player-api";
 import { getCoachById } from "@/api/coach-api";
-import { addDurationToStartDate, date, time } from "@/services/dateService";
+import { addDurationToStartDate, time } from "@/services/dateService";
 import moment from "moment";
 import { router } from "expo-router";
 import fireToast from "@/services/toast";
@@ -118,7 +118,7 @@ export default function TrainingInformations() {
                     <Text marginTop={10} marginLeft={20} color={Colors.secondary} marginRight={20}>{training.description}</Text>
                 </YStack>
                 {(training.tags.length !== 0 && training.tags[0] !== '') &&
-                    <YStack >
+                    <YStack>
                         <Text style={styles.title}>Tags</Text>
                         <YStack flexDirection="row" flexWrap="wrap" padding={20} marginEnd={20} rowGap={'$3'}>
                             {training.tags.map((tag, index) => (
@@ -136,8 +136,8 @@ export default function TrainingInformations() {
                 <YStack marginTop={20}>
                     <Text style={styles.title}>Players {training.players.length}/{training.maxPeople}</Text>
                     <YStack flexDirection="row" flexWrap="wrap">
-                        {players.map((element, index) => (
-                            <Avatar key={element.image}
+                        {players.map((element) => (
+                            <Avatar
                                 circular
                                 size="$5"
                                 marginTop={30}

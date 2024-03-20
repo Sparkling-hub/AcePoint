@@ -1,13 +1,14 @@
 import Colors from "@/constants/Colors";
 import { useRouter } from "expo-router";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "tamagui";
 
 export default function AddButtonCalendar({ testID }: { readonly testID?: string }) {
+    const paddingTop = Platform.OS === 'ios' ? 5 : 0
     const router = useRouter()
     return (
         <TouchableOpacity testID={testID} style={styles.addButton} onPress={() => { router.push("/new-training") }}>
-            <Text style={styles.addButtonText}>+</Text>
+            <Text style={{ ...styles.addButtonText, paddingTop: paddingTop }}>+</Text>
         </TouchableOpacity>
     )
 }
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
     addButtonText: {
         fontSize: 39,
         color: Colors.secondary,
-        textAlign:'center'
+        textAlign: 'center'
     },
 });
 

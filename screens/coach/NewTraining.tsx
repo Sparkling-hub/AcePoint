@@ -17,7 +17,7 @@ import CustomDropdownMultiSelect from "@/components/Form/dropdown/CustomDropDown
 import CustomDropdown from "@/components/Form/dropdown/CustomDropdown";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { retrieveData } from "@/api/localStorage";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -40,7 +40,7 @@ export default function NewTrainingScreen() {
     const [startDate, setStartDate] = useState(new Date());
     const [startTime, setStartTime] = useState('12:30:00.000Z')
     const [deadLineTime, setDeadLineTime] = useState('12:30:00.000Z')
-
+    const marginRight = Platform.OS === 'ios' ? 50 : 20
     const [isLoading, setIsLoading] = useState(true)
     const dispatch = useDispatch()
     const handleShow = (field: string) => {
@@ -93,7 +93,7 @@ export default function NewTrainingScreen() {
     const storeAndRedirect = async () => {
         if (mode === 'EDIT TRAINING') {
             const trainingID = await retrieveData('trainingID')
-            await updateLesson(trainingID || '', formik.values, startTime, deadLineTime);
+            await updateLesson(trainingID ?? '', formik.values, startTime, deadLineTime);
         }
         else
             await storeLesson(formik.values, startTime, deadLineTime);
@@ -327,9 +327,9 @@ export default function NewTrainingScreen() {
                         icon={<Person />}
                     />
                 </YStack>
-                {(formik.errors.maxPeople != 'Max people is required !' || formik.errors.minPeople != 'Min people is required !') &&
+                {(formik.errors.maxPeople != 'Max people is required !' ?? formik.errors.minPeople != 'Min people is required !') &&
                     <YStack style={{ ...styles.ystackselect, marginBottom: -15 }}>
-                        {formik.errors.maxPeople != 'Max people is required !' && <Text style={{ ...styles.errormessage, position: "relative", top: -20, marginRight: 20 }}>{formik.errors.maxPeople}</Text>}
+                        {formik.errors.maxPeople != 'Max people is required !' && <Text style={{ ...styles.errormessage, position: "relative", top: -20, marginRight: marginRight }}>{formik.errors.maxPeople}</Text>}
                         {formik.errors.minPeople != 'Min people is required !' && <Text style={{ ...styles.errormessage, position: "relative", top: -20 }}>{formik.errors.minPeople}</Text>}
                     </YStack>
                 }

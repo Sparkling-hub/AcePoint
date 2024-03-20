@@ -39,7 +39,8 @@ const prepareLessonData = (lessonData: any, startTime: string, deadLineTime: str
         startDate: startDate,
         endDate: endDate,
         tags: tagsArray,
-        signInDeadLine: signInDeadLine
+        signInDeadLine: signInDeadLine,
+        players: []
     };
 };
 
