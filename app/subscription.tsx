@@ -1,4 +1,4 @@
-import { Text, StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import React from 'react';
 import SubscriptionScreen from '@/screens/SubscriptionScreen';
 
