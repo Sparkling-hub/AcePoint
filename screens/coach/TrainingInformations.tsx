@@ -1,14 +1,17 @@
-import { getLessonById } from "@/api/lesson-api"
+import { deleteLessonById, getLessonById } from "@/api/lesson-api"
 import { retrieveData } from "@/api/localStorage"
 import { useEffect, useState } from "react"
-import { Text, YStack, Avatar, Separator, ScrollView } from 'tamagui';
+import { Text, YStack, Avatar, Separator, ScrollView, Button } from 'tamagui';
 import Colors from '@/constants/Colors';
 import { ExternalLink, Star } from "@tamagui/lucide-icons";
 import { StyleSheet } from "react-native";
 import ProgressBar from "@/components/ProgressBar";
 import { getPlayerById } from "@/api/player-api";
 import { getCoachById } from "@/api/coach-api";
-import { addDurationToStartDate, time } from "@/services/dateService";
+import { addDurationToStartDate, date, time } from "@/services/dateService";
+import moment from "moment";
+import { router } from "expo-router";
+import fireToast from "@/services/toast";
 
 export default function TrainingInformations() {
     const [isLoading, setIsLoading] = useState(true)
@@ -21,8 +24,10 @@ export default function TrainingInformations() {
         duration: '',
         trainingTitle: '',
         signInDeadLine: '',
-        price:''
+        price: '',
+        paymentMode: ['']
     })
+    const [id, setId] = useState('')
     const [players, setPlayers] = useState([])
     const [coach, setCoach] = useState({
         displayName: '',
@@ -35,9 +40,10 @@ export default function TrainingInformations() {
         const getInformations = async () => {
             const trainingID = await retrieveData('trainingID')
             if (trainingID) {
+                setId(trainingID)
                 const trainingDoc = await getLessonById(trainingID)
                 if (trainingDoc) {
-                    setTraining(trainingDoc)                    
+                    setTraining(trainingDoc)
                     const coachDoc = await getCoachById(trainingDoc.coachId)
                     if (coachDoc) setCoach(coachDoc)
                     const arrayPlayers = trainingDoc.players
@@ -76,7 +82,7 @@ export default function TrainingInformations() {
                     </YStack>
                     <YStack paddingTop={30} alignSelf="center" marginLeft={30}>
                         <Text fontSize={30} fontWeight={'bold'} color={Colors.secondary}>{training.trainingTitle}</Text>
-                        <Text fontSize={15} color={Colors.secondary}>{time(training.startDate)} - {addDurationToStartDate(time(training.startDate), training.duration)}</Text>
+                        <Text fontSize={15} color={Colors.secondary}>{moment(new Date(training.startDate.seconds * 1000)).format('dddd Do')} {time(training.startDate)} - {addDurationToStartDate(time(training.startDate), training.duration)}</Text>
                     </YStack>
                 </YStack>
                 <YStack paddingTop={20}>
@@ -107,23 +113,25 @@ export default function TrainingInformations() {
                     </YStack>
                 </YStack>
                 <Separator borderColor={Colors.secondary} width={'90%'} alignSelf="center" marginTop={20} marginBottom={20}></Separator>
-                <YStack>
+                <YStack marginBottom={10}>
                     <Text style={styles.title}>Description</Text>
                     <Text marginTop={10} marginLeft={20} color={Colors.secondary} marginRight={20}>{training.description}</Text>
                 </YStack>
-                <YStack marginTop={10}>
-                    <Text style={styles.title}>Tags</Text>
-                    <YStack flexDirection="row" flexWrap="wrap" padding={20} marginEnd={20} rowGap={'$3'}>
-                        {training.tags.map((tag, index) => (
-                            <YStack key={index + 123321} style={styles.tags}>
-                                <Text style={styles.tagText}>{tag}</Text>
-                            </YStack>
-                        ))}
+                {(training.tags.length !== 0 && training.tags[0] !== '') &&
+                    <YStack >
+                        <Text style={styles.title}>Tags</Text>
+                        <YStack flexDirection="row" flexWrap="wrap" padding={20} marginEnd={20} rowGap={'$3'}>
+                            {training.tags.map((tag, index) => (
+                                <YStack key={index + 123321} style={styles.tags}>
+                                    <Text style={styles.tagText}>{tag}</Text>
+                                </YStack>
+                            ))}
+                        </YStack>
                     </YStack>
-                </YStack>
+                }
                 <YStack>
                     <Text style={styles.title}>Sign in dead line</Text>
-                    <Text marginLeft={20} color={Colors.secondary} marginRight={20}>{new Date(training.signInDeadLine.seconds * 1000).toString()}</Text>
+                    <Text marginLeft={20} color={Colors.secondary} marginRight={20}>{moment(new Date(training.startDate.seconds * 1000)).format('dddd Do hh:mm')}</Text>
                 </YStack>
                 <YStack marginTop={20}>
                     <Text style={styles.title}>Players {training.players.length}/{training.maxPeople}</Text>
@@ -149,7 +157,7 @@ export default function TrainingInformations() {
                         <ProgressBar value={rating}></ProgressBar>
                     </YStack>
                 </YStack>
-                <YStack marginBottom={30}>
+                <YStack marginBottom={10}>
                     <Text style={styles.title}>Position</Text>
                     <YStack flexDirection="row">
                         <YStack>
@@ -172,6 +180,19 @@ export default function TrainingInformations() {
                             <ExternalLink></ExternalLink>
                         </YStack>
                     </YStack>
+                </YStack>
+                <YStack style={{ marginBottom: 30 }}>
+                    <Text style={styles.title}>Payement</Text>
+                    {training.paymentMode.map((element, index) => (
+                        <Text color={Colors.secondary} fontSize={15} fontWeight={'bold'} marginLeft={20} marginTop={8} key={index}>{element}</Text>
+                    ))}
+                </YStack>
+                <YStack style={{ marginLeft: 20, marginRight: 20, marginBottom: 30 }}>
+                    <Button onPress={async () => {
+                        await deleteLessonById(id)
+                        fireToast('success', 'Lesson deleted successfully !')
+                        router.replace("/calendar-coach")
+                    }} backgroundColor={Colors.danger} color={'white'} fontWeight={'bold'} fontSize={20} paddingTop={15} paddingBottom={15} height={60}>Delete</Button>
                 </YStack>
             </YStack>
         </ScrollView>

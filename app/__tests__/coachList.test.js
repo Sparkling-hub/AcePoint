@@ -1,15 +1,15 @@
 import { favoriteCoachList, getPlayerById } from '@/api/player-api'
 import { getCoachById } from '@/api/coach-api'
-import { storeLesson, getLessonById } from '@/api/lesson-api';
+import { storeLesson, getLessonById, updateLesson, deleteLessonById } from '@/api/lesson-api';
 import { auth, db } from '@/lib/firebase';
-import { getDoc, getDocs, doc, addDoc } from 'firebase/firestore';
+import { getDoc, getDocs, doc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import fireToast from "@/services/toast";
 
 jest.mock("@/services/toast", () => {
-    return {
-        __esModule: true,
-        default: jest.fn()
-    };
+  return {
+    __esModule: true,
+    default: jest.fn()
+  };
 });
 jest.mock('firebase/auth', () => ({
   getReactNativePersistence: jest.fn(),
@@ -26,7 +26,9 @@ jest.mock('firebase/firestore', () => ({
   doc: jest.fn(),
   getDoc: jest.fn(),
   getDocs: jest.fn(),
-  addDoc: jest.fn()
+  addDoc: jest.fn(),
+  updateDoc: jest.fn(),
+  deleteDoc: jest.fn()
 }));
 jest.mock("@/lib/firebase", () => ({
   auth: jest.fn(),
@@ -123,10 +125,12 @@ describe('storeLesson', () => {
       maxPeople: "10",
     };
     const startTime = "14:00";
+    const deadLineTime = "14:00";
+
     (addDoc).mockResolvedValue({});
 
     // When
-    await storeLesson(lessonData, startTime);
+    await storeLesson(lessonData, startTime, deadLineTime);
 
     // Then
     expect(addDoc).toHaveBeenCalled();
@@ -146,10 +150,11 @@ describe('storeLesson', () => {
       maxPeople: "10",
     }
     const startTime = "14:00";
+    const deadLineTime = "14:00";
     (addDoc).mockRejectedValue(new Error('Failed to add document'));
 
     // When
-    await storeLesson(lessonData, startTime);
+    await storeLesson(lessonData, startTime, deadLineTime);
 
     // Then
     expect(fireToast).toHaveBeenCalledWith('error', 'Something went wrong !');
@@ -245,6 +250,90 @@ describe('getPlayerById', () => {
     expect(getDoc).toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalledWith('No such document!');
     expect(result).toBeNull();
+
+    // Cleanup
+    consoleSpy.mockRestore();
+  });
+});
+
+describe('updateLesson', () => {
+  const fakeId = 'lesson123';
+  const updatedLessonData = {
+    startDate: "01/02/2024",
+    endDate: "01/03/2024",
+    signInDeadLine: "01/02/2024",
+    duration: "2",
+    tags: "updatedTag1, updatedTag2",
+    minAge: "20",
+    minPeople: "10",
+    maxPeople: "20",
+  };
+  const startTime = "10:00";
+  const deadLineTime = "10:00";
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('calls updateDoc with the correct parameters and shows success toast', async () => {
+    // Arrange
+    updateDoc.mockResolvedValueOnce({}); // Simulate successful update
+
+    // Act
+    await updateLesson(fakeId, updatedLessonData, startTime, deadLineTime);
+
+    // Assert
+    expect(doc).toHaveBeenCalled();
+    expect(updateDoc).toHaveBeenCalled();
+    expect(fireToast).toHaveBeenCalledWith('success', 'Lesson updated successfully !');
+  });
+
+  it('shows error toast when updating a lesson fails', async () => {
+    // Arrange
+    const error = new Error('Failed to update document');
+    updateDoc.mockRejectedValueOnce(error); // Simulate failure
+
+    // Act
+    await updateLesson(fakeId, updatedLessonData, startTime, deadLineTime);
+
+    // Assert
+    expect(doc).toHaveBeenCalled()
+    expect(updateDoc).toHaveBeenCalled();
+    expect(fireToast).toHaveBeenCalledWith('error', 'Something went wrong while updating the lesson !');
+  });
+});
+describe('deleteLessonById', () => {
+  const fakeId = 'lesson123';
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('calls deleteDoc with the correct parameters', async () => {
+    // Arrange
+    deleteDoc.mockResolvedValueOnce({}); // Simulate successful deletion
+
+    // Act
+    await deleteLessonById(fakeId);
+
+    // Assert
+    expect(doc).toHaveBeenCalled()
+    expect(deleteDoc).toHaveBeenCalled();
+  });
+
+  it('logs an error message when deletion fails', async () => {
+    // Arrange
+    const consoleSpy = jest.spyOn(console, 'log');
+    const error = new Error('Failed to delete document');
+    deleteDoc.mockRejectedValueOnce(error); // Simulate failure
+
+    // Act
+    await deleteLessonById(fakeId);
+
+    // Assert
+    expect(doc).toHaveBeenCalled();
+    expect(deleteDoc).toHaveBeenCalled();
+    expect(consoleSpy).toHaveBeenCalledWith('Error deleting the lesson');
 
     // Cleanup
     consoleSpy.mockRestore();

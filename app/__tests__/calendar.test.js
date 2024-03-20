@@ -31,9 +31,7 @@ mockGetDocs.mockResolvedValue({
 
 describe('getLessonsByCoachId', () => {
     it('fetches lessons successfully', async () => {
-
         const lessons = await getLessonsByCoachId();
-
         expect(collection).toHaveBeenCalledWith(db, 'lesson');
         expect(query).toHaveBeenCalled();
         expect(where).toHaveBeenCalled();
@@ -44,9 +42,7 @@ describe('getLessonsByCoachId', () => {
     it('handles errors gracefully', async () => {
         const mockGetDocs = getDocs;
         mockGetDocs.mockRejectedValue(new Error('Error getting lessons'));
-
         const lessons = await getLessonsByCoachId();
-
         expect(lessons).toEqual([]);
     });
 });

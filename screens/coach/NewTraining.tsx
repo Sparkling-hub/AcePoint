@@ -8,7 +8,7 @@ import Colors from "@/constants/Colors";
 import Portrait from "@/components/svg/Portrait";
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { CalendarDays } from "@tamagui/lucide-icons";
-import { ScrollView, YStack } from "tamagui";
+import { ScrollView, Text, YStack } from "tamagui";
 import StyleIcon from "@/components/svg/StyleIcon";
 import TimeIcon from "@/components/svg/TimeIcon";
 import CustomButton from "@/components/CustomButton";
@@ -21,10 +21,10 @@ import { StyleSheet } from "react-native";
 import { retrieveData } from "@/api/localStorage";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { storeLesson } from "@/api/lesson-api";
+import { getLessonById, storeLesson, updateLesson } from "@/api/lesson-api";
 import fireToast from "@/services/toast";
 import NewTrainingSkeleton from "@/components/skeletons/NewTrainingSkeleton";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { TimerPickerModal } from "react-native-timer-picker";
 import { useDispatch } from "react-redux";
 import { setCalendarOption } from "@/store/slices/calendarSlice";
@@ -37,7 +37,10 @@ export default function NewTrainingScreen() {
     const [showStartDate, setShowStartDate] = useState(false);
     const [showSignInDeadLine, setShowSignInDeadLine] = useState(false);
     const [showEndDate, setShowEndDate] = useState(false);
+    const [startDate, setStartDate] = useState(new Date());
     const [startTime, setStartTime] = useState('12:30:00.000Z')
+    const [deadLineTime, setDeadLineTime] = useState('12:30:00.000Z')
+
     const [isLoading, setIsLoading] = useState(true)
     const dispatch = useDispatch()
     const handleShow = (field: string) => {
@@ -79,7 +82,7 @@ export default function NewTrainingScreen() {
         duration: Yup.string().required('Duration is required !'),
         maxPeople: Yup.number().min(1, 'Minimum value is 1 !').max(50, 'Maximum value is 50 !').required('Max people is required !'),
         minPeople: Yup.number().min(1, 'Minimum value is 1 !').max(20, 'Maximum value is 20 !').required('Min people is required !'),
-        court: Yup.string().min(3, 'Court is too short!').max(200, 'Court is too long!'),
+        court: Yup.number().min(1, 'Court is too short!').max(200, 'Court is too long!'),
         recurrence: Yup.string().required('Recurrence is required !'),
         paymentMode: Yup.array().required('Payement mode is required !'),
         minAge: Yup.number().min(1, 'Minimum value is 1 !').max(200, 'No !').required('Min age is required !'),
@@ -88,7 +91,12 @@ export default function NewTrainingScreen() {
         formik.setFieldValue(name, value);
     };
     const storeAndRedirect = async () => {
-        await storeLesson(formik.values, startTime);
+        if (mode === 'EDIT TRAINING') {
+            const trainingID = await retrieveData('trainingID')
+            await updateLesson(trainingID || '', formik.values, startTime, deadLineTime);
+        }
+        else
+            await storeLesson(formik.values, startTime, deadLineTime);
         dispatch(setCalendarOption('D'))
         router.replace('/calendar-coach');
     }
@@ -108,16 +116,23 @@ export default function NewTrainingScreen() {
         onSubmit: () => handleSubmit(),
     });
     const handleConfirm = (field: string, date: Date) => {
+        const dateParts = date.toISOString().split('T')
         if (field === "startDate") {
-            const dateParts = date.toISOString().split('T')
+            setStartDate(date)
             setStartTime(dateParts[1])
             const endDate = date.setDate(date.getDate() + 5)
             handleChange('endDate', new Date(endDate).toLocaleDateString('en-US'))
             date.setDate(date.getDate() - 5)
+        } else if (field === "signInDeadLine") {
+            setDeadLineTime(dateParts[1])
         }
         handleChange(field, date.toLocaleDateString())
         handleShow(field);
     };
+
+    const { mode } = useLocalSearchParams();
+
+
     useEffect(() => {
         const getUserName = async () => {
             const userInfo = await retrieveData('userInfo')
@@ -133,9 +148,52 @@ export default function NewTrainingScreen() {
                     handleChange('club', user.club)
                 }
             }
+        }
+        const getTraining = async () => {
+            if (mode === 'EDIT TRAINING') {
+                const trainingID = await retrieveData('trainingID')
+                if (trainingID) {
+                    const training = await getLessonById(trainingID)
+                    if (training) {
+                        formik.setFieldValue('organiser', training.organiser);
+                        formik.setFieldValue('description', training.description);
+                        formik.setFieldValue('trainingTitle', training.trainingTitle);
+                        formik.setFieldValue('maxPeople', training.maxPeople.toString());
+                        formik.setFieldValue('minPeople', training.minPeople.toString());
+                        formik.setFieldValue('price', training.price);
+                        formik.setFieldValue('club', training.club);
+                        formik.setFieldValue('duration', training.duration);
+                        let timestamps = new Date(training.startDate.seconds * 1000)
+                        let date = timestamps.toLocaleString().split(',')[0]
+                        let time = timestamps.toISOString().split('T')[1]
+                        setStartTime(time)
+                        setStartDate(timestamps)
+                        formik.setFieldValue('startDate', date);
+                        timestamps = new Date(training.endDate.seconds * 1000)
+                        date = timestamps.toLocaleString().split(',')[0]
+                        formik.setFieldValue('endDate', date);
+                        timestamps = new Date(training.signInDeadLine.seconds * 1000)
+                        date = timestamps.toLocaleString().split(',')[0]
+                        time = timestamps.toISOString().split('T')[1]
+                        setDeadLineTime(time)
+                        formik.setFieldValue('signInDeadLine', date);
+                        if (training.court !== "") formik.setFieldValue('court', training.court.toString());
+                        formik.setFieldValue('minAge', training.minAge.toString());
+                        formik.setFieldValue('recurrence', training.recurrence);
+                        formik.setFieldValue('paymentMode', training.paymentMode);
+                        let tags = training.tags[0]
+                        for (let index = 1; index < training.tags.length; index++) {
+                            const element = training.tags[index];
+                            tags += ', ' + element
+                        }
+                        formik.setFieldValue('tags', tags);
+                    }
+                }
+            }
             setIsLoading(false)
         }
         getUserName()
+        getTraining()
     }, [])
 
     if (isLoading) {
@@ -163,6 +221,19 @@ export default function NewTrainingScreen() {
                 </YStack>
                 <YStack style={styles.ystack}>
                     <CustomInput
+                        value={formik.values.trainingTitle}
+                        onChangeText={(value: any) => {
+                            handleChange('trainingTitle', value)
+                        }}
+                        onBlur={formik.handleBlur('trainingTitle')}
+                        errors={formik.errors.trainingTitle}
+                        validateOnInit
+                        placeholder="Training Title"
+                        icon={<Sutitles />}
+                    />
+                </YStack>
+                <YStack style={styles.ystack}>
+                    <CustomInput
                         value={formik.values.description}
                         onChangeText={(value: any) => {
                             handleChange('description', value)
@@ -173,6 +244,7 @@ export default function NewTrainingScreen() {
                         placeholder="Description"
                         icon={<Sutitles />}
                     />
+                    {formik.errors.description != 'Description is required' && <Text style={styles.errormessage}>{formik.errors.description}</Text>}
                 </YStack>
                 <YStack style={styles.ystackselect}>
                     <CustomInput
@@ -255,19 +327,13 @@ export default function NewTrainingScreen() {
                         icon={<Person />}
                     />
                 </YStack>
-                <YStack style={styles.ystack}>
-                    <CustomInput
-                        value={formik.values.trainingTitle}
-                        onChangeText={(value: any) => {
-                            handleChange('trainingTitle', value)
-                        }}
-                        onBlur={formik.handleBlur('trainingTitle')}
-                        errors={formik.errors.trainingTitle}
-                        validateOnInit
-                        placeholder="Training Title"
-                        icon={<Sutitles />}
-                    />
-                </YStack>
+                {(formik.errors.maxPeople != 'Max people is required !' || formik.errors.minPeople != 'Min people is required !') &&
+                    <YStack style={{ ...styles.ystackselect, marginBottom: -15 }}>
+                        {formik.errors.maxPeople != 'Max people is required !' && <Text style={{ ...styles.errormessage, position: "relative", top: -20, marginRight: 20 }}>{formik.errors.maxPeople}</Text>}
+                        {formik.errors.minPeople != 'Min people is required !' && <Text style={{ ...styles.errormessage, position: "relative", top: -20 }}>{formik.errors.minPeople}</Text>}
+                    </YStack>
+                }
+
                 <YStack style={styles.ystack}>
                     <CustomInput
                         value={formik.values.signInDeadLine}
@@ -290,6 +356,7 @@ export default function NewTrainingScreen() {
                             handleConfirm('signInDeadLine', date)
                         }}
                         onCancel={() => { handleShow('signInDeadLine') }}
+                        minimumDate={startDate}
                     />
                 </YStack>
                 <YStack style={styles.ystack}>
@@ -313,6 +380,8 @@ export default function NewTrainingScreen() {
                                 d="M308 352h-45.495c-6.627 0-12 5.373-12 12v50.848H128V288h84c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12h-84v-63.556c0-32.266 24.562-57.086 61.792-57.086 23.658 0 45.878 11.505 57.652 18.849 5.151 3.213 11.888 2.051 15.688-2.685l28.493-35.513c4.233-5.276 3.279-13.005-2.119-17.081C273.124 54.56 236.576 32 187.931 32 106.026 32 48 84.742 48 157.961V224H20c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h28v128H12c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h296c6.627 0 12-5.373 12-12V364c0-6.627-5.373-12-12-12z" />
                         </Svg>}
                     />
+                    {formik.errors.price != 'Price is required !' && <Text style={styles.errormessage}>{formik.errors.price}</Text>}
+
                 </YStack>
                 <YStack style={styles.ystack}>
                     <CustomInput
@@ -333,12 +402,16 @@ export default function NewTrainingScreen() {
                         onChangeText={(value: any) => {
                             handleChange('court', value)
                         }}
+                        keyboardType="numeric"
                         onBlur={formik.handleBlur('court')}
                         errors={formik.errors.court}
                         validateOnInit
                         placeholder="Court"
                         icon={<Portrait />}
                     />
+                </YStack>
+                <YStack style={{ marginTop: -15 }}>
+                    {formik.errors.court != 'Court is required !' && <Text style={{ ...styles.errormessage, marginBottom: 15 }}>{formik.errors.court}</Text>}
                 </YStack>
                 <YStack style={styles.ystack}>
                     <CustomDropdown
@@ -377,6 +450,7 @@ export default function NewTrainingScreen() {
                                 handleConfirm('endDate', date)
                             }}
                             onCancel={() => { handleShow('endDate') }}
+                            minimumDate={startDate}
                         />
                     </YStack>
                 }
@@ -417,6 +491,7 @@ export default function NewTrainingScreen() {
                         placeholder="Min age"
                         icon={<TimeIcon />}
                     />
+                    {formik.errors.minAge != 'Min age is required !' && <Text style={styles.errormessage}>{formik.errors.minAge}</Text>}
                 </YStack>
                 <YStack style={styles.ystack} alignItems="center" alignSelf="center">
                     <CustomButton title="PUBLISH" onPress={() => { handleSubmit() }}></CustomButton>
@@ -449,6 +524,5 @@ const styles = StyleSheet.create({
     errormessage: {
         color: 'red',
         marginLeft: 10,
-        marginBottom: 20
     }
 })

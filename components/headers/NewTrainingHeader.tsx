@@ -8,7 +8,7 @@ export default function NewTrainingHeader() {
     return (
         <CustomHeader
             leftIcon={<ChevronLeft size={'$3'} color={Colors.secondary} />}
-            title="NEW TRAINING"
+            title="TRAINING"
             rightContent={
                 <TouchableOpacity onPress={() => { }}>
                     <HeaderText text="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />

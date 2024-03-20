@@ -50,7 +50,7 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
         return (
             <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }} onPress={async () => {
                 await storeData('trainingID', item.id)
-                router.navigate('/training')
+                router.replace('/training')
             }}>
                 <Card>
                     <Card.Content style={{ backgroundColor: Colors.secondary, borderRadius: 10 }}>
@@ -71,7 +71,6 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
     };
     return (
         <>
-            { }
             <Agenda
                 items={items}
                 loadItemsForMonth={loadItems}
