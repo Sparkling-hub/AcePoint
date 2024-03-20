@@ -8,7 +8,7 @@ import { storeData } from "@/api/localStorage";
 import { router } from "expo-router";
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const times = ['06:00', '06:30','07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'];
+const times = ['06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30'];
 
 function getTimeIndex(time: string): number {
     const baseTime = times[0];
@@ -27,6 +27,13 @@ function calculateEventHeight(startTime: string, endTime: string): number {
     const startIndex = getTimeIndex(startTime);
     const endIndex = getTimeIndex(endTime);
     return (endIndex - startIndex) * 40;
+}
+
+function calculateCurrentTimeOffset(): number {
+    const now = new Date();
+    const hours = now.getHours() + 1
+    const currentTime = `${hours.toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    return calculateEventTopOffset(currentTime);
 }
 
 export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { readonly lessons: any[], readonly currentWeek: string }) {
@@ -108,6 +115,11 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
                         );
                     })}
 
+                    <View style={{ position: 'absolute', top: calculateCurrentTimeOffset(), left: 0, right: 0, flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={styles.currentTimeTriangle} />
+                        <View style={[styles.currentTimeIndicator]} />
+                    </View>
+
                     {daysOfWeek.map((day, dayIndex) => (
                         <View key={day} style={styles.dayColumn}>
                             <View style={[styles.gridLine, { top: 0, width: 1, left: null, right: 0, height: 20000 }]} />
@@ -122,7 +134,7 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
                                             router.navigate('/training')
                                         }}
                                             key={time}>
-                                            <View key={day + time} style={[styles.eventCell, { top: eventTopOffset, height: eventHeight, borderWidth: 1, borderColor: Colors.primary }]}>
+                                            <View key={day + time} style={[styles.eventCell, { top: eventTopOffset, height: eventHeight, borderWidth: 1, borderColor: Colors.primary }]} >
                                                 <Text style={styles.eventTime}>{time} - {event.endTime}</Text>
                                                 <Text style={styles.eventText}>{event.name}</Text>
                                                 <Text style={styles.eventTime}>{event.spacesLeft} Spaces left</Text>
@@ -243,4 +255,23 @@ const styles = StyleSheet.create({
         backgroundColor: '#e0e0e0',
         zIndex: 0,
     },
+    currentTimeIndicator: {
+        flex: 1,
+        height: 2,
+        backgroundColor: Colors.primary,
+    },
+    currentTimeTriangle: {
+        width: 0,
+        height: 0,
+        backgroundColor: 'transparent',
+        borderStyle: 'solid',
+        borderLeftWidth: 5,
+        borderRightWidth: 5,
+        borderBottomWidth: 10,
+        borderLeftColor: 'transparent',
+        borderRightColor: 'transparent',
+        borderBottomColor: Colors.primary,
+        transform: [{ rotate: '90deg' }],
+    },
 });
+

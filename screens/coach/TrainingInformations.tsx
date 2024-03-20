@@ -27,6 +27,7 @@ export default function TrainingInformations() {
         price: '',
         paymentMode: ['']
     })
+    const [playersRequired, setPlayersRequired] = useState(0)
     const [id, setId] = useState('')
     const [players, setPlayers] = useState([])
     const [coach, setCoach] = useState({
@@ -47,6 +48,7 @@ export default function TrainingInformations() {
                     const coachDoc = await getCoachById(trainingDoc.coachId)
                     if (coachDoc) setCoach(coachDoc)
                     const arrayPlayers = trainingDoc.players
+                    setPlayersRequired(trainingDoc.maxPeople - arrayPlayers.length)
                     arrayPlayers.forEach(async (element: string) => {
                         const player = await getPlayerById(element)
                         if (player) {
@@ -155,6 +157,13 @@ export default function TrainingInformations() {
                     </YStack>
                     <YStack marginBottom={10} marginTop={10} paddingLeft={20}>
                         <ProgressBar value={rating}></ProgressBar>
+                        {playersRequired === 0 ? (
+                            <Text color={Colors.lightSilver}>Full</Text>
+                        ) : playersRequired === 1 ? (
+                            <Text color={Colors.lightSilver}>Minimum {playersRequired} player required</Text>
+                        ) : (
+                            <Text color={Colors.lightSilver}>Minimum {playersRequired} players required</Text>
+                        )}
                     </YStack>
                 </YStack>
                 <YStack marginBottom={10}>
