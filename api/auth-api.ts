@@ -1,5 +1,5 @@
 import { auth, createUserWithEmailAndPassword, setDoc, db   } from '@/lib/firebase'
-import { Timestamp, getDoc,doc } from "firebase/firestore";
+import { Timestamp, getDoc,doc } from "firebase/firestore"
 import { Coach } from '@/model/coach';
 import { Player } from '@/model/player';
 import { storeData } from '@/api/localStorage'
