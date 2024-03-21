@@ -88,9 +88,9 @@ const loginUser = async ({ email, password,usertype }: { email: string, password
           return 'coach does not exist.';
         }
         
-        const coachData = coachSnap.data();
-        storeData("userInfo",JSON.stringify({user:user.user,coachData}) )
-        return {user,coachData}
+        const data = coachSnap.data();
+        storeData("userInfo",JSON.stringify({user:user.user,data}) )
+        return {user,data}
     }
     if (usertype==="Player") {
       const user = await signInWithEmailAndPassword(auth, email, password)
@@ -100,9 +100,9 @@ const loginUser = async ({ email, password,usertype }: { email: string, password
           signOut(auth)
           return 'player does not exist.';
         }
-        const playerData = playerSnap.data();
-        storeData("userInfo",JSON.stringify({user:user.user,playerData}))
-        return {user,playerData}
+        const data = playerSnap.data();
+        storeData("userInfo",JSON.stringify({user:user.user,data}))
+        return {user,data}
     }
   } catch (error) {
     return error

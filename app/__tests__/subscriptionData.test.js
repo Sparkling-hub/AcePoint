@@ -27,7 +27,7 @@ describe('subscriptionData function', () => {
 
     it('should return "subscription is not exist" if subscription data does not exist', async () => {
         // Mocking the retrieveData function to return data without subscription
-        retrieveData.mockResolvedValueOnce(JSON.stringify({ coachData: {}}));
+        retrieveData.mockResolvedValueOnce(JSON.stringify({ data: {}}));
 
         // Call the subscriptionData function
         const result = await subscriptionData();
@@ -46,7 +46,7 @@ describe('subscriptionData function', () => {
     });
     it('should return subscription data if it exists', async () => {
         // Mocking the retrieveData function to return data with subscription
-        retrieveData.mockResolvedValueOnce(JSON.stringify({ coachData: { subscription: 'exampleSubscription'} }));
+        retrieveData.mockResolvedValueOnce(JSON.stringify({ data: { subscription: 'exampleSubscription'} }));
 
         // Call the subscriptionData function
         const result = await subscriptionData();

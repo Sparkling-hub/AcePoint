@@ -30,7 +30,7 @@ jest.mock('firebase/auth', () => ({
   
     it('should login coach and return user and coachData', async () => {
       // Mock Firestore snapshot
-      const coachSnap = { exists: jest.fn().mockReturnValue(true), data: jest.fn().mockReturnValue({ coachData: 'mockCoachData' }) };
+      const coachSnap = { exists: jest.fn().mockReturnValue(true), data: jest.fn().mockReturnValue({ data: 'mockCoachData' }) };
       getDoc.mockResolvedValue(coachSnap);
       // Mock Firebase authentication
       signInWithEmailAndPassword.mockResolvedValueOnce({ user: { uid: 'mockUid' } });
@@ -39,13 +39,13 @@ jest.mock('firebase/auth', () => ({
       expect(signOut).not.toHaveBeenCalled();
       expect(result).toEqual({
         user: { user: { uid: 'mockUid' } },
-        coachData: { coachData: 'mockCoachData' }
+        data: { data: 'mockCoachData' }
       });
     });
   
     it('should login player and return user and playerData', async () => {
       // Mock Firestore snapshot
-      const playerSnap = { exists: jest.fn().mockReturnValue(true), data: jest.fn().mockReturnValue({ playerData: 'mockPlayerData' }) };
+      const playerSnap = { exists: jest.fn().mockReturnValue(true), data: jest.fn().mockReturnValue({ data: 'mockPlayerData' }) };
       getDoc.mockResolvedValue(playerSnap);
   
       // Mock Firebase authentication
@@ -55,7 +55,7 @@ jest.mock('firebase/auth', () => ({
   
       expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(), 'player@example.com', 'passworduser123');
       expect(signOut).not.toHaveBeenCalled();
-      expect(result).toEqual({ user: { user: { uid: 'mockUid' } }, playerData: { playerData: 'mockPlayerData' } });
+      expect(result).toEqual({ user: { user: { uid: 'mockUid' } }, data: { data: 'mockPlayerData' } });
     });
   
     it('should handle error', async () => {

@@ -15,7 +15,6 @@ export default function TabOneScreen() {
       <Button size="$3" onPress={() => alert('Button pressed!')}>
         Press Me
       </Button>
-
       <View
         style={styles.separator}
         lightColor="#eee"
