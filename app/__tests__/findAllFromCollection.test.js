@@ -1,6 +1,5 @@
-import { findAllFromCollection,findByIdInCollection } from '@/api/chat-api'; 
-import { doc,getDoc,collection,getDocs } from 'firebase/firestore'; 
-import { db } from '@/lib/firebase'; 
+import { findAllFromCollection } from '@/api/chat-api'; 
+import { getDocs } from 'firebase/firestore'; 
 
 jest.mock('firebase/auth', () => ({
     getReactNativePersistence: jest.fn(),

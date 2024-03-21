@@ -1,5 +1,5 @@
 import { db,auth } from "@/lib/firebase";
-import { Timestamp, addDoc, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query } from "firebase/firestore";
+import { Timestamp, addDoc, collection, getDocs, onSnapshot, orderBy, query } from "firebase/firestore";
 import { retrieveData } from "./localStorage";
 const getMessages =  (callback:any)=> {
     try {
