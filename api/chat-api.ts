@@ -70,27 +70,7 @@ async function findAllFromCollection(collectionName:string) {
         return error.message;
     }
 }
-async function findByIdInCollection( collectionName:string, documentId:string) {
-    try {
-        // Get a reference to the document   tl6AyKtPHuVbCQlguyPEuziQIhr1
-        const docRef = doc(db, collectionName, documentId);
 
-        // Retrieve the document
-        const docSnapshot = await getDoc(docRef);
-
-        // Check if the document exists
-        if (docSnapshot.exists()) {
-            // Return the document data
-            return { id: docSnapshot.id, ...docSnapshot.data() };
-        } else {
-            // If the document doesn't exist, return null
-            return null;
-        }
-    } catch (error:any) {
-        console.log('Error fetching document:', error.message);
-        throw error.message;
-    }
-}
 const cureentUser=()=>{
     const currentUser = auth.currentUser; 
         if (!currentUser) {
@@ -98,4 +78,4 @@ const cureentUser=()=>{
         }  
     return currentUser.uid
 }
-export {getMessages,sendMessage,findAllFromCollection,findByIdInCollection,cureentUser}
+export {getMessages,sendMessage,findAllFromCollection,cureentUser}
