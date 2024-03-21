@@ -140,6 +140,7 @@ export default function TrainingInformations() {
                     <YStack flexDirection="row" flexWrap="wrap">
                         {players.map((element) => (
                             <Avatar
+                                key={element.image}
                                 circular
                                 size="$5"
                                 marginTop={30}
@@ -157,11 +158,13 @@ export default function TrainingInformations() {
                     </YStack>
                     <YStack marginBottom={10} marginTop={10} paddingLeft={20}>
                         <ProgressBar value={rating}></ProgressBar>
-                        {playersRequired === 0 ? (
+                        {playersRequired === 0 && (
                             <Text color={Colors.lightSilver}>Full</Text>
-                        ) : playersRequired === 1 ? (
+                        )}
+                        {playersRequired === 1 && (
                             <Text color={Colors.lightSilver}>Minimum {playersRequired} player required</Text>
-                        ) : (
+                        )}
+                        {playersRequired > 1 && (
                             <Text color={Colors.lightSilver}>Minimum {playersRequired} players required</Text>
                         )}
                     </YStack>
@@ -193,7 +196,7 @@ export default function TrainingInformations() {
                 <YStack style={{ marginBottom: 30 }}>
                     <Text style={styles.title}>Payement</Text>
                     {training.paymentMode.map((element, index) => (
-                        <Text color={Colors.secondary} fontSize={15} fontWeight={'bold'} marginLeft={20} marginTop={8} key={index}>{element}</Text>
+                        <Text color={Colors.secondary} fontSize={15} fontWeight={'bold'} marginLeft={20} marginTop={8} key={element}>{element}</Text>
                     ))}
                 </YStack>
                 <YStack style={{ marginLeft: 20, marginRight: 20, marginBottom: 30 }}>

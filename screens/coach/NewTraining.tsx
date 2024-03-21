@@ -327,7 +327,7 @@ export default function NewTrainingScreen() {
                         icon={<Person />}
                     />
                 </YStack>
-                {(formik.errors.maxPeople != 'Max people is required !' ?? formik.errors.minPeople != 'Min people is required !') &&
+                {(formik.errors.maxPeople != 'Max people is required !' && formik.errors.minPeople != 'Min people is required !') &&
                     <YStack style={{ ...styles.ystackselect, marginBottom: -15 }}>
                         {formik.errors.maxPeople != 'Max people is required !' && <Text style={{ ...styles.errormessage, position: "relative", top: -20, marginRight: marginRight }}>{formik.errors.maxPeople}</Text>}
                         {formik.errors.minPeople != 'Min people is required !' && <Text style={{ ...styles.errormessage, position: "relative", top: -20 }}>{formik.errors.minPeople}</Text>}
