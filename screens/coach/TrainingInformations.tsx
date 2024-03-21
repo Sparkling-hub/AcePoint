@@ -1,4 +1,4 @@
-import { deleteLessonById, getLessonById } from "@/api/lesson-api"
+import { addPlayerToLesson, deleteLessonById, getLessonById } from "@/api/lesson-api"
 import { retrieveData } from "@/api/localStorage"
 import { useEffect, useState } from "react"
 import { Text, YStack, Avatar, Separator, ScrollView, Button } from 'tamagui';
@@ -10,10 +10,13 @@ import { getPlayerById } from "@/api/player-api";
 import { getCoachById } from "@/api/coach-api";
 import { addDurationToStartDate, time } from "@/services/dateService";
 import moment from "moment";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import fireToast from "@/services/toast";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export default function TrainingInformations() {
+    const router = useRouter()
     const [isLoading, setIsLoading] = useState(true)
     const [training, setTraining] = useState({
         description: '',
@@ -37,6 +40,9 @@ export default function TrainingInformations() {
         level: ''
     })
     const [rating, setRating] = useState(50)
+    const user = useSelector((state: RootState) => state.userRole);
+    const userRole = user.userRole;
+    const [disabled, setDisabled] = useState(false)
     useEffect(() => {
         const getInformations = async () => {
             const trainingID = await retrieveData('trainingID')
@@ -44,10 +50,13 @@ export default function TrainingInformations() {
                 setId(trainingID)
                 const trainingDoc = await getLessonById(trainingID)
                 if (trainingDoc) {
+                    setDisabled((new Date(trainingDoc.signInDeadLine.seconds * 1000) > new Date()));
                     setTraining(trainingDoc)
                     const coachDoc = await getCoachById(trainingDoc.coachId)
                     if (coachDoc) setCoach(coachDoc)
                     const arrayPlayers = trainingDoc.players
+                    const userID = await retrieveData("userID")
+                    setDisabled(arrayPlayers.includes(userID))
                     setPlayersRequired(trainingDoc.maxPeople - arrayPlayers.length)
                     arrayPlayers.forEach(async (element: string) => {
                         const player = await getPlayerById(element)
@@ -140,7 +149,7 @@ export default function TrainingInformations() {
                     <YStack flexDirection="row" flexWrap="wrap">
                         {players.map((element) => (
                             <Avatar
-                                key={element.image}
+                                key={element.phoneNumber}
                                 circular
                                 size="$5"
                                 marginTop={30}
@@ -200,11 +209,20 @@ export default function TrainingInformations() {
                     ))}
                 </YStack>
                 <YStack style={{ marginLeft: 20, marginRight: 20, marginBottom: 30 }}>
-                    <Button onPress={async () => {
+                    {userRole === 'Coach' && <Button onPress={async () => {
                         await deleteLessonById(id)
                         fireToast('success', 'Lesson deleted successfully !')
                         router.replace("/calendar-coach")
                     }} backgroundColor={Colors.danger} color={'white'} fontWeight={'bold'} fontSize={20} paddingTop={15} paddingBottom={15} height={60}>Delete</Button>
+                    }
+                    {(userRole === 'Player' && !disabled) &&
+                        <Button onPress={async () => {
+                            const userId = await retrieveData("userID")
+                            if (userId) await addPlayerToLesson(id, userId)
+                            router.replace("/training")
+                        }}
+                            backgroundColor={Colors.secondary} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}>Join</Button>
+                    }
                 </YStack>
             </YStack>
         </ScrollView>

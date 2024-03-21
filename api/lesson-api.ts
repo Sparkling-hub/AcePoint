@@ -1,13 +1,11 @@
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, addDoc, getDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
-import { retrieveData } from './localStorage';
 import fireToast from '@/services/toast';
 
 const lessonsRef = collection(db, "lesson");
 
-const getLessonsByCoachId = async () => {
-    const coachId = await retrieveData('userID')
-    const q = query(lessonsRef, where("coachId", "==", coachId));
+const getLessonsByCoachId = async (id: string) => {
+    const q = query(lessonsRef, where("coachId", "==", id));
     try {
         const querySnapshot = await getDocs(q);
         const lessons: any = [];
@@ -67,6 +65,21 @@ const updateLesson = async (id: string, updatedLessonData: any, startTime: strin
     }
 };
 
+const addPlayerToLesson = async (id: string, playerId: string) => {
+    const docRef = doc(db, "lesson", id);
+    const lesson = await getLessonById(id)
+    if (lesson) {
+        lesson.players.push(playerId)
+        try {
+            await updateDoc(docRef, lesson);
+            fireToast('success', 'Joined !');
+        } catch (error) {
+            fireToast('error', 'Something went wrong !');
+            console.log(error);
+        }
+    }
+};
+
 const getLessonById = async (id: string) => {
     const docRef = doc(db, "lesson", id);
     const docSnap = await getDoc(docRef);
@@ -86,5 +99,5 @@ const deleteLessonById = async (id: string) => {
     }
 }
 
-export { getLessonsByCoachId, storeLesson, getLessonById, deleteLessonById, updateLesson };
+export { getLessonsByCoachId, storeLesson, getLessonById, deleteLessonById, updateLesson, addPlayerToLesson };
 

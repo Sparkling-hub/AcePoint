@@ -7,6 +7,11 @@ import { favouriteCoach, unfavoriteCoach } from '@/api/player-api';
 import { Pressable } from 'react-native';
 import { auth } from '@/lib/firebase';
 import fireToast from './toast/Toast';
+import { useDispatch } from 'react-redux';
+import { setCoachId, setCoachName, setLessons } from '@/store/slices/CoachSlice';
+import { router } from 'expo-router';
+import { getLessonsByCoachId } from '@/api/lesson-api';
+import { getUpdatedLessonsForWeeklyView } from '@/services/lessons';
 
 interface CoachBoxProps {
   readonly name?: string;
@@ -28,7 +33,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
   followedPlayer,
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
-
+  const dispatch = useDispatch()
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (
@@ -88,6 +93,14 @@ const CoachBox: React.FC<CoachBoxProps> = ({
               {name}
             </Text>
             <Text
+              onPress={async () => {
+                const lessonsFromDB = await getLessonsByCoachId(coachRef)
+                const lessons = getUpdatedLessonsForWeeklyView(lessonsFromDB)
+                dispatch(setCoachName(name))
+                dispatch(setCoachId(coachRef))
+                dispatch(setLessons(lessons))
+                router.push('/(tabs)/book/coach-availability')
+              }}
               style={{ fontFamily: 'MontserratMedium' }}
               color={Colors.primary}
               fontSize={14}
