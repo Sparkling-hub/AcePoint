@@ -17,7 +17,7 @@ export default function TrainingHeader({ testID }: { readonly testID: string }) 
             : router.replace('/(tabs)/book/coach-availability');
     }
     const editButton = () => {
-        userRole === 'Coach' ? (<TouchableOpacity onPress={() => {
+        return userRole === 'Coach' ? (<TouchableOpacity onPress={() => {
             router.push({
                 pathname: "/new-training",
                 params: { mode: 'EDIT TRAINING' },
