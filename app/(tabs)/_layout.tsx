@@ -9,7 +9,7 @@ import CalendarIcon from '@/components/tabIcons/CalendarIcon';
 import CalendarIconLabel from '@/components/tabIcons/CalendarIconLabel';
 import { ChevronLeft } from '@tamagui/lucide-icons';
 import { Button, View } from 'tamagui';
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from 'react-native';
 import Calendar from '@/components/svg/Calendar';
 import { setCalendarOption } from '@/store/slices/calendarSlice';
 import ProfileIcon from '@/components/tabIcons/ProfileIcon';
@@ -21,7 +21,10 @@ import HomeIconLabel from '@/components/tabIcons/HomeIconLabel';
 import ProfileHeader from '@/components/headers/ProfileHeader';
 import { RootState } from '@/store/store';
 
-const CalendarHeader = ({ handleState, getButtonStyle }: {
+const CalendarHeader = ({
+  handleState,
+  getButtonStyle,
+}: {
   handleState: (selected: string) => void;
   getButtonStyle: (key: string) => React.CSSProperties;
 }) => {
@@ -30,9 +33,15 @@ const CalendarHeader = ({ handleState, getButtonStyle }: {
       leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
       rightContent={
         <View style={styles.header}>
-          <Calendar fill={Colors.secondary} style={{ marginRight: 20, marginTop: 3 }} />
+          <Calendar
+            fill={Colors.secondary}
+            style={{ marginRight: 20, marginTop: 3 }}
+          />
           {['D', 'W', 'M'].map((key) => (
-            <Button key={key} style={getButtonStyle(key)} onPress={() => handleState(key)}>
+            <Button
+              key={key}
+              style={getButtonStyle(key)}
+              onPress={() => handleState(key)}>
               {key}
             </Button>
           ))}
@@ -55,14 +64,14 @@ export default function TabLayout() {
   const { userRole } = useSelector((state: RootState) => state.userRole);
 
   const [state, setState] = useState({
-    "D": true,
-    "W": false,
-    "M": false,
-  })
+    D: true,
+    W: false,
+    M: false,
+  });
   type ButtonKey = 'D' | 'W' | 'M';
 
   const handleState = (selected: ButtonKey) => {
-    setState({ "D": false, "W": false, "M": false, [selected]: true });
+    setState({ D: false, W: false, M: false, [selected]: true });
     dispatch(setCalendarOption(selected));
   };
 
@@ -90,7 +99,8 @@ export default function TabLayout() {
           shadowOpacity: 0,
           elevation: 0,
           paddingHorizontal: 30,
-          height: 80,
+          height: 100,
+          paddingTop: Platform.OS === 'ios' ? 30 : 20,
           flexDirection: 'row',
           alignItems: 'center',
         },
@@ -139,7 +149,7 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   button: {
     alignItems: 'center',
@@ -151,7 +161,7 @@ const styles = StyleSheet.create({
     paddingRight: 7,
     height: 30,
     marginRight: 2,
-    color: Colors.secondary
+    color: Colors.secondary,
   },
   buttonText: {
     fontFamily: 'MontserratBold',
@@ -160,4 +170,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.secondary,
   },
-})
+});
