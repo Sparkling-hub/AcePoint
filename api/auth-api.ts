@@ -3,7 +3,7 @@ import { Timestamp, getDoc,doc } from "firebase/firestore";
 import { Coach } from '@/model/coach';
 import { Player } from '@/model/player';
 import { storeData } from '@/api/localStorage'
-import { signInWithEmailAndPassword,signOut } from 'firebase/auth';
+import { signInWithEmailAndPassword,signOut } from 'firebase/auth'
 
 const signUpCoach = async ({ email, password, coach }: { email: string, password: string, coach: Coach }): Promise<string> => {
   try {
