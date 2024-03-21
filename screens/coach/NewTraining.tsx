@@ -169,16 +169,13 @@ export default function NewTrainingScreen() {
                         formik.setFieldValue('club', training.club);
                         formik.setFieldValue('duration', training.duration);
                         let timestamps = new Date(training.startDate.seconds * 1000)
-                        let date = timestamps.toLocaleString().split(',')[0]
                         let time = timestamps.toISOString().split('T')[1]
                         setStartTime(time)
                         setStartDate(timestamps)
                         formik.setFieldValue('startDate', moment(timestamps).format('DD/MMM/yyyy, hh:mm'));
                         timestamps = new Date(training.endDate.seconds * 1000)
-                        date = timestamps.toLocaleString().split(',')[0]
                         formik.setFieldValue('endDate', moment(timestamps).format('DD/MMM/yyyy'));
                         timestamps = new Date(training.signInDeadLine.seconds * 1000)
-                        date = timestamps.toLocaleString().split(',')[0]
                         time = timestamps.toISOString().split('T')[1]
                         setDeadLineTime(time)
                         formik.setFieldValue('signInDeadLine', moment(timestamps).format('DD/MMM/yyyy, hh:mm'));
