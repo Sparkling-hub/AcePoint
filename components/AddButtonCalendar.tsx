@@ -3,11 +3,16 @@ import { useRouter } from "expo-router";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "tamagui";
 
-export default function AddButtonCalendar({ testID }: { readonly testID?: string }) {
+export default function AddButtonCalendar({ testID, selectedDate }: { readonly testID?: string, readonly selectedDate?: string }) {
     const paddingTop = Platform.OS === 'ios' ? 5 : 0
     const router = useRouter()
     return (
-        <TouchableOpacity testID={testID} style={styles.addButton} onPress={() => { router.push("/new-training") }}>
+        <TouchableOpacity testID={testID} style={styles.addButton} onPress={() => {
+            router.push({
+                pathname: "/new-training",
+                params: { selectedDate: selectedDate },
+            })
+        }}>
             <Text style={{ ...styles.addButtonText, paddingTop: paddingTop }}>+</Text>
         </TouchableOpacity>
     )

@@ -3,6 +3,7 @@ import AddButtonCalendar from "@/components/AddButtonCalendar";
 import Colors from "@/constants/Colors";
 import { addDurationToStartDate, date, time } from "@/services/dateService";
 import { router } from "expo-router";
+import moment from "moment";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Agenda } from "react-native-calendars";
@@ -12,7 +13,6 @@ import { Text, View } from "tamagui";
 export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[] }) {
 
     const [items, setItems] = useState({});
-
     const loadItems = () => {
         const itemsByDate = lessons.reduce((acc, lesson) => {
             let lessonDate = new Date(lesson.startDate.seconds * 1000);
@@ -69,9 +69,14 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
             </TouchableOpacity>
         );
     };
+    const [selectedDate, setSelectedDate] = useState(moment().format('DD/MMM/yyyy, hh:mm'));
+    const onDayPress = (day) => {
+        setSelectedDate(moment(day).format('DD/MMM/yyyy, hh:mm'));
+    };
     return (
         <>
             <Agenda
+                onDayPress={onDayPress}
                 items={items}
                 loadItemsForMonth={loadItems}
                 selected={new Date().toString()}
@@ -104,7 +109,7 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
                     dayTextColor: Colors.secondary
                 }}
             />
-            <AddButtonCalendar />
+            <AddButtonCalendar selectedDate={selectedDate} />
         </>
 
     )
