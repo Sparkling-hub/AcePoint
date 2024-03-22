@@ -119,6 +119,34 @@ const addPlayerToLesson = async (id: string, playerId: string) => {
         }
     }
 };
+// Function to remove a player from a lesson
+const removePlayerToLesson = async (id: string, playerId: string) => {
+    // Create a reference to the lesson document in the Firestore database
+    const docRef = doc(db, "lesson", id);
+    // Get the lesson by its ID
+    const lesson = await getLessonById(id)
+    // Check if the lesson exists
+    if (lesson) {
+        // Find the index of the player in the lesson's players array
+        const index = lesson.players.indexOf(playerId);
+        // If the player is in the lesson's players array
+        if (index > -1) {
+            // Remove the player from the lesson's players array
+            lesson.players.splice(index, 1)
+        }
+        try {
+            // Update the lesson document in the Firestore database
+            await updateDoc(docRef, lesson);
+            // Show a success message
+            fireToast('success', 'Canceled !');
+        } catch (error) {
+            // Show an error message if something went wrong
+            fireToast('error', 'Something went wrong !');
+            // Log the error
+            console.log(error);
+        }
+    }
+};
 // Function to get a lesson by its ID
 const getLessonById = async (id: string) => {
     // Create a reference to the lesson document in the Firestore database
@@ -148,5 +176,5 @@ const deleteLessonById = async (id: string) => {
     }
 }
 // Export all the functions
-export { getLessonsByCoachId, storeLesson, getLessonById, deleteLessonById, updateLesson, addPlayerToLesson };
+export { getLessonsByCoachId, storeLesson, getLessonById, deleteLessonById, updateLesson, addPlayerToLesson, removePlayerToLesson };
 

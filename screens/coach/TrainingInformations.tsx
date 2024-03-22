@@ -1,4 +1,4 @@
-import { addPlayerToLesson, deleteLessonById, getLessonById } from "@/api/lesson-api"
+import { addPlayerToLesson, deleteLessonById, getLessonById, removePlayerToLesson } from "@/api/lesson-api"
 import { retrieveData } from "@/api/localStorage"
 import { useEffect, useState } from "react"
 import { Text, YStack, Avatar, Separator, ScrollView, Button } from 'tamagui';
@@ -43,19 +43,22 @@ export default function TrainingInformations() {
     const user = useSelector((state: RootState) => state.userRole);
     const userRole = user.userRole;
     const [disabled, setDisabled] = useState(true)
+    const [showCancelButton, setShowCancelButton] = useState(false)
     useEffect(() => {
         const getInformations = async () => {
             const trainingID = await retrieveData('trainingID')
+            const userID = await retrieveData('userID')
             if (trainingID) {
                 setId(trainingID)
                 const trainingDoc = await getLessonById(trainingID)
                 if (trainingDoc) {
-                    console.log((new Date(trainingDoc.signInDeadLine.seconds * 1000) > new Date()));
                     setDisabled((new Date(trainingDoc.signInDeadLine.seconds * 1000) > new Date()));
                     setTraining(trainingDoc)
                     const coachDoc = await getCoachById(trainingDoc.coachId)
                     if (coachDoc) setCoach(coachDoc)
                     const arrayPlayers = trainingDoc.players
+                    if((new Date(trainingDoc.signInDeadLine.seconds * 1000) > new Date()) && arrayPlayers.includes(userID))
+                        setShowCancelButton(true)
                     setPlayersRequired(trainingDoc.maxPeople - arrayPlayers.length)
                     arrayPlayers.forEach(async (element: string) => {
                         const player = await getPlayerById(element)
@@ -214,13 +217,23 @@ export default function TrainingInformations() {
                         router.replace("/calendar-coach")
                     }} backgroundColor={Colors.danger} color={'white'} fontWeight={'bold'} fontSize={20} paddingTop={15} paddingBottom={15} height={60}>Delete</Button>
                     }
-                    {(userRole === 'Player' && disabled) &&
-                        <Button onPress={async () => {
-                            const userId = await retrieveData("userID")
-                            if (userId) await addPlayerToLesson(id, userId)
-                            router.replace("/training")
-                        }}
-                            backgroundColor={Colors.secondary} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}>Join</Button>
+                    {(userRole === 'Player' && disabled && !showCancelButton) &&
+                        <Button backgroundColor={Colors.secondary} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}
+                            onPress={async () => {
+                                const userId = await retrieveData("userID")
+                                if (userId) await addPlayerToLesson(id, userId)
+                                router.replace("/training")
+                            }}
+                        >Join</Button>
+                    }
+                    {(userRole === 'Player' && showCancelButton) &&
+                        <Button backgroundColor={Colors.secondary} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}
+                            onPress={async () => {
+                                const userId = await retrieveData("userID")
+                                if (userId) await removePlayerToLesson(id, userId)
+                                router.replace("/training")
+                            }}
+                        >Cancel</Button>
                     }
                 </YStack>
             </YStack>
