@@ -29,17 +29,22 @@ import { TimerPickerModal } from "react-native-timer-picker";
 import { useDispatch } from "react-redux";
 import { setCalendarOption } from "@/store/slices/calendarSlice";
 import { Path, Svg } from "react-native-svg";
+import moment from "moment";
 
 
 export default function NewTrainingScreen() {
+    const { mode, selectedDate } = useLocalSearchParams();
+    const parts = selectedDate.split(/[/, :]/);
+    const months = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+    const date = new Date(Date.UTC(parts[2], months[parts[1]], parts[0], parts[3], parts[4]));
     const router = useRouter()
     const [showDuration, setShowDuration] = useState(false);
     const [showStartDate, setShowStartDate] = useState(false);
     const [showSignInDeadLine, setShowSignInDeadLine] = useState(false);
     const [showEndDate, setShowEndDate] = useState(false);
-    const [startDate, setStartDate] = useState(new Date());
-    const [startTime, setStartTime] = useState('12:30:00.000Z')
-    const [deadLineTime, setDeadLineTime] = useState('12:30:00.000Z')
+    const [startDate, setStartDate] = useState(date);
+    const [startTime, setStartTime] = useState('12:00:00.000Z')
+    const [deadLineTime, setDeadLineTime] = useState('12:00:00.000Z')
     const marginRight = Platform.OS === 'ios' ? 50 : 20
     const [isLoading, setIsLoading] = useState(true)
     const dispatch = useDispatch()
@@ -48,14 +53,13 @@ export default function NewTrainingScreen() {
         if (field === 'endDate') setShowEndDate(!showEndDate)
         if (field === 'signInDeadLine') setShowSignInDeadLine(!showSignInDeadLine)
     };
-    const currentDate = new Date()
-    const timstamp = currentDate.setDate(currentDate.getDate() + 2)
-    const endDate = new Date(timstamp)
+
+    const startTimeParts = startTime.split(':')
     const initialValues = {
         organiser: '',
         description: '',
-        startDate: new Date().toLocaleDateString('en-US'),
-        endDate: endDate.toLocaleDateString('en-US'),
+        startDate: selectedDate,
+        endDate: moment().add(7, 'days').format('DD/MMM/yyyy'),
         duration: '',
         maxPeople: '',
         minPeople: '1',
@@ -67,7 +71,7 @@ export default function NewTrainingScreen() {
         paymentMode: ['On App'],
         trainingTitle: '',
         price: '',
-        signInDeadLine: new Date().toLocaleDateString('en-US')
+        signInDeadLine: moment().format('DD/MMM/yyyy') + ', ' + startTimeParts[0] + ':' + startTimeParts[1],
     }
     const validationSchema = Yup.object().shape({
         description: Yup.string()
@@ -91,6 +95,9 @@ export default function NewTrainingScreen() {
         formik.setFieldValue(name, value);
     };
     const storeAndRedirect = async () => {
+        formik.values.startDate = moment(formik.values.startDate, 'DD/MMM/YYYY, HH:mm').format('MM/DD/yyyy')
+        formik.values.endDate = moment(formik.values.endDate, 'DD/MMM/YYYY, HH:mm').format('MM/DD/yyyy')
+        formik.values.signInDeadLine = moment(formik.values.signInDeadLine, 'DD/MMM/YYYY, HH:mm').format('MM/DD/yyyy')
         if (mode === 'EDIT TRAINING') {
             const trainingID = await retrieveData('trainingID')
             await updateLesson(trainingID ?? '', formik.values, startTime, deadLineTime);
@@ -121,16 +128,14 @@ export default function NewTrainingScreen() {
             setStartDate(date)
             setStartTime(dateParts[1])
             const endDate = date.setDate(date.getDate() + 5)
-            handleChange('endDate', new Date(endDate).toLocaleDateString('en-US'))
+            handleChange('endDate', moment(endDate).format('DD/MMM/yyyy'))
             date.setDate(date.getDate() - 5)
         } else if (field === "signInDeadLine") {
             setDeadLineTime(dateParts[1])
         }
-        handleChange(field, date.toLocaleDateString())
+        handleChange(field, moment(date).format('DD/MMM/yyyy, HH:mm'))
         handleShow(field);
     };
-
-    const { mode } = useLocalSearchParams();
 
 
     useEffect(() => {
@@ -164,19 +169,16 @@ export default function NewTrainingScreen() {
                         formik.setFieldValue('club', training.club);
                         formik.setFieldValue('duration', training.duration);
                         let timestamps = new Date(training.startDate.seconds * 1000)
-                        let date = timestamps.toLocaleString().split(',')[0]
                         let time = timestamps.toISOString().split('T')[1]
                         setStartTime(time)
                         setStartDate(timestamps)
-                        formik.setFieldValue('startDate', date);
+                        formik.setFieldValue('startDate', moment(timestamps).format('DD/MMM/yyyy, hh:mm'));
                         timestamps = new Date(training.endDate.seconds * 1000)
-                        date = timestamps.toLocaleString().split(',')[0]
-                        formik.setFieldValue('endDate', date);
+                        formik.setFieldValue('endDate', moment(timestamps).format('DD/MMM/yyyy'));
                         timestamps = new Date(training.signInDeadLine.seconds * 1000)
-                        date = timestamps.toLocaleString().split(',')[0]
                         time = timestamps.toISOString().split('T')[1]
                         setDeadLineTime(time)
-                        formik.setFieldValue('signInDeadLine', date);
+                        formik.setFieldValue('signInDeadLine', moment(timestamps).format('DD/MMM/yyyy, hh:mm'));
                         if (training.court !== "") formik.setFieldValue('court', training.court.toString());
                         formik.setFieldValue('minAge', training.minAge.toString());
                         formik.setFieldValue('recurrence', training.recurrence);
@@ -248,6 +250,7 @@ export default function NewTrainingScreen() {
                 </YStack>
                 <YStack style={styles.ystackselect}>
                     <CustomInput
+                        fontSize={13}
                         value={formik.values.startDate}
                         onChangeText={(value: any) => {
                             handleChange('startDate', value)
@@ -287,7 +290,9 @@ export default function NewTrainingScreen() {
                         setIsVisible={setShowDuration}
                         hourLimit={{ max: 8 }}
                         onConfirm={(pickedDuration) => {
-                            handleChange('duration', `${pickedDuration.hours}:${pickedDuration.minutes}`)
+                            let minutes = pickedDuration.minutes + ""
+                            if (pickedDuration.minutes < 10) minutes = '0' + pickedDuration.minutes
+                            handleChange('duration', `${pickedDuration.hours}:${minutes}`)
                             setShowDuration(false)
                         }}
                         modalTitle="Set Duration"
