@@ -42,7 +42,7 @@ export default function TrainingInformations() {
     const [rating, setRating] = useState(50)
     const user = useSelector((state: RootState) => state.userRole);
     const userRole = user.userRole;
-    const [disabled, setDisabled] = useState(false)
+    const [disabled, setDisabled] = useState(true)
     useEffect(() => {
         const getInformations = async () => {
             const trainingID = await retrieveData('trainingID')
@@ -50,13 +50,12 @@ export default function TrainingInformations() {
                 setId(trainingID)
                 const trainingDoc = await getLessonById(trainingID)
                 if (trainingDoc) {
+                    console.log((new Date(trainingDoc.signInDeadLine.seconds * 1000) > new Date()));
                     setDisabled((new Date(trainingDoc.signInDeadLine.seconds * 1000) > new Date()));
                     setTraining(trainingDoc)
                     const coachDoc = await getCoachById(trainingDoc.coachId)
                     if (coachDoc) setCoach(coachDoc)
                     const arrayPlayers = trainingDoc.players
-                    const userID = await retrieveData("userID")
-                    setDisabled(arrayPlayers.includes(userID))
                     setPlayersRequired(trainingDoc.maxPeople - arrayPlayers.length)
                     arrayPlayers.forEach(async (element: string) => {
                         const player = await getPlayerById(element)
@@ -142,7 +141,7 @@ export default function TrainingInformations() {
                 }
                 <YStack>
                     <Text style={styles.title}>Sign in dead line</Text>
-                    <Text marginLeft={20} color={Colors.secondary} marginRight={20}>{moment(new Date(training.startDate.seconds * 1000)).format('dddd Do hh:mm')}</Text>
+                    <Text marginLeft={20} color={Colors.secondary} marginRight={20}>{moment(new Date(training.signInDeadLine.seconds * 1000)).format('dddd Do hh:mm')}</Text>
                 </YStack>
                 <YStack marginTop={20}>
                     <Text style={styles.title}>Players {training.players.length}/{training.maxPeople}</Text>
@@ -215,7 +214,7 @@ export default function TrainingInformations() {
                         router.replace("/calendar-coach")
                     }} backgroundColor={Colors.danger} color={'white'} fontWeight={'bold'} fontSize={20} paddingTop={15} paddingBottom={15} height={60}>Delete</Button>
                     }
-                    {(userRole === 'Player' && !disabled) &&
+                    {(userRole === 'Player' && disabled) &&
                         <Button onPress={async () => {
                             const userId = await retrieveData("userID")
                             if (userId) await addPlayerToLesson(id, userId)
