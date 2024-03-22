@@ -25,6 +25,7 @@ import EditProfileHeader from '@/components/headers/EditProfileHeader';
 import SupportHeader from '@/components/SupportHeader';
 import LegalHeader from '@/components/LegalHeader';
 import SubscriptionHeader from '@/components/headers/SubscriptionHeader';
+import ChatsHeader from '@/components/headers/ChatsHeader';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -88,6 +89,13 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: AccountHeader,
+              }}
+            />
+            <Stack.Screen
+              name="chats/[id]"
+              options={{
+                headerShadowVisible: false,
+                header: ChatsHeader,
               }}
             />
             <Stack.Screen

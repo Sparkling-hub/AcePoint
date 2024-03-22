@@ -1,23 +1,27 @@
-import { Pressable } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import CustomHeader from '../CustomHeader';
 import Bars from '../svg/Bars';
 import Colors from '@/constants/Colors';
 import { Link } from 'expo-router';
+import Message from '../svg/Message';
+import { XStack } from 'tamagui';
 
 const ProfileHeader = () => {
   return (
     <CustomHeader
       rightContent={
-        <Link href="/user/account" asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <Bars
-                fill={Colors.secondary}
-                style={{ opacity: pressed ? 0.5 : 1 }}
-              />
-            )}
-          </Pressable>
-        </Link>
+        <XStack gap={'$3'} alignItems="center">
+          <Link href="/account/chats" asChild>
+            <TouchableOpacity>
+              <Message fill={Colors.secondary} />
+            </TouchableOpacity>
+          </Link>
+          <Link href="/user/account" asChild>
+            <TouchableOpacity>
+              <Bars fill={Colors.secondary} />
+            </TouchableOpacity>
+          </Link>
+        </XStack>
       }
     />
   );
