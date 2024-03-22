@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Platform,
   StatusBar,
   StyleProp,
   TextStyle,
@@ -30,13 +31,14 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 }) => {
   const navigation = useNavigation();
 
+  const paddingTop = Platform.OS === 'ios' ? 60 : (StatusBar.currentHeight ?? 0) + 29
   return (
     <XStack
       backgroundColor={'#fff'}
       justifyContent={leftIcon || title ? 'space-between' : 'flex-end'}
       alignItems="center"
       paddingHorizontal={16}
-      paddingTop={(StatusBar.currentHeight ?? 0) + 29}>
+      paddingTop={paddingTop}>
       {leftIcon && (
         <TouchableOpacity
           onPress={onLeftPress || (() => navigation.goBack())}

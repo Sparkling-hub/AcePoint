@@ -1,14 +1,14 @@
-import Colors from "@/constants/Colors";
-import CustomHeader from "./CustomHeader";
 import { ChevronLeft } from "@tamagui/lucide-icons";
+import CustomHeader from "../CustomHeader";
 import { TouchableOpacity } from "react-native";
-import HeaderText from "./HeaderText";
+import Colors from "@/constants/Colors";
+import HeaderText from "../HeaderText";
 
-export default function LegalHeader() {
+export default function SettingsHeader() {
     return (
         <CustomHeader
             leftIcon={<ChevronLeft size={'$3'} color={Colors.secondary} />}
-            title="LEGAL"
+            title="SETTINGS"
             rightContent={
                 <TouchableOpacity onPress={() => { }}>
                     <HeaderText text="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
