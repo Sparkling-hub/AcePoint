@@ -4,8 +4,6 @@ import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, doc, getDoc, } from "firebase/firestore";
 import { addPlayerToLesson, removePlayerToLesson } from '@/api/lesson-api';
 import * as lessonApi from '@/api/lesson-api';
-// import { fireToast } from '@/services/toast' updateDoc
-// Mocking only the getLessonById function
 jest.mock('@/api/lesson-api', () => {
     const originalModule = jest.requireActual('@/api/lesson-api');
     return {
@@ -77,15 +75,6 @@ describe('addPlayerToLesson', () => {
 
         await addPlayerToLesson(lessonId, playerId);
         expect(doc).toHaveBeenCalled()
-
-        // expect(updateDoc).toHaveBeenCalledWith(
-        //     expect.anything(),
-        //     expect.objectContaining({
-        //         players: expect.arrayContaining([playerId])
-        //     })
-        // );
-
-        // expect(fireToast).toHaveBeenCalled();
     });
 });
 
@@ -100,12 +89,5 @@ describe('removePlayerToLesson', () => {
         await removePlayerToLesson(lessonId, playerId);
         expect(doc).toHaveBeenCalled()
 
-        // expect(updateDoc).toHaveBeenCalledWith(
-        //     expect.anything(),
-        //     expect.objectContaining({
-        //         players: expect.not.arrayContaining([playerId])
-        //     })
-        // );
-        // expect(fireToast).toHaveBeenCalledWith('success', 'Canceled !');
     });
 });
