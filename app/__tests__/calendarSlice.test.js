@@ -1,5 +1,5 @@
 import calendarReducer, { setCalendarOption } from '../../store/slices/calendarSlice';
-import coachReducer, { setCoachName, setCoachId, setLessons } from '../../store/slices/coachSlice';
+import coachReducer, { setCoachName, setCoachId, setLessons } from '../../store/slices/CoachSlice';
 
 describe('calendarSlice reducer', () => {
   const initialState = {
