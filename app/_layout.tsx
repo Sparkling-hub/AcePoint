@@ -26,7 +26,6 @@ import SupportHeader from '@/components/headers/SupportHeader';
 import LegalHeader from '@/components/headers/LegalHeader';
 import NewTrainingHeader from '@/components/headers/NewTrainingHeader';
 import TrainingHeader from '@/components/headers/TrainingHeader';
-import PlayerCalendarHeader from '@/components/headers/PlayerCalendarHeader';
 
 
 export {
