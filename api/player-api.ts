@@ -29,9 +29,9 @@ const calculateDistance = (
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(lat1Rad) *
-      Math.cos(lat2Rad) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos(lat2Rad) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = earthRadius * c;
   if (distance <= radius === true) {
@@ -366,6 +366,25 @@ const favoriteCoachList = async () => {
   }
 };
 
+
+// This function fetches a player document from the Firestore database by its ID.
+const getPlayerById = async (id: string) => {
+  // Create a reference to the player document in the Firestore database
+  const docRef = doc(db, "player", id);
+  // Get the document snapshot
+  const docSnap = await getDoc(docRef);
+  // Check if the document exists
+  if (docSnap.exists()) {
+    // Return the data of the document
+    return docSnap.data();
+  } else {
+    // Log a message if the document does not exist
+    console.log("No such document!");
+    // Return null
+    return null;
+  }
+}
+
 export {
   findByName,
   favouriteCoach,
@@ -373,6 +392,7 @@ export {
   unfavoriteCoach,
   favoriteCoachList,
   fetchData,
+  getPlayerById,
   locationPosition,
   distanceCalculation,
   filterCoach,
