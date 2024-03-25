@@ -1,15 +1,65 @@
+import { createRoom, cureentUser, sendMessage } from '@/api/chat-api';
+import MessageList from '@/components/MessageList';
 import ChatInput from '@/components/chat/ChatInput';
 import Colors from '@/constants/Colors';
+import { db } from '@/lib/firebase';
 import { item } from '@/types/chatItem';
-import React from 'react';
-import { Avatar, Text, View, XStack, YStack } from 'tamagui';
+import { getRoomId } from '@/utils/chatRoomUtil';
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { Avatar, Input, Text, View, XStack, YStack } from 'tamagui';
 
 interface ChatScreenProps {
   item: item;
 }
 
 const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
-  const { name } = item;
+  const { displayName, image, id } = item;
+  const textRef = React.useRef('');
+  const inputRef = React.useRef<Input>(null);
+  const [messages, setMessages] = useState<any[]>([]);
+  const userId = cureentUser();
+  // console.log(userId, id);
+  useEffect(() => {
+    createRoomIfNotExists();
+    let roomId = getRoomId(userId, id);
+
+    const docRef = doc(db, 'chat', roomId);
+    const messagesRef = collection(docRef, 'messages');
+    const q = query(messagesRef, orderBy('createdAt', 'asc'));
+
+    let unsub = onSnapshot(q, (querySnapshot) => {
+      let messages = querySnapshot.docs.map((doc) => {
+        return doc.data();
+      });
+      setMessages([...messages]);
+    });
+
+    return unsub;
+  }, []);
+  const createRoomIfNotExists = async () => {
+    let roomId = getRoomId(userId, id);
+    await createRoom(roomId);
+  };
+
+  const handleSendMessage = async () => {
+    let message = textRef.current.trim();
+    if (!message) return;
+    try {
+      let roomId = getRoomId(userId, id);
+      await sendMessage(roomId, message);
+      if (inputRef) inputRef.current?.clear();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <YStack flex={1} padding={16} justifyContent="space-between">
       <YStack>
@@ -20,84 +70,17 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
           marginBottom={16}
           lineHeight={19}
           color={Colors.secondary}>
-          With: {name}
+          With: {displayName}
         </Text>
-        <YStack gap={10}>
-          {/* Example of recieved message */}
-          <YStack maxWidth={261} gap={3} alignSelf="flex-start">
-            <Text
-              style={{ fontFamily: 'MontserratMedium' }}
-              fontSize={14}
-              textAlign="right"
-              lineHeight={17}
-              color={Colors.secondary}>
-              15:35
-            </Text>
-            <XStack gap={7}>
-              <Avatar
-                circular
-                borderWidth={2}
-                borderColor={Colors.primary}
-                size={28}>
-                <Avatar.Image src={require('../assets/images/user-pfp.png')} />
-                <Avatar.Fallback bc={'#EFEFEF'} />
-              </Avatar>
-              <View
-                backgroundColor={Colors.lightSilver}
-                paddingHorizontal={10}
-                paddingVertical={5}
-                borderRadius={10}>
-                <Text
-                  style={{ fontFamily: 'MontserratMedium' }}
-                  fontSize={14}
-                  lineHeight={17}
-                  color={Colors.secondary}>
-                  Pellentesque habitant morbi tristique senectus et netus et
-                  malesuada fa
-                </Text>
-              </View>
-            </XStack>
-          </YStack>
-
-          {/* Example of sent message */}
-          <YStack maxWidth={261} gap={3} alignSelf="flex-end">
-            <Text
-              style={{ fontFamily: 'MontserratMedium' }}
-              fontSize={14}
-              textAlign="left"
-              lineHeight={17}
-              color={Colors.secondary}>
-              15:35
-            </Text>
-            <XStack gap={7}>
-              <View
-                backgroundColor={Colors.secondary}
-                paddingHorizontal={10}
-                paddingVertical={5}
-                borderRadius={10}>
-                <Text
-                  style={{ fontFamily: 'MontserratMedium' }}
-                  fontSize={14}
-                  lineHeight={17}
-                  color={'white'}>
-                  Pellentesque habitant morbi tristique senectus et netus et
-                  malesuada fa
-                </Text>
-              </View>
-              <Avatar
-                circular
-                borderWidth={2}
-                borderColor={Colors.secondary}
-                size={28}>
-                {/* <Avatar.Image src={require('../assets/images/user-pfp.png')} /> */}
-                <Avatar.Fallback bc={Colors.secondary} />
-              </Avatar>
-            </XStack>
-          </YStack>
-        </YStack>
+        <MessageList messages={messages} userId={userId} />
       </YStack>
 
-      <ChatInput placeholder="Type message..." />
+      <ChatInput
+        inputRef={inputRef}
+        placeholder="Type message..."
+        onChangeText={(value) => (textRef.current = value)}
+        onSend={handleSendMessage}
+      />
     </YStack>
   );
 };

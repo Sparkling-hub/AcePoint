@@ -11,7 +11,8 @@ interface ChatBoxProps {
 }
 
 const ChatBox: React.FC<ChatBoxProps> = ({ item }) => {
-  const { name, lastMessage, time } = item;
+  const { displayName, image } = item;
+
   return (
     <YStack gap={4}>
       <XStack
@@ -23,19 +24,19 @@ const ChatBox: React.FC<ChatBoxProps> = ({ item }) => {
           fontSize={16}
           color={Colors.secondary}
           lineHeight={19.5}>
-          {name}
+          {displayName}
         </Text>
         <Text
           style={{ fontFamily: 'MontserratMedium' }}
           fontSize={14}
           lineHeight={17}
           color={Colors.secondary}>
-          {time}
+          12:00
         </Text>
       </XStack>
       <XStack gap={20} alignItems="center">
         <Avatar circular borderWidth={2} borderColor={Colors.primary} size={47}>
-          <Avatar.Image src={require('../../assets/images/user-pfp.png')} />
+          <Avatar.Image src={image} />
           <Avatar.Fallback bc={'#EFEFEF'} />
         </Avatar>
 
@@ -60,7 +61,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ item }) => {
               color={Colors.secondary}
               lineHeight={14.5}
               fontSize={12}>
-              {lastMessage}
+              Lorem ipsum dolor sit amet, onsect adipiscing elit pellentesque
+              tempor.
             </Text>
             <Circle
               size={18}

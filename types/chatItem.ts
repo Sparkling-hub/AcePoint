@@ -1,5 +1,7 @@
 export type item = {
-  name: string;
-  lastMessage: string;
-  time: string;
+  id: string;
+  image?: string;
+  displayName?: string;
+  lastMessage?: string;
+  time?: string;
 };

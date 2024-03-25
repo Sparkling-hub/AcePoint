@@ -5,9 +5,14 @@ import { Send } from '@tamagui/lucide-icons';
 
 interface ChatInputProps extends InputProps {
   onSend?: (text: string) => void;
+  inputRef?: React.RefObject<Input>;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSend, ...props }) => {
+const ChatInput: React.FC<ChatInputProps> = ({
+  onSend,
+  inputRef,
+  ...props
+}) => {
   return (
     <XStack
       height={44}
@@ -21,6 +26,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, ...props }) => {
       <Input
         flex={1}
         unstyled
+        ref={inputRef}
         {...props}
         style={{ fontFamily: 'MontserratMedium' }}
         fontSize={14}
