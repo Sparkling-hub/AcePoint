@@ -92,7 +92,7 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
-              name="chats/[id]"
+              name="chatRoom"
               options={{
                 headerShadowVisible: false,
                 header: ChatsHeader,

@@ -1,9 +1,15 @@
 import ChatInput from '@/components/chat/ChatInput';
 import Colors from '@/constants/Colors';
+import { item } from '@/types/chatItem';
 import React from 'react';
 import { Avatar, Text, View, XStack, YStack } from 'tamagui';
 
-const ChatScreen = () => {
+interface ChatScreenProps {
+  item: item;
+}
+
+const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
+  const { name } = item;
   return (
     <YStack flex={1} padding={16} justifyContent="space-between">
       <YStack>
@@ -14,7 +20,7 @@ const ChatScreen = () => {
           marginBottom={16}
           lineHeight={19}
           color={Colors.secondary}>
-          With: ADI DANIEL
+          With: {name}
         </Text>
         <YStack gap={10}>
           {/* Example of recieved message */}
@@ -91,7 +97,7 @@ const ChatScreen = () => {
         </YStack>
       </YStack>
 
-      <ChatInput placeholder="Type" />
+      <ChatInput placeholder="Type message..." />
     </YStack>
   );
 };

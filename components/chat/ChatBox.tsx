@@ -4,37 +4,48 @@ import Colors from '@/constants/Colors';
 import { Text } from 'tamagui';
 import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import { item } from '@/types/chatItem';
 
-const ChatBox = () => {
+interface ChatBoxProps {
+  item: item;
+}
+
+const ChatBox: React.FC<ChatBoxProps> = ({ item }) => {
+  const { name, lastMessage, time } = item;
   return (
-    <XStack gap={20} alignItems="flex-end">
-      <Avatar circular borderWidth={2} borderColor={Colors.primary} size={47}>
-        <Avatar.Image src={require('../../assets/images/user-pfp.png')} />
-        <Avatar.Fallback bc={'#EFEFEF'} />
-      </Avatar>
-      <YStack flex={1} gap={4}>
-        <XStack justifyContent="space-between" paddingHorizontal={12}>
-          <Text
-            style={{ fontFamily: 'MontserratMedium' }}
-            fontSize={16}
-            color={Colors.secondary}
-            lineHeight={19.5}>
-            ADI DANIEL
-          </Text>
-          <Text
-            style={{ fontFamily: 'MontserratMedium' }}
-            fontSize={14}
-            lineHeight={17}
-            color={Colors.secondary}>
-            15:35
-          </Text>
-        </XStack>
+    <YStack gap={4}>
+      <XStack
+        justifyContent="space-between"
+        paddingHorizontal={12}
+        marginLeft={64}>
+        <Text
+          style={{ fontFamily: 'MontserratMedium' }}
+          fontSize={16}
+          color={Colors.secondary}
+          lineHeight={19.5}>
+          {name}
+        </Text>
+        <Text
+          style={{ fontFamily: 'MontserratMedium' }}
+          fontSize={14}
+          lineHeight={17}
+          color={Colors.secondary}>
+          {time}
+        </Text>
+      </XStack>
+      <XStack gap={20} alignItems="center">
+        <Avatar circular borderWidth={2} borderColor={Colors.primary} size={47}>
+          <Avatar.Image src={require('../../assets/images/user-pfp.png')} />
+          <Avatar.Fallback bc={'#EFEFEF'} />
+        </Avatar>
+
         <TouchableOpacity
           activeOpacity={0.7}
+          style={{ flex: 1 }}
           onPress={() =>
             router.push({
-              pathname: '/chats/[id]',
-              params: { id: 1 },
+              pathname: '/chatRoom',
+              params: item,
             })
           }>
           <XStack
@@ -49,8 +60,7 @@ const ChatBox = () => {
               color={Colors.secondary}
               lineHeight={14.5}
               fontSize={12}>
-              Lorem ipsum dolor sit amet, onsect adipiscing elit pellentesque
-              tempor.
+              {lastMessage}
             </Text>
             <Circle
               size={18}
@@ -66,8 +76,8 @@ const ChatBox = () => {
             </Circle>
           </XStack>
         </TouchableOpacity>
-      </YStack>
-    </XStack>
+      </XStack>
+    </YStack>
   );
 };
 
