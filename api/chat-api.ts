@@ -48,14 +48,14 @@ async function sendMessage(roomId: string, message: string) {
 
     const newDoc = await addDoc(messagesRef, {
       message: message,
-      senderId: parsedValue.user.uid,
-      image: parsedValue.data.image ?? null,
-      senderName: parsedValue.data.displayName,
+      senderId: parsedValue.user?.uid,
+      image: parsedValue.data?.image ?? null,
+      senderName: parsedValue.data?.displayName,
       seen: false,
       createdAt: Timestamp.now(),
     });
 
-    console.log('new message id:', newDoc.id);
+    //console.log('new message id:', newDoc.id);
   } catch (error) {
     console.log(error);
   }
@@ -91,29 +91,34 @@ const cureentUser = () => {
 
 async function getAllUsers() {
   const currentUser = auth.currentUser;
-
   try {
     if (!currentUser) {
-      return;
+      console.log('User not authenticated.');
+      return [];
     }
-
     const playerCollection = collection(db, 'player');
     const coachCollection = collection(db, 'coach');
-    const querySnapshot = await getDocs(coachCollection);
-
-    const documents: any[] = [];
-
-    querySnapshot.forEach((doc) => {
+    const [playerQuerySnapshot, coachQuerySnapshot] = await Promise.all([
+      getDocs(playerCollection),
+      getDocs(coachCollection),
+    ]);
+    const users: any[] = [];
+    playerQuerySnapshot.forEach((doc) => {
       // Assuming the document ID is the user ID
       if (doc.id !== currentUser.uid) {
         const { displayName, image } = doc.data();
-        documents.push({ id: doc.id, displayName, image });
+        users.push({ id: doc.id, displayName, image });
       }
     });
-
-    return documents;
+    coachQuerySnapshot.forEach((doc) => {
+      if (doc.id !== currentUser.uid) {
+        const { displayName, image } = doc.data();
+        users.push({ id: doc.id, displayName, image });
+      }
+    });
+    return users;
   } catch (error: any) {
-    console.error('Error fetching documents:', error.message);
+    console.error('Error fetching users:', error.message);
     return error.message;
   }
 }

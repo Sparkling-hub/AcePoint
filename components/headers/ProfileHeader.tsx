@@ -11,7 +11,7 @@ const ProfileHeader = () => {
     <CustomHeader
       rightContent={
         <XStack gap={'$3'} alignItems="center">
-          <Link href="/account/chats" asChild>
+          <Link href="/account/chat" asChild>
             <TouchableOpacity>
               <Message fill={Colors.secondary} />
             </TouchableOpacity>

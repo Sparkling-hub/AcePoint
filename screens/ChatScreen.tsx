@@ -1,5 +1,5 @@
 import { createRoom, cureentUser, sendMessage } from '@/api/chat-api';
-import MessageList from '@/components/MessageList';
+import MessageList from '@/components/chat/MessageList';
 import ChatInput from '@/components/chat/ChatInput';
 import Colors from '@/constants/Colors';
 import { db } from '@/lib/firebase';
@@ -13,7 +13,8 @@ import {
   query,
 } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { Avatar, Input, Text, View, XStack, YStack } from 'tamagui';
+import { Input, Text, YStack } from 'tamagui';
+import { ActivityIndicator, ScrollView } from 'react-native';
 
 interface ChatScreenProps {
   item: item;
@@ -23,7 +24,9 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
   const { displayName, image, id } = item;
   const textRef = React.useRef('');
   const inputRef = React.useRef<Input>(null);
+  const messageListRef = React.useRef<ScrollView>(null);
   const [messages, setMessages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const userId = cureentUser();
   // console.log(userId, id);
   useEffect(() => {
@@ -39,6 +42,12 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
         return doc.data();
       });
       setMessages([...messages]);
+      setLoading(false);
+
+      // After messages are loaded, scroll to the bottom
+      if (messageListRef.current) {
+        messageListRef.current.scrollToEnd();
+      }
     });
 
     return unsub;
@@ -62,7 +71,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
 
   return (
     <YStack flex={1} padding={16} justifyContent="space-between">
-      <YStack>
+      <YStack flex={1} marginBottom={20}>
         <Text
           style={{ fontFamily: 'MontserratMedium' }}
           fontSize={16}
@@ -72,11 +81,24 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
           color={Colors.secondary}>
           With: {displayName}
         </Text>
-        <MessageList messages={messages} userId={userId} />
+        {loading ? (
+          <ActivityIndicator size="large" color={Colors.secondary} />
+        ) : (
+          <MessageList
+            messages={messages}
+            userId={userId}
+            messageListRef={messageListRef}
+          />
+        )}
       </YStack>
 
       <ChatInput
         inputRef={inputRef}
+        onPressIn={() => {
+          if (messageListRef.current) {
+            messageListRef.current.scrollToEnd();
+          }
+        }}
         placeholder="Type message..."
         onChangeText={(value) => (textRef.current = value)}
         onSend={handleSendMessage}

@@ -2,10 +2,11 @@ import React from 'react';
 import { Input, InputProps, XStack } from 'tamagui';
 import Colors from '@/constants/Colors';
 import { Send } from '@tamagui/lucide-icons';
+import { TouchableOpacity } from 'react-native';
 
 interface ChatInputProps extends InputProps {
-  onSend?: (text: string) => void;
-  inputRef?: React.RefObject<Input>;
+  onSend: () => Promise<void>;
+  inputRef: React.RefObject<Input>;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
@@ -34,13 +35,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
         placeholderTextColor={Colors.secondary}
         returnKeyType="send"
         returnKeyLabel="Send"
-        onSubmitEditing={(e) => {
-          if (onSend) {
-            onSend(e.nativeEvent.text);
-          }
-        }}
+        onSubmitEditing={onSend}
       />
-      <Send size={24} color={Colors.secondary} />
+      <TouchableOpacity onPress={onSend}>
+        <Send size={24} color={Colors.secondary} />
+      </TouchableOpacity>
     </XStack>
   );
 };

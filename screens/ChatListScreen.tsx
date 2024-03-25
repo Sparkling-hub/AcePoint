@@ -1,31 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import ChatBox from '@/components/chat/ChatBox';
-import { View } from 'tamagui';
+import { View, YStack } from 'tamagui';
 
-import { FlatList } from 'react-native';
+import { ActivityIndicator, FlatList } from 'react-native';
 import { getAllUsers } from '@/api/chat-api';
 import { item } from '@/types/chatItem';
+import Colors from '@/constants/Colors';
 
 const Spacer = ({ height = 16 }) => <View style={{ height }} />;
 
 const ChatListScreen = () => {
   const [users, setUsers] = useState<item[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const fetchUsers = async () => {
-    const users = await getAllUsers();
-    setUsers(users);
+    try {
+      const users = await getAllUsers();
+      setUsers(users);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
   useEffect(() => {
     fetchUsers();
   }, []);
+
   return (
-    <View flex={1} paddingTop={27} paddingHorizontal={22}>
-      <FlatList
-        data={users}
-        keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={Spacer}
-        renderItem={({ item }) => <ChatBox item={item} />}
-      />
-    </View>
+    <YStack flex={1} paddingTop={27} paddingHorizontal={22}>
+      {isLoading ? (
+        <ActivityIndicator size="large" color={Colors.secondary} />
+      ) : (
+        <FlatList
+          data={users}
+          keyExtractor={(item) => item.id}
+          ItemSeparatorComponent={Spacer}
+          renderItem={({ item }) => <ChatBox item={item} />}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+    </YStack>
   );
 };
 

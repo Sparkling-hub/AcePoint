@@ -13,7 +13,7 @@ const StackLayout = () => {
         }}
       />
       <Stack.Screen
-        name="chats"
+        name="chat"
         options={{
           header: ChatsHeader,
         }}

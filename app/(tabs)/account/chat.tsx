@@ -2,7 +2,7 @@ import { StyleSheet, SafeAreaView } from 'react-native';
 import React from 'react';
 import ChatListScreen from '@/screens/ChatListScreen';
 
-const chats = () => {
+const chat = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ChatListScreen />
@@ -10,7 +10,7 @@ const chats = () => {
   );
 };
 
-export default chats;
+export default chat;
 
 const styles = StyleSheet.create({
   container: {
