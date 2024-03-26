@@ -4,6 +4,7 @@ import tempFilterReducer from './slices/tempFilterSlice';
 import savedFilterReducer from './slices/savedFilterSlice';
 import editProfileReducer from './slices/editProfile';
 import userRoleReducer from './slices/userRole';
+import calendarSlice from './slices/calendarSlice';
 import showMapsReducer from './slices/showMapsSlice';
 import showFavoritesReducer from './slices/showFavoritesSlice';
 import coachSearchResultsReducer from './slices/coachSearchResultsSlice';
@@ -16,6 +17,7 @@ export const store = configureStore({
   reducer: {
     editProfile: editProfileReducer,
     userRole: userRoleReducer,
+    calendarOption: calendarSlice,
     tempFilter: tempFilterReducer,
     savedFilter: savedFilterReducer,
     showMaps: showMapsReducer,
