@@ -4,6 +4,7 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   getDocs,
   onSnapshot,
   orderBy,
@@ -11,6 +12,7 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { retrieveData } from './localStorage';
+import { getGroupRoomId } from '@/utils/chatRoomUtil';
 const getMessages = (callback: any) => {
   try {
     const msgRef = collection(db, 'chat');
@@ -125,13 +127,61 @@ async function getAllUsers() {
 
 async function createRoom(roomId: string) {
   try {
-    const roomRef = doc(db, 'chat', roomId); // Obtain a reference to the document
+    const roomRef = doc(db, 'chat', roomId);
     await setDoc(roomRef, {
       roomId,
       createdAt: Timestamp.now(),
     });
   } catch (error) {
     console.log(error);
+  }
+}
+
+async function createGroupChatRoom(userIds: string[]) {
+  try {
+    const roomId = getGroupRoomId(userIds);
+    const roomRef = doc(db, 'chat', roomId);
+    await setDoc(roomRef, {
+      roomId,
+      createdAt: Timestamp.now(),
+      members: userIds,
+      groupName: 'Group Chat',
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function fetchGroupMembers(userIds: string[]) {
+  try {
+    const playerPromises = userIds.map(async (id) => {
+      const userDoc = await getDoc(doc(db, 'player', id));
+      if (userDoc.exists()) {
+        const { displayName, image } = userDoc.data();
+        return { id, displayName, image };
+      }
+    });
+
+    const coachPromises = userIds.map(async (id) => {
+      const userDoc = await getDoc(doc(db, 'coach', id));
+      if (userDoc.exists()) {
+        const { displayName, image } = userDoc.data();
+        return { id, displayName, image };
+      }
+    });
+
+    const playerResults = await Promise.all(playerPromises);
+    const coachResults = await Promise.all(coachPromises);
+
+    const allResults = [...playerResults, ...coachResults];
+
+    // Filter out undefined results
+    const users = allResults.filter((user) => user !== undefined);
+
+    return users;
+  } catch (error) {
+    console.log('Error fetching group members:', error);
+    return [];
   }
 }
 
@@ -142,4 +192,6 @@ export {
   cureentUser,
   getAllUsers,
   createRoom,
+  createGroupChatRoom,
+  fetchGroupMembers,
 };

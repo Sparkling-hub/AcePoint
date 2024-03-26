@@ -101,6 +101,13 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
+              name="groupChatRoom"
+              options={{
+                headerShadowVisible: false,
+                header: ChatsHeader,
+              }}
+            />
+            <Stack.Screen
               name="new-training"
               options={{
                 headerShadowVisible: false,

@@ -3,3 +3,9 @@ export const getRoomId = (userId: string, otherUserId: string) => {
   const roomId = sortedIds.join('-');
   return roomId;
 };
+
+export const getGroupRoomId = (usersId: string[]) => {
+  const sortedIds = usersId.sort();
+  const roomId = sortedIds.join('-');
+  return roomId;
+};
