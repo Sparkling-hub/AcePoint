@@ -1,34 +1,22 @@
 import { db } from "@/lib/firebase";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { retrieveData,storeData } from "./localStorage";
 import { subscriptionEnum } from "@/model/subscriptionEnum";
 
 const subscriptionData = async ()=> {
     try {
-        const colRef = collection(db, "subscription");
-
-        // Retrieve all documents in the collection
-        const querySnapshot = await getDocs(colRef);
-        
         // retrieve User Data
        const data= await retrieveData("userInfo")
        if (!data) {
            return 'User not authenticated';
        }
-       let status
         const parsedValue = JSON.parse(data);
-        querySnapshot.forEach((doc) => {
-            const subscriptionData=doc.data()
-            if (subscriptionData.coachId===parsedValue.user.uid) 
-            {   
-                status=subscriptionData.status
-                return "subscription exist"
-            }
-            else return "there is no subscription "
-    
-        });
+        if(!(parsedValue.data.hasOwnProperty('subscription'))){
+            // return msg if subscription is not existing in coach schema
+            return "subscription is not exist"
+        }
          // return  subscription value
-        return status
+        return parsedValue.data.subscription
     }catch (error:any) {
         console.log("Error :", error);
         return error.message;

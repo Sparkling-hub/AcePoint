@@ -33,7 +33,7 @@ describe('changeSubscription function', () => {
     it('should change subscription successfully', async () => {
         // Mocking the retrieveData function to return user data
         const userData = {
-            coachData: {},
+            data: {},
             user: { 
                 uid: 'exampleUid'  
             }
@@ -51,7 +51,7 @@ describe('changeSubscription function', () => {
         expect(retrieveData).toHaveBeenCalledWith('userInfo');
         expect(storeData).toHaveBeenCalledWith(
             'userInfo',
-            JSON.stringify({ coachData: { subscription: 'exampleSubscription' },user:userData.user })
+            JSON.stringify({ data: { subscription: 'exampleSubscription' },user:userData.user })
         );
     });
 
