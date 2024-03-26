@@ -9,12 +9,14 @@ interface DropDownItemProps {
   readonly handleItemClick: (item: string) => void;
   readonly selectedItem: string;
   readonly item: option;
+  readonly testID?: string
 }
 
 export default function DropDownItem(props: DropDownItemProps) {
-  const { handleItemClick, selectedItem, item } = props;
+  const { handleItemClick, selectedItem, item, testID } = props;
   return (
     <TouchableOpacity
+      testID={testID}
       onPress={() => handleItemClick(item.value)}
       style={{
         paddingVertical: 10,
