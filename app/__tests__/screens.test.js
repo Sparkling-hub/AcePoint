@@ -7,6 +7,12 @@ import Account from '../user/account';
 import Security from '../user/security';
 import Legal from '../legal'
 import Support from '../support'
+import AddButtonCalendar from '@/components/AddButtonCalendar'
+import CalendarIconLabel from '@/components/tabIcons/CalendarIconLabel'
+import CalendarIcon from '@/components/tabIcons/CalendarIcon'
+import Colors from '@/constants/Colors';
+import CustomDropdownMultiSelect from '@/components/Form/dropdown/CustomDropDownMultiSelectProps';
+import React from 'react';
 
 jest.mock('tamagui', () => ({
   YStack: jest.fn(),
@@ -26,7 +32,6 @@ jest.mock('firebase/firestore', () => ({
   updateDoc: jest.fn(),
   getDoc: jest.fn(() => Promise.resolve({ data: jest.fn() })),
 }));
-// Mocking modules and hooks
 jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
 }));
@@ -34,6 +39,10 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(),
 }));
 jest.mock('expo-router', () => ({
+  useNavigation: () => ({
+    navigate: jest.fn(),
+    goBack: jest.fn(),
+  }),
   router: {
     push: jest.fn(),
   },
@@ -57,7 +66,9 @@ jest.mock('firebase/storage', () => ({
   uploadBytesResumable: jest.fn(),
   getStorage: jest.fn(),
 }));
-
+jest.mock('expo-router', () => ({
+  useRouter: jest.fn()
+}))
 describe('AccountScreen', () => {
   beforeEach(() => {
     // Reset mocks before each test
@@ -101,5 +112,53 @@ describe('AccountScreen', () => {
     const { getByTestId } = render(<Legal testID={testID} />);
     expect(getByTestId(testID)).toBeTruthy();
   });
+  it('Add button calendar renders correctly', () => {
+    const testID = 'add-button-calendar';
+    const { getByTestId } = render(<AddButtonCalendar testID={testID} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Calendar icon label renders correctly', () => {
+    const testID = 'calendar-icon-label-calendar';
+    const { getByTestId } = render(<CalendarIconLabel testID={testID} focused={true} />);
+    expect(getByTestId(testID)).toBeTruthy();
+  });
+  it('Calendar icon renders correctly when focused', () => {
+    const testID = 'calendar-icon-calendar';
+    const { getByTestId } = render(<CalendarIcon testID={testID} focused={true} />);
+    const calendarIcon = getByTestId(testID);
+    expect(calendarIcon).toBeTruthy();
+    expect(calendarIcon.props.fill).toEqual(Colors.secondary);
+  });
 
+  it('Calendar icon renders correctly when not focused', () => {
+    const testID = 'calendar-icon-calendar';
+    const { getByTestId } = render(<CalendarIcon testID={testID} focused={false} />);
+    const calendarIcon = getByTestId(testID);
+    expect(calendarIcon).toBeTruthy();
+    expect(calendarIcon.props.fill).toEqual(Colors.primary);
+  });
+
+
+});
+
+describe('CustomDropdownMultiSelect', () => {
+  const options = [
+    { label: 'Option 1', value: 'option1' },
+    { label: 'Option 2', value: 'option2' },
+  ];
+  const selectedItems = [];
+  const handleChange = jest.fn();
+
+  it('CustomDropdownMultiSelect renders correctly', () => {
+    const testID = 'Custom-Dropdown-Multi-Select';
+    const { getByTestId } = render(<CustomDropdownMultiSelect
+      testID={testID}
+      placeholder="Select Options"
+      options={options}
+      selectedItems={selectedItems}
+      handleChange={handleChange}
+    />);
+    const dropdown = getByTestId(testID);
+    expect(dropdown).toBeTruthy();
+  });
 });

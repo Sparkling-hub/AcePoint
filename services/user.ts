@@ -42,7 +42,7 @@ async function findUserByEmail(
         const newPlayerRef = await addDoc(collection(db, 'player'), {
           email: email,
           displayName: displayName,
-          picture: photoURL,
+          image: photoURL,
           sessionNotification: true,
           messageNotification: true,
           promotionsViaEmail: true,
@@ -55,7 +55,7 @@ async function findUserByEmail(
         const newCoachRef = await addDoc(collection(db, 'coach'), {
           email: email,
           displayName: displayName,
-          picture: photoURL,
+          image: photoURL,
           sessionNotification: true,
           messageNotification: true,
           promotionsViaEmail: true,
