@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 import { subscriptionEnum } from './subscriptionEnum';
 
-export class subscription {
+export class Subscription {
   id?: string;
   coachId?: string;
   startDate?: Timestamp;
