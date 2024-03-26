@@ -11,7 +11,6 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { retrieveData } from './localStorage';
-import { getRoomId } from '@/utils/chatRoomUtil';
 const getMessages = (callback: any) => {
   try {
     const msgRef = collection(db, 'chat');
@@ -124,15 +123,13 @@ async function getAllUsers() {
   }
 }
 
-async function createRoom(id: string) {
+async function createRoom(roomId: string, userIds: string[]) {
   try {
-    const userId = cureentUser();
-    const roomId = getRoomId(userId, id);
     const roomRef = doc(db, 'chat', roomId); // Obtain a reference to the document
     await setDoc(roomRef, {
       roomId,
       createdAt: Timestamp.now(),
-      members: [userId, id],
+      members: userIds,
     });
   } catch (error) {
     console.log(error);
