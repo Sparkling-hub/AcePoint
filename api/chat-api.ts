@@ -12,7 +12,7 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { retrieveData } from './localStorage';
-import { getGroupRoomId } from '@/utils/chatRoomUtil';
+import { getGroupRoomId, getRoomId } from '@/utils/chatRoomUtil';
 const getMessages = (callback: any) => {
   try {
     const msgRef = collection(db, 'chat');
@@ -125,12 +125,15 @@ async function getAllUsers() {
   }
 }
 
-async function createRoom(roomId: string) {
+async function createRoom(id: string) {
   try {
-    const roomRef = doc(db, 'chat', roomId);
+    const userId = cureentUser();
+    const roomId = getRoomId(userId, id);
+    const roomRef = doc(db, 'chat', roomId); // Obtain a reference to the document
     await setDoc(roomRef, {
       roomId,
       createdAt: Timestamp.now(),
+      members: [userId, id],
     });
   } catch (error) {
     console.log(error);

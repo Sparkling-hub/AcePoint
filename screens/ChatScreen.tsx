@@ -31,8 +31,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
   // console.log(userId, id);
 
   const createRoomIfNotExists = async () => {
-    let roomId = getRoomId(userId, id);
-    await createRoom(roomId);
+    await createRoom(id);
   };
 
   useEffect(() => {
