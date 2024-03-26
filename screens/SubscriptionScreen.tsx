@@ -14,7 +14,6 @@ import { Text, YStack } from 'tamagui';
 const SubscriptionScreen = () => {
   const [status, setStatus] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
   const getCoachSubscriptionStatus = async () => {
     setIsLoading(true);
     try {
@@ -31,9 +30,10 @@ const SubscriptionScreen = () => {
       setIsLoading(false);
     }
   };
-
   useEffect(() => {
     getCoachSubscriptionStatus();
+    
+
   }, []);
 
   const statusColor = useMemo(() => {

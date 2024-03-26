@@ -1,6 +1,6 @@
 import { changeSubscription } from '@/api/subscription-api';
-import { retrieveData,storeData } from "@/api/localStorage";
-import { setDoc,doc } from "firebase/firestore";
+import { retrieveData } from "@/api/localStorage";
+import { setDoc } from "firebase/firestore";
 jest.mock('@/api/localStorage', () => ({ retrieveData: jest.fn(),storeData: jest.fn() }));
 jest.mock('firebase/auth', () => ({
     getReactNativePersistence: jest.fn(),
@@ -19,50 +19,37 @@ jest.mock('firebase/firestore', () => ({
 jest.mock("@/lib/firebase", () => ({
     db: {}
   }));
-describe('changeSubscription function', () => {
-    it('should return "User not authenticated." if no data is retrieved', async () => {
-        // Mocking the retrieveData function to return null
+  describe('changeSubscription function', () => {
+    it('should change subscription successfully when user is authenticated', async () => {
+        // Mock user data
+        const mockUserData = JSON.stringify({ user: { uid: 'user1' } });
+        retrieveData.mockResolvedValueOnce(mockUserData);
+
+        // Mock Firestore response
+        setDoc.mockResolvedValueOnce();
+
+        const result = await changeSubscription({ subscription: { /* your subscription data */ }, id: 'subscriptionId' });
+        expect(result).toEqual("subscription changed successfully");
+    });
+
+    it('should return "User not authenticated" when user is not authenticated', async () => {
+        // Mock user data as null
         retrieveData.mockResolvedValueOnce(null);
 
-        // Call the changeSubscription function
-        const result = await changeSubscription({ subscription: 'exampleSubscription' });
-
-        // Assert that the result is as expected
-        expect(result).toBe('User not authenticated.');
-    });
-    it('should change subscription successfully', async () => {
-        // Mocking the retrieveData function to return user data
-        const userData = {
-            coachData: {},
-            user: { 
-                uid: 'exampleUid'  
-            }
-        };
-        retrieveData.mockResolvedValueOnce(JSON.stringify(userData));
-        storeData.mockResolvedValueOnce();
-        // Mock Firestore functions
-        doc.mockReturnValueOnce('exampleDocRef');
-        setDoc.mockResolvedValueOnce();
-    
-        // Call the changeSubscription function
-        const result = await changeSubscription({ subscription: 'exampleSubscription' });
-        // Assert that the result is as expected
-        expect(result).toBe('subscription changed successfully');
-        expect(retrieveData).toHaveBeenCalledWith('userInfo');
-        expect(storeData).toHaveBeenCalledWith(
-            'userInfo',
-            JSON.stringify({ coachData: { subscription: 'exampleSubscription' },user:userData.user })
-        );
+        const result = await changeSubscription({ subscription: { /* your subscription data */ }, id: 'subscriptionId' });
+        expect(result).toEqual("User not authenticated.");
     });
 
-    it('should return error message if an error occurs during data retrieval or Firestore operation', async () => {
-        // Mocking the retrieveData function to throw an error
-        retrieveData.mockRejectedValueOnce(new Error('Error retrieving data'));
+    it('should return error message when an error occurs', async () => {
+        // Mock user data
+        const mockUserData = JSON.stringify({ user: { uid: 'user1' } });
+        retrieveData.mockResolvedValueOnce(mockUserData);
 
-        // Call the changeSubscription function
-        const result = await changeSubscription({ subscription: 'exampleSubscription' });
+        // Mock error
+        const errorMessage = "Firestore error";
+        setDoc.mockRejectedValueOnce(new Error(errorMessage));
 
-        // Assert that the result is as expected
-        expect(result).toBe('Error retrieving data');
+        const result = await changeSubscription({ subscription: { /* your subscription data */ }, id: 'subscriptionId' });
+        expect(result).toEqual(errorMessage);
     });
 });

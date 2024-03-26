@@ -1,7 +1,6 @@
 import { db } from "@/lib/firebase";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
-import { retrieveData,storeData } from "./localStorage";
-import { subscriptionEnum } from "@/model/subscriptionEnum";
+import { retrieveData } from "./localStorage";
 
 const subscriptionData = async ()=> {
     try {
@@ -15,46 +14,38 @@ const subscriptionData = async ()=> {
        if (!data) {
            return 'User not authenticated';
        }
-       let status
+       let id:any=null
+       let subscriptionData:any=null
         const parsedValue = JSON.parse(data);
         querySnapshot.forEach((doc) => {
-            const subscriptionData=doc.data()
+            subscriptionData=doc.data() 
             if (subscriptionData.coachId===parsedValue.user.uid) 
-            {   
-                status=subscriptionData.status
-                return "subscription exist"
+            {               
+                subscriptionData=doc.data() 
+                id=doc.id
+                return {data:subscriptionData,subscriptionId:id}
             }
-            else return "there is no subscription "
+            else return {data:null,subscriptionId:id}
     
         });
-         // return  subscription value
-        return status
+        // return  subscription value
+        return {data:subscriptionData,subscriptionId:id}
     }catch (error:any) {
         console.log("Error :", error);
         return error.message;
     }
 };
-const changeSubscription = async ({  subscription }: {subscription: subscriptionEnum })=> {
+const changeSubscription = async ({  subscription,id }: {subscription: any,id:string })=> {
     try {
         // retrieve User Data 
        const data= await retrieveData("userInfo")
        if (!data) {
            return 'User not authenticated.';
        }
-        const parsedValue = JSON.parse(data);
-        const userData = {
-            ...parsedValue.coachData,
-            subscription: subscription
-        };
         // retrieve coach data and add it to db 
-        const docRef = doc(db, 'coach', parsedValue.user.uid);
-        await setDoc(docRef, userData);
+        const docRef = doc(db, 'subscription', id);
+        await setDoc(docRef, subscription);
         // return msg when value changed with successful status
-        
-        // update the local storage with new values
-        //updating the storage
-        parsedValue.data=userData
-        await storeData('userInfo',JSON.stringify(parsedValue))
         return "subscription changed successfully";
     }catch (error:any) {
         console.log("Error :", error);
