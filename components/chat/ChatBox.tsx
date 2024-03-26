@@ -1,7 +1,7 @@
 import React from 'react';
-import { Avatar, Circle, XStack, YStack } from 'tamagui';
+import { Avatar, Circle, XStack, YStack, Text } from 'tamagui';
 import Colors from '@/constants/Colors';
-import { Text } from 'tamagui';
+
 import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { item } from '@/types/chatItem';

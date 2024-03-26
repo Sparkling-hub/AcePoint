@@ -21,7 +21,7 @@ interface ChatScreenProps {
 }
 
 const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
-  const { displayName, image, id } = item;
+  const { displayName, id } = item;
   const textRef = React.useRef('');
   const inputRef = React.useRef<Input>(null);
   const messageListRef = React.useRef<ScrollView>(null);
