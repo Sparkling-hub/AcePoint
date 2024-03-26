@@ -2,10 +2,11 @@ import { useSelector } from "react-redux";
 import AgendaCoachScreen from "./AgendaCoachScreen";
 import WeeklyCalendarCoachScreen from "./WeeklyCalendarCoachScreen";
 import { useEffect, useState } from "react";
-import { getLessonsByCoachId } from "@/api/lesson-api";
+import { getLessonsByCoachId, getLessonsByPlayerId } from "@/api/lesson-api";
 import { useIsFocused } from '@react-navigation/native';
 import { retrieveData } from "@/api/localStorage";
 import { getUpdatedLessonsForWeeklyView } from "@/services/lessons";
+import { RootState } from "@/store/store";
 
 export default function CalendarCoachScreen() {
     const [isLoading, setIsLoading] = useState(true)
@@ -14,18 +15,22 @@ export default function CalendarCoachScreen() {
     const [lessonsForWeeklyView, setLessonsForWeeklyView] = useState([]);
     const [currentWeek, setCurrentWeek] = useState('');
     const isFocused = useIsFocused();
+    const userRole = useSelector((state: RootState) => state.userRole);
+    const userRoleValue = userRole.userRole;
 
     useEffect(() => {
         const getLessons = async () => {
             setIsLoading(true)
-            const coachId = await retrieveData('userID')
-            let lessonss = []
-            if (coachId) {
-                lessonss = await getLessonsByCoachId(coachId);
-            }
-            setLessons(lessonss);
-            const updatedLessonsForWeeklyView = getUpdatedLessonsForWeeklyView(lessons)
-            setLessonsForWeeklyView(updatedLessonsForWeeklyView);
+                const userID = await retrieveData('userID')
+                let lessonss = []
+                if (userID) {
+                    console.log(userID);
+                    lessonss = userRoleValue === 'Coach' ? await getLessonsByCoachId(userID) : await getLessonsByPlayerId(userID)
+                }
+                setLessons(lessonss);
+                const updatedLessonsForWeeklyView = getUpdatedLessonsForWeeklyView(lessons)
+                setLessonsForWeeklyView(updatedLessonsForWeeklyView);
+
             setIsLoading(false)
         }
         const getCurrentWeek = () => {

@@ -14,8 +14,16 @@ import { useRouter } from "expo-router";
 import fireToast from "@/services/toast";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-
+const generateRandomString = (length: number): string => {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
 export default function TrainingInformations() {
+
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(true)
     const [training, setTraining] = useState({
@@ -57,13 +65,12 @@ export default function TrainingInformations() {
                     const coachDoc = await getCoachById(trainingDoc.coachId)
                     if (coachDoc) setCoach(coachDoc)
                     const arrayPlayers = trainingDoc.players
-                    if((new Date(trainingDoc.signInDeadLine.seconds * 1000) > new Date()) && arrayPlayers.includes(userID))
-                        setShowCancelButton(true)
+                    setShowCancelButton(arrayPlayers.includes(userID))
                     setPlayersRequired(trainingDoc.maxPeople - arrayPlayers.length)
                     arrayPlayers.forEach(async (element: string) => {
                         const player = await getPlayerById(element)
                         if (player) {
-                            setPlayers([...players, player])
+                            setPlayers((prevPlayers) => [...prevPlayers, player])
                         }
                     });
                     setRating(Math.round(arrayPlayers.length / parseInt(trainingDoc.maxPeople) * 100))
@@ -151,7 +158,7 @@ export default function TrainingInformations() {
                     <YStack flexDirection="row" flexWrap="wrap">
                         {players.map((element) => (
                             <Avatar
-                                key={element.phoneNumber}
+                                key={generateRandomString(20)}
                                 circular
                                 size="$5"
                                 marginTop={30}
@@ -160,8 +167,10 @@ export default function TrainingInformations() {
                                 borderColor={Colors.primary}
                                 backgroundColor={Colors.secondary}
                             >
-                                {!!element.image &&
+                                {!!element.image ?
                                     <Avatar.Image src={element.image} />
+                                    :
+                                    <Avatar.Image src={require('../../assets/images/user-pfp.png')} />
                                 }
                             </Avatar>
                         ))}
@@ -234,6 +243,14 @@ export default function TrainingInformations() {
                                 router.replace("/training")
                             }}
                         >Cancel</Button>
+                    }
+                    {(userRole === 'Player' && !disabled && !showCancelButton && playersRequired > 0) &&
+                        <Button backgroundColor={'#7888A3'} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}
+                        >Unavailable</Button>
+                    }
+                    {(userRole === 'Player'&& !showCancelButton && playersRequired === 0) &&
+                        <Button backgroundColor={'#7888A3'} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}
+                        >Full</Button>
                     }
                 </YStack>
             </YStack>

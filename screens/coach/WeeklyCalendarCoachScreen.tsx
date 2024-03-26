@@ -11,8 +11,13 @@ import { RootState } from "@/store/store";
 import moment from "moment";
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const times = ['06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30'];
 
+const times = Array.from({length: 49}, (_, i) => {
+    if (i === 48) return '23:59';
+    const hour = Math.floor(i / 2);
+    const minute = i % 2 === 0 ? '00' : '30';
+    return `${hour.toString().padStart(2, '0')}:${minute}`;
+});
 function getTimeIndex(time: string): number {
     const baseTime = times[0];
     const [hours, minutes] = time.split(':').map(Number);
@@ -112,7 +117,7 @@ export default function WeeklyCalendarCoachScreen({ lessons, currentWeek }: { re
                 <View style={styles.timeColumn}>
                     {times.map((time) => (
                         <View key={`time-${time}`} style={styles.timeCell}>
-                            <Text style={styles.timeText}>{time}</Text>
+                            {time !== '23:59' && <Text style={styles.timeText}>{time}</Text>}
                         </View>
                     ))}
                 </View>

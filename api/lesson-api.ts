@@ -175,6 +175,30 @@ const deleteLessonById = async (id: string) => {
         console.log('Error deleting the lesson')
     }
 }
+
+// Function to get all lessons by player ID
+const getLessonsByPlayerId = async (playerId: string) => {
+    // Create a query to get all lessons where the players array contains the player ID
+    const q = query(lessonsRef, where("players", "array-contains", playerId));
+    try {
+        // Get the documents that match the query
+        const querySnapshot = await getDocs(q);
+        // Initialize an empty array to store the lessons
+        const lessons = [];
+        // Loop through each document in the query snapshot
+        querySnapshot.forEach((doc) => {
+            // Push the document data (including the ID) to the lessons array
+            lessons.push({ id: doc.id, ...doc.data() });
+        });
+        // Return the array of lessons
+        return lessons;
+    } catch (error) {
+        // Log an error message if something went wrong
+        console.error("Error getting lessons: ", error);
+        // Return an empty array
+        return [];
+    }
+};
 // Export all the functions
-export { getLessonsByCoachId, storeLesson, getLessonById, deleteLessonById, updateLesson, addPlayerToLesson, removePlayerToLesson };
+export { getLessonsByCoachId, storeLesson, getLessonById, deleteLessonById, updateLesson, addPlayerToLesson, removePlayerToLesson, getLessonsByPlayerId };
 

@@ -1,5 +1,5 @@
 import { expect, jest, describe, it } from '@jest/globals';
-import { getLessonsByCoachId } from '../../api/lesson-api';
+import { getLessonsByCoachId, getLessonsByPlayerId } from '../../api/lesson-api';
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, doc, getDoc, } from "firebase/firestore";
 import { addPlayerToLesson, removePlayerToLesson } from '@/api/lesson-api';
@@ -58,6 +58,23 @@ describe('getLessonsByCoachId', () => {
         const mockGetDocs = getDocs;
         mockGetDocs.mockRejectedValue(new Error('Error getting lessons'));
         const lessons = await getLessonsByCoachId();
+        expect(lessons).toEqual([]);
+    });
+});
+describe('getLessonsByPlayerId', () => {
+    it('fetches lessons successfully', async () => {
+        const lessons = await getLessonsByPlayerId();
+        expect(collection).toHaveBeenCalledWith(db, 'lesson');
+        expect(query).toHaveBeenCalled();
+        expect(where).toHaveBeenCalled();
+        expect(getDocs).toHaveBeenCalled();
+        expect(lessons).toEqual([]);
+    });
+
+    it('handles errors gracefully', async () => {
+        const mockGetDocs = getDocs;
+        mockGetDocs.mockRejectedValue(new Error('Error getting lessons'));
+        const lessons = await getLessonsByPlayerId();
         expect(lessons).toEqual([]);
     });
 });

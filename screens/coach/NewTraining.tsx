@@ -17,7 +17,7 @@ import CustomDropdownMultiSelect from "@/components/Form/dropdown/CustomDropDown
 import CustomDropdown from "@/components/Form/dropdown/CustomDropdown";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import { Platform, StyleSheet } from "react-native";
+import { Modal, Platform, StyleSheet } from "react-native";
 import { retrieveData } from "@/api/localStorage";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -30,6 +30,8 @@ import { useDispatch } from "react-redux";
 import { setCalendarOption } from "@/store/slices/calendarSlice";
 import { Path, Svg } from "react-native-svg";
 import moment from "moment";
+import SearchApi from "@/components/SearchApi/SearchApi";
+
 
 
 export default function NewTrainingScreen() {
@@ -45,6 +47,8 @@ export default function NewTrainingScreen() {
     const [startDate, setStartDate] = useState(date);
     const [startTime, setStartTime] = useState('12:00:00.000Z')
     const [deadLineTime, setDeadLineTime] = useState('12:00:00.000Z')
+    const [open, setOpen] = useState<boolean>(false);
+    const [close, setClose] = useState<boolean>(false);
     const marginRight = Platform.OS === 'ios' ? 50 : 20
     const [isLoading, setIsLoading] = useState(true)
     const dispatch = useDispatch()
@@ -53,7 +57,9 @@ export default function NewTrainingScreen() {
         if (field === 'endDate') setShowEndDate(!showEndDate)
         if (field === 'signInDeadLine') setShowSignInDeadLine(!showSignInDeadLine)
     };
-
+    const handleData = (data: string) => {
+        handleChange('club', data)
+    };
     const startTimeParts = startTime.split(':')
     const initialValues = {
         organiser: '',
@@ -136,7 +142,6 @@ export default function NewTrainingScreen() {
         handleChange(field, moment(date).format('DD/MMM/yyyy, HH:mm'))
         handleShow(field);
     };
-
 
     useEffect(() => {
         const getUserName = async () => {
@@ -391,15 +396,16 @@ export default function NewTrainingScreen() {
                 <YStack style={styles.ystack}>
                     <CustomInput
                         value={formik.values.club}
-                        onChangeText={(value: any) => {
-                            handleChange('club', value)
-                        }}
-                        onBlur={formik.handleBlur('club')}
                         errors={formik.errors.club}
                         validateOnInit
                         placeholder="Club"
                         icon={<Tennis />}
+                        readOnly
+                        onPress={() => { setOpen(true) }}
                     />
+                    <Modal animationType="slide" visible={open}>
+                        <SearchApi setOpen={setOpen} setClose={setClose} handleData={handleData} />
+                    </Modal>
                 </YStack>
                 <YStack style={styles.ystack}>
                     <CustomInput

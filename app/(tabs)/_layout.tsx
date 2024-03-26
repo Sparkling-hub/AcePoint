@@ -7,7 +7,6 @@ import { setUserRole } from '@/store/slices/userRole';
 import { retrieveData } from '@/api/localStorage';
 import CalendarIcon from '@/components/tabIcons/CalendarIcon';
 import CalendarIconLabel from '@/components/tabIcons/CalendarIconLabel';
-import { ChevronLeft } from '@tamagui/lucide-icons';
 import { Button, View } from 'tamagui';
 import { Platform, StyleSheet } from 'react-native';
 import Calendar from '@/components/svg/Calendar';
@@ -30,7 +29,6 @@ const CalendarHeader = ({
 }) => {
   return (
     <CustomHeader
-      leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
       rightContent={
         <View style={styles.header}>
           <Calendar
@@ -150,6 +148,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 15
   },
   button: {
     alignItems: 'center',
