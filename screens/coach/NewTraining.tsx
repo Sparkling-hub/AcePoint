@@ -36,9 +36,12 @@ import SearchApi from "@/components/SearchApi/SearchApi";
 
 export default function NewTrainingScreen() {
     const { mode, selectedDate } = useLocalSearchParams();
-    const parts = selectedDate.split(/[/, :]/);
-    const months = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
-    const date = new Date(Date.UTC(parts[2], months[parts[1]], parts[0], parts[3], parts[4]));
+    let date = new Date()
+    if (selectedDate) {
+        const parts = selectedDate.split(/[/, :]/);
+        const months = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+        date = new Date(Date.UTC(parts[2], months[parts[1]], parts[0], parts[3], parts[4]));
+    }
     const router = useRouter()
     const [showDuration, setShowDuration] = useState(false);
     const [showStartDate, setShowStartDate] = useState(false);
@@ -48,7 +51,7 @@ export default function NewTrainingScreen() {
     const [startTime, setStartTime] = useState('12:00:00.000Z')
     const [deadLineTime, setDeadLineTime] = useState('12:00:00.000Z')
     const [open, setOpen] = useState<boolean>(false);
-    const [close, setClose] = useState<boolean>(false);
+    const [, setClose] = useState<boolean>(false);
     const marginRight = Platform.OS === 'ios' ? 50 : 20
     const [isLoading, setIsLoading] = useState(true)
     const dispatch = useDispatch()

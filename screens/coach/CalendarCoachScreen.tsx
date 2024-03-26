@@ -24,11 +24,10 @@ export default function CalendarCoachScreen() {
                 const userID = await retrieveData('userID')
                 let lessonss = []
                 if (userID) {
-                    console.log(userID);
                     lessonss = userRoleValue === 'Coach' ? await getLessonsByCoachId(userID) : await getLessonsByPlayerId(userID)
                 }
                 setLessons(lessonss);
-                const updatedLessonsForWeeklyView = getUpdatedLessonsForWeeklyView(lessons)
+                const updatedLessonsForWeeklyView = getUpdatedLessonsForWeeklyView(lessonss)
                 setLessonsForWeeklyView(updatedLessonsForWeeklyView);
 
             setIsLoading(false)

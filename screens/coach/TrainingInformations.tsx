@@ -14,14 +14,7 @@ import { useRouter } from "expo-router";
 import fireToast from "@/services/toast";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-const generateRandomString = (length: number): string => {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-}
+
 export default function TrainingInformations() {
 
     const router = useRouter()
@@ -52,6 +45,14 @@ export default function TrainingInformations() {
     const userRole = user.userRole;
     const [disabled, setDisabled] = useState(true)
     const [showCancelButton, setShowCancelButton] = useState(false)
+    const pushPlayers = (arrayPlayers: Array<any>) => {
+        arrayPlayers.forEach(async (element: string) => {
+            const player = await getPlayerById(element)
+            if (player) {
+                setPlayers((prevPlayers) => [...prevPlayers, player])
+            }
+        });
+    }
     useEffect(() => {
         const getInformations = async () => {
             const trainingID = await retrieveData('trainingID')
@@ -67,12 +68,7 @@ export default function TrainingInformations() {
                     const arrayPlayers = trainingDoc.players
                     setShowCancelButton(arrayPlayers.includes(userID))
                     setPlayersRequired(trainingDoc.maxPeople - arrayPlayers.length)
-                    arrayPlayers.forEach(async (element: string) => {
-                        const player = await getPlayerById(element)
-                        if (player) {
-                            setPlayers((prevPlayers) => [...prevPlayers, player])
-                        }
-                    });
+                    pushPlayers(arrayPlayers)
                     setRating(Math.round(arrayPlayers.length / parseInt(trainingDoc.maxPeople) * 100))
                 }
             }
@@ -158,7 +154,7 @@ export default function TrainingInformations() {
                     <YStack flexDirection="row" flexWrap="wrap">
                         {players.map((element) => (
                             <Avatar
-                                key={generateRandomString(20)}
+                                key={element.displayName}
                                 circular
                                 size="$5"
                                 marginTop={30}
@@ -167,7 +163,7 @@ export default function TrainingInformations() {
                                 borderColor={Colors.primary}
                                 backgroundColor={Colors.secondary}
                             >
-                                {!!element.image ?
+                                {element.image ?
                                     <Avatar.Image src={element.image} />
                                     :
                                     <Avatar.Image src={require('../../assets/images/user-pfp.png')} />
@@ -248,7 +244,7 @@ export default function TrainingInformations() {
                         <Button backgroundColor={'#7888A3'} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}
                         >Unavailable</Button>
                     }
-                    {(userRole === 'Player'&& !showCancelButton && playersRequired === 0) &&
+                    {(userRole === 'Player' && !showCancelButton && playersRequired === 0) &&
                         <Button backgroundColor={'#7888A3'} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}
                         >Full</Button>
                     }
