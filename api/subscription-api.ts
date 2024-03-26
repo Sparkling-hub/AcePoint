@@ -11,12 +11,12 @@ const subscriptionData = async ()=> {
            return 'User not authenticated';
        }
         const parsedValue = JSON.parse(data);
-        if(!(parsedValue.data.hasOwnProperty('subscription'))){
+        if(!(parsedValue.coachData.hasOwnProperty('subscription'))){
             // return msg if subscription is not existing in coach schema
             return "subscription is not exist"
         }
          // return  subscription value
-        return parsedValue.data.subscription
+        return parsedValue.coachData.subscription
     }catch (error:any) {
         console.log("Error :", error);
         return error.message;
@@ -41,7 +41,7 @@ const changeSubscription = async ({  subscription }: {subscription: subscription
         
         // update the local storage with new values
         //updating the storage
-        parsedValue.data=userData
+        parsedValue.coachData=userData
         await storeData('userInfo',JSON.stringify(parsedValue))
         return "subscription changed successfully";
     }catch (error:any) {
