@@ -14,7 +14,7 @@ import {
 } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Input, Text, YStack } from 'tamagui';
-import { ActivityIndicator, ScrollView } from 'react-native';
+import { ActivityIndicator, Keyboard, ScrollView } from 'react-native';
 
 interface ChatScreenProps {
   item: item;
@@ -29,6 +29,12 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
   const [loading, setLoading] = useState(true);
   const userId = cureentUser();
   // console.log(userId, id);
+
+  const createRoomIfNotExists = async () => {
+    let roomId = getRoomId(userId, id);
+    await createRoom(roomId);
+  };
+
   useEffect(() => {
     createRoomIfNotExists();
     let roomId = getRoomId(userId, id);
@@ -43,19 +49,28 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
       });
       setMessages([...messages]);
       setLoading(false);
-
-      // After messages are loaded, scroll to the bottom
-      if (messageListRef.current) {
-        messageListRef.current.scrollToEnd();
-      }
     });
 
-    return unsub;
+    const KeyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => updateScrollView()
+    );
+
+    return () => {
+      unsub();
+      KeyboardDidShowListener.remove();
+    };
   }, []);
-  const createRoomIfNotExists = async () => {
-    let roomId = getRoomId(userId, id);
-    await createRoom(roomId);
+
+  const updateScrollView = () => {
+    setTimeout(() => {
+      messageListRef?.current?.scrollToEnd({ animated: true });
+    }, 100);
   };
+
+  useEffect(() => {
+    updateScrollView();
+  }, [messages]);
 
   const handleSendMessage = async () => {
     let message = textRef.current.trim();
@@ -94,11 +109,6 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
 
       <ChatInput
         inputRef={inputRef}
-        onPressIn={() => {
-          if (messageListRef.current) {
-            messageListRef.current.scrollToEnd();
-          }
-        }}
         placeholder="Type message..."
         onChangeText={(value) => (textRef.current = value)}
         onSend={handleSendMessage}

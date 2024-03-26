@@ -12,6 +12,7 @@ interface MessageBoxProps {
 
 const MessageBox: React.FC<MessageBoxProps> = ({ message, sent = false }) => {
   const { createdAt, image } = message;
+
   const timestampInMillis =
     createdAt?.seconds * 1000 + createdAt?.nanoseconds / 1000000;
 
@@ -39,7 +40,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({ message, sent = false }) => {
             borderWidth={2}
             borderColor={Colors.primary}
             size={28}>
-            <Avatar.Image src={require('../../assets/images/user-pfp.png')} />
+            <Avatar.Image src={image} />
             <Avatar.Fallback bc={'#EFEFEF'} />
           </Avatar>
         )}
@@ -62,7 +63,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({ message, sent = false }) => {
             borderWidth={2}
             borderColor={Colors.secondary}
             size={28}>
-            <Avatar.Image src={require('../../assets/images/user-pfp.png')} />
+            <Avatar.Image src={image} />
             <Avatar.Fallback bc={Colors.secondary} />
           </Avatar>
         )}

@@ -55,7 +55,7 @@ async function sendMessage(roomId: string, message: string) {
       createdAt: Timestamp.now(),
     });
 
-    //console.log('new message id:', newDoc.id);
+    console.log('new message id:', newDoc.id);
   } catch (error) {
     console.log(error);
   }
