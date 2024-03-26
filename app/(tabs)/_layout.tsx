@@ -1,9 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs } from 'expo-router';
-
+import Colors from '@/constants/Colors';
+import CustomHeader from '@/components/CustomHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserRole } from '@/store/slices/userRole';
 import { retrieveData } from '@/api/localStorage';
+import CalendarIcon from '@/components/tabIcons/CalendarIcon';
+import CalendarIconLabel from '@/components/tabIcons/CalendarIconLabel';
+import { ChevronLeft } from '@tamagui/lucide-icons';
+import { Button, View } from 'tamagui';
+import { Platform, StyleSheet } from 'react-native';
+import Calendar from '@/components/svg/Calendar';
+import { setCalendarOption } from '@/store/slices/calendarSlice';
 import ProfileIcon from '@/components/tabIcons/ProfileIcon';
 import PorfileIconLabel from '@/components/tabIcons/PorfileIconLabel';
 import BookIcon from '@/components/tabIcons/BookIcon';
@@ -14,6 +22,35 @@ import { RootState } from '@/store/store';
 import StatisticsIcon from '@/components/tabIcons/StatisticsIcon';
 import StatisticsIconLabel from '@/components/tabIcons/StatisticsIconLabel';
 
+const CalendarHeader = ({
+  handleState,
+  getButtonStyle,
+}: {
+  handleState: (selected: string) => void;
+  getButtonStyle: (key: string) => React.CSSProperties;
+}) => {
+  return (
+    <CustomHeader
+      leftIcon={<ChevronLeft size={'$2.5'} color={Colors.secondary} />}
+      rightContent={
+        <View style={styles.header}>
+          <Calendar
+            fill={Colors.secondary}
+            style={{ marginRight: 20, marginTop: 3 }}
+          />
+          {['D', 'W', 'M'].map((key) => (
+            <Button
+              key={key}
+              style={getButtonStyle(key)}
+              onPress={() => handleState(key)}>
+              {key}
+            </Button>
+          ))}
+        </View>
+      }
+    />
+  );
+};
 export default function TabLayout() {
   const dispatch = useDispatch();
   const getUserRole = async () => {
@@ -27,6 +64,33 @@ export default function TabLayout() {
 
   const { userRole } = useSelector((state: RootState) => state.userRole);
 
+  const [state, setState] = useState({
+    D: true,
+    W: false,
+    M: false,
+  });
+  type ButtonKey = 'D' | 'W' | 'M';
+
+  const handleState = (selected: ButtonKey) => {
+    setState({ D: false, W: false, M: false, [selected]: true });
+    dispatch(setCalendarOption(selected));
+  };
+
+  const getButtonStyle = (key: ButtonKey) => ({
+    ...styles.button,
+    backgroundColor: state[key] ? Colors.secondary : Colors.iron,
+    color: state[key] ? Colors.iron : Colors.secondary,
+  });
+
+  const renderCalendarHeader = () => {
+    return (
+      <CalendarHeader
+        handleState={(selected: any) => handleState(selected as ButtonKey)}
+        getButtonStyle={(key: any) => getButtonStyle(key as ButtonKey)}
+      />
+    );
+  };
+
   return (
     <Tabs
       screenOptions={{
@@ -36,7 +100,8 @@ export default function TabLayout() {
           shadowOpacity: 0,
           elevation: 0,
           paddingHorizontal: 30,
-          height: 80,
+          height: Platform.OS === 'ios' ? 100 : 80,
+          paddingTop: Platform.OS === 'ios' ? 30 : 10,
           flexDirection: 'row',
           alignItems: 'center',
         },
@@ -48,6 +113,16 @@ export default function TabLayout() {
           title: 'Home',
           tabBarIcon: HomeIcon,
           tabBarLabel: HomeIconLabel,
+        }}
+      />
+      <Tabs.Screen
+        name="calendar-coach"
+        options={{
+          title: 'Calendar',
+          tabBarIcon: CalendarIcon,
+          tabBarLabel: CalendarIconLabel,
+          header: renderCalendarHeader,
+          headerShadowVisible: false,
         }}
       />
       <Tabs.Screen
@@ -79,3 +154,29 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  button: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.iron,
+    borderRadius: 7,
+    paddingLeft: 7,
+    paddingRight: 7,
+    height: 30,
+    marginRight: 2,
+    color: Colors.secondary,
+  },
+  buttonText: {
+    fontFamily: 'MontserratBold',
+    fontSize: 16,
+    lineHeight: 20,
+    textAlign: 'center',
+    color: Colors.secondary,
+  },
+});

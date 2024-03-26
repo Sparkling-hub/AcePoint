@@ -6,6 +6,7 @@ import { Input, InputProps, Text, XStack, YStack } from 'tamagui';
 
 interface CustomInputProps extends InputProps {
   onPress?: () => void;
+  fontSize?: number;
   icon?: React.ReactNode;
   readOnly?: boolean;
   inputStyle?: object;
@@ -25,6 +26,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     touched,
     errors,
     hide,
+    fontSize,
     ...rest
   } = props;
   const textInputRef = useRef<Input>(null);
@@ -39,7 +41,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
   };
 
   return (
-    <YStack>
+    <YStack width={props.width}>
       <TouchableOpacity onPress={handleContainerPress} activeOpacity={0.5}>
         <YStack
           height={70}
@@ -64,7 +66,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
               <Input
                 ref={textInputRef}
                 color={Colors.secondary}
-                fontSize={16}
+                fontSize={fontSize ?? 16}
                 lineHeight={20}
                 minWidth={'100%'}
                 style={[{ fontFamily: 'MontserratMedium' }, inputStyle]}

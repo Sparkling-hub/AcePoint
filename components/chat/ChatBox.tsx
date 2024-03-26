@@ -36,7 +36,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({ item }) => {
       </XStack>
       <XStack gap={20} alignItems="center">
         <Avatar circular borderWidth={2} borderColor={Colors.primary} size={47}>
-          <Avatar.Image src={image} />
+          <Avatar.Image
+            src={image ?? require('../../assets/images/user-pfp.png')}
+          />
           <Avatar.Fallback bc={'#EFEFEF'} />
         </Avatar>
 
