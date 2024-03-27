@@ -1,14 +1,26 @@
-import { favoriteCoachList, getPlayerById } from '@/api/player-api'
-import { getCoachById } from '@/api/coach-api'
-import { storeLesson, getLessonById, updateLesson, deleteLessonById } from '@/api/lesson-api';
+import { favoriteCoachList, getPlayerById } from '@/api/player-api';
+import { getCoachById } from '@/api/coach-api';
+import {
+  storeLesson,
+  getLessonById,
+  updateLesson,
+  deleteLessonById,
+} from '@/api/lesson-api';
 import { auth, db } from '@/lib/firebase';
-import { getDoc, getDocs, doc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-import fireToast from "@/services/toast";
+import {
+  getDoc,
+  getDocs,
+  doc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+} from 'firebase/firestore';
+import fireToast from '@/services/toast';
 
-jest.mock("@/services/toast", () => {
+jest.mock('@/services/toast', () => {
   return {
     __esModule: true,
-    default: jest.fn()
+    default: jest.fn(),
   };
 });
 jest.mock('firebase/auth', () => ({
@@ -16,9 +28,11 @@ jest.mock('firebase/auth', () => ({
   initializeAuth: jest.fn(),
 }));
 
-jest.mock('firebase/app', () => ({ initializeApp: jest.fn(), }));
-jest.mock('firebase/storage', () => ({ getStorage: jest.fn(), }));
-jest.mock('@react-native-async-storage/async-storage', () => ({ ReactNativeAsyncStorage: jest.fn() }));
+jest.mock('firebase/app', () => ({ initializeApp: jest.fn() }));
+jest.mock('firebase/storage', () => ({ getStorage: jest.fn() }));
+jest.mock('@react-native-async-storage/async-storage', () => ({
+  ReactNativeAsyncStorage: jest.fn(),
+}));
 
 jest.mock('firebase/firestore', () => ({
   getFirestore: jest.fn(),
@@ -28,9 +42,9 @@ jest.mock('firebase/firestore', () => ({
   getDocs: jest.fn(),
   addDoc: jest.fn(),
   updateDoc: jest.fn(),
-  deleteDoc: jest.fn()
+  deleteDoc: jest.fn(),
 }));
-jest.mock("@/lib/firebase", () => ({
+jest.mock('@/lib/firebase', () => ({
   auth: jest.fn(),
 }));
 describe('favoriteCoachList function', () => {
@@ -40,7 +54,7 @@ describe('favoriteCoachList function', () => {
   test('should return "User not authenticated." when currentUser is not defined', async () => {
     auth.currentUser = null;
     const result = await favoriteCoachList();
-    expect(result).toBe("User not authenticated.");
+    expect(result).toBe('User not authenticated.');
   });
 
   test('should return "Player does not exist." when player does not exist', async () => {
@@ -48,14 +62,17 @@ describe('favoriteCoachList function', () => {
     auth.currentUser = mockCurrentUser;
     getDoc.mockResolvedValueOnce({ exists: () => false, data: () => null });
     const result = await favoriteCoachList();
-    expect(result).toBe("Player does not exist.");
+    expect(result).toBe('Player does not exist.');
   });
 
   test('should handle error if fetching coach data fails', async () => {
     const playerData = {
-      favoriteCoach: ['coachId1']
+      favoriteCoach: ['coachId1'],
     };
-    getDoc.mockResolvedValueOnce({ exists: () => true, data: () => playerData });
+    getDoc.mockResolvedValueOnce({
+      exists: () => true,
+      data: () => playerData,
+    });
 
     getDocs.mockRejectedValueOnce(new Error('Error fetching coach data'));
 
@@ -73,7 +90,7 @@ describe('getCoachById', () => {
       exists: jest.fn().mockReturnValue(true),
       data: jest.fn().mockReturnValue(fakeCoachData),
     };
-    (getDoc).mockResolvedValue(docSnapMock);
+    getDoc.mockResolvedValue(docSnapMock);
 
     // Execute
     const result = await getCoachById(fakeId);
@@ -91,7 +108,7 @@ describe('getCoachById', () => {
     const docSnapMock = {
       exists: jest.fn().mockReturnValue(false),
     };
-    (getDoc).mockResolvedValue(docSnapMock);
+    getDoc.mockResolvedValue(docSnapMock);
 
     // Execute
     const result = await getCoachById(fakeId);
@@ -115,43 +132,46 @@ describe('storeLesson', () => {
   it('successfully stores a lesson and shows success toast', async () => {
     // Given
     const lessonData = {
-      startDate: "12/31/2023",
-      endDate: "01/01/2024",
-      signInDeadLine: "01/01/2024",
-      duration: "1",
-      tags: "tag1, tag2",
-      minAge: "18",
-      minPeople: "5",
-      maxPeople: "10",
+      startDate: '12/31/2023',
+      endDate: '01/01/2024',
+      signInDeadLine: '01/01/2024',
+      duration: '1',
+      tags: 'tag1, tag2',
+      minAge: '18',
+      minPeople: '5',
+      maxPeople: '10',
     };
-    const startTime = "14:00";
-    const deadLineTime = "14:00";
+    const startTime = '14:00';
+    const deadLineTime = '14:00';
 
-    (addDoc).mockResolvedValue({});
+    addDoc.mockResolvedValue({});
 
     // When
     await storeLesson(lessonData, startTime, deadLineTime);
 
     // Then
     expect(addDoc).toHaveBeenCalled();
-    expect(fireToast).toHaveBeenCalledWith('success', 'New training added successfully !');
+    expect(fireToast).toHaveBeenCalledWith(
+      'success',
+      'New training added successfully !'
+    );
   });
 
   it('shows error toast when storing a lesson fails', async () => {
     // Given
     const lessonData = {
-      startDate: "12/31/2023",
-      endDate: "01/01/2024",
-      signInDeadLine: "01/01/2024",
-      duration: "1",
-      tags: "tag1, tag2",
-      minAge: "18",
-      minPeople: "5",
-      maxPeople: "10",
-    }
-    const startTime = "14:00";
-    const deadLineTime = "14:00";
-    (addDoc).mockRejectedValue(new Error('Failed to add document'));
+      startDate: '12/31/2023',
+      endDate: '01/01/2024',
+      signInDeadLine: '01/01/2024',
+      duration: '1',
+      tags: 'tag1, tag2',
+      minAge: '18',
+      minPeople: '5',
+      maxPeople: '10',
+    };
+    const startTime = '14:00';
+    const deadLineTime = '14:00';
+    addDoc.mockRejectedValue(new Error('Failed to add document'));
 
     // When
     await storeLesson(lessonData, startTime, deadLineTime);
@@ -169,12 +189,15 @@ describe('getLessonById', () => {
   it('returns lesson data if document exists', async () => {
     // Given
     const fakeId = '123';
-    const fakeLessonData = { title: 'Test Lesson', description: 'This is a test' };
+    const fakeLessonData = {
+      title: 'Test Lesson',
+      description: 'This is a test',
+    };
     const docSnapMock = {
       exists: jest.fn().mockReturnValue(true),
       data: jest.fn().mockReturnValue(fakeLessonData),
     };
-    (getDoc).mockResolvedValue(docSnapMock);
+    getDoc.mockResolvedValue(docSnapMock);
 
     // When
     const result = await getLessonById(fakeId);
@@ -192,7 +215,7 @@ describe('getLessonById', () => {
     const docSnapMock = {
       exists: jest.fn().mockReturnValue(false),
     };
-    (getDoc).mockResolvedValue(docSnapMock);
+    getDoc.mockResolvedValue(docSnapMock);
 
     // When
     const result = await getLessonById(fakeId);
@@ -222,7 +245,7 @@ describe('getPlayerById', () => {
       exists: jest.fn().mockReturnValue(true),
       data: jest.fn().mockReturnValue(fakePlayerData),
     };
-    (getDoc).mockResolvedValue(docSnapMock);
+    getDoc.mockResolvedValue(docSnapMock);
 
     // When
     const result = await getPlayerById(fakeId);
@@ -240,7 +263,7 @@ describe('getPlayerById', () => {
     const docSnapMock = {
       exists: jest.fn().mockReturnValue(false),
     };
-    (getDoc).mockResolvedValue(docSnapMock);
+    getDoc.mockResolvedValue(docSnapMock);
 
     // When
     const result = await getPlayerById(fakeId);
@@ -259,17 +282,17 @@ describe('getPlayerById', () => {
 describe('updateLesson', () => {
   const fakeId = 'lesson123';
   const updatedLessonData = {
-    startDate: "01/02/2024",
-    endDate: "01/03/2024",
-    signInDeadLine: "01/02/2024",
-    duration: "2",
-    tags: "updatedTag1, updatedTag2",
-    minAge: "20",
-    minPeople: "10",
-    maxPeople: "20",
+    startDate: '01/02/2024',
+    endDate: '01/03/2024',
+    signInDeadLine: '01/02/2024',
+    duration: '2',
+    tags: 'updatedTag1, updatedTag2',
+    minAge: '20',
+    minPeople: '10',
+    maxPeople: '20',
   };
-  const startTime = "10:00";
-  const deadLineTime = "10:00";
+  const startTime = '10:00';
+  const deadLineTime = '10:00';
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -285,7 +308,10 @@ describe('updateLesson', () => {
     // Assert
     expect(doc).toHaveBeenCalled();
     expect(updateDoc).toHaveBeenCalled();
-    expect(fireToast).toHaveBeenCalledWith('success', 'Lesson updated successfully !');
+    expect(fireToast).toHaveBeenCalledWith(
+      'success',
+      'Lesson updated successfully !'
+    );
   });
 
   it('shows error toast when updating a lesson fails', async () => {
@@ -297,9 +323,12 @@ describe('updateLesson', () => {
     await updateLesson(fakeId, updatedLessonData, startTime, deadLineTime);
 
     // Assert
-    expect(doc).toHaveBeenCalled()
+    expect(doc).toHaveBeenCalled();
     expect(updateDoc).toHaveBeenCalled();
-    expect(fireToast).toHaveBeenCalledWith('error', 'Something went wrong while updating the lesson !');
+    expect(fireToast).toHaveBeenCalledWith(
+      'error',
+      'Something went wrong while updating the lesson !'
+    );
   });
 });
 describe('deleteLessonById', () => {
@@ -317,7 +346,7 @@ describe('deleteLessonById', () => {
     await deleteLessonById(fakeId);
 
     // Assert
-    expect(doc).toHaveBeenCalled()
+    expect(doc).toHaveBeenCalled();
     expect(deleteDoc).toHaveBeenCalled();
   });
 

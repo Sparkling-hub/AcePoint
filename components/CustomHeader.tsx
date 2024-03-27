@@ -31,7 +31,8 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 }) => {
   const navigation = useNavigation();
 
-  const paddingTop = Platform.OS === 'ios' ? 60 : (StatusBar.currentHeight ?? 0) + 29
+  const paddingTop =
+    Platform.OS === 'ios' ? 60 : (StatusBar.currentHeight ?? 0) + 29;
   return (
     <XStack
       backgroundColor={'#fff'}

@@ -1,0 +1,84 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+    // Certification rules
+    match /certification/{certificationId} {
+      // Rule 1: Ensure "validForm" is before "validUntil"
+      allow write: if request.resource.data.validForm < request.resource.data.validUntil;
+
+      // Rule 2: Check current date against validity range
+      allow read: if request.time > resource.data.validForm &&
+                    request.time < resource.data.validUntil;
+
+      // Rule 3: Check that "createdAt" is before current date
+      allow write: if request.resource.data.createdAt < request.time;
+
+      // Rule 4: Data consistency and validation constraints
+      allow write: if request.resource.data.validForm < request.resource.data.validUntil &&
+                    request.resource.data.validForm is timestamp &&
+                    request.resource.data.validUntil is timestamp &&
+                    request.resource.data.createdAt is timestamp &&
+                    request.resource.data.name is string &&
+                    request.resource.data.keys().hasOnly(["validForm", "validUntil", "createdAt", "name"]);
+    }
+    // Club rules
+    match /club/{clubId} {
+      allow write: if request.resource.data.createdAt is timestamp;
+      allow write: if request.resource.data.keys().hasOnly(["createdAt", "location", "name"]);
+      allow write: if request.resource.data.location is string &&
+                    request.resource.data.name is string;
+    }
+    // Coach rules
+		match /coach/{coachId} {
+      allow write: if exists(/databases/$(database)/documents/certification/$(request.resource.data.certificationId));
+      allow write: if exists(/databases/$(database)/documents/club/$(request.resource.data.clubId));
+      allow write: if request.resource.data.createdAt is timestamp;
+      allow write: if request.resource.data.displayName is string;
+      allow write: if request.resource.data.phonenumber is number;
+      allow write: if request.resource.data.rating is number;
+      allow write: if request.resource.data.subscription is bool;
+			allow write: if request.resource.data.age is number; // New rule for age
+      allow write: if request.resource.data.picture is string; // New rule for picture  
+      allow write: if request.resource.data.keys().hasOnly(["createdAt", "displayName", "phonenumber", "rating", "subscription", "age", "picture", "clubId", "certificationId"]);
+    }
+    // Lesson rules
+   match /lesson/{lessonId} {
+      allow write: if exists(/databases/$(database)/documents/club/$(request.resource.data.clubId));
+      allow write: if exists(/databases/$(database)/documents/coach/$(request.resource.data.coachId));
+      allow write: if exists(/databases/$(database)/documents/player/$(request.resource.data.playerId));
+      allow write: if request.resource.data.createdAt is timestamp;
+      allow write: if request.resource.data.enddate is timestamp;
+      allow write: if request.resource.data.description is string;
+      allow write: if request.resource.data.duration is number;
+      allow write: if request.resource.data.group is bool;
+      allow write: if request.resource.data.spaceLeft is number;
+      // Ensure "startdate" is a valid timestamp and before "enddate"
+      allow write: if request.resource.data.startdate is timestamp &&
+                    request.resource.data.enddate > request.resource.data.startdate;
+      allow write: if request.resource.data.keys().hasOnly(["createdAt", "enddate", "description", "duration", "group", "spaceLeft", "startdate", "clubId", "coachId", "playerId"]);
+
+    }
+    // Notification rules
+ 		match /notification/{notificationId} {
+      allow write: if exists(/databases/$(database)/documents/coach/$(request.resource.data.coachId));
+      allow write: if exists(/databases/$(database)/documents/lesson/$(request.resource.data.lessonId));
+      allow write: if exists(/databases/$(database)/documents/player/$(request.resource.data.playerId));
+      allow write: if request.resource.data.createdAt is timestamp;
+      allow write: if request.resource.data.type is string;
+      allow write: if request.resource.data.keys().hasOnly(["createdAt", "type", "coachId", "lessonId", "playerId"]);
+    }
+    // Player rules
+    match /player/{playerId} {
+      allow write: if request.resource.data.createdAt is timestamp;
+      allow write: if request.resource.data.displayName is string;
+      allow write: if request.resource.data.phonenumber is number;
+      allow write: if request.resource.data.rating is number;
+      allow write: if request.resource.data.picture is string; // New rule for picture
+      allow write: if request.resource.data.keys().hasOnly(["createdAt", "displayName", "phonenumber", "rating", "picture"]);
+    }
+  }
+}
