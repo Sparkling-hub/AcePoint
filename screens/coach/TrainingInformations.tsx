@@ -43,7 +43,6 @@ export default function TrainingInformations() {
     const [rating, setRating] = useState(50)
     const user = useSelector((state: RootState) => state.userRole);
     const userRole = user.userRole;
-    const [disabled, setDisabled] = useState(true)
     const [showCancelButton, setShowCancelButton] = useState(false)
     const pushPlayers = (arrayPlayers: Array<any>) => {
         arrayPlayers.forEach(async (element: string) => {
@@ -61,7 +60,6 @@ export default function TrainingInformations() {
                 setId(trainingID)
                 const trainingDoc = await getLessonById(trainingID)
                 if (trainingDoc) {
-                    setDisabled((new Date(trainingDoc.signInDeadLine.seconds * 1000) > new Date()));
                     setTraining(trainingDoc)
                     const coachDoc = await getCoachById(trainingDoc.coachId)
                     if (coachDoc) setCoach(coachDoc)
