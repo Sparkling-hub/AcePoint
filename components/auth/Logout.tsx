@@ -9,7 +9,7 @@ export async function handleLogout() {
     await ReactNativeAsyncStorage.removeItem('image');
     await ReactNativeAsyncStorage.removeItem('username');
     await ReactNativeAsyncStorage.removeItem('userID');
-    await signOut(auth)
     await removeItem('userInfo')
+    await signOut(auth)
     router.push('/');
 }

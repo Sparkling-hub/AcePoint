@@ -22,11 +22,11 @@ import SettingsHeader from '@/components/headers/SettingsHeader';
 import SecurityHeader from '@/components/headers/SecurityHeader';
 import AccountHeader from '@/components/headers/AccountHeader';
 import EditProfileHeader from '@/components/headers/EditProfileHeader';
+import SubscriptionHeader from '@/components/headers/SubscriptionHeader';
 import SupportHeader from '@/components/headers/SupportHeader';
 import LegalHeader from '@/components/headers/LegalHeader';
 import NewTrainingHeader from '@/components/headers/NewTrainingHeader';
 import TrainingHeader from '@/components/headers/TrainingHeader';
-
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -139,6 +139,13 @@ function RootLayoutNav() {
               options={{
                 headerShadowVisible: false,
                 header: SupportHeader,
+              }}
+            />
+            <Stack.Screen
+              name="subscription"
+              options={{
+                headerShadowVisible: false,
+                header: SubscriptionHeader,
               }}
             />
             <Stack.Screen
