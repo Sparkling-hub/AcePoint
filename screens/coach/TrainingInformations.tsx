@@ -43,7 +43,6 @@ export default function TrainingInformations() {
     const [rating, setRating] = useState(50)
     const user = useSelector((state: RootState) => state.userRole);
     const userRole = user.userRole;
-    const [disabled, setDisabled] = useState(true)
     const [showCancelButton, setShowCancelButton] = useState(false)
     const pushPlayers = (arrayPlayers: Array<any>) => {
         arrayPlayers.forEach(async (element: string) => {
@@ -61,7 +60,6 @@ export default function TrainingInformations() {
                 setId(trainingID)
                 const trainingDoc = await getLessonById(trainingID)
                 if (trainingDoc) {
-                    setDisabled((new Date(trainingDoc.signInDeadLine.seconds * 1000) > new Date()));
                     setTraining(trainingDoc)
                     const coachDoc = await getCoachById(trainingDoc.coachId)
                     if (coachDoc) setCoach(coachDoc)
@@ -222,32 +220,72 @@ export default function TrainingInformations() {
                         router.replace("/calendar-coach")
                     }} backgroundColor={Colors.danger} color={'white'} fontWeight={'bold'} fontSize={20} paddingTop={15} paddingBottom={15} height={60}>Delete</Button>
                     }
-                    {(userRole === 'Player' && disabled && !showCancelButton) &&
-                        <Button backgroundColor={Colors.secondary} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}
-                            onPress={async () => {
-                                const userId = await retrieveData("userID")
-                                if (userId) await addPlayerToLesson(id, userId)
-                                router.replace("/training")
-                            }}
-                        >Join</Button>
-                    }
-                    {(userRole === 'Player' && showCancelButton) &&
-                        <Button backgroundColor={Colors.secondary} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}
-                            onPress={async () => {
-                                const userId = await retrieveData("userID")
-                                if (userId) await removePlayerToLesson(id, userId)
-                                router.replace("/training")
-                            }}
-                        >Cancel</Button>
-                    }
-                    {(userRole === 'Player' && !disabled && !showCancelButton && playersRequired > 0) &&
-                        <Button backgroundColor={'#7888A3'} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}
-                        >Unavailable</Button>
-                    }
-                    {(userRole === 'Player' && !showCancelButton && playersRequired === 0) &&
-                        <Button backgroundColor={'#7888A3'} color={'white'} fontWeight={'bold'} marginRight={70} marginLeft={70} fontSize={20} paddingTop={15} paddingBottom={15} height={60}
-                        >Full</Button>
-                    }
+                    {userRole === 'Player' && (
+                        <>
+                            {new Date() < new Date(training.signInDeadLine.seconds * 1000) && players.length < parseInt(training.maxPeople) && !showCancelButton && (
+                                <Button
+                                    backgroundColor={Colors.secondary}
+                                    color={'white'}
+                                    fontWeight={'bold'}
+                                    marginRight={70}
+                                    marginLeft={70}
+                                    fontSize={20}
+                                    paddingTop={15}
+                                    paddingBottom={15}
+                                    height={60}
+                                    onPress={async () => {
+                                        const userId = await retrieveData("userID")
+                                        if (userId) await addPlayerToLesson(id, userId)
+                                        router.replace("/training")
+                                    }}
+                                >Join</Button>
+                            )}
+                            {showCancelButton && (
+                                <Button
+                                    backgroundColor={Colors.secondary}
+                                    color={'white'}
+                                    fontWeight={'bold'}
+                                    marginRight={70}
+                                    marginLeft={70}
+                                    fontSize={20}
+                                    paddingTop={15}
+                                    paddingBottom={15}
+                                    height={60}
+                                    onPress={async () => {
+                                        const userId = await retrieveData("userID")
+                                        if (userId) await removePlayerToLesson(id, userId)
+                                        router.replace("/training")
+                                    }}
+                                >Cancel</Button>
+                            )}
+                            {new Date() >= new Date(training.signInDeadLine.seconds * 1000) && !showCancelButton && (
+                                <Button
+                                    backgroundColor={'#7888A3'}
+                                    color={'white'}
+                                    fontWeight={'bold'}
+                                    marginRight={70}
+                                    marginLeft={70}
+                                    fontSize={20}
+                                    paddingTop={15}
+                                    paddingBottom={15}
+                                    height={60}
+                                >Unavailable</Button>
+                            )}
+                            {players.length >= parseInt(training.maxPeople) && !showCancelButton && (
+                                <Button
+                                    backgroundColor={'#7888A3'}
+                                    color={'white'}
+                                    fontWeight={'bold'}
+                                    marginRight={70}
+                                    marginLeft={70}
+                                    fontSize={20}
+                                    paddingTop={15}
+                                    paddingBottom={15}
+                                    height={60}
+                                >Full</Button>
+                            )}
+                        </>
+                    )}
                 </YStack>
             </YStack>
         </ScrollView>
