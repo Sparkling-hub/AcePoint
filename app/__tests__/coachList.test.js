@@ -1,6 +1,6 @@
 import { favoriteCoachList, getPlayerById } from '@/api/player-api'
 import { getCoachById } from '@/api/coach-api'
-import { storeLesson, getLessonById, updateLesson, deleteLessonById } from '@/api/lesson-api';
+import { storeLesson, getLessonById, updateLesson, deleteLessonById} from '@/api/lesson-api';
 import { auth, db } from '@/lib/firebase';
 import { getDoc, getDocs, doc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import fireToast from "@/services/toast";
@@ -106,60 +106,7 @@ describe('getCoachById', () => {
     consoleSpy.mockRestore();
   });
 });
-describe('storeLesson', () => {
-  beforeEach(() => {
-    // Clear all mocks before each test
-    jest.clearAllMocks();
-  });
 
-  it('successfully stores a lesson and shows success toast', async () => {
-    // Given
-    const lessonData = {
-      startDate: "12/31/2023",
-      endDate: "01/01/2024",
-      signInDeadLine: "01/01/2024",
-      duration: "1",
-      tags: "tag1, tag2",
-      minAge: "18",
-      minPeople: "5",
-      maxPeople: "10",
-    };
-    const startTime = "14:00";
-    const deadLineTime = "14:00";
-
-    (addDoc).mockResolvedValue({});
-
-    // When
-    await storeLesson(lessonData, startTime, deadLineTime);
-
-    // Then
-    expect(addDoc).toHaveBeenCalled();
-    expect(fireToast).toHaveBeenCalledWith('success', 'New training added successfully !');
-  });
-
-  it('shows error toast when storing a lesson fails', async () => {
-    // Given
-    const lessonData = {
-      startDate: "12/31/2023",
-      endDate: "01/01/2024",
-      signInDeadLine: "01/01/2024",
-      duration: "1",
-      tags: "tag1, tag2",
-      minAge: "18",
-      minPeople: "5",
-      maxPeople: "10",
-    }
-    const startTime = "14:00";
-    const deadLineTime = "14:00";
-    (addDoc).mockRejectedValue(new Error('Failed to add document'));
-
-    // When
-    await storeLesson(lessonData, startTime, deadLineTime);
-
-    // Then
-    expect(fireToast).toHaveBeenCalledWith('error', 'Something went wrong !');
-  });
-});
 describe('getLessonById', () => {
   beforeEach(() => {
     // Clear all mocks before each test
@@ -267,6 +214,7 @@ describe('updateLesson', () => {
     minAge: "20",
     minPeople: "10",
     maxPeople: "20",
+    recurrence: "Does not repeat"
   };
   const startTime = "10:00";
   const deadLineTime = "10:00";
@@ -337,5 +285,30 @@ describe('deleteLessonById', () => {
 
     // Cleanup
     consoleSpy.mockRestore();
+  });
+});
+
+describe('storeLesson', () => {
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('stores non-recurring lessons correctly', async () => {
+    const lessonData = { startDate: new Date().toISOString(), endDate: new Date().toISOString(), signInDeadLine: new Date().toISOString(), recurrence: 'Does not repeat', tags: 'test, test' };
+    const startTime = '10:00';
+    const deadLineTime = '12:00';
+    await storeLesson(lessonData, startTime, deadLineTime);
+    expect(addDoc).toHaveBeenCalled();
+    expect(fireToast).toHaveBeenCalledWith('success', 'New training added successfully !');
+  });
+
+  it('shows an error toast when storing a lesson fails', async () => {
+    const lessonData = { startDate: new Date().toISOString(), endDate: new Date().toISOString(), signInDeadLine: new Date().toISOString(), recurrence: 'Does not repeat', tags: 'test, test' };
+      const startTime = '10:00';
+      const deadLineTime = '12:00';
+      addDoc.mockRejectedValue(new Error('Failed to add document'));
+      await storeLesson(lessonData, startTime, deadLineTime);
+      expect(fireToast).toHaveBeenCalledWith('error', 'Something went wrong !');
   });
 });

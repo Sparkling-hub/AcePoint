@@ -1,7 +1,7 @@
 import { storeData } from "@/api/localStorage";
 import AddButtonCalendar from "@/components/AddButtonCalendar";
 import Colors from "@/constants/Colors";
-import { addDurationToStartDate, date, time } from "@/services/dateService";
+import { addDurationToStartDate, time } from "@/services/dateService";
 import { RootState } from "@/store/store";
 import { router } from "expo-router";
 import moment from "moment";
@@ -15,37 +15,24 @@ import { Text, View } from "tamagui";
 export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[] }) {
 
     const [items, setItems] = useState({});
+    const timeToString = (time: number) => {
+        const date = new Date(time);
+        return date.toISOString().split('T')[0];
+    }
     const loadItems = () => {
-        const itemsByDate = lessons.reduce((acc, lesson) => {
-            let lessonDate = new Date(lesson.startDate.seconds * 1000);
-            const endDate = new Date(lesson.endDate.seconds * 1000);
-            while (lessonDate <= endDate) {
-                const formattedDate = date(lessonDate.getTime() / 1000);
-                acc[formattedDate] = acc[formattedDate] || [];
-                acc[formattedDate].push(lesson);
-                if (lesson.recurrence === 'Weekly') lessonDate.setDate(lessonDate.getDate() + 7);
-                else if (lesson.recurrence === 'Daily') lessonDate.setDate(lessonDate.getDate() + 1);
-                else if (lesson.recurrence === 'Monthly') lessonDate.setMonth(lessonDate.getMonth() + 1);
-                else if (lesson.recurrence === 'EveryWeekDay') {
-                    const day = lessonDate.getDay();
-                    let lessonDuration;
-                    if (day === 5) {
-                        lessonDuration = 3;
-                    } else if (day === 6) {
-                        lessonDuration = 2;
-                    } else {
-                        lessonDuration = 1;
-                    }
-                    lessonDate.setDate(lessonDate.getDate() + lessonDuration);
-
-                }
-                else {
-                    lessonDate.setDate(lessonDate.getTime())
-                }
-            }
-            return acc;
-        }, {});
-        setItems(itemsByDate);
+        let items = {}
+        for (const lesson of lessons) {
+            const strTime = timeToString(lesson.startDate.seconds * 1000);
+            if (!items[strTime])
+                items[strTime] = [];
+            items[strTime].push({
+                organiser: lesson.organiser,
+                club: lesson.club,
+                startDate: lesson.startDate,
+                duration: lesson.duration
+            });
+        }
+        setItems(items);
     }
 
     const renderItem = (item: any) => {

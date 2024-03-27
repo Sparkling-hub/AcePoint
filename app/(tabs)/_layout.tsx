@@ -35,7 +35,7 @@ const CalendarHeader = ({
             fill={Colors.secondary}
             style={{ marginRight: 20, marginTop: 3 }}
           />
-          {['D', 'W', 'M'].map((key) => (
+          {['D', 'W'].map((key) => (
             <Button
               key={key}
               style={getButtonStyle(key)}
@@ -63,13 +63,12 @@ export default function TabLayout() {
 
   const [state, setState] = useState({
     D: true,
-    W: false,
-    M: false,
+    W: false
   });
-  type ButtonKey = 'D' | 'W' | 'M';
+  type ButtonKey = 'D' | 'W';
 
   const handleState = (selected: ButtonKey) => {
-    setState({ D: false, W: false, M: false, [selected]: true });
+    setState({ D: false, W: false, [selected]: true });
     dispatch(setCalendarOption(selected));
   };
 
