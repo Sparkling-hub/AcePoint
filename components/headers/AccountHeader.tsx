@@ -8,7 +8,7 @@ const AccountHeader = () => {
     <CustomHeader
       leftIcon={<X size={'$2.5'} color={Colors.secondary} />}
       onLeftPress={() => {
-        router.navigate('/(tabs)/profile');
+        router.navigate('/(tabs)/account');
       }}
     />
   );
