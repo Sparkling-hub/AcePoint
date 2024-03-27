@@ -1,7 +1,7 @@
 import { storeData } from "@/api/localStorage";
 import AddButtonCalendar from "@/components/AddButtonCalendar";
 import Colors from "@/constants/Colors";
-import { addDurationToStartDate, date, time } from "@/services/dateService";
+import { addDurationToStartDate, time } from "@/services/dateService";
 import { RootState } from "@/store/store";
 import { router } from "expo-router";
 import moment from "moment";
@@ -21,15 +21,15 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
     }
     const loadItems = () => {
         let items = {}
-        for (let i = 0; i < lessons.length; i++) {
-            const strTime = timeToString(lessons[i].startDate.seconds * 1000);
+        for (const lesson of lessons) {
+            const strTime = timeToString(lesson.startDate.seconds * 1000);
             if (!items[strTime])
                 items[strTime] = [];
             items[strTime].push({
-                organiser: lessons[i].organiser,
-                club: lessons[i].club,
-                startDate: lessons[i].startDate,
-                duration: lessons[i].duration
+                organiser: lesson.organiser,
+                club: lesson.club,
+                startDate: lesson.startDate,
+                duration: lesson.duration
             });
         }
         setItems(items);
