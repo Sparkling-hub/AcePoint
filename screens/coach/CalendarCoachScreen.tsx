@@ -5,14 +5,12 @@ import { useEffect, useState } from "react";
 import { getLessonsByCoachId, getLessonsByPlayerId } from "@/api/lesson-api";
 import { useIsFocused } from '@react-navigation/native';
 import { retrieveData } from "@/api/localStorage";
-import { getUpdatedLessonsForWeeklyView } from "@/services/lessons";
 import { RootState } from "@/store/store";
 
 export default function CalendarCoachScreen() {
     const [isLoading, setIsLoading] = useState(true)
     const result = useSelector((state: any) => state.calendarOption);
     const [lessons, setLessons] = useState([]);
-    const [lessonsForWeeklyView, setLessonsForWeeklyView] = useState([]);
     const [currentWeek, setCurrentWeek] = useState('');
     const isFocused = useIsFocused();
     const userRole = useSelector((state: RootState) => state.userRole);
@@ -27,8 +25,6 @@ export default function CalendarCoachScreen() {
                     lessonss = userRoleValue === 'Coach' ? await getLessonsByCoachId(userID) : await getLessonsByPlayerId(userID)
                 }
                 setLessons(lessonss);
-                const updatedLessonsForWeeklyView = getUpdatedLessonsForWeeklyView(lessonss)
-                setLessonsForWeeklyView(updatedLessonsForWeeklyView);
 
             setIsLoading(false)
         }
@@ -49,13 +45,15 @@ export default function CalendarCoachScreen() {
         if (isFocused) {
             result.option === 'W' ? getCurrentWeek() : getLessons();
         }
+        console.log(isFocused.toString());
+        
     }, [isFocused, result.option]);
 
     if (isLoading) return (<></>)
     return (
         <>
             {result.option === 'W'
-                ? <WeeklyCalendarCoachScreen lessons={lessonsForWeeklyView} currentWeek={currentWeek} />
+                ? <WeeklyCalendarCoachScreen lessons={lessons} currentWeek={currentWeek} />
                 : <AgendaCoachScreen lessons={lessons} />
             }
         </>

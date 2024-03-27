@@ -66,8 +66,17 @@ const storeLesson = async (lessonData: any, startTime: string, deadLineTime: str
     // Prepare the lesson data
     const lesson = prepareLessonData(lessonData, startTime, deadLineTime);
     try {
-        // Add the prepared lesson data to the lessons collection
-        await addDoc(lessonsRef, lesson);
+        // Check the recurrence and create lessons accordingly
+        if (lesson.recurrence !== 'Does not repeat') {
+            const dates = calculateRecurrenceDates(lesson.startDate, lesson.recurrence, lesson.endDate);
+            for (const date of dates) {
+                const newLesson = { ...lesson, startDate: date };
+                await addDoc(lessonsRef, newLesson);
+            }
+        } else {
+            // Add the prepared lesson data to the lessons collection for non-recurring lessons
+            await addDoc(lessonsRef, lesson);
+        }
         // Show a success message
         fireToast('success', 'New training added successfully !');
     } catch (error) {
@@ -80,13 +89,22 @@ const storeLesson = async (lessonData: any, startTime: string, deadLineTime: str
 
 // Function to update a lesson
 const updateLesson = async (id: string, updatedLessonData: any, startTime: string, deadLineTime: string) => {
-    // Create a reference to the lesson document in the Firestore database
-    const docRef = doc(db, "lesson", id);
     // Prepare the updated lesson data
     const lessonToUpdate = prepareLessonData(updatedLessonData, startTime, deadLineTime);
     try {
-        // Update the lesson document in the Firestore database
-        await updateDoc(docRef, lessonToUpdate);
+        // If updating recurrence, handle accordingly (simplified example)
+        if (lessonToUpdate.recurrence !== 'Does not repeat') {
+            const dates = calculateRecurrenceDates(lessonToUpdate.startDate, lessonToUpdate.recurrence, lessonToUpdate.endDate);
+            for (const date of dates) {
+                const newLesson = { ...lessonToUpdate, startDate: date };
+                await addDoc(lessonsRef, newLesson);
+            }
+            // Delete the old lesson
+            await deleteDoc(doc(db, "lesson", id));
+        } else {
+            // Update the lesson document in the Firestore database for non-recurring lessons
+            await updateDoc(doc(db, "lesson", id), lessonToUpdate);
+        }
         // Show a success message
         fireToast('success', 'Lesson updated successfully !');
     } catch (error) {
@@ -199,6 +217,47 @@ const getLessonsByPlayerId = async (playerId: string) => {
         return [];
     }
 };
+
+// Function to calculate recurrence dates based on start date, recurrence type, and end date
+const calculateRecurrenceDates = (startDate: Date, recurrence: string, endDate: Date): Date[] => {
+    // Initialize an empty array to store the dates
+    const dates = [];
+    // Create a new date object from the start date
+    let currentDate = new Date(startDate);
+
+    // Loop through the dates until the current date is greater than the end date
+    while (currentDate <= endDate) {
+        // Push the current date to the dates array
+        dates.push(new Date(currentDate));
+        // Switch based on the recurrence type
+        switch (recurrence) {
+            // If the recurrence is Daily, add 1 day to the current date
+            case 'Daily':
+                currentDate.setDate(currentDate.getDate() + 1);
+                break;
+            // If the recurrence is Weekly, add 7 days to the current date
+            case 'Weekly':
+                currentDate.setDate(currentDate.getDate() + 7);
+                break;
+            // If the recurrence is EveryWeekDay, add 1 day to the current date until it's not a weekend
+            case 'EveryWeekDay':
+                do {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                } while (currentDate.getDay() === 0 || currentDate.getDay() === 6);
+                break;
+            // If the recurrence is Monthly, add 1 month to the current date
+            case 'Monthly':
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                break;
+            // If the recurrence is not recognized, do nothing
+            default:
+                break;
+        }
+    }
+    // Return the array of dates
+    return dates;
+};
+
 // Export all the functions
-export { getLessonsByCoachId, storeLesson, getLessonById, deleteLessonById, updateLesson, addPlayerToLesson, removePlayerToLesson, getLessonsByPlayerId };
+export { getLessonsByCoachId, storeLesson, getLessonById, deleteLessonById, updateLesson, addPlayerToLesson, removePlayerToLesson, getLessonsByPlayerId, calculateRecurrenceDates };
 

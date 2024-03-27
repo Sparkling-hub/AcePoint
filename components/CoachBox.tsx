@@ -11,7 +11,6 @@ import { useDispatch } from 'react-redux';
 import { setCoachId, setCoachName, setLessons } from '@/store/slices/CoachSlice';
 import { router } from 'expo-router';
 import { getLessonsByCoachId } from '@/api/lesson-api';
-import { getUpdatedLessonsForWeeklyView } from '@/services/lessons';
 
 interface CoachBoxProps {
   readonly name?: string;
@@ -94,8 +93,7 @@ const CoachBox: React.FC<CoachBoxProps> = ({
             </Text>
             <Text
               onPress={async () => {
-                const lessonsFromDB = await getLessonsByCoachId(coachRef)
-                const lessons = getUpdatedLessonsForWeeklyView(lessonsFromDB)
+                const lessons = await getLessonsByCoachId(coachRef)
                 dispatch(setCoachName(name))
                 dispatch(setCoachId(coachRef))
                 dispatch(setLessons(lessons))

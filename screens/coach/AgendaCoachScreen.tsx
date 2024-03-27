@@ -15,37 +15,24 @@ import { Text, View } from "tamagui";
 export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[] }) {
 
     const [items, setItems] = useState({});
+    const timeToString = (time: number) => {
+        const date = new Date(time);
+        return date.toISOString().split('T')[0];
+    }
     const loadItems = () => {
-        const itemsByDate = lessons.reduce((acc, lesson) => {
-            let lessonDate = new Date(lesson.startDate.seconds * 1000);
-            const endDate = new Date(lesson.endDate.seconds * 1000);
-            while (lessonDate <= endDate) {
-                const formattedDate = date(lessonDate.getTime() / 1000);
-                acc[formattedDate] = acc[formattedDate] || [];
-                acc[formattedDate].push(lesson);
-                if (lesson.recurrence === 'Weekly') lessonDate.setDate(lessonDate.getDate() + 7);
-                else if (lesson.recurrence === 'Daily') lessonDate.setDate(lessonDate.getDate() + 1);
-                else if (lesson.recurrence === 'Monthly') lessonDate.setMonth(lessonDate.getMonth() + 1);
-                else if (lesson.recurrence === 'EveryWeekDay') {
-                    const day = lessonDate.getDay();
-                    let lessonDuration;
-                    if (day === 5) {
-                        lessonDuration = 3;
-                    } else if (day === 6) {
-                        lessonDuration = 2;
-                    } else {
-                        lessonDuration = 1;
-                    }
-                    lessonDate.setDate(lessonDate.getDate() + lessonDuration);
-
-                }
-                else {
-                    lessonDate.setDate(lessonDate.getTime())
-                }
-            }
-            return acc;
-        }, {});
-        setItems(itemsByDate);
+        let items = {}
+        for (let i = 0; i < lessons.length; i++) {
+            const strTime = timeToString(lessons[i].startDate.seconds * 1000);
+            if (!items[strTime])
+                items[strTime] = [];
+            items[strTime].push({
+                organiser: lessons[i].organiser,
+                club: lessons[i].club,
+                startDate: lessons[i].startDate,
+                duration: lessons[i].duration
+            });
+        }
+        setItems(items);
     }
 
     const renderItem = (item: any) => {

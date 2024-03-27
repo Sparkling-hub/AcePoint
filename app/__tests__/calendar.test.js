@@ -2,7 +2,7 @@ import { expect, jest, describe, it } from '@jest/globals';
 import { getLessonsByCoachId, getLessonsByPlayerId } from '../../api/lesson-api';
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, doc, getDoc, } from "firebase/firestore";
-import { addPlayerToLesson, removePlayerToLesson } from '@/api/lesson-api';
+import { addPlayerToLesson, removePlayerToLesson, calculateRecurrenceDates } from '@/api/lesson-api';
 import * as lessonApi from '@/api/lesson-api';
 jest.mock('@/api/lesson-api', () => {
     const originalModule = jest.requireActual('@/api/lesson-api');
@@ -106,5 +106,57 @@ describe('removePlayerToLesson', () => {
         await removePlayerToLesson(lessonId, playerId);
         expect(doc).toHaveBeenCalled()
 
+    });
+});
+
+describe('calculateRecurrenceDates', () => {
+
+    it('calculates daily recurrence dates correctly', () => {
+        const startDate = new Date('2023-01-01');
+        const endDate = new Date('2023-01-03');
+        const recurrence = 'Daily';
+        const expectedDates = [
+            new Date('2023-01-01'),
+            new Date('2023-01-02'),
+            new Date('2023-01-03'),
+        ];
+        expect(calculateRecurrenceDates(startDate, recurrence, endDate)).toEqual(expectedDates);
+    });
+
+    it('calculates weekly recurrence dates correctly', () => {
+        const startDate = new Date('2023-01-01');
+        const endDate = new Date('2023-01-15');
+        const recurrence = 'Weekly';
+        const expectedDates = [
+            new Date('2023-01-01'),
+            new Date('2023-01-08'),
+            new Date('2023-01-15'),
+        ];
+        expect(calculateRecurrenceDates(startDate, recurrence, endDate)).toEqual(expectedDates);
+    });
+
+    it('calculates monthly recurrence dates correctly', () => {
+        const startDate = new Date('2023-01-01');
+        const endDate = new Date('2023-03-02');
+        const recurrence = 'Monthly';
+        const expectedDates = [
+            new Date('2023-01-01'),
+            new Date('2023-02-01'),
+            new Date('2023-03-01'),
+        ];
+        expect(calculateRecurrenceDates(startDate, recurrence, endDate)).toEqual(expectedDates);
+    });
+
+    it('calculates every weekday recurrence dates correctly', () => {
+        const startDate = new Date('2023-01-06'); // Friday
+        const endDate = new Date('2023-01-11'); // Next Wednesday
+        const recurrence = 'EveryWeekDay';
+        const expectedDates = [
+            new Date('2023-01-06'), // Friday
+            new Date('2023-01-09'), // Monday
+            new Date('2023-01-10'), // Tuesday
+            new Date('2023-01-11'), // Wednesday
+        ];
+        expect(calculateRecurrenceDates(startDate, recurrence, endDate)).toEqual(expectedDates);
     });
 });
