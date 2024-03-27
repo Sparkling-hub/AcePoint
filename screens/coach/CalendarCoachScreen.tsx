@@ -2,8 +2,11 @@ import { useSelector } from "react-redux";
 import AgendaCoachScreen from "./AgendaCoachScreen";
 import WeeklyCalendarCoachScreen from "./WeeklyCalendarCoachScreen";
 import { useEffect, useState } from "react";
-import { getLessonsByCoachId } from "@/api/lesson-api";
+import { getLessonsByCoachId, getLessonsByPlayerId } from "@/api/lesson-api";
 import { useIsFocused } from '@react-navigation/native';
+import { retrieveData } from "@/api/localStorage";
+import { getUpdatedLessonsForWeeklyView } from "@/services/lessons";
+import { RootState } from "@/store/store";
 
 export default function CalendarCoachScreen() {
     const [isLoading, setIsLoading] = useState(true)
@@ -12,40 +15,21 @@ export default function CalendarCoachScreen() {
     const [lessonsForWeeklyView, setLessonsForWeeklyView] = useState([]);
     const [currentWeek, setCurrentWeek] = useState('');
     const isFocused = useIsFocused();
+    const userRole = useSelector((state: RootState) => state.userRole);
+    const userRoleValue = userRole.userRole;
 
     useEffect(() => {
         const getLessons = async () => {
             setIsLoading(true)
-            const lessons = await getLessonsByCoachId();
-            setLessons(lessons);
-            const updatedLessonsForWeeklyView = lessons.reduce((acc, lesson) => {
-                const startDate = new Date(lesson.startDate.seconds * 1000);
-                const endDate = new Date(lesson.endDate.seconds * 1000);
-                switch (lesson.recurrence) {
-                    case "Daily":
-                    case "EveryWeekDay":
-                        while (startDate <= endDate) {
-                            if (lesson.recurrence === "EveryWeekDay" && (startDate.getDay() === 0 || startDate.getDay() === 6)) {
-                                startDate.setDate(startDate.getDate() + 1);
-                                continue;
-                            }
-                            acc.push({ ...lesson, startDate: { seconds: startDate.getTime() / 1000 } });
-                            startDate.setDate(startDate.getDate() + 1);
-                        }
-                        break;
-                    case "Weekly":
-                        while (startDate <= endDate) {
-                            acc.push({ ...lesson, startDate: { seconds: startDate.getTime() / 1000 } });
-                            startDate.setDate(startDate.getDate() + 7);
-                        }
-                        break;
-                    default:
-                        acc.push(lesson);
-                        break;
+                const userID = await retrieveData('userID')
+                let lessonss = []
+                if (userID) {
+                    lessonss = userRoleValue === 'Coach' ? await getLessonsByCoachId(userID) : await getLessonsByPlayerId(userID)
                 }
-                return acc;
-            }, []);
-            setLessonsForWeeklyView(updatedLessonsForWeeklyView);
+                setLessons(lessonss);
+                const updatedLessonsForWeeklyView = getUpdatedLessonsForWeeklyView(lessonss)
+                setLessonsForWeeklyView(updatedLessonsForWeeklyView);
+
             setIsLoading(false)
         }
         const getCurrentWeek = () => {

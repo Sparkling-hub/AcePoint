@@ -12,6 +12,7 @@ import clubSearchResultsReducer from './slices/clubSearchResultsSlice';
 import filterIsLoadingReducer from './slices/filterIsLoadingSlice';
 import nearbyClubsReducer from './slices/nearbyClubsSlice';
 import signUpReducer from './slices/signup';
+import coachReducer from './slices/CoachSlice';
 
 export const store = configureStore({
   reducer: {
@@ -27,6 +28,7 @@ export const store = configureStore({
     filterIsLoading: filterIsLoadingReducer,
     nearbyClubs: nearbyClubsReducer,
     signUp: signUpReducer,
+    coach: coachReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),

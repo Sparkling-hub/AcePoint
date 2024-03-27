@@ -1,15 +1,13 @@
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, addDoc, getDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
-import { retrieveData } from './localStorage';
 import fireToast from '@/services/toast';
 
 // Define the reference to the 'lesson' collection in the Firestore database
 const lessonsRef = collection(db, "lesson");
 
 // Function to get all lessons by coach ID
-const getLessonsByCoachId = async () => {
-    // Retrieve the coach ID from local storage
-    const coachId = await retrieveData('userID')
+const getLessonsByCoachId = async (coachId: string) => {
+
     // Create a query to get all lessons where the coachId matches the retrieved coachId
     const q = query(lessonsRef, where("coachId", "==", coachId));
     try {
@@ -40,15 +38,15 @@ const prepareLessonData = (lessonData: any, startTime: string, deadLineTime: str
     const timePartsDeadLineTime = deadLineTime.split(":");
     const datePartsEndDate = lessonData.endDate.split("/");
     const datePartsSignInDeadLine = lessonData.signInDeadLine.split("/");
-    
+
     // Create new Date objects for start date, end date, and sign in deadline
     const startDate = new Date(parseInt(datePartsStartDate[2], 10), parseInt(datePartsStartDate[0], 10) - 1, parseInt(datePartsStartDate[1], 10), parseInt(timePartsStartDate[0], 10), parseInt(timePartsStartDate[1], 10));
     const endDate = new Date(parseInt(datePartsEndDate[2], 10), parseInt(datePartsEndDate[0], 10) - 1, parseInt(datePartsEndDate[1], 10), 23, 59);
     const signInDeadLine = new Date(parseInt(datePartsSignInDeadLine[2], 10), parseInt(datePartsSignInDeadLine[0], 10) - 1, parseInt(datePartsSignInDeadLine[1], 10), parseInt(timePartsDeadLineTime[0], 10), parseInt(timePartsDeadLineTime[1], 10));
-    
+
     // Split the tags into an array and trim each tag
     const tagsArray = lessonData.tags.split(',').map(tag => tag.trim());
-    
+
     // Return the lesson data with the new Date objects and tags array
     return {
         ...lessonData,
@@ -98,7 +96,57 @@ const updateLesson = async (id: string, updatedLessonData: any, startTime: strin
         console.log(error);
     }
 };
-
+// Function to add a player to a lesson
+const addPlayerToLesson = async (id: string, playerId: string) => {
+    // Create a reference to the lesson document in the Firestore database
+    const docRef = doc(db, "lesson", id);
+    // Get the lesson by its ID
+    const lesson = await getLessonById(id)
+    // Check if the lesson exists
+    if (lesson) {
+        // Add the player to the lesson
+        lesson.players.push(playerId)
+        try {
+            // Update the lesson document in the Firestore database
+            await updateDoc(docRef, lesson);
+            // Show a success message
+            fireToast('success', 'Joined !');
+        } catch (error) {
+            // Show an error message if something went wrong
+            fireToast('error', 'Something went wrong !');
+            // Log the error
+            console.log(error);
+        }
+    }
+};
+// Function to remove a player from a lesson
+const removePlayerToLesson = async (id: string, playerId: string) => {
+    // Create a reference to the lesson document in the Firestore database
+    const docRef = doc(db, "lesson", id);
+    // Get the lesson by its ID
+    const lesson = await getLessonById(id)
+    // Check if the lesson exists
+    if (lesson) {
+        // Find the index of the player in the lesson's players array
+        const index = lesson.players.indexOf(playerId);
+        // If the player is in the lesson's players array
+        if (index > -1) {
+            // Remove the player from the lesson's players array
+            lesson.players.splice(index, 1)
+        }
+        try {
+            // Update the lesson document in the Firestore database
+            await updateDoc(docRef, lesson);
+            // Show a success message
+            fireToast('success', 'Canceled !');
+        } catch (error) {
+            // Show an error message if something went wrong
+            fireToast('error', 'Something went wrong !');
+            // Log the error
+            console.log(error);
+        }
+    }
+};
 // Function to get a lesson by its ID
 const getLessonById = async (id: string) => {
     // Create a reference to the lesson document in the Firestore database
@@ -128,6 +176,29 @@ const deleteLessonById = async (id: string) => {
     }
 }
 
+// Function to get all lessons by player ID
+const getLessonsByPlayerId = async (playerId: string) => {
+    // Create a query to get all lessons where the players array contains the player ID
+    const q = query(lessonsRef, where("players", "array-contains", playerId));
+    try {
+        // Get the documents that match the query
+        const querySnapshot = await getDocs(q);
+        // Initialize an empty array to store the lessons
+        const lessons = [];
+        // Loop through each document in the query snapshot
+        querySnapshot.forEach((doc) => {
+            // Push the document data (including the ID) to the lessons array
+            lessons.push({ id: doc.id, ...doc.data() });
+        });
+        // Return the array of lessons
+        return lessons;
+    } catch (error) {
+        // Log an error message if something went wrong
+        console.error("Error getting lessons: ", error);
+        // Return an empty array
+        return [];
+    }
+};
 // Export all the functions
-export { getLessonsByCoachId, storeLesson, getLessonById, deleteLessonById, updateLesson };
+export { getLessonsByCoachId, storeLesson, getLessonById, deleteLessonById, updateLesson, addPlayerToLesson, removePlayerToLesson, getLessonsByPlayerId };
 

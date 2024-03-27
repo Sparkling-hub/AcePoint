@@ -2,12 +2,14 @@ import { storeData } from "@/api/localStorage";
 import AddButtonCalendar from "@/components/AddButtonCalendar";
 import Colors from "@/constants/Colors";
 import { addDurationToStartDate, date, time } from "@/services/dateService";
+import { RootState } from "@/store/store";
 import { router } from "expo-router";
 import moment from "moment";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Agenda } from "react-native-calendars";
 import { Card } from "react-native-paper";
+import { useSelector } from "react-redux";
 import { Text, View } from "tamagui";
 
 export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[] }) {
@@ -73,6 +75,8 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
     const onDayPress = (day) => {
         setSelectedDate(moment(day).format('DD/MMM/yyyy, hh:mm'));
     };
+    const user = useSelector((state: RootState) => state.userRole);
+    const userRole = user.userRole;
     return (
         <>
             <Agenda
@@ -109,7 +113,9 @@ export default function AgendaCoachScreen({ lessons }: { readonly lessons: any[]
                     dayTextColor: Colors.secondary
                 }}
             />
-            <AddButtonCalendar selectedDate={selectedDate} />
+            {userRole !== 'Player' &&
+                <AddButtonCalendar selectedDate={selectedDate} />
+            }
         </>
 
     )

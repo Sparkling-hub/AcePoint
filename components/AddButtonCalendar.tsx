@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "tamagui";
 
-export default function AddButtonCalendar({ testID, selectedDate }: { readonly testID?: string, readonly selectedDate?: string }) {
+export default function AddButtonCalendar({ testID, selectedDate }: { readonly testID?: string, readonly selectedDate: string }) {
     const paddingTop = Platform.OS === 'ios' ? 5 : 0
     const router = useRouter()
     return (
