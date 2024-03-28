@@ -1,4 +1,4 @@
-export type item = {
+export type chatItem = {
   id: string;
   image?: string;
   displayName?: string;

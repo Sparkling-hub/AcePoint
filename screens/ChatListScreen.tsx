@@ -1,61 +1,70 @@
 import React, { useEffect, useState } from 'react';
 import ChatBox from '@/components/chat/ChatBox';
-import { View, YStack } from 'tamagui';
+import { YStack } from 'tamagui';
 
 import { ActivityIndicator, ScrollView } from 'react-native';
 import {
-  createGroupChatRoom,
-  fetchGroupMembers,
+  cureentUser,
   getAllUsers,
+  getGroupMembers,
+  getLessonGroupChats,
 } from '@/api/chat-api';
-import { item } from '@/types/chatItem';
+import { chatItem } from '@/types/chatItem';
 import Colors from '@/constants/Colors';
 import GroupChatBox from '@/components/chat/GroupChatBox';
 
-const groups = [
-  {
-    id: '1',
-    groupName: 'SUNDAY TRAINING GROUP',
-    image: require('../assets/images/acepointicon.png'),
-  },
-];
-
-const userIds = [
-  'u7U9DYgyVtYT9XhbzAE7lzM9VXB3',
-  'mmkK0tZKHAdSc8pSMonL3Zo1fNI3',
-  'Pt45pfwYMbVOUkXDRHmAwQYcF8v2',
-];
-
 const ChatListScreen = () => {
-  const [users, setUsers] = useState<item[]>([]);
+  const [users, setUsers] = useState<chatItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [groups, setGroups] = useState<any[]>([]);
+  const userId = cureentUser();
+
   const fetchUsers = async () => {
     try {
       const users = await getAllUsers();
       setUsers(users);
     } catch (error) {
       console.log(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const createGroupChatRoomIfNotExists = async () => {
-    await createGroupChatRoom(userIds);
-  };
-
-  const getGroupMembers = async () => {
+  const fetchGroups = async () => {
     try {
-      const members = await fetchGroupMembers(userIds);
-      console.log(members);
+      // Fetch lesson group chat member IDs
+      const lessonGroups = await getLessonGroupChats(userId);
+      if (lessonGroups.length > 0) {
+        // Fetch group members
+        let groupsData = await Promise.all(
+          lessonGroups.map(async (lessonGroup) => {
+            const members = await getGroupMembers(lessonGroup?.members);
+            return {
+              id: lessonGroup.lessonId,
+              name: lessonGroup.trainingTitle,
+              members: members,
+            };
+          })
+        );
+        // Set group state
+        setGroups(groupsData);
+      }
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
-    createGroupChatRoomIfNotExists();
-    getGroupMembers();
-    fetchUsers();
+    const fetchData = async () => {
+      try {
+        await fetchUsers();
+        await fetchGroups();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -70,11 +79,15 @@ const ChatListScreen = () => {
                 <ChatBox item={item} key={item.id} />
               ))}
             </YStack>
-            <YStack gap={16}>
-              {groups.map((item) => (
-                <GroupChatBox groupItem={item} key={item.id} />
-              ))}
-            </YStack>
+            {groups?.map((group) => (
+              <YStack gap={16} key={group.id}>
+                <GroupChatBox
+                  id={group.id}
+                  groupName={group.name}
+                  groupItem={group.members}
+                />
+              </YStack>
+            ))}
           </YStack>
         </ScrollView>
       )}

@@ -4,10 +4,10 @@ import Colors from '@/constants/Colors';
 
 import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
-import { item } from '@/types/chatItem';
+import { chatItem } from '@/types/chatItem';
 
 interface ChatBoxProps {
-  item: item;
+  item: chatItem;
 }
 
 const ChatBox: React.FC<ChatBoxProps> = ({ item }) => {
@@ -22,6 +22,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ item }) => {
         <Text
           style={{ fontFamily: 'MontserratMedium' }}
           fontSize={16}
+          textTransform="uppercase"
           color={Colors.secondary}
           lineHeight={19.5}>
           {displayName}

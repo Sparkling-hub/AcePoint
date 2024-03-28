@@ -3,7 +3,7 @@ import MessageList from '@/components/chat/MessageList';
 import ChatInput from '@/components/chat/ChatInput';
 import Colors from '@/constants/Colors';
 import { db } from '@/lib/firebase';
-import { item } from '@/types/chatItem';
+import { chatItem } from '@/types/chatItem';
 import { getRoomId } from '@/utils/chatRoomUtil';
 import {
   collection,
@@ -17,7 +17,7 @@ import { Input, Text, YStack } from 'tamagui';
 import { ActivityIndicator, Keyboard, ScrollView } from 'react-native';
 
 interface ChatScreenProps {
-  item: item;
+  item: chatItem;
 }
 
 const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
@@ -28,10 +28,11 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const userId = cureentUser();
-  // console.log(userId, id);
 
   const createRoomIfNotExists = async () => {
-    await createRoom(id);
+    let roomId = getRoomId(userId, id);
+    let userIds = [userId, id];
+    await createRoom(roomId, userIds);
   };
 
   useEffect(() => {

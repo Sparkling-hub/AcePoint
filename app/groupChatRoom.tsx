@@ -1,14 +1,25 @@
 import GroupChatScreen from '@/screens/GroupChatScreen';
-import { item } from '@/types/chatItem';
 
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, StyleSheet } from 'react-native';
 
 const GroupChatRoom = () => {
-  const item = useLocalSearchParams<item>();
+  const params = useLocalSearchParams();
+
+  const roomId = params.roomId as string;
+  const groupName = params.groupName as string;
+
+  const userIds = Array.isArray(params.userIds)
+    ? params.userIds
+    : params.userIds?.split(',') || [];
+
   return (
     <SafeAreaView style={styles.container}>
-      <GroupChatScreen groupItem={item} />
+      <GroupChatScreen
+        roomId={roomId}
+        groupName={groupName}
+        userIds={userIds}
+      />
     </SafeAreaView>
   );
 };

@@ -10,9 +10,10 @@ import {
   orderBy,
   query,
   setDoc,
+  where,
 } from 'firebase/firestore';
 import { retrieveData } from './localStorage';
-import { getGroupRoomId, getRoomId } from '@/utils/chatRoomUtil';
+
 const getMessages = (callback: any) => {
   try {
     const msgRef = collection(db, 'chat');
@@ -125,37 +126,50 @@ async function getAllUsers() {
   }
 }
 
-async function createRoom(id: string) {
+async function createRoom(roomId: string, userIds: string[]) {
   try {
-    const userId = cureentUser();
-    const roomId = getRoomId(userId, id);
     const roomRef = doc(db, 'chat', roomId); // Obtain a reference to the document
     await setDoc(roomRef, {
       roomId,
       createdAt: Timestamp.now(),
-      members: [userId, id],
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function createGroupChatRoom(userIds: string[]) {
-  try {
-    const roomId = getGroupRoomId(userIds);
-    const roomRef = doc(db, 'chat', roomId);
-    await setDoc(roomRef, {
-      roomId,
-      createdAt: Timestamp.now(),
       members: userIds,
-      groupName: 'Group Chat',
     });
   } catch (error) {
     console.log(error);
   }
 }
 
-async function fetchGroupMembers(userIds: string[]) {
+const getLessonGroupChats = async (userId: string) => {
+  const lessonsRef = collection(db, 'lesson');
+  try {
+    const querySnapshot = await getDocs(lessonsRef);
+
+    const lessonsWithMembers: any[] = [];
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const { coachId, players } = data;
+      if (coachId === userId || players.includes(userId)) {
+        const members = [coachId, ...players];
+        const lessonWithMembers = {
+          lessonId: doc.id,
+          trainingTitle: data.trainingTitle,
+          members: members,
+        };
+        lessonsWithMembers.push(lessonWithMembers);
+      }
+    });
+
+    return lessonsWithMembers;
+  } catch (error) {
+    // Log an error message if something went wrong
+    console.error('Error getting lessons: ', error);
+    // Return an empty array
+    return [];
+  }
+};
+
+async function getGroupMembers(userIds: string[]) {
   try {
     const playerPromises = userIds.map(async (id) => {
       const userDoc = await getDoc(doc(db, 'player', id));
@@ -195,6 +209,6 @@ export {
   cureentUser,
   getAllUsers,
   createRoom,
-  createGroupChatRoom,
-  fetchGroupMembers,
+  getGroupMembers,
+  getLessonGroupChats,
 };

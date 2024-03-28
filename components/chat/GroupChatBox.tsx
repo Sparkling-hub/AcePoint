@@ -1,5 +1,5 @@
 import Colors from '@/constants/Colors';
-import { item } from '@/types/chatItem';
+import { chatItem } from '@/types/chatItem';
 
 import { router } from 'expo-router';
 import React from 'react';
@@ -7,11 +7,18 @@ import { TouchableOpacity } from 'react-native';
 import { Avatar, Circle, Text, XStack, YStack } from 'tamagui';
 
 interface GroupChatBoxProps {
-  groupItem: item;
+  id: string;
+  groupName: string;
+  groupItem: chatItem[];
 }
 
-const GroupChatBox: React.FC<GroupChatBoxProps> = ({ groupItem }) => {
-  const { id, image } = groupItem;
+const GroupChatBox: React.FC<GroupChatBoxProps> = ({
+  id,
+  groupItem,
+  groupName,
+}) => {
+  const userIds = groupItem.map((item) => item.id);
+
   return (
     <YStack gap={4}>
       <XStack
@@ -21,9 +28,10 @@ const GroupChatBox: React.FC<GroupChatBoxProps> = ({ groupItem }) => {
         <Text
           style={{ fontFamily: 'MontserratMedium' }}
           fontSize={16}
+          textTransform="uppercase"
           color={Colors.secondary}
           lineHeight={19.5}>
-          Group Chat
+          {groupName}
         </Text>
         <Text
           style={{ fontFamily: 'MontserratMedium' }}
@@ -33,13 +41,26 @@ const GroupChatBox: React.FC<GroupChatBoxProps> = ({ groupItem }) => {
           12:00
         </Text>
       </XStack>
-      <XStack gap={20} alignItems="center">
-        <Avatar circular borderWidth={2} borderColor={Colors.primary} size={47}>
-          <Avatar.Image
-            src={image ?? require('../../assets/images/user-pfp.png')}
-          />
-          <Avatar.Fallback bc={'#EFEFEF'} />
-        </Avatar>
+      <XStack gap={11} alignItems="center">
+        <YStack>
+          <XStack gap={5} maxWidth={51} flexWrap="wrap">
+            {groupItem.map((item) => (
+              <Avatar
+                key={item.id}
+                circular
+                borderWidth={2}
+                borderColor={Colors.primary}
+                size={23}>
+                <Avatar.Image
+                  src={
+                    item.image ?? require('../../assets/images/user-pfp.png')
+                  }
+                />
+                <Avatar.Fallback bc={'#EFEFEF'} />
+              </Avatar>
+            ))}
+          </XStack>
+        </YStack>
 
         <TouchableOpacity
           activeOpacity={0.7}
@@ -47,7 +68,7 @@ const GroupChatBox: React.FC<GroupChatBoxProps> = ({ groupItem }) => {
           onPress={() =>
             router.push({
               pathname: '/groupChatRoom',
-              params: groupItem,
+              params: { roomId: id, groupName: groupName, userIds: userIds },
             })
           }>
           <XStack
