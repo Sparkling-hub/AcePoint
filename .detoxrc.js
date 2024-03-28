@@ -24,6 +24,7 @@ module.exports = {
       type: 'android.apk',
       build: 'cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug',
       binaryPath: 'android/app/build/outputs/apk/debug/app-debug.apk',
+      testBinaryPath: 'android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk',
       reversePorts: [
         8081
       ]
@@ -31,7 +32,8 @@ module.exports = {
     'android.release': {
       type: 'android.apk',
       build: 'cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release',
-      binaryPath: 'android/app/build/outputs/apk/release/app-release.apk'
+      binaryPath: 'android/app/build/outputs/apk/release/app-release.apk',
+      testBinaryPath: 'android/app/build/outputs/apk/androidTest/release/app-release-androidTest.apk',
     }
   },
   devices: {
@@ -62,14 +64,6 @@ module.exports = {
     'ios.sim.release': {
       device: 'simulator',
       app: 'ios.release'
-    },
-    'android.att.debug': {
-      device: 'attached',
-      app: 'android.debug'
-    },
-    'android.att.release': {
-      device: 'attached',
-      app: 'android.release'
     },
     'android.emu.debug': {
       device: 'emulator',
