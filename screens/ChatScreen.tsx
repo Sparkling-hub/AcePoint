@@ -3,7 +3,7 @@ import MessageList from '@/components/chat/MessageList';
 import ChatInput from '@/components/chat/ChatInput';
 import Colors from '@/constants/Colors';
 import { db } from '@/lib/firebase';
-import { chatItem } from '@/types/chatItem';
+
 import { getRoomId } from '@/utils/chatRoomUtil';
 import {
   collection,
@@ -17,11 +17,11 @@ import { Input, Text, YStack } from 'tamagui';
 import { ActivityIndicator, Keyboard, ScrollView } from 'react-native';
 
 interface ChatScreenProps {
-  item: chatItem;
+  id: string;
+  displayName: string;
 }
 
-const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
-  const { displayName, id } = item;
+const ChatScreen: React.FC<ChatScreenProps> = ({ id, displayName }) => {
   const textRef = React.useRef('');
   const inputRef = React.useRef<Input>(null);
   const messageListRef = React.useRef<ScrollView>(null);
@@ -94,7 +94,13 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ item }) => {
           marginBottom={16}
           lineHeight={19}
           color={Colors.secondary}>
-          With: {displayName}
+          With:{' '}
+          <Text
+            style={{ fontFamily: 'MontserratMedium' }}
+            color={Colors.secondary}
+            textTransform="uppercase">
+            {displayName}
+          </Text>
         </Text>
         {loading ? (
           <ActivityIndicator size="large" color={Colors.secondary} />

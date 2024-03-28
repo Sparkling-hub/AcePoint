@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Avatar, Text, View, XStack, YStack } from 'tamagui';
 import Colors from '@/constants/Colors';
-import { Heart } from '@tamagui/lucide-icons';
+import { Heart, MessagesSquare } from '@tamagui/lucide-icons';
 import { renderStars } from '@/helpers/RatingsHelper';
 import { favouriteCoach, unfavoriteCoach } from '@/api/player-api';
-import { Pressable } from 'react-native';
+import { Pressable, TouchableOpacity } from 'react-native';
 import { auth } from '@/lib/firebase';
 import fireToast from './toast/Toast';
+import { router } from 'expo-router';
 
 interface CoachBoxProps {
   readonly name?: string;
@@ -149,14 +150,27 @@ const CoachBox: React.FC<CoachBoxProps> = ({
                 </Text>
               </Text>
             </XStack>
-            <Pressable onPress={handleFavoriteToggle}>
-              <Heart
-                size={20}
-                color={Colors.secondary}
-                marginTop={'$2'}
-                fill={isFavorite ? Colors.secondary : 'none'}
-              />
-            </Pressable>
+            <XStack gap={8} alignItems="center" marginTop={'$2'}>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: '/chatRoom',
+                    params: {
+                      id: coachRef,
+                      displayName: name ?? '',
+                    },
+                  })
+                }>
+                <MessagesSquare size={20} color={Colors.secondary} />
+              </TouchableOpacity>
+              <Pressable onPress={handleFavoriteToggle}>
+                <Heart
+                  size={20}
+                  color={Colors.secondary}
+                  fill={isFavorite ? Colors.secondary : 'none'}
+                />
+              </Pressable>
+            </XStack>
           </XStack>
           <XStack>{stars}</XStack>
         </YStack>

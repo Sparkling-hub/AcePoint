@@ -10,7 +10,6 @@ import {
   orderBy,
   query,
   setDoc,
-  where,
 } from 'firebase/firestore';
 import { retrieveData } from './localStorage';
 

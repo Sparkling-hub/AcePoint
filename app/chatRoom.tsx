@@ -1,14 +1,15 @@
 import ChatScreen from '@/screens/ChatScreen';
-import { item } from '@/types/chatItem';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, StyleSheet } from 'react-native';
 
 const ChatRoom = () => {
-  const item = useLocalSearchParams<item>();
+  const params = useLocalSearchParams();
+  const id = params.id as string;
+  const displayName = params.displayName as string;
 
   return (
     <SafeAreaView style={styles.container}>
-      <ChatScreen item={item} />
+      <ChatScreen id={id} displayName={displayName} />
     </SafeAreaView>
   );
 };

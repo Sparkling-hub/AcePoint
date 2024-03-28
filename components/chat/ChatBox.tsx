@@ -11,7 +11,7 @@ interface ChatBoxProps {
 }
 
 const ChatBox: React.FC<ChatBoxProps> = ({ item }) => {
-  const { displayName, image } = item;
+  const { id, displayName, image } = item;
 
   return (
     <YStack gap={4}>
@@ -49,7 +49,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ item }) => {
           onPress={() =>
             router.push({
               pathname: '/chatRoom',
-              params: item,
+              params: { id, displayName: displayName ?? '' },
             })
           }>
           <XStack
